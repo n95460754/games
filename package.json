@@ -1,8 +1,13 @@
 {
-  "name": "my-blocks",
+  "name": "minecraft",
+  "appName": "My Minecraft",
   "version": "1.0.0",
-  "description": "Moyata blokova igra za Tizen TV",
+  "description": "Moyata blokova igra",
+  "packageType": "apps",
+  "websiteURL": "https://cdn.jsdelivr.net/gh/n95460754/minecraft@main/index.html",
   "main": "index.html",
-  "type": "mod",
-  "keywords": ["tizenbrew"]
+  "author": "n95460754",
+  "repository": {
+    "url": "https://github.com/n95460754/minecraft"
+  }
 }
