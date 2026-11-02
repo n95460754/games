@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Test</title>
+<style>body{margin:0;background:#222}</style></head>
+<body>
+<script src="three.min.js"></script>
+<script>
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 100);
+cam.position.z = 3;
+const r = new THREE.WebGLRenderer();
+r.setSize(innerWidth, innerHeight);
+document.body.appendChild(r.domElement);
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(1,1,1),
+  new THREE.MeshBasicMaterial({color:0x00ff00})
+);
+scene.add(cube);
+function loop(){
+  requestAnimationFrame(loop);
+  cube.rotation.x += 0.02;
+  cube.rotation.y += 0.02;
+  r.render(scene, cam);
+}
+loop();
+</script>
+</body>
+</html>
