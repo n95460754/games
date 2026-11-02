@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>My Minecraft</title>
+<style>
+  body { margin:0; overflow:hidden; font-family:sans-serif; }
+  canvas { display:block; }
+  #info { position:fixed; top:10px; left:10px; color:white;
+    background:rgba(0,0,0,0.5); padding:8px; border-radius:8px; font-size:13px; z-index:10; }
+  #hotbar { position:fixed; bottom:12px; left:50%; transform:translateX(-50%);
+    display:flex; gap:4px; z-index:10; }
+  .slot { width:48px; height:48px; border:3px solid #555; background:rgba(0,0,0,0.4);
+    display:flex; align-items:center; justify-content:center; color:white; font-size:11px; text-align:center; }
+  .slot.active { border-color:white; }
+</style>
+</head>
+<body>
+<div id="info">Клик = заключи | WASD = ход | Space = скок | ЛЯВ = копай | ДЕСЕН = строй | 1-4 = избор блок</div>
+<div id="hotbar"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87ceeb);
+scene.fog = new THREE.Fog(0x87ceeb, 20, 60);
+
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(innerWidth, innerHeight);
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+const sun = new THREE.DirectionalLight(0xffffff, 0.7);
+sun.position.set(30, 50, 20);
+scene.add(sun);
+
+camera.position.set(16, 12, 28);
+
+// --- рисуваме текстура с код (малко "пиксели" върху всеки блок) ---
+function makeTexture(base, spots){
+  const c = document.createElement('canvas'); c.width=c.height=16;
+  const g = c.getContext('2d');
+  g.fillStyle = base; g.fillRect(0,0,16,16);
+  g.fillStyle = spots;
+  for(let i=0;i<24;i++){ // пръски за "грапав" вид
+    g.fillRect((Math.random()*16)|0,(Math.random()*16)|0,1,1);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = THREE.NearestFilter; // пикселест вид, като Minecraft
+  return t;
+}
+const mats = {
+  grass: new THREE.MeshStandardMaterial({ map: makeTexture('#4caf50','#43a047') }),
+  dirt:  new THREE.MeshStandardMaterial({ map: makeTexture('#8d6e63','#795548') }),
+  stone: new THREE.MeshStandardMaterial({ map: makeTexture('#9e9e9e','#757575') }),
+  wood:  new THREE.MeshStandardMaterial({ map: makeTexture('#8d6e3f','#6d4c2f') }),
+  water: new THREE.MeshStandardMaterial({ color:0x2196f3, transparent:true, opacity:0.7 })
+};
+
+const blocks = [];
+const geo = new THREE.BoxGeometry(1,1,1);
+function addBlock(x,y,z,type){
+  const b = new THREE.Mesh(geo, mats[type]);
+  b.position.set(x,y,z);
+  b.userData.type = type;
+  scene.add(b); blocks.push(b);
+}
+
+// --- свят с хълмове (прост "шум" от синуси) ---
+const SIZE = 32;
+for(let x=0;x<SIZE;x++){
+  for(let z=0;z<SIZE;z++){
+    const h = Math.floor(Math.sin(x*0.3)*1.5 + Math.cos(z*0.3)*1.5 + 2);
+    for(let y=0;y<=h;y++){
+      const type = (y===h) ? 'grass' : (y>=h-1 ? 'dirt' : 'stone');
+      addBlock(x,y,z,type);
+    }
+    if(h < 1){ addBlock(x,1,z,'water'); } // ниското става вода
+  }
+}
+
+// --- hotbar ---
+const types = ['grass','dirt','stone','wood'];
+let selected = 0;
+const hotbar = document.getElementById('hotbar');
+types.forEach((t,i)=>{
+  const d=document.createElement('div'); d.className='slot'+(i===0?' active':'');
+  d.textContent=(i+1)+'\n'+t; hotbar.appendChild(d);
+});
+function updateHotbar(){
+  [...hotbar.children].forEach((s,i)=>s.className='slot'+(i===selected?' active':''));
+}
+
+// --- оглеждане ---
+let yaw=0,pitch=-0.3,locked=false;
+let vy=0; // вертикална скорост за скока
+document.body.addEventListener('click',()=>document.body.requestPointerLock());
+document.addEventListener('pointerlockchange',()=>locked=(document.pointerLockElement===document.body));
+document.addEventListener('mousemove',e=>{
+  if(!locked)return;
+  yaw-=e.movementX*0.002; pitch-=e.movementY*0.002;
+  pitch=Math.max(-1.5,Math.min(1.5,pitch));
+});
+
+const keys={};
+document.addEventListener('keydown',e=>{
+  keys[e.code]=true;
+  if(e.code.startsWith('Digit')){
+    const n=parseInt(e.code.slice(5))-1;
+    if(n>=0&&n<types.length){selected=n;updateHotbar();}
+  }
+});
+document.addEventListener('keyup',e=>keys[e.code]=false);
+
+const ray=new THREE.Raycaster();
+document.addEventListener('mousedown',e=>{
+  if(!locked)return;
+  ray.setFromCamera({x:0,y:0},camera);
+  const hit=ray.intersectObjects(blocks)[0];
+  if(!hit)return;
+  if(e.button===0){
+    scene.remove(hit.object);
+    blocks.splice(blocks.indexOf(hit.object),1);
+  }else if(e.button===2){
+    const p=hit.object.position.clone().add(hit.face.normal);
+    addBlock(p.x,p.y,p.z,types[selected]);
+  }
+});
+document.addEventListener('contextmenu',e=>e.preventDefault());
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dir=new THREE.Vector3(Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),Math.cos(yaw)*Math.cos(pitch));
+  camera.lookAt(camera.position.clone().add(dir));
+  const speed=0.2;
+  const fwd=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));
+  const right=new THREE.Vector3(Math.sin(yaw+Math.PI/2),0,Math.cos(yaw+Math.PI/2));
+  if(keys['KeyW'])camera.position.addScaledVector(fwd,speed);
+  if(keys['KeyS'])camera.position.addScaledVector(fwd,-speed);
+  if(keys['KeyA'])camera.position.addScaledVector(right,speed);
+  if(keys['KeyD'])camera.position.addScaledVector(right,-speed);
+  // прост скок + гравитация
+  if(keys['Space']&&camera.position.y<=8.01)vy=0.25;
+  vy-=0.012; camera.position.y+=vy;
+  if(camera.position.y<8){camera.position.y=8;vy=0;}
+  renderer.render(scene,camera);
+}
+updateHotbar();
+animate();
+</script>
+</body>
+</html>

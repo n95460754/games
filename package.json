@@ -1,0 +1,8 @@
+{
+  "name": "my-blocks",
+  "version": "1.0.0",
+  "description": "Moyata blokova igra za Tizen TV",
+  "main": "index.html",
+  "type": "mod",
+  "keywords": ["tizenbrew"]
+}
