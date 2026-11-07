@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лава под краката</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#200;font-family:Consolas,"Courier New",monospace;user-select:none}
+canvas{display:block}
+#cross{position:fixed;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;pointer-events:none}
+#cross:before,#cross:after{content:"";position:absolute;background:#fff;mix-blend-mode:difference}
+#cross:before{left:8px;top:0;width:2px;height:18px}
+#cross:after{top:8px;left:0;height:2px;width:18px}
+#hud{position:fixed;left:10px;top:10px;color:#fff;font-size:15px;line-height:1.5;text-shadow:2px 2px 0 #000;pointer-events:none;white-space:pre}
+#banner{position:fixed;top:22%;left:0;right:0;text-align:center;color:#ffd54f;font-size:42px;font-weight:bold;text-shadow:3px 3px 0 #000;pointer-events:none;opacity:0;transition:opacity .3s}
+#menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(30,0,0,.72);z-index:5}
+#menu .box{background:#2b1410;border:4px solid #000;box-shadow:0 0 0 4px #7a3b20;padding:24px 32px;color:#fff;max-width:520px;text-align:center}
+#menu h1{margin:0 0 6px;color:#ff7043;font-size:34px;text-shadow:3px 3px 0 #000}
+#menu p{margin:8px 0;line-height:1.5;color:#ffccbc}
+#menu button{margin-top:14px;font:inherit;font-size:20px;padding:10px 28px;background:#5d9c3a;color:#fff;border:3px solid #000;box-shadow:inset -3px -3px 0 #3c6d22,inset 3px 3px 0 #8fd16a;cursor:pointer}
+#menu button:hover{filter:brightness(1.15)}
+#menu a{color:#ffab91}
+kbd{background:#444;border:1px solid #000;padding:0 5px;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="cross"></div>
+<div id="hud"></div>
+<div id="banner"></div>
+<div id="menu"><div class="box">
+  <h1>🔥 Лава под краката</h1>
+  <p>Всеки блок, на който стъпиш, се <b>руши</b> след миг. Под теб има още 2 етажа, а най-долу е <b>лавата</b>.</p>
+  <p>Ботовете също рушат пода. <b>Оцелей последен</b>, за да минеш в следващия рунд!</p>
+  <p><kbd>WASD</kbd> ход · <kbd>Space</kbd> скок · <kbd>Shift</kbd> спринт · <kbd>Мишка</kbd> оглед · <kbd>Esc</kbd> пауза</p>
+  <p id="best"></p>
+  <button id="play">▶ Играй</button>
+  <p><a href="games.html">← към всички игри</a></p>
+</div></div>
+<script src="three.min.js"></script>
+<script>
+// ---------- помощни ----------
+function rnd(a,b){return a+Math.random()*(b-a);}
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+// пикселна текстура, нарисувана с код
+function tex(base, dots, n, extra){
+  const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');
+  g.fillStyle=base;g.fillRect(0,0,16,16);
+  for(let i=0;i<n;i++){g.fillStyle=dots[i%dots.length];g.fillRect((Math.random()*16)|0,(Math.random()*16)|0,1,1);}
+  if(extra)extra(g);
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t;
+}
+const border=g=>{g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,0,16,1);g.fillRect(0,15,16,1);g.fillRect(0,0,1,16);g.fillRect(15,0,1,16);};
+
+// ---------- сцена ----------
+const renderer=new THREE.WebGLRenderer({antialias:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x3a1208);
+scene.fog=new THREE.Fog(0x3a1208,18,48);
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.05,200);
+scene.add(new THREE.HemisphereLight(0xffe0c0,0x501000,0.75));
+const sun=new THREE.DirectionalLight(0xffffff,0.55);sun.position.set(10,30,5);scene.add(sun);
+const lavaLight=new THREE.PointLight(0xff5a1f,1.6,40);lavaLight.position.set(8,-16,8);scene.add(lavaLight);
+
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+
+// ---------- лава ----------
+const lavaTex=tex('#e8501a',['#ff8f00','#ffb300','#c62828'],70);
+lavaTex.wrapS=lavaTex.wrapT=THREE.RepeatWrapping;lavaTex.repeat.set(30,30);
+const lava=new THREE.Mesh(new THREE.PlaneGeometry(120,120),new THREE.MeshBasicMaterial({map:lavaTex}));
+lava.rotation.x=-Math.PI/2;lava.position.set(8,-20,8);scene.add(lava);
+
+// ---------- етажи ----------
+const N=16;                    // 16 x 16 блока на етаж
+const LAYERS=[0,-7,-14];       // височина на всеки етаж (горната страна е y+1)
+const layerTex=[
+  tex('#6ab04c',['#4e8a34','#7fc95c'],40,border),
+  tex('#e0c068',['#c9a64a','#f2d98a'],40,border),
+  tex('#7ec8e3',['#a8e0f0','#5aa9c8'],30,border)
+];
+const crackTex=tex('#3b2a20',['#000','#5a3c28'],60,border);
+const boxGeo=new THREE.BoxGeometry(1,1,1);
+let tiles=[];  // tiles[l][x][z] = {mesh, state:0 цял / 1 руши се / 2 пада / 3 няма, t}
+const falling=[];
+function buildArena(){
+  for(const L of tiles)for(const row of L)for(const t of row)if(t.mesh)scene.remove(t.mesh);
+  falling.length=0;tiles=[];
+  LAYERS.forEach((y,l)=>{
+    const mat=new THREE.MeshLambertMaterial({map:layerTex[l]});
+    const L=[];
+    for(let x=0;x<N;x++){const row=[];for(let z=0;z<N;z++){
+      const m=new THREE.Mesh(boxGeo,mat);m.position.set(x+.5,y+.5,z+.5);scene.add(m);
+      row.push({mesh:m,state:0,t:0,mat:mat});
+    }L.push(row);}
+    tiles.push(L);
+  });
+}
+function tileAt(l,x,z){x=Math.floor(x);z=Math.floor(z);if(x<0||z<0||x>=N||z>=N)return null;return tiles[l][x][z];}
+const crackMat=new THREE.MeshLambertMaterial({map:crackTex});
+function stepOn(t){
+  if(time<1.5)return;           // кратък безопасен старт на всеки рунд
+  if(t&&t.state===0){t.state=1;t.t=crumbleTime;}
+}
+
+// ---------- същества (играч и ботове) ----------
+const R=0.3, H=1.8, G=24, JUMP=8.2;
+function makeBody(color){
+  const grp=new THREE.Group();
+  const mat=new THREE.MeshLambertMaterial({color});
+  const body=new THREE.Mesh(new THREE.BoxGeometry(.6,.9,.4),mat);body.position.y=.95;grp.add(body);
+  const head=new THREE.Mesh(new THREE.BoxGeometry(.5,.5,.5),new THREE.MeshLambertMaterial({color:0xf1c27d}));head.position.y=1.65;grp.add(head);
+  const eyeM=new THREE.MeshBasicMaterial({color:0x111111});
+  for(const s of[-1,1]){const e=new THREE.Mesh(new THREE.BoxGeometry(.08,.08,.02),eyeM);e.position.set(s*.11,1.7,.26);grp.add(e);}
+  const legM=new THREE.MeshLambertMaterial({color:0x2d3a6b});
+  const legs=[];for(const s of[-1,1]){const g=new THREE.Mesh(new THREE.BoxGeometry(.25,.5,.3),legM);g.geometry.translate(0,-.25,0);g.position.set(s*.15,.5,0);grp.add(g);legs.push(g);}
+  grp.userData.legs=legs;
+  scene.add(grp);return grp;
+}
+function newEntity(x,z,isBot,color){
+  return {p:new THREE.Vector3(x,LAYERS[0]+1,z),v:new THREE.Vector3(),onGround:false,alive:true,bot:isBot,
+    mesh:isBot?makeBody(color):null,target:null,think:0,yaw:0,walk:0,name:''};
+}
+
+// стъпване на плочките под краката (4 ъгъла на кутията)
+function groundUnder(e){
+  for(let l=0;l<LAYERS.length;l++){
+    const top=LAYERS[l]+1;
+    if(Math.abs(e.p.y-top)>0.02)continue;
+    const res=[];
+    for(const dx of[-R,R])for(const dz of[-R,R]){const t=tileAt(l,e.p.x+dx,e.p.z+dz);if(t&&t.state<2&&!res.includes(t))res.push(t);}
+    if(res.length)return res;
+  }
+  return null;
+}
+function physics(e,dt,wish){
+  // хоризонтално
+  const accel=e.onGround?14:5;
+  e.v.x+=(wish.x-e.v.x)*Math.min(1,accel*dt);
+  e.v.z+=(wish.z-e.v.z)*Math.min(1,accel*dt);
+  e.p.x+=e.v.x*dt;e.p.z+=e.v.z*dt;
+  // стени около арената (невидими), за да не излизаш навън
+  e.p.x=Math.max(R-1.5,Math.min(N+1.5-R,e.p.x));e.p.z=Math.max(R-1.5,Math.min(N+1.5-R,e.p.z));
+  // вертикално
+  const prevY=e.p.y;
+  e.v.y-=G*dt;if(e.v.y<-30)e.v.y=-30;
+  e.p.y+=e.v.y*dt;
+  e.onGround=false;
+  if(e.v.y<=0){
+    for(let l=0;l<LAYERS.length;l++){
+      const top=LAYERS[l]+1;
+      if(prevY>=top-0.001&&e.p.y<=top){
+        let hit=false;
+        for(const dx of[-R,R])for(const dz of[-R,R]){const t=tileAt(l,e.p.x+dx,e.p.z+dz);if(t&&t.state<2)hit=true;}
+        if(hit){e.p.y=top;e.v.y=0;e.onGround=true;break;}
+      }
+    }
+  }
+  if(e.onGround){const g=groundUnder(e);if(g)g.forEach(stepOn);}
+}
+function layerOf(e){let best=-1;for(let l=0;l<LAYERS.length;l++)if(e.p.y>=LAYERS[l]+0.5)return l;return best;}
+
+// ---------- играч ----------
+let player=newEntity(8,8,false);
+let yaw=0,pitch=-0.25;
+const keys={};
+addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='Space')e.preventDefault();});
+addEventListener('keyup',e=>{keys[e.code]=false;});
+addEventListener('mousemove',e=>{
+  if(document.pointerLockElement!==renderer.domElement)return;
+  yaw-=e.movementX*0.0025;pitch-=e.movementY*0.0025;pitch=Math.max(-1.5,Math.min(1.5,pitch));
+});
+
+// ---------- ботове ----------
+const BOT_COLORS=[0xe53935,0x8e24aa,0x1e88e5,0xfdd835,0xff7043,0x26a69a,0xd81b60,0x6d4c41];
+const BOT_NAMES=['Искра','Буря','Кубчо','Пиксел','Жар','Вихър','Блоки','Мълния'];
+let bots=[];
+function botThink(b){
+  const l=Math.max(0,layerOf(b));
+  let best=null,bestS=-1e9;
+  for(let i=0;i<14;i++){
+    const tx=Math.floor(b.p.x+rnd(-5,5)),tz=Math.floor(b.p.z+rnd(-5,5));
+    const t=tileAt(l,tx,tz);if(!t||t.state!==0)continue;
+    // по-добре: цял блок, с цели съседи, не твърде далеч, малко към играча
+    let n=0;for(const[dx,dz]of[[1,0],[-1,0],[0,1],[0,-1]]){const q=tileAt(l,tx+dx,tz+dz);if(q&&q.state===0)n++;}
+    const d=Math.hypot(tx+.5-b.p.x,tz+.5-b.p.z);
+    const dp=Math.hypot(tx+.5-player.p.x,tz+.5-player.p.z);
+    const s=n*2-Math.abs(d-3)-dp*b.aggro+rnd(0,2.5);
+    if(s>bestS){bestS=s;best={x:tx+.5,z:tz+.5};}
+  }
+  b.target=best;b.think=rnd(.35,1.1);
+}
+function updateBot(b,dt){
+  b.think-=dt;
+  if(b.think<=0||!b.target)botThink(b);
+  const wish=new THREE.Vector3();
+  if(b.target){
+    const dx=b.target.x-b.p.x,dz=b.target.z-b.p.z,d=Math.hypot(dx,dz);
+    if(d>0.25){wish.set(dx/d*b.speed,0,dz/d*b.speed);b.yaw=Math.atan2(dx,dz);}
+    // ако отпред няма под – скачай
+    if(b.onGround&&d>0.6){
+      const l=layerOf(b);
+      const ax=b.p.x+dx/d*0.7,az=b.p.z+dz/d*0.7;
+      const ahead=l>=0?tileAt(l,ax,az):null;
+      if(!ahead||ahead.state>=1){b.v.y=JUMP;b.onGround=false;}
+    }
+  }
+  physics(b,dt,wish);
+  b.walk+=Math.hypot(b.v.x,b.v.z)*dt*3;
+  b.mesh.position.copy(b.p);b.mesh.rotation.y=b.yaw;
+  const sw=Math.sin(b.walk)*0.6;b.mesh.userData.legs[0].rotation.x=sw;b.mesh.userData.legs[1].rotation.x=-sw;
+}
+
+// ---------- искри от лавата ----------
+const sparks=[];
+const sparkGeo=new THREE.BoxGeometry(.15,.15,.15);
+const sparkMat=new THREE.MeshBasicMaterial({color:0xffa000});
+function splash(x,z){
+  for(let i=0;i<18;i++){const m=new THREE.Mesh(sparkGeo,sparkMat);m.position.set(x,-19.8,z);scene.add(m);
+    sparks.push({m,v:new THREE.Vector3(rnd(-3,3),rnd(6,12),rnd(-3,3)),t:1.2});}
+  beep(120,0.25,'sawtooth',0.12);
+}
+
+// ---------- звук ----------
+let ac=null;
+function beep(f,d,type,vol){
+  try{if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;
+    g.gain.setValueAtTime(vol||0.08,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
+    o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}
+}
+
+// ---------- рундове ----------
+let round=1,crumbleTime=0.6,state='menu',time=0,bannerT=0,best=load('lavaBest',0);
+const hud=document.getElementById('hud'),banner=document.getElementById('banner'),menu=document.getElementById('menu');
+document.getElementById('best').textContent=best?('🏆 Рекорд: рунд '+best):'';
+function showBanner(t,s){banner.textContent=t;banner.style.opacity=1;bannerT=s||2;}
+function startRound(){
+  buildArena();
+  for(const b of bots)scene.remove(b.mesh);
+  bots=[];
+  crumbleTime=Math.max(0.28,0.65-round*0.04);
+  const count=Math.min(8,1+round);
+  player=newEntity(8,8,false);
+  for(let i=0;i<count;i++){
+    const a=i/count*Math.PI*2;
+    const b=newEntity(8+Math.cos(a)*5.5,8+Math.sin(a)*5.5,true,BOT_COLORS[i%BOT_COLORS.length]);
+    b.speed=rnd(3.3,4.0)+round*0.08;b.aggro=Math.min(0.6,0.1+round*0.05);b.name=BOT_NAMES[i%BOT_NAMES.length];
+    bots.push(b);
+  }
+  time=0;state='play';
+  showBanner('Рунд '+round,1.8);
+  beep(660,0.15);setTimeout(()=>beep(880,0.2),150);
+}
+function lose(){
+  state='over';
+  if(round-1>best){best=round-1;save('lavaBest',best);}
+  showBanner('Падна в лавата! 🔥',2.5);
+  setTimeout(()=>{round=1;time=0;buildArena();for(const b of bots)scene.remove(b.mesh);bots=[];document.exitPointerLock&&document.exitPointerLock();
+    menu.querySelector('h1').textContent='💀 Изгоря!';
+    document.getElementById('best').textContent='🏆 Рекорд: рунд '+best;
+    document.getElementById('play').textContent='↻ Нова игра';menu.style.display='flex';state='menu';},1800);
+}
+function win(){
+  state='won';
+  if(round>best){best=round;save('lavaBest',best);}
+  showBanner('Рунд '+round+' спечелен! ⭐',2.2);
+  [523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.18),i*120));
+  setTimeout(()=>{round++;startRound();},2300);
+}
+
+document.getElementById('play').onclick=()=>{
+  menu.style.display='none';
+  renderer.domElement.requestPointerLock&&renderer.domElement.requestPointerLock();
+  if(state==='menu')startRound();else if(state==='pause')state='play';
+};
+document.addEventListener('pointerlockchange',()=>{
+  if(document.pointerLockElement!==renderer.domElement&&state==='play'){
+    state='pause';menu.querySelector('h1').textContent='⏸ Пауза';document.getElementById('play').textContent='▶ Продължи';menu.style.display='flex';
+  }
+});
+
+// ---------- главен цикъл ----------
+buildArena();
+let last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(0.05,(now-last)/1000);last=now;
+  lavaTex.offset.x+=dt*0.02;lavaTex.offset.y+=dt*0.013;
+  lavaLight.intensity=1.4+Math.sin(now*0.003)*0.3;
+
+  if(state==='play'||state==='won'){
+    time+=dt;
+    // играч
+    if(player.alive){
+      const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw)),r=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+      const w=new THREE.Vector3();
+      if(keys.KeyW||keys.ArrowUp)w.add(f);if(keys.KeyS||keys.ArrowDown)w.sub(f);
+      if(keys.KeyD||keys.ArrowRight)w.add(r);if(keys.KeyA||keys.ArrowLeft)w.sub(r);
+      if(w.lengthSq()>0)w.normalize().multiplyScalar(keys.ShiftLeft||keys.ShiftRight?6.2:4.4);
+      if(keys.Space&&player.onGround){player.v.y=JUMP;player.onGround=false;beep(330,0.08);}
+      physics(player,dt,w);
+      if(player.p.y<-19.5&&state==='play'){player.alive=false;splash(player.p.x,player.p.z);lose();}
+    }
+    // ботове
+    for(const b of bots){
+      if(!b.alive)continue;
+      updateBot(b,dt);
+      if(b.p.y<-19.5){b.alive=false;scene.remove(b.mesh);splash(b.p.x,b.p.z);}
+    }
+    if(state==='play'&&player.alive&&bots.every(b=>!b.alive))win();
+  }
+
+  // рушащи се блокове
+  for(const L of tiles)for(const row of L)for(const t of row){
+    if(t.state===1){
+      t.t-=dt;
+      t.mesh.material=(Math.floor(t.t*16)%2)?crackMat:t.mat;
+      t.mesh.position.y=Math.floor(t.mesh.position.y)+.5-(1-t.t/crumbleTime)*0.12;
+      if(t.t<=0){t.state=2;falling.push({t,v:0});t.mesh.material=crackMat;}
+    }
+  }
+  for(let i=falling.length-1;i>=0;i--){
+    const f=falling[i];f.v+=G*dt;f.t.mesh.position.y-=f.v*dt;f.t.mesh.rotation.x+=dt*2;
+    if(f.t.mesh.position.y<-21){scene.remove(f.t.mesh);f.t.state=3;falling.splice(i,1);}
+  }
+  for(let i=sparks.length-1;i>=0;i--){const s=sparks[i];s.t-=dt;s.v.y-=G*dt;s.m.position.addScaledVector(s.v,dt);
+    if(s.t<=0){scene.remove(s.m);sparks.splice(i,1);}}
+
+  // камера
+  if(state==='menu'&&!player.alive){/* оставяме я където е */}
+  if(state==='menu'&&time===0){
+    const a=now*0.0002;camera.position.set(8+Math.cos(a)*16,9,8+Math.sin(a)*16);camera.lookAt(8,-4,8);
+  }else{
+    camera.position.set(player.p.x,player.p.y+1.6,player.p.z);
+    camera.rotation.set(pitch,yaw,0,'YXZ');
+  }
+
+  // HUD
+  if(state!=='menu'){
+    const alive=bots.filter(b=>b.alive).length;
+    const lay=layerOf(player);
+    hud.textContent='Рунд: '+round+'\nБотове: '+alive+' / '+bots.length+'\nЕтаж: '+(lay<0?'💀':(lay+1)+' / 3')+'\nВреме: '+time.toFixed(1)+' с\n🏆 Рекорд: '+best;
+  }else hud.textContent='';
+  if(bannerT>0){bannerT-=dt;if(bannerT<=0)banner.style.opacity=0;}
+
+  renderer.render(scene,camera);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

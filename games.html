@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блокови игри</title>
+<style>
+:root{--bg:#1b2430;--card:#2b3646;--edge:#000;--hl:#ffd54f;--txt:#eef3f8;--sub:#b9c6d6}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--txt);font-family:Consolas,"Courier New",monospace;
+  background-image:linear-gradient(45deg,rgba(255,255,255,.025) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.025) 75%),linear-gradient(45deg,rgba(255,255,255,.025) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.025) 75%);
+  background-size:32px 32px;background-position:0 0,16px 16px}
+header{text-align:center;padding:36px 16px 10px}
+h1{margin:0;font-size:clamp(30px,6vw,52px);color:var(--hl);text-shadow:4px 4px 0 #000}
+header p{color:var(--sub);margin:10px 0 0}
+main{max-width:1060px;margin:0 auto;padding:20px 16px 50px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+a.card{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:var(--card);border:4px solid var(--edge);box-shadow:inset -4px -4px 0 rgba(0,0,0,.35),inset 4px 4px 0 rgba(255,255,255,.08);transition:transform .12s}
+a.card:hover,a.card:focus-visible{transform:translateY(-4px);outline:3px solid var(--hl)}
+.art{height:110px;display:flex;align-items:center;justify-content:center;font-size:54px;border-bottom:4px solid var(--edge);image-rendering:pixelated}
+.body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column}
+.body h2{margin:0 0 6px;font-size:19px}
+.body p{margin:0 0 10px;color:var(--sub);font-size:13.5px;line-height:1.45;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:2px 7px;background:rgba(0,0,0,.35);border:1px solid #000}
+.new{background:#c62828;color:#fff}
+footer{text-align:center;color:var(--sub);font-size:12px;padding:0 16px 30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>⛏️ Блокови игри</h1>
+  <p>Избери игра. Всичко върви директно в браузъра.</p>
+</header>
+<main>
+  <a class="card" href="minecraft.html"><div class="art" style="background:linear-gradient(#6fb3e8 55%,#5aa13a 55%)">🌍</div>
+    <div class="body"><h2>BlockForge</h2><p>Голям свят с чънкове, копаене и строене. Писан на чист WebGL2.</p><div class="tags"><span class="tag">3D</span><span class="tag">пясъчник</span></div></div></a>
+  <a class="card" href="New%20World%20-%20Play.html"><div class="art" style="background:linear-gradient(#ffb36b 55%,#7a5233 55%)">🗺️</div>
+    <div class="body"><h2>New World</h2><p>Още един безкраен блоков свят за разглеждане и строене.</p><div class="tags"><span class="tag">3D</span><span class="tag">пясъчник</span></div></div></a>
+  <a class="card" href="index.html"><div class="art" style="background:linear-gradient(#87ceeb 60%,#4caf50 60%)">🧱</div>
+    <div class="body"><h2>My Minecraft</h2><p>Малък хълмист свят 32×32: копай и строй с 4 вида блокове.</p><div class="tags"><span class="tag">3D</span><span class="tag">офлайн</span></div></div></a>
+  <a class="card" href="infinite-parkour.html"><div class="art" style="background:linear-gradient(135deg,#7ec8e3,#8e24aa)">🏃</div>
+    <div class="body"><h2>Блоков паркур ∞</h2><p>Безкрайна писта през 5 свята. Колко далеч ще стигнеш?</p><div class="tags"><span class="tag">3D</span><span class="tag">умение</span></div></div></a>
+  <a class="card" href="lava-floor.html"><div class="art" style="background:linear-gradient(#3a1208 50%,#e8501a 50%)">🔥</div>
+    <div class="body"><h2>Лава под краката</h2><p>Подът се руши под всеки, който стъпи по него. Оцелей последен срещу ботовете!</p><div class="tags"><span class="tag new">НОВО</span><span class="tag">3D</span><span class="tag">оцеляване</span></div></div></a>
+  <a class="card" href="deep-miner.html"><div class="art" style="background:linear-gradient(#a9dcf7 30%,#7a5233 30%,#4b4b55 80%,#ff2e55 80%)">⛏️</div>
+    <div class="body"><h2>Дълбок миньор</h2><p>Копай за руди, продавай ги, купувай ъпгрейди и стигни Древното сърце на 250 м.</p><div class="tags"><span class="tag new">НОВО</span><span class="tag">2D</span><span class="tag">ъпгрейди</span></div></div></a>
+  <a class="card" href="block-architect.html"><div class="art" style="background:linear-gradient(135deg,#3b7bd6,#f2c230)">🏗️</div>
+    <div class="body"><h2>Блоков архитект</h2><p>Построй точно копие на въртящия се модел. 20 нива пространствени пъзели.</p><div class="tags"><span class="tag new">НОВО</span><span class="tag">3D</span><span class="tag">пъзел</span></div></div></a>
+</main>
+<footer>Фен проект, не е свързан с Mojang или Microsoft.</footer>
+</body>
+</html>

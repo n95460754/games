@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дълбок миньор</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:Consolas,"Courier New",monospace;user-select:none;color:#fff}
+canvas{display:block;image-rendering:pixelated}
+#hud{position:fixed;left:10px;top:10px;font-size:14px;line-height:1.55;text-shadow:2px 2px 0 #000;pointer-events:none;white-space:pre}
+.bar{display:inline-block;width:120px;height:10px;border:2px solid #000;background:#333;vertical-align:middle;margin-left:4px}
+.bar i{display:block;height:100%}
+#tip{position:fixed;bottom:14px;left:0;right:0;text-align:center;font-size:14px;text-shadow:2px 2px 0 #000;pointer-events:none;color:#ffe082}
+.panel{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.65);z-index:5}
+.box{background:#3b2f25;border:4px solid #000;box-shadow:0 0 0 4px #8d6e4f;padding:22px 28px;max-width:560px;width:calc(100% - 64px);text-align:center}
+.box h1{margin:0 0 8px;color:#ffca28;text-shadow:3px 3px 0 #000;font-size:30px}
+.box h2{margin:0 0 10px;color:#ffca28;text-shadow:2px 2px 0 #000}
+.box p{line-height:1.5;color:#efe1cf;margin:8px 0}
+button{font:inherit;font-size:16px;padding:8px 18px;margin:4px;background:#5d9c3a;color:#fff;border:3px solid #000;box-shadow:inset -3px -3px 0 #3c6d22,inset 3px 3px 0 #8fd16a;cursor:pointer}
+button:hover{filter:brightness(1.15)}
+button:disabled{background:#666;box-shadow:inset -3px -3px 0 #444,inset 3px 3px 0 #888;cursor:default;filter:none;color:#bbb}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0;text-align:left}
+.row span{flex:1}
+kbd{background:#555;border:1px solid #000;padding:0 5px;border-radius:3px}
+a{color:#ffcc80}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"></div>
+<div id="tip"></div>
+
+<div class="panel" id="menu" style="display:flex"><div class="box">
+  <h1>⛏️ Дълбок миньор</h1>
+  <p>Копай надолу, събирай руди и ги продавай в <b>магазина</b> на повърхността. С парите купувай по-добра кирка, по-голям резервоар и раница.</p>
+  <p>Пази <b>горивото</b>: летенето нагоре го харчи бързо. Внимавай с <b>лавата</b> в дълбокото!</p>
+  <p>Цел: стигни до <b>Древното сърце</b> на дълбочина 250 м.</p>
+  <p><kbd>A</kbd><kbd>D</kbd> / <kbd>←</kbd><kbd>→</kbd> копай настрани · <kbd>S</kbd> / <kbd>↓</kbd> копай надолу · <kbd>W</kbd> / <kbd>↑</kbd> лети · <kbd>E</kbd> магазин</p>
+  <p id="best"></p>
+  <button id="play">▶ Играй</button> <button id="reset" style="display:none">Нова игра</button>
+  <p><a href="games.html">← към всички игри</a></p>
+</div></div>
+
+<div class="panel" id="shop"><div class="box">
+  <h2>🏪 Магазин</h2>
+  <div id="shopList"></div>
+  <button id="closeShop">Затвори (E)</button>
+</div></div>
+
+<script>
+// ---------- запис ----------
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+// ---------- канава ----------
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+let TS=36,W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;TS=Math.max(28,Math.min(44,Math.floor(Math.min(W,H)/16)));ctx.imageSmoothingEnabled=false;}
+addEventListener('resize',resize);resize();
+
+// ---------- блокове ----------
+// id: 0 въздух, 1 трева, 2 пръст, 3 камък, 4 твърд камък, 5 въглен, 6 желязо, 7 злато, 8 кристал, 9 рубин, 10 лава, 11 скала-граница, 12 сърце
+const B={
+  0:{n:'въздух'},
+  1:{n:'трева',h:0.5,c:'#5aa13a'},
+  2:{n:'пръст',h:0.6,c:'#7a5233'},
+  3:{n:'камък',h:1.1,c:'#7d7d7d'},
+  4:{n:'твърд камък',h:2.2,c:'#4b4b55',need:2},
+  5:{n:'въглен',h:1.2,c:'#7d7d7d',ore:'#1b1b1b',v:6,w:1},
+  6:{n:'желязо',h:1.5,c:'#7d7d7d',ore:'#d8a07a',v:16,w:1},
+  7:{n:'злато',h:1.8,c:'#6d6d6d',ore:'#ffd23f',v:45,w:1},
+  8:{n:'кристал',h:2.4,c:'#4b4b55',ore:'#4de8f5',v:110,w:1,need:2},
+  9:{n:'рубин',h:3.0,c:'#3d3540',ore:'#ff2e55',v:260,w:1,need:3},
+  10:{n:'лава',h:0,c:'#ff6a00'},
+  11:{n:'скала',h:1e9,c:'#222'},
+  12:{n:'Древното сърце',h:3,c:'#3d3540',ore:'#ff66ff',v:0,w:0}
+};
+// малки пикселни картинки за всеки блок
+const SPR={};
+function seeded(s){return()=>{s=(s*16807)%2147483647;return s/2147483647;};}
+function drawSprite(id){
+  const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');const r=seeded(id*999+7);
+  const b=B[id];
+  g.fillStyle=b.c;g.fillRect(0,0,16,16);
+  for(let i=0;i<40;i++){g.fillStyle=r()<.5?'rgba(0,0,0,.18)':'rgba(255,255,255,.1)';g.fillRect((r()*16)|0,(r()*16)|0,1+(r()*2|0),1);}
+  if(id===1){g.fillStyle='#7a5233';g.fillRect(0,5,16,11);g.fillStyle='#5aa13a';for(let x=0;x<16;x++)g.fillRect(x,5,1,1+(r()*3|0));}
+  if(b.ore){for(let i=0;i<6;i++){const x=1+(r()*12|0),y=1+(r()*12|0);g.fillStyle=b.ore;g.fillRect(x,y,3,2);g.fillStyle='rgba(255,255,255,.45)';g.fillRect(x,y,1,1);}}
+  if(id===12){g.fillStyle='#ff66ff';g.fillRect(4,4,8,8);g.fillStyle='#fff';g.fillRect(6,6,2,2);}
+  if(id===10){for(let i=0;i<10;i++){g.fillStyle=r()<.5?'#ffb300':'#d84315';g.fillRect(r()*16|0,r()*16|0,3,2);}}
+  if(id===11){g.fillStyle='#111';for(let i=0;i<20;i++)g.fillRect(r()*16|0,r()*16|0,2,2);}
+  SPR[id]=c;
+}
+for(const k in B)if(k>0)drawSprite(+k);
+const crackSpr=[1,2,3].map(n=>{const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');g.fillStyle='rgba(0,0,0,.7)';
+  const r=seeded(n*31);for(let i=0;i<n*7;i++){g.fillRect(r()*16|0,r()*16|0,1+(r()*3|0),1);}return c;});
+
+// ---------- свят ----------
+const WW=40, DEPTH=260, SURF=6; // ред SURF е тревата
+let world;
+function genWorld(){
+  world=new Uint8Array(WW*(DEPTH+12));
+  const rand=Math.random;
+  for(let y=0;y<DEPTH+12;y++)for(let x=0;x<WW;x++){
+    let id=0;
+    const d=y-SURF;
+    if(x===0||x===WW-1){id=y>=SURF?11:0;}
+    else if(y<SURF)id=0;
+    else if(y===SURF)id=1;
+    else if(d<8)id=2;
+    else{
+      id=d<25?(rand()<.75?2:3):3;
+      if(d>60&&rand()<Math.min(.45,(d-60)/250))id=4;
+      const q=rand();
+      if(q<.07)id=5;
+      else if(d>15&&q<.11)id=6;
+      else if(d>45&&q<.135)id=7;
+      else if(d>90&&q<.15)id=8;
+      else if(d>150&&q<.158)id=9;
+      if(d>70&&rand()<Math.min(.06,(d-70)/2500))id=10;
+      if(rand()<.035)id=0;            // малки пещери
+    }
+    if(y>=SURF+DEPTH)id=11;
+    world[y*WW+x]=id;
+  }
+  // Древното сърце в "стая" на дъното
+  const hx=(WW/2)|0,hy=SURF+250;
+  for(let y=hy-2;y<=hy+1;y++)for(let x=hx-3;x<=hx+3;x++)world[y*WW+x]=4;
+  world[hy*WW+hx]=12;
+  // площадка за магазина
+  for(let x=2;x<7;x++)world[SURF*WW+x]=1;
+}
+const get=(x,y)=>(x<0||x>=WW||y<0)?11:(y>=DEPTH+12?11:world[y*WW+x]);
+const set=(x,y,v)=>{world[y*WW+x]=v;};
+const solid=id=>id!==0&&id!==10;
+const SHOP_X=4;
+
+// ---------- играч и ъпгрейди ----------
+const UP={
+  pick:{n:'⛏️ Кирка',lv:[1,1.6,2.4,3.5,5],cost:[0,120,450,1400,4000],note:['','','чупи твърд камък и кристал','чупи рубин','']},
+  tank:{n:'⛽ Резервоар',lv:[100,170,260,400,600],cost:[0,90,350,1100,3000]},
+  bag:{n:'🎒 Раница',lv:[8,14,22,35,55],cost:[0,80,300,900,2500]},
+  hull:{n:'🛡️ Броня',lv:[100,150,220,320,450],cost:[0,100,400,1200,3200]}
+};
+const pickTier=lv=>lv>=3?3:lv>=2?2:1;  // ниво 2 (индекс 2) = може твърди, ниво 3 = рубин
+let P,cargo,best=load('minerBest',{depth:0,money:0,won:false});
+function newGame(){
+  genWorld();
+  P={x:SHOP_X+2,y:SURF-1,px:SHOP_X+2,py:SURF-1,anim:0,from:null,to:null,dig:null,money:0,fuel:100,hp:100,
+     lv:{pick:0,tank:0,bag:0,hull:0},face:1,maxDepth:0,won:false,flyT:0};
+  cargo={};
+}
+const cargoCount=()=>Object.values(cargo).reduce((a,b)=>a+b,0);
+const cargoValue=()=>Object.entries(cargo).reduce((a,[id,n])=>a+B[id].v*n,0);
+const maxFuel=()=>UP.tank.lv[P.lv.tank],maxHp=()=>UP.hull.lv[P.lv.hull],bagSize=()=>UP.bag.lv[P.lv.bag];
+const pickPower=()=>UP.pick.lv[P.lv.pick];
+
+// ---------- вход ----------
+const keys={};
+addEventListener('keydown',e=>{
+  keys[e.code]=true;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
+  if(e.code==='KeyE'&&state==='play'){if(atShop())openShop();else say('Магазинът е на повърхността ↑',P.x,P.y-1,'#ffe082');}
+  else if(e.code==='KeyE'&&state==='shop')closeShop();
+  if(e.code==='Escape'&&state==='play'){state='menu';showMenu('⏸ Пауза','▶ Продължи');}
+});
+addEventListener('keyup',e=>{keys[e.code]=false;});
+const L=()=>keys.KeyA||keys.ArrowLeft,Rr=()=>keys.KeyD||keys.ArrowRight,U=()=>keys.KeyW||keys.ArrowUp||keys.Space,D=()=>keys.KeyS||keys.ArrowDown;
+
+// ---------- звук ----------
+let ac=null;
+function beep(f,d,type,vol){try{if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;
+  g.gain.setValueAtTime(vol||0.06,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
+  o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
+
+// ---------- частици и текст ----------
+const parts=[],texts=[];
+function burst(x,y,col,n){for(let i=0;i<(n||8);i++)parts.push({x:x+.5,y:y+.5,vx:(Math.random()-.5)*6,vy:-Math.random()*5,t:.6,c:col});}
+let lastSay=0;
+function say(s,x,y,c){const t=performance.now();if(t-lastSay>1200){lastSay=t;floatText(s,x,y,c);}}
+function floatText(s,x,y,c){texts.push({s,x:x+.5,y,t:1.3,c:c||'#fff'});}
+
+// ---------- движение по мрежата ----------
+function startMove(nx,ny,dur){P.from={x:P.x,y:P.y};P.to={x:nx,y:ny};P.anim=0;P.dur=dur;}
+function tryAct(dx,dy){
+  const nx=P.x+dx,ny=P.y+dy,id=get(nx,ny);
+  if(dx)P.face=dx;
+  if(!solid(id)){
+    if(dy<0){ if(P.fuel<=0){return false;} P.fuel-=0.9; }
+    startMove(nx,ny,dy<0?0.16:0.13);return true;
+  }
+  if(id===11){return false;}
+  const need=B[id].need||1;
+  if(pickTier(P.lv.pick)<need){say('Нужна е по-добра кирка!',nx,ny,'#ff8a80');return false;}
+  if(P.fuel<=0){say('Няма гориво!',P.x,P.y-1,'#ff8a80');return false;}
+  P.dig={x:nx,y:ny,t:0,need:B[id].h/pickPower()*0.55,id};
+  return true;
+}
+function finishDig(){
+  const {x,y,id}=P.dig;P.dig=null;
+  P.fuel=Math.max(0,P.fuel-0.35-B[id].h*0.25);
+  burst(x,y,B[id].ore||B[id].c,10);beep(140+Math.random()*60,0.05,'square',0.04);
+  if(id===12){set(x,y,0);P.won=true;winGame();return;}
+  if(B[id].v){
+    if(cargoCount()<bagSize()){cargo[id]=(cargo[id]||0)+1;floatText('+'+B[id].n+' ($'+B[id].v+')',x,y,B[id].ore);beep(880,0.08,'triangle',0.06);}
+    else floatText('Раницата е пълна!',x,y,'#ff8a80');
+  }
+  set(x,y,0);
+  startMove(x,y,0.12);
+}
+const atShop=()=>P.y===SURF-1&&Math.abs(P.x-SHOP_X)<=1;
+
+// ---------- магазин ----------
+const shopEl=document.getElementById('shop'),shopList=document.getElementById('shopList');
+function openShop(){state='shop';renderShop();shopEl.style.display='flex';}
+function closeShop(){state='play';shopEl.style.display='none';}
+document.getElementById('closeShop').onclick=closeShop;
+function renderShop(){
+  const val=cargoValue(),fuelNeed=Math.ceil(maxFuel()-P.fuel),fuelCost=Math.ceil(fuelNeed*0.5),hpNeed=Math.ceil(maxHp()-P.hp),hpCost=Math.ceil(hpNeed*0.8);
+  let h='<p>💰 Пари: <b>$'+P.money+'</b></p>';
+  h+=row('Продай рудите ('+cargoCount()+' бр.)','$'+val,'sell',val===0);
+  h+=row('Напълни горивото','$'+fuelCost,'fuel',fuelNeed<=0||P.money<fuelCost);
+  h+=row('Поправи бронята','$'+hpCost,'heal',hpNeed<=0||P.money<hpCost);
+  h+='<hr style="border-color:#000">';
+  for(const k in UP){const u=UP[k],l=P.lv[k];
+    if(l>=u.lv.length-1){h+=row(u.n+' — МАКС','✔','',true);continue;}
+    const note=u.note&&u.note[l+1]?' <small style="color:#ffcc80">('+u.note[l+1]+')</small>':'';
+    h+=row(u.n+' ниво '+(l+1)+' → '+(l+2)+note,'$'+u.cost[l+1],'up_'+k,P.money<u.cost[l+1]);}
+  shopList.innerHTML=h;
+  shopList.querySelectorAll('button[data-a]').forEach(b=>b.onclick=()=>shopAction(b.dataset.a));
+}
+function row(t,price,a,dis){return '<div class="row"><span>'+t+'</span><button data-a="'+a+'" '+(dis?'disabled':'')+'>'+price+'</button></div>';}
+function shopAction(a){
+  if(a==='sell'){const v=cargoValue();P.money+=v;cargo={};if(v)beep(1046,0.15,'triangle');}
+  if(a==='fuel'){const n=Math.ceil(maxFuel()-P.fuel),c=Math.ceil(n*0.5);if(P.money>=c){P.money-=c;P.fuel=maxFuel();beep(660,0.1);}}
+  if(a==='heal'){const n=Math.ceil(maxHp()-P.hp),c=Math.ceil(n*0.8);if(P.money>=c){P.money-=c;P.hp=maxHp();beep(660,0.1);}}
+  if(a.startsWith('up_')){const k=a.slice(3),c=UP[k].cost[P.lv[k]+1];if(P.money>=c){P.money-=c;P.lv[k]++;
+    if(k==='tank')P.fuel=maxFuel();if(k==='hull')P.hp=maxHp();[523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,0.12),i*90));}}
+  saveBest();renderShop();
+}
+
+// ---------- край ----------
+function saveBest(){
+  const d=Math.max(0,P.maxDepth);
+  if(d>best.depth||P.money>best.money||(P.won&&!best.won)){best={depth:Math.max(d,best.depth),money:Math.max(P.money,best.money),won:best.won||P.won};save('minerBest',best);}
+}
+function hurt(n,why){
+  P.hp-=n;beep(90,0.2,'sawtooth',0.08);
+  if(P.hp<=0){
+    const lost=cargoCount();cargo={};const fine=Math.floor(P.money*0.2);P.money-=fine;
+    P.hp=maxHp()*0.5;P.fuel=maxFuel()*0.5;P.x=P.px=SHOP_X+2;P.y=P.py=SURF-1;P.from=P.to=P.dig=null;
+    floatText(why+' Спасителите те изтеглиха (-$'+fine+', -'+lost+' руди)',P.x,P.y-1,'#ff8a80');
+  }
+}
+function winGame(){
+  saveBest();state='menu';
+  [523,659,784,1046,1318].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'triangle'),i*140));
+  showMenu('💎 Намери Древното сърце!','↻ Играй пак',true);
+}
+
+// ---------- меню ----------
+const menuEl=document.getElementById('menu');
+let state='menu',started=false;
+function showMenu(title,btn,won){
+  menuEl.querySelector('h1').textContent=title;document.getElementById('play').textContent=btn;menuEl.style.display='flex';
+  document.getElementById('reset').style.display=started&&!won?'inline-block':'none';
+  if(won)started=false;
+  document.getElementById('best').textContent=best.depth?('🏆 Рекорд: '+best.depth+' м · $'+best.money+(best.won?' · 💎 сърцето е намерено':'')):'';
+}
+showMenu('⛏️ Дълбок миньор','▶ Играй');
+document.getElementById('play').onclick=()=>{if(!started){newGame();started=true;}menuEl.style.display='none';state='play';};
+document.getElementById('reset').onclick=()=>{newGame();started=true;menuEl.style.display='none';state='play';};
+
+// ---------- ъпдейт ----------
+function update(dt){
+  // лава вреди при докосване
+  const here=get(P.x,P.y);
+  if(here===10){P.lavaT=(P.lavaT||0)-dt;if(P.lavaT<=0){P.lavaT=0.4;hurt(18,'Изгоря в лава!');burst(P.x,P.y,'#ff6a00',6);}}
+  if(P.to){
+    P.anim+=dt/P.dur;
+    if(P.anim>=1){
+      P.x=P.to.x;P.y=P.to.y;P.to=null;
+      if(!solid(get(P.x,P.y+1))){P.fallDist=U()?0:(P.fallDist||0)+1;}
+      else{if((P.fallDist||0)>=5)hurt((P.fallDist-4)*7,'Тежко падане!');P.fallDist=0;}
+    }
+  }else if(P.dig){
+    // продължаваме само докато е натиснат бутонът в същата посока
+    const dx=P.dig.x-P.x,dy=P.dig.y-P.y;
+    const holding=(dx<0&&L())||(dx>0&&Rr())||(dy>0&&D())||(dy<0&&U());
+    if(!holding)P.dig=null;
+    else{P.dig.t+=dt;if(P.dig.t>=P.dig.need)finishDig();}
+  }else{
+    const below=get(P.x,P.y+1);
+    P.falling=false;
+    if(L())tryAct(-1,0);
+    else if(Rr())tryAct(1,0);
+    else if(U()){
+      if(!tryAct(0,-1)&&!solid(below)){P.falling=true;startMove(P.x,P.y+1,0.07);}
+    }
+    else if(D())tryAct(0,1);
+    if(!P.to&&!P.dig&&!solid(below)){P.falling=true;startMove(P.x,P.y+1,0.07);}
+  }
+  // висящ във въздуха и натиска нагоре = харчи гориво бавно
+  if(U()&&P.to&&P.to.y<P.from.y){P.flyT+=dt;}
+  P.fuel=Math.max(0,P.fuel);
+  // безплатна дажба гориво до магазина, за да не заседнеш без пари
+  if(atShop()&&P.fuel<20)P.fuel=20;
+  // позиция за рисуване
+  if(P.to){const t=Math.min(1,P.anim);P.px=P.from.x+(P.to.x-P.from.x)*t;P.py=P.from.y+(P.to.y-P.from.y)*t;}else{P.px=P.x;P.py=P.y;}
+  const depth=P.y-SURF+1;if(depth>P.maxDepth){P.maxDepth=depth;if(depth%25===0)saveBest();}
+  // без гориво далеч от повърхността → аварийно извикване
+  if(P.fuel<=0&&!P.to&&!P.dig&&P.y>SURF-1&&solid(get(P.x,P.y+1))){
+    P.noFuelT=(P.noFuelT||0)+dt;
+    if(P.noFuelT>2.5){P.noFuelT=0;P.hp=1;hurt(5,'Свърши горивото!');P.fuel=maxFuel()*0.5;}
+  }else P.noFuelT=0;
+  for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.t-=dt;p.vy+=14*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.t<=0)parts.splice(i,1);}
+  for(let i=texts.length-1;i>=0;i--){const t=texts[i];t.t-=dt;t.y-=dt*0.8;if(t.t<=0)texts.splice(i,1);}
+}
+
+// ---------- рисуване ----------
+let camX=0,camY=0;
+function draw(now){
+  const tx=P?P.px:WW/2,ty=P?P.py:SURF;
+  camX+=((tx+.5)*TS-W/2-camX)*0.15;camY+=((ty+.5)*TS-H/2-camY)*0.15;
+  camX=Math.max(-TS,Math.min(WW*TS-W+TS,camX));
+  if(W>WW*TS)camX=(WW*TS-W)/2;
+  // небе
+  const skyY=SURF*TS-camY;
+  const g=ctx.createLinearGradient(0,skyY-H,0,skyY);g.addColorStop(0,'#3d8fd6');g.addColorStop(1,'#a9dcf7');
+  ctx.fillStyle='#120d0a';ctx.fillRect(0,0,W,H);
+  if(skyY>0){ctx.fillStyle=g;ctx.fillRect(0,0,W,skyY);}
+  // облаци
+  ctx.fillStyle='rgba(255,255,255,.85)';
+  for(let i=0;i<5;i++){const cx=((i*317+now*0.01)%(WW*TS+300))-150-camX*0.5,cy=skyY-TS*(3.5+(i%3)*0.9);if(cy>-40){ctx.fillRect(cx,cy,TS*2.4,TS*.5);ctx.fillRect(cx+TS*.5,cy-TS*.3,TS*1.3,TS*.4);}}
+  // блокове
+  const x0=Math.floor(camX/TS)-1,x1=Math.ceil((camX+W)/TS)+1,y0=Math.floor(camY/TS)-1,y1=Math.ceil((camY+H)/TS)+1;
+  for(let y=Math.max(0,y0);y<y1;y++)for(let x=Math.max(0,x0);x<Math.min(WW,x1);x++){
+    const id=get(x,y),sx=Math.round(x*TS-camX),sy=Math.round(y*TS-camY);
+    if(id===0){if(y>SURF){ctx.fillStyle='#2a1f17';ctx.fillRect(sx,sy,TS,TS);}continue;}
+    if(id===10){ctx.globalAlpha=.85+Math.sin(now*.005+x)*.15;}
+    ctx.drawImage(SPR[id],sx,sy,TS,TS);ctx.globalAlpha=1;
+  }
+  // магазин
+  if(P){
+    const sx=SHOP_X*TS-camX-TS,sy=(SURF-3)*TS-camY;
+    ctx.fillStyle='#8d5a2b';ctx.fillRect(sx,sy+TS*.6,TS*3,TS*2.4);
+    ctx.fillStyle='#c0392b';ctx.fillRect(sx-TS*.2,sy,TS*3.4,TS*.7);
+    ctx.fillStyle='#fff';for(let i=0;i<4;i++)ctx.fillRect(sx-TS*.2+i*TS*.9,sy,TS*.45,TS*.7);
+    ctx.fillStyle='#3a2410';ctx.fillRect(sx+TS*1.1,sy+TS*1.8,TS*.8,TS*1.2);
+    ctx.fillStyle='#ffe082';ctx.font='bold '+Math.round(TS*.36)+'px monospace';ctx.textAlign='center';ctx.fillText('МАГАЗИН',sx+TS*1.5,sy+TS*1.45);
+  }
+  // пукнатини при копане
+  if(P&&P.dig){const k=Math.min(2,Math.floor(P.dig.t/P.dig.need*3));ctx.drawImage(crackSpr[k],P.dig.x*TS-camX,P.dig.y*TS-camY,TS,TS);}
+  // играч
+  if(P){
+    const sx=P.px*TS-camX,sy=P.py*TS-camY,s=TS/16;
+    ctx.save();ctx.translate(sx+TS/2,sy);ctx.scale(P.face,1);ctx.translate(-TS/2,0);
+    const bob=P.to?Math.sin(now*.03)*s*.5:0;
+    ctx.fillStyle='#2d3a6b';ctx.fillRect(4*s,12*s,3*s,4*s);ctx.fillRect(9*s,12*s,3*s,4*s);
+    ctx.fillStyle='#e67e22';ctx.fillRect(3*s,6*s+bob,10*s,7*s);
+    ctx.fillStyle='#f1c27d';ctx.fillRect(4*s,1*s+bob,8*s,6*s);
+    ctx.fillStyle='#ffd23f';ctx.fillRect(3*s,0+bob,10*s,2.5*s);ctx.fillStyle='#fff8b0';ctx.fillRect(10*s,.5*s+bob,2*s,1.5*s);
+    ctx.fillStyle='#111';ctx.fillRect(9*s,3.5*s+bob,1.5*s,1.5*s);
+    // кирка
+    const sw=P.dig?Math.sin(now*.03)*0.9:0.3;
+    ctx.translate(12*s,8*s+bob);ctx.rotate(sw);ctx.fillStyle='#8d6e3f';ctx.fillRect(0,-1*s,7*s,1.6*s);
+    ctx.fillStyle=['#aaa','#ccc','#7ee8f0','#ff6e8a','#ffd23f'][P.lv.pick];ctx.fillRect(6*s,-4*s,1.8*s,7.5*s);
+    ctx.restore();
+    if(P.to&&P.to.y<P.from.y){ctx.fillStyle='rgba(255,170,40,'+(.6+Math.random()*.4)+')';ctx.fillRect(sx+TS*.35,sy+TS,TS*.3,TS*(.3+Math.random()*.3));}
+  }
+  for(const p of parts){ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,p.t/.6);ctx.fillRect(p.x*TS-camX-3,p.y*TS-camY-3,6,6);}ctx.globalAlpha=1;
+  // тъмнина под земята със светлина около миньора
+  if(P){
+    const depth=P.py-SURF;
+    const dark=Math.max(0,Math.min(.93,depth/40));
+    if(dark>0){
+      const lx=(P.px+.5)*TS-camX,ly=(P.py+.5)*TS-camY,rad=TS*(4.5+P.lv.pick*0.4);
+      const rg=ctx.createRadialGradient(lx,ly,rad*.25,lx,ly,rad);
+      rg.addColorStop(0,'rgba(0,0,0,0)');rg.addColorStop(1,'rgba(0,0,0,'+dark+')');
+      ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);
+    }
+  }
+  ctx.textAlign='center';ctx.font='bold 14px monospace';
+  for(const t of texts){ctx.globalAlpha=Math.min(1,t.t);ctx.fillStyle='#000';ctx.fillText(t.s,t.x*TS-camX+2,t.y*TS-camY+2);ctx.fillStyle=t.c;ctx.fillText(t.s,t.x*TS-camX,t.y*TS-camY);}
+  ctx.globalAlpha=1;
+}
+
+// ---------- HUD ----------
+const hud=document.getElementById('hud'),tip=document.getElementById('tip');
+function bar(v,max,col){return '<span class="bar"><i style="width:'+Math.max(0,Math.min(100,v/max*100))+'%;background:'+col+'"></i></span>';}
+function updHud(){
+  if(!P){hud.innerHTML='';return;}
+  const depth=Math.max(0,P.y-SURF+1);
+  hud.innerHTML='⛽ Гориво '+bar(P.fuel,maxFuel(),P.fuel<maxFuel()*.25?'#ff5252':'#ffb300')+' '+Math.ceil(P.fuel)+
+    '\n❤️ Броня  '+bar(P.hp,maxHp(),'#ef5350')+' '+Math.ceil(P.hp)+
+    '\n🎒 Руди: '+cargoCount()+' / '+bagSize()+'  ($'+cargoValue()+')'+
+    '\n💰 $'+P.money+'\n📏 Дълбочина: '+depth+' м  (рекорд '+Math.max(best.depth,P.maxDepth)+')';
+  tip.textContent=atShop()?'Натисни E за магазина':(P.fuel<maxFuel()*.2&&depth>0?'⚠ Горивото свършва! Върни се горе (W).':'');
+}
+
+genWorld();
+let last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(0.05,(now-last)/1000);last=now;
+  if(state==='play'&&P)update(dt);
+  draw(now);updHud();
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

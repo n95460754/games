@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков архитект</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#1d2a3a;font-family:Consolas,"Courier New",monospace;user-select:none;color:#fff}
+canvas{display:block;touch-action:none}
+#hud{position:fixed;left:10px;top:10px;font-size:15px;line-height:1.55;text-shadow:2px 2px 0 #000;pointer-events:none;white-space:pre}
+#targetLabel{position:fixed;right:12px;top:10px;width:min(30vw,260px);text-align:center;font-size:13px;text-shadow:2px 2px 0 #000;pointer-events:none}
+#targetFrame{position:fixed;right:12px;top:30px;width:min(30vw,260px);height:min(30vw,260px);border:3px solid #000;box-shadow:0 0 0 3px #ffd54f;pointer-events:none;box-sizing:border-box}
+#hotbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;background:rgba(0,0,0,.5);border:3px solid #111}
+.slot{width:44px;height:44px;border:3px solid #555;position:relative;cursor:pointer;box-sizing:border-box}
+.slot.sel{border-color:#fff;box-shadow:0 0 0 2px #000}
+.slot span{position:absolute;left:3px;top:1px;font-size:11px;text-shadow:1px 1px 0 #000}
+#btns{position:fixed;left:10px;bottom:12px;display:flex;gap:6px;flex-wrap:wrap;max-width:40vw}
+button{font:inherit;font-size:14px;padding:7px 12px;background:#5d9c3a;color:#fff;border:3px solid #000;box-shadow:inset -3px -3px 0 #3c6d22,inset 3px 3px 0 #8fd16a;cursor:pointer}
+button.alt{background:#5a6b8c;box-shadow:inset -3px -3px 0 #3c4a66,inset 3px 3px 0 #8ea2c8}
+button:hover{filter:brightness(1.15)}
+.panel{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:5}
+.box{background:#26364d;border:4px solid #000;box-shadow:0 0 0 4px #5a7bab;padding:22px 28px;max-width:540px;width:calc(100% - 64px);text-align:center}
+.box h1{margin:0 0 8px;color:#ffd54f;text-shadow:3px 3px 0 #000;font-size:30px}
+.box p{line-height:1.5;color:#dbe6f5;margin:8px 0}
+#levels{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0}
+#levels button{padding:8px 0;font-size:13px}
+#levels button.locked{background:#555;box-shadow:inset -3px -3px 0 #333,inset 3px 3px 0 #777;cursor:default;color:#999}
+#stars{font-size:38px;letter-spacing:6px}
+kbd{background:#445;border:1px solid #000;padding:0 5px;border-radius:3px}
+a{color:#9ecbff}
+</style>
+</head>
+<body>
+<div id="hud"></div>
+<div id="targetLabel">🎯 Построй това:</div>
+<div id="targetFrame"></div>
+<div id="hotbar"></div>
+<div id="btns">
+  <button class="alt" id="bGhost">👻 Подсказка (H)</button>
+  <button class="alt" id="bClear">🧹 Изчисти</button>
+  <button class="alt" id="bMenu">☰ Нива</button>
+</div>
+
+<div class="panel" id="menu" style="display:flex"><div class="box">
+  <h1>🏗️ Блоков архитект</h1>
+  <p>Горе вдясно се върти <b>модел</b>. Построй <b>точно същия</b> на плочата: същите блокове, на същите места, в същите цветове.</p>
+  <p><kbd>Ляв клик</kbd> слага блок · <kbd>Десен клик</kbd> маха блок · <kbd>Влачи</kbd> върти камерата · <kbd>Колелце</kbd> зуум · <kbd>1</kbd>–<kbd>6</kbd> цвят</p>
+  <p>По-бързо и с по-малко грешки значи повече ⭐. Подсказката показва призрак на модела, но ти струва 1 ⭐.</p>
+  <div id="levels"></div>
+  <p><a href="games.html">← към всички игри</a></p>
+</div></div>
+
+<div class="panel" id="done"><div class="box">
+  <h1 id="doneTitle">Готово!</h1>
+  <div id="stars"></div>
+  <p id="doneInfo"></p>
+  <button id="bNext">▶ Следващо ниво</button> <button class="alt" id="bLevels">☰ Нива</button>
+</div></div>
+
+<script src="three.min.js"></script>
+<script>
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+// ---------- цветове / блокове ----------
+const COLORS=[
+  {n:'червен',c:'#d84a3a'},{n:'жълт',c:'#f2c230'},{n:'зелен',c:'#5aa13a'},
+  {n:'син',c:'#3b7bd6'},{n:'дърво',c:'#9a6a3a'},{n:'бял',c:'#e8e8e8'}
+];
+function blockTex(hex){
+  const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');
+  g.fillStyle=hex;g.fillRect(0,0,16,16);
+  for(let i=0;i<30;i++){g.fillStyle=Math.random()<.5?'rgba(0,0,0,.12)':'rgba(255,255,255,.12)';g.fillRect(Math.random()*16|0,Math.random()*16|0,1,1);}
+  g.fillStyle='rgba(0,0,0,.3)';g.fillRect(0,15,16,1);g.fillRect(15,0,1,16);g.fillStyle='rgba(255,255,255,.25)';g.fillRect(0,0,16,1);g.fillRect(0,0,1,16);
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t;
+}
+const MATS=COLORS.map(o=>new THREE.MeshLambertMaterial({map:blockTex(o.c)}));
+const GHOST=COLORS.map(o=>new THREE.MeshBasicMaterial({color:o.c,transparent:true,opacity:.28,depthWrite:false}));
+const GEO=new THREE.BoxGeometry(1,1,1);
+
+// ---------- нива ----------
+// всяко ниво: списък [x,y,z,цвят] в мрежа 5x5 (x,z от 0 до 4), y от 0 нагоре
+const S=5;
+function fill(arr,x0,x1,y0,y1,z0,z1,c){for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++)for(let z=z0;z<=z1;z++)arr.push([x,y,z,c]);return arr;}
+const LEVELS=[
+  {n:'Кула',b:()=>fill([],2,2,0,2,2,2,0)},
+  {n:'Стълбичка',b:()=>[[1,0,2,1],[2,0,2,1],[3,0,2,1],[2,1,2,1],[3,1,2,1],[3,2,2,1]]},
+  {n:'Буквата Т',b:()=>{const a=fill([],2,2,0,2,2,2,3);fill(a,1,3,3,3,2,2,3);return a;}},
+  {n:'Две колони',b:()=>{const a=fill([],1,1,0,1,1,1,0);fill(a,3,3,0,2,3,3,3);return a;}},
+  {n:'Мост',b:()=>{const a=fill([],1,1,0,1,2,2,5);fill(a,3,3,0,1,2,2,5);fill(a,1,3,2,2,2,2,4);return a;}},
+  {n:'Дърво',b:()=>{const a=fill([],2,2,0,2,2,2,4);fill(a,1,3,3,3,1,3,2);a.push([2,4,2,2]);return a;}},
+  {n:'Пирамида',b:()=>{const a=fill([],0,4,0,0,0,4,1);fill(a,1,3,1,1,1,3,1);a.push([2,2,2,0]);return a;}},
+  {n:'Къщичка',b:()=>{const a=[];for(let x=1;x<=3;x++)for(let z=1;z<=3;z++)for(let y=0;y<=1;y++)if(x!==2||z!==2)if(!(x===2&&z===1&&y===0))a.push([x,y,z,5]);
+     fill(a,1,3,2,2,1,3,0);a.push([2,3,2,0]);return a;}},
+  {n:'Спирала',b:()=>[[0,0,0,3],[1,0,0,3],[1,1,0,3],[2,1,0,3],[3,1,0,3],[3,2,0,3],[4,2,0,3],[4,2,1,3],[4,3,1,3],[4,3,2,3],[4,3,3,3],[4,4,3,3],[4,4,4,3],[3,4,4,0]]},
+  {n:'Шахматна дъска',b:()=>{const a=[];for(let x=0;x<S;x++)for(let z=0;z<S;z++)a.push([x,0,z,(x+z)%2?5:4]);a.push([2,1,2,0]);return a;}},
+  {n:'Арка',b:()=>{const a=fill([],0,0,0,2,2,2,3);fill(a,4,4,0,2,2,2,3);fill(a,0,4,3,3,2,2,1);fill(a,1,1,2,2,2,2,1);fill(a,3,3,2,2,2,2,1);return a;}},
+  {n:'Замък',b:()=>{const a=[];for(const[x,z]of[[0,0],[4,0],[0,4],[4,4]])fill(a,x,x,0,2,z,z,5);
+     for(let i=1;i<4;i++){a.push([i,0,0,5],[i,0,4,5],[0,0,i,5],[4,0,i,5]);}a.push([2,1,0,0],[2,1,4,0],[0,1,2,0],[4,1,2,0]);return a;}},
+];
+// след ръчните нива: случайни "предизвикателства"
+function randomLevel(seed){
+  let s=seed*9301+49297;const r=()=>{s=(s*16807)%2147483647;return s/2147483647;};
+  const a=[],h={};const n=8+Math.floor(r()*8);
+  let x=2,z=2;
+  for(let i=0;i<n;i++){
+    const k=x+','+z,y=h[k]||0;
+    if(y<4){a.push([x,y,z,Math.floor(r()*COLORS.length)]);h[k]=y+1;}
+    const d=Math.floor(r()*5);if(d===0)x=Math.min(4,x+1);if(d===1)x=Math.max(0,x-1);if(d===2)z=Math.min(4,z+1);if(d===3)z=Math.max(0,z-1);
+  }
+  return a;
+}
+const TOTAL=LEVELS.length+8;
+function getLevel(i){return i<LEVELS.length?{n:LEVELS[i].n,blocks:LEVELS[i].b()}:{n:'Предизвикателство '+(i-LEVELS.length+1),blocks:randomLevel(i+1)};}
+
+// ---------- рендер ----------
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+function lights(sc){sc.add(new THREE.HemisphereLight(0xffffff,0x445566,.8));const d=new THREE.DirectionalLight(0xffffff,.6);d.position.set(5,10,7);sc.add(d);}
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x6fb3e8);lights(scene);
+const tScene=new THREE.Scene();tScene.background=new THREE.Color(0x26364d);lights(tScene);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);
+const tCam=new THREE.PerspectiveCamera(45,1,.1,100);
+
+// плоча
+const plateTex=(()=>{const c=document.createElement('canvas');c.width=c.height=80;const g=c.getContext('2d');
+  for(let x=0;x<5;x++)for(let z=0;z<5;z++){g.fillStyle=(x+z)%2?'#7a8a96':'#8d9ca8';g.fillRect(x*16,z*16,16,16);}
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;return t;})();
+const plate=new THREE.Mesh(new THREE.BoxGeometry(S,.3,S),[0,0,new THREE.MeshLambertMaterial({map:plateTex}),0,0,0].map(m=>m||new THREE.MeshLambertMaterial({color:0x56636e})));
+plate.position.set(S/2,-.15,S/2);scene.add(plate);
+const tPlate=plate.clone();tScene.add(tPlate);
+// рамка за височина (до 5 блока)
+const frame=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(S,S,S)),new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.18}));
+frame.position.set(S/2,S/2,S/2);scene.add(frame);
+// подсветка къде ще падне блокът
+const hover=new THREE.Mesh(new THREE.BoxGeometry(1.02,1.02,1.02),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.35,depthWrite:false}));
+hover.visible=false;scene.add(hover);
+
+// ---------- състояние ----------
+let built=new Map();      // "x,y,z" -> {c, mesh}
+let target=[],tMeshes=[],ghosts=[],level=0,ghostOn=false,usedHint=false,t0=0,elapsed=0,moves=0,state='menu',sel=0;
+let progress=load('architectProgress',{unlocked:1,stars:{}});
+const key=(x,y,z)=>x+','+y+','+z;
+
+function loadLevel(i){
+  level=i;const L=getLevel(i);target=L.blocks;
+  for(const m of tMeshes)tScene.remove(m);tMeshes=[];
+  for(const m of ghosts)scene.remove(m);ghosts=[];
+  for(const[,v]of built)scene.remove(v.mesh);built.clear();
+  for(const[x,y,z,c]of target){
+    const m=new THREE.Mesh(GEO,MATS[c]);m.position.set(x+.5,y+.5,z+.5);tScene.add(m);tMeshes.push(m);
+    const g=new THREE.Mesh(GEO,GHOST[c]);g.position.copy(m.position);g.scale.setScalar(.98);g.visible=false;scene.add(g);ghosts.push(g);
+  }
+  ghostOn=false;usedHint=false;moves=0;elapsed=0;t0=performance.now();state='play';
+  levelName=L.n;
+}
+let levelName='';
+function setGhost(on){ghostOn=on;if(on)usedHint=true;ghosts.forEach(g=>g.visible=on);}
+
+// ---------- проверка ----------
+function check(){
+  const want=new Map(target.map(([x,y,z,c])=>[key(x,y,z),c]));
+  let right=0,wrongColor=0,extra=0;
+  for(const[k,v]of built){if(!want.has(k))extra++;else if(want.get(k)===v.c)right++;else wrongColor++;}
+  return {right,wrongColor,extra,total:target.length,done:right===target.length&&extra===0&&wrongColor===0};
+}
+function finish(){
+  state='done';elapsed=(performance.now()-t0)/1000;
+  const par=target.length*3+6;
+  let stars=3;if(elapsed>par)stars--;if(moves>target.length*1.5+2)stars--;if(usedHint)stars--;stars=Math.max(1,stars);
+  const prev=progress.stars[level]||0;progress.stars[level]=Math.max(prev,stars);
+  progress.unlocked=Math.max(progress.unlocked,Math.min(TOTAL,level+2));save('architectProgress',progress);
+  document.getElementById('doneTitle').textContent='✔ '+levelName;
+  document.getElementById('stars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+  document.getElementById('doneInfo').innerHTML='Време: <b>'+elapsed.toFixed(1)+' с</b> (цел до '+par+' с) · Ходове: <b>'+moves+'</b> (блокове: '+target.length+')'+(usedHint?'<br>👻 Ползва подсказка':'');
+  document.getElementById('bNext').style.display=level+1<TOTAL?'inline-block':'none';
+  document.getElementById('done').style.display='flex';
+  [523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,.15,'triangle'),i*110));
+}
+
+// ---------- звук ----------
+let ac=null;
+function beep(f,d,type,vol){try{if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;
+  g.gain.setValueAtTime(vol||0.05,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
+  o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
+
+// ---------- камера (орбита) ----------
+let theta=0.7,phi=0.95,dist=11;
+function placeCam(){
+  const cx=S/2,cy=1.2,cz=S/2;
+  camera.position.set(cx+dist*Math.sin(phi)*Math.sin(theta),cy+dist*Math.cos(phi),cz+dist*Math.sin(phi)*Math.cos(theta));
+  camera.lookAt(cx,cy,cz);
+}
+
+// ---------- мишка ----------
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
+let down=null;
+function pick(ev){
+  mouse.x=ev.clientX/innerWidth*2-1;mouse.y=-(ev.clientY/innerHeight)*2+1;
+  ray.setFromCamera(mouse,camera);
+  const objs=[plate,...[...built.values()].map(v=>v.mesh)];
+  const hit=ray.intersectObjects(objs)[0];
+  if(!hit)return null;
+  const n=hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
+  if(hit.object===plate){
+    if(n.y<.5)return null;
+    const x=Math.floor(hit.point.x),z=Math.floor(hit.point.z);
+    if(x<0||z<0||x>=S||z>=S)return null;
+    return {place:[x,0,z],remove:null};
+  }
+  const p=hit.object.position;
+  const ox=Math.floor(p.x),oy=Math.floor(p.y),oz=Math.floor(p.z);
+  const px=ox+Math.round(n.x),py=oy+Math.round(n.y),pz=oz+Math.round(n.z);
+  const ok=px>=0&&pz>=0&&py>=0&&px<S&&pz<S&&py<S;
+  return {place:ok?[px,py,pz]:null,remove:[ox,oy,oz]};
+}
+const cvs=renderer.domElement;
+cvs.addEventListener('contextmenu',e=>e.preventDefault());
+cvs.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,b:e.button,moved:false,t:theta,p:phi};cvs.setPointerCapture(e.pointerId);});
+cvs.addEventListener('pointermove',e=>{
+  if(down){
+    const dx=e.clientX-down.x,dy=e.clientY-down.y;
+    if(Math.hypot(dx,dy)>6)down.moved=true;
+    if(down.moved){theta=down.t-dx*0.008;phi=Math.max(.25,Math.min(1.5,down.p-dy*0.008));}
+  }
+  if(state!=='play'){hover.visible=false;return;}
+  const h=pick(e);
+  if(h&&h.place&&!(down&&down.moved)){hover.visible=true;hover.position.set(h.place[0]+.5,h.place[1]+.5,h.place[2]+.5);}else hover.visible=false;
+});
+cvs.addEventListener('pointerup',e=>{
+  if(!down)return;const d=down;down=null;
+  if(d.moved||state!=='play')return;
+  const h=pick(e);if(!h)return;
+  if(d.b===2||e.shiftKey){
+    if(h.remove){const k=key(...h.remove);const v=built.get(k);if(v){scene.remove(v.mesh);built.delete(k);moves++;beep(220,.06);}}
+  }else if(d.b===0&&h.place){
+    const k=key(...h.place);if(built.has(k))return;
+    const m=new THREE.Mesh(GEO,MATS[sel]);m.position.set(h.place[0]+.5,h.place[1]+.5,h.place[2]+.5);m.scale.setScalar(.2);scene.add(m);
+    built.set(k,{c:sel,mesh:m});moves++;beep(440+sel*60,.06);
+  }
+  if(check().done)setTimeout(()=>{if(state==='play'&&check().done)finish();},250);
+});
+cvs.addEventListener('wheel',e=>{dist=Math.max(6,Math.min(20,dist+Math.sign(e.deltaY)*0.8));e.preventDefault();},{passive:false});
+
+// ---------- хотбар ----------
+const hb=document.getElementById('hotbar');
+COLORS.forEach((o,i)=>{const d=document.createElement('div');d.className='slot';d.style.background=o.c;d.title=o.n;d.innerHTML='<span>'+(i+1)+'</span>';d.onclick=()=>selectColor(i);hb.appendChild(d);});
+function selectColor(i){sel=i;[...hb.children].forEach((d,j)=>d.classList.toggle('sel',j===i));}
+selectColor(0);
+addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='6')selectColor(+e.key-1);
+  if(e.code==='KeyH'&&state==='play')setGhost(!ghostOn);
+  if(e.code==='Escape'&&state==='play')openMenu();
+});
+
+// ---------- менюта ----------
+const menuEl=document.getElementById('menu'),doneEl=document.getElementById('done');
+function openMenu(){
+  state='menu';doneEl.style.display='none';menuEl.style.display='flex';
+  const lv=document.getElementById('levels');lv.innerHTML='';
+  for(let i=0;i<TOTAL;i++){
+    const b=document.createElement('button');const st=progress.stars[i]||0;
+    const locked=i>=progress.unlocked;
+    b.className=locked?'locked':'';
+    b.innerHTML=(locked?'🔒':(i+1))+'<br><small>'+(st?'⭐'.repeat(st):'&nbsp;')+'</small>';
+    b.title=getLevel(i).n;
+    if(!locked)b.onclick=()=>{menuEl.style.display='none';loadLevel(i);};
+    lv.appendChild(b);
+  }
+}
+document.getElementById('bGhost').onclick=()=>{if(state==='play')setGhost(!ghostOn);};
+document.getElementById('bClear').onclick=()=>{if(state!=='play')return;for(const[,v]of built)scene.remove(v.mesh);built.clear();};
+document.getElementById('bMenu').onclick=openMenu;
+document.getElementById('bNext').onclick=()=>{doneEl.style.display='none';loadLevel(level+1);};
+document.getElementById('bLevels').onclick=openMenu;
+openMenu();
+loadLevel(0);state='menu';
+
+addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();});
+
+// ---------- цикъл ----------
+const hud=document.getElementById('hud'),tf=document.getElementById('targetFrame');
+let last=performance.now(),spin=0;
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  // анимация "изскачане" на новите блокове
+  for(const[,v]of built){const s=v.mesh.scale.x;if(s<1)v.mesh.scale.setScalar(Math.min(1,s+dt*7));}
+  placeCam();
+  // основна сцена
+  renderer.setScissorTest(false);renderer.setViewport(0,0,innerWidth,innerHeight);
+  renderer.render(scene,camera);
+  // модел в ъгъла
+  const r=tf.getBoundingClientRect();
+  spin+=dt*0.6;
+  tCam.position.set(S/2+10*Math.sin(spin),7.5,S/2+10*Math.cos(spin));tCam.lookAt(S/2,1.4,S/2);
+  const vx=r.left+3,vy=innerHeight-r.bottom+3,vw=r.width-6,vh=r.height-6;
+  renderer.setScissorTest(true);renderer.setScissor(vx,vy,vw,vh);renderer.setViewport(vx,vy,vw,vh);
+  renderer.render(tScene,tCam);renderer.setScissorTest(false);
+  // HUD
+  if(state==='play'){
+    const c=check();
+    hud.textContent='Ниво '+(level+1)+': '+levelName+'\n✔ Правилни: '+c.right+' / '+c.total+(c.wrongColor?'\n🎨 Грешен цвят: '+c.wrongColor:'')+(c.extra?'\n✖ Излишни: '+c.extra:'')+'\n⏱ '+((now-t0)/1000).toFixed(1)+' с · Ходове: '+moves;
+  }
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

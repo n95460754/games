@@ -1,7 +1,6 @@
-[README.md](https://github.com/user-attachments/files/34519987/README.md)
 # ⛏️ My Minecraft
 
-Two Minecraft-style block games that run straight in your browser. Built with plain HTML + JavaScript and [Three.js](https://threejs.org/), with no build step, no installs and no server.
+Seven block games that run straight in your browser. Built with plain HTML + JavaScript and [Three.js](https://threejs.org/), with no build step, no installs and no server.
 
 > Moyata blokova igra: dig, build, explore and jump through an endless blocky world.
 
@@ -9,6 +8,13 @@ Two Minecraft-style block games that run straight in your browser. Built with pl
 |---|---|---|
 | ⛏️ **My Minecraft** | `index.html` | Dig and build in a small hilly world |
 | 🏃 **Block Parkour ∞** (Блоков Паркур ∞) | `infinite-parkour.html` | Jump along an endless path through 5 worlds |
+| 🌍 **BlockForge** | `minecraft.html` | Big chunked world, written in pure WebGL2 |
+| 🗺️ **New World** | `New World - Play.html` | Another endless block world to explore |
+| 🔥 **Lava Floor** (Лава под краката) 🆕 | `lava-floor.html` | Blocks crumble under your feet. Be the last one standing vs bots |
+| ⛏️ **Deep Miner** (Дълбок миньор) 🆕 | `deep-miner.html` | 2D mining: dig ores, sell them, buy upgrades, reach 250 m |
+| 🏗️ **Block Architect** (Блоков архитект) 🆕 | `block-architect.html` | Rebuild the spinning model block by block. 20 puzzle levels |
+
+🎮 **Open `games.html`** for a menu with all the games.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
@@ -83,6 +89,57 @@ An endless parkour run. The path keeps generating in front of you and gets harde
 
 ---
 
+# 🔥 Game 3: Lava Floor (Лава под краката)
+
+Three floors of blocks hang above a lake of lava. Every block anyone steps on crumbles after a moment, so you have to keep moving. Bots run around and break the floor too. Be the last one alive to win the round; each round adds a bot and makes blocks crumble faster.
+
+| Action | Key |
+|---|---|
+| Move | **W A S D** |
+| Jump | **Space** |
+| Sprint | **Shift** |
+| Look | **Mouse** |
+| Pause | **Esc** |
+
+- Bot AI picks safe blocks nearby and jumps over holes
+- 1.5 s of safe time at the start of each round
+- Best round saved in `localStorage`
+
+# ⛏️ Game 4: Deep Miner (Дълбок миньор)
+
+A 2D side-view mining game drawn on a canvas. Dig down, fill your bag with ore (coal, iron, gold, crystal, ruby), fly back up and sell it in the shop. Upgrade your pickaxe, fuel tank, bag and armor, then reach the **Ancient Heart** 250 m down.
+
+| Action | Key |
+|---|---|
+| Dig / move sideways | **A D** or **← →** |
+| Dig down | **S** or **↓** |
+| Fly up (uses fuel) | **W**, **↑** or **Space** |
+| Shop (at the surface) | **E** |
+
+- Hard rock and crystal need pickaxe level 3, ruby needs level 4
+- Lava pockets and long falls hurt your armor
+- It gets darker the deeper you go; only your lamp lights the way
+
+# 🏗️ Game 5: Block Architect (Блоков архитект)
+
+A 3D spatial puzzle. A model spins in the corner; build an exact copy on the 5×5 plate with the same blocks in the same places and colors. 12 hand-made levels (tower, bridge, tree, pyramid, house, arch, castle…) plus 8 random challenges.
+
+| Action | Mouse / Key |
+|---|---|
+| Place block | **Left click** |
+| Remove block | **Right click** (or Shift + click) |
+| Rotate camera | **Drag** |
+| Zoom | **Mouse wheel** |
+| Pick color | **1–6** |
+| Ghost hint (costs a ⭐) | **H** |
+
+- Up to 3 ⭐ for speed, few moves and no hints
+- Progress and stars saved in `localStorage`
+
+All three new games use the local `three.min.js` or a plain canvas, so they work **offline**.
+
+---
+
 ## 🚀 How to play
 
 ### Option 1: Run it locally
@@ -100,6 +157,7 @@ An endless parkour run. The path keeps generating in front of you and gets harde
 3. After about a minute both games are live:
    - ⛏️ **https://n95460754.github.io/minecraft/**
    - 🏃 **https://n95460754.github.io/minecraft/infinite-parkour.html**
+   - 🎮 **https://n95460754.github.io/minecraft/games.html** (all games)
 
 ## 📁 Project structure
 
@@ -107,6 +165,12 @@ An endless parkour run. The path keeps generating in front of you and gets harde
 minecraft/
 ├── index.html              # Game 1: My Minecraft (world, dig/build, hotbar)
 ├── infinite-parkour.html   # Game 2: Block Parkour ∞ (endless path, zones, physics, sounds)
+├── lava-floor.html         # Game 3: Lava Floor (crumbling floors, bots)
+├── deep-miner.html         # Game 4: Deep Miner (2D mining, shop, upgrades)
+├── block-architect.html    # Game 5: Block Architect (3D build puzzles)
+├── minecraft.html          # BlockForge (WebGL2 chunked world)
+├── New World - Play.html   # New World (endless world)
+├── games.html              # Menu with all the games
 ├── test.html               # Quick check that Three.js/WebGL works (a spinning green cube)
 ├── three.min.js            # Three.js r128 (3D engine, MIT license), used by index.html
 ├── package.json            # Project info
