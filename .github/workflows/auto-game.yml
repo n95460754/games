@@ -1,20 +1,31 @@
 name: Auto Game (every 5 min)
 
+# How it works: one run stays alive for ~5.5 hours and makes a game every
+# INTERVAL_MINUTES. Before it ends it starts the next run itself, so the chain
+# never stops. No personal token or outside service is needed.
+# The hourly schedule is only a backup that restarts the chain if it ever breaks.
+
 on:
   schedule:
-    - cron: '*/5 * * * *'   # every 5 minutes (UTC); GitHub may delay runs a few minutes
-  workflow_dispatch:          # "Run workflow" button for a manual run
+    - cron: '17 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: auto-game
   cancel-in-progress: false
 
+env:
+  INTERVAL_MINUTES: 5
+  LOOP_MINUTES: 330
+
 jobs:
-  make-game:
+  make-games:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
 
@@ -22,18 +33,28 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate a new game and update README
-        id: gen
-        run: node scripts/generate-game.js
-
-      - name: Commit and push
+      - name: Make a game every few minutes
         run: |
           git config user.name "auto-game-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add games README.md
-          git commit -m "Add ${{ steps.gen.outputs.title }}"
-          for i in 1 2 3 4; do
-            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
-            sleep $((i * 5))
+          end=$(( $(date +%s) + LOOP_MINUTES * 60 ))
+          while [ "$(date +%s)" -lt "$end" ]; do
+            git pull -q --rebase origin "$GITHUB_REF_NAME" || git rebase --abort || true
+            title=$(node scripts/generate-game.js | sed 's/^Created [^:]*: //')
+            git add games README.md
+            git commit -q -m "Add $title"
+            pushed=0
+            for i in 1 2 3 4; do
+              if git push -q origin "HEAD:$GITHUB_REF_NAME"; then pushed=1; break; fi
+              sleep $((i * 5))
+              git pull -q --rebase origin "$GITHUB_REF_NAME"
+            done
+            [ "$pushed" = 1 ] && echo "Pushed: $title" || { echo "Push failed, resetting"; git reset -q --hard "origin/$GITHUB_REF_NAME"; }
+            sleep $(( INTERVAL_MINUTES * 60 ))
           done
-          exit 1
+
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run auto-game.yml --ref "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY"
