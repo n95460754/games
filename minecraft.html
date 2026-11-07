@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<title>BlockForge</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#111;font-family:Consolas,monospace;user-select:none}
+#c{display:block;width:100%;height:100%}
+#cross{position:fixed;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;pointer-events:none;display:none}
+#cross:before,#cross:after{content:"";position:absolute;background:#fff;mix-blend-mode:difference}
+#cross:before{left:9px;top:0;width:2px;height:20px}
+#cross:after{top:9px;left:0;height:2px;width:20px}
+#hud{display:none}
+#hotbar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:3px;padding:3px;background:rgba(0,0,0,.5);border:2px solid #111}
+.slot{width:46px;height:46px;border:2px solid #666;position:relative;background:rgba(90,90,90,.45)}
+.slot.sel{border-color:#fff;outline:2px solid #fff}
+.slot canvas{width:38px;height:38px;margin:4px;image-rendering:pixelated}
+.slot span{position:absolute;left:3px;top:1px;color:#eee;font-size:10px;text-shadow:1px 1px 0 #000}
+#info{position:fixed;left:8px;top:8px;color:#fff;font-size:12px;text-shadow:1px 1px 0 #000;white-space:pre;pointer-events:none;line-height:1.4}
+#name{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);color:#fff;text-shadow:2px 2px 0 #000;font-size:15px;opacity:0;transition:opacity .4s;pointer-events:none}
+#tint{position:fixed;inset:0;display:none;pointer-events:none}
+#msg{position:fixed;top:30%;left:50%;transform:translateX(-50%);color:#fff;font-size:22px;text-shadow:2px 2px 0 #000;pointer-events:none;text-align:center}
+.tag{position:fixed;color:#fff;background:rgba(0,0,0,.45);padding:1px 5px;font-size:12px;transform:translate(-50%,-100%);pointer-events:none;white-space:nowrap}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;background:rgba(0,0,0,.6)}
+.screen.bg{background:linear-gradient(#5d8fd6 0%,#9cc3ee 55%,#5e9e3a 55%,#4d8530 63%,#7a5634 63%,#5a3f26 100%)}
+h1{font-size:64px;margin:0 0 4px;letter-spacing:6px;color:#eee;text-shadow:5px 5px 0 #333}
+h2{font-size:26px;margin:0 0 16px;text-shadow:2px 2px 0 #000}
+.sub{color:#ffe14d;margin-bottom:24px;text-shadow:2px 2px 0 #3a3200;transform:rotate(-4deg);font-size:17px}
+button{font:inherit;font-size:17px;padding:9px 24px;margin:4px;background:#6e6e6e;color:#fff;border:3px solid #1a1a1a;box-shadow:inset -3px -3px 0 #484848,inset 3px 3px 0 #9a9a9a;cursor:pointer;min-width:300px;text-shadow:1px 1px 0 #333}
+button:hover{background:#7d8cc4}
+button.small{min-width:0;padding:6px 12px;font-size:14px}
+button.on{background:#3f8a3a}
+.list{width:520px;max-height:46vh;overflow:auto;background:rgba(0,0,0,.55);border:2px solid #000;margin-bottom:10px;text-align:left}
+.row{padding:8px 12px;border:2px solid transparent;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.row:hover{background:rgba(255,255,255,.08)}
+.row.sel{border-color:#ddd}
+.row small{color:#aaa}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;max-width:640px}
+.btns button{min-width:200px}
+input[type=text]{font:inherit;font-size:17px;padding:8px;width:300px;background:#000;color:#fff;border:2px solid #aaa;margin:6px}
+label{display:block;margin:8px;font-size:15px}
+.note{font-size:13px;color:#ccc;max-width:560px;line-height:1.6;margin:10px}
+.keys{margin-top:14px;font-size:13px;line-height:1.75;color:#ddd}
+#invgrid{display:grid;grid-template-columns:repeat(8,52px);gap:4px;padding:10px;background:rgba(40,40,40,.9);border:3px solid #000;margin-bottom:10px}
+#invgrid .slot{cursor:pointer}
+#invgrid .slot:hover{border-color:#fff}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="tint"></div>
+<div id="cross"></div>
+<div id="hud"><div id="info"></div><div id="name"></div><div id="hotbar"></div></div>
+<div id="msg"></div>
+<div id="tags"></div>
+
+<!-- TITLE -->
+<div class="screen bg" id="s-title" style="display:flex">
+  <h1>BLOCKFORGE</h1>
+  <div class="sub">С Нидър и Края!</div>
+  <button data-go="worlds">Един играч</button>
+  <button data-go="multi">Мултиплейър</button>
+  <button data-go="mods">Модове</button>
+  <button data-go="options">Настройки</button>
+</div>
+
+<!-- WORLDS -->
+<div class="screen bg" id="s-worlds">
+  <h2>Избери свят</h2>
+  <div class="list" id="worldlist"></div>
+  <div class="btns">
+    <button id="w-play">Играй избрания свят</button>
+    <button data-go="create">Създай нов свят</button>
+    <button id="w-del">Изтрий</button>
+    <button data-go="title">Назад</button>
+  </div>
+</div>
+
+<!-- CREATE -->
+<div class="screen bg" id="s-create">
+  <h2>Нов свят</h2>
+  <label>Име на света<br><input type="text" id="c-name" value="Нов свят"></label>
+  <label>Сийд (по желание)<br><input type="text" id="c-seed" placeholder="случаен"></label>
+  <label>Тип: <button class="small" id="c-type">Нормален</button></label>
+  <div class="btns"><button id="c-go">Създай</button><button data-go="worlds">Отказ</button></div>
+</div>
+
+<!-- MULTI -->
+<div class="screen bg" id="s-multi">
+  <h2>Мултиплейър</h2>
+  <div class="note">Локален мултиплейър: отвори същия свят в няколко таба или прозореца на този компютър и всички играчи се виждат и строят заедно в реално време. Свързване с истински Minecraft сървъри не е възможно от HTML файл.</div>
+  <div class="list" id="mplist"></div>
+  <div class="btns">
+    <button id="mp-host">Влез в света</button>
+    <button id="mp-open">Отвори втори играч (нов таб)</button>
+    <button data-go="title">Назад</button>
+  </div>
+</div>
+
+<!-- MODS -->
+<div class="screen bg" id="s-mods">
+  <h2>Модове</h2>
+  <div class="btns" id="modlist"></div>
+  <div class="note">Модовете се включват веднага, дори по време на игра.</div>
+  <button id="mods-back">Готово</button>
+</div>
+
+<!-- OPTIONS -->
+<div class="screen bg" id="s-options">
+  <h2>Настройки</h2>
+  <label>Име на играча<br><input type="text" id="o-name"></label>
+  <label>Далечина на виждане: <span id="o-rdv"></span> чънка<br><input type="range" id="o-rd" min="3" max="12"></label>
+  <label>Зрително поле (FOV): <span id="o-fovv"></span>°<br><input type="range" id="o-fov" min="50" max="110"></label>
+  <label>Чувствителност на мишката: <span id="o-sensv"></span><br><input type="range" id="o-sens" min="5" max="60"></label>
+  <button id="opt-back">Готово</button>
+</div>
+
+<!-- PAUSE -->
+<div class="screen" id="s-pause">
+  <h2>Пауза</h2>
+  <button id="p-resume">Продължи играта</button>
+  <button id="p-mods">Модове</button>
+  <button id="p-opts">Настройки</button>
+  <button id="p-lan">Покани втори играч (нов таб)</button>
+  <button id="p-quit">Запази и излез</button>
+  <div class="keys">
+    <b>WASD</b> движение · <b>Space</b> скок/плуване · <b>Shift</b> спринт · <b>F</b> летене<br>
+    <b>Ляв клик</b> чупене · <b>Десен клик</b> поставяне · <b>Среден клик</b> вземи блок<br>
+    <b>E</b> инвентар · <b>1–9</b>/колелце избор · <b>Esc</b> пауза<br>
+    Влез в лилав портал за Нидъра, в черния портал за Края.
+  </div>
+</div>
+
+<!-- INVENTORY -->
+<div class="screen" id="s-inv">
+  <h2>Инвентар</h2>
+  <div id="invgrid"></div>
+  <div class="note">Кликни блок, за да го сложиш в избраното място (<span id="invsel"></span>). Колелцето сменя мястото.</div>
+  <button id="inv-done">Готово (E)</button>
+</div>
+
+<script>
+'use strict';
+// ===================== BLOCKS =====================
+const CS=16,H=96,SEA=30,TILES=24;
+const AIR=0,GRASS=1,DIRT=2,STONE=3,SAND=4,LOG=5,LEAVES=6,PLANKS=7,COBBLE=8,GLASS=9,WATER=10,BEDROCK=11,BRICK=12,SNOW=13,
+      OBSIDIAN=14,NPORTAL=15,NETHERRACK=16,GLOWSTONE=17,LAVA=18,SOULSAND=19,ENDSTONE=20,EPORTAL=21;
+const NAMES=['Въздух','Трева','Пръст','Камък','Пясък','Дънер','Листа','Дъски','Калдъръм','Стъкло','Вода','Скална основа','Тухли','Сняг',
+  'Обсидиан','Портал към Нидъра','Нидърак','Светлокамък','Лава','Пясък на душите','Камък от Края','Портал към Края'];
+const FACES=[null,[0,2,1],[2,2,2],[3,3,3],[4,4,4],[6,6,5],[7,7,7],[8,8,8],[9,9,9],[10,10,10],[11,11,11],[12,12,12],[13,13,13],[14,2,15],
+  [16,16,16],[17,17,17],[18,18,18],[19,19,19],[20,20,20],[21,21,21],[22,22,22],[23,23,23]];
+const TRANS=b=>b===WATER||b===LAVA||b===NPORTAL||b===EPORTAL;
+const OPAQUE=b=>b!==AIR&&!TRANS(b)&&b!==GLASS&&b!==LEAVES;
+const SOLID=b=>b!==AIR&&!TRANS(b);
+const EMIT=b=>b===GLOWSTONE||b===LAVA||b===NPORTAL||b===EPORTAL;
+const LIQUID=b=>b===WATER||b===LAVA;
+const DIMNAMES=['Обикновен свят','Нидър','Краят'];
+
+// ===================== RNG / NOISE =====================
+function rng(seed){let s=(seed>>>0)||1;return()=>{s^=s<<13;s>>>=0;s^=s>>>17;s^=s<<5;s>>>=0;return s/4294967296;};}
+let seed=0,noise=null,flatWorld=false,dim=0;
+function makeNoise(sd){
+  const r=rng(sd),p=[];for(let i=0;i<256;i++)p[i]=i;
+  for(let i=255;i>0;i--){const j=(r()*(i+1))|0;const t=p[i];p[i]=p[j];p[j]=t;}
+  const perm=new Uint8Array(512);for(let i=0;i<512;i++)perm[i]=p[i&255];
+  const gx=new Float32Array(8),gy=new Float32Array(8);
+  for(let k=0;k<8;k++){gx[k]=Math.cos(k*Math.PI/4);gy[k]=Math.sin(k*Math.PI/4);}
+  const g=(h,x,y)=>{h&=7;return gx[h]*x+gy[h]*y;};
+  return(x,y)=>{
+    const xf=Math.floor(x),yf=Math.floor(y),X=xf&255,Y=yf&255;x-=xf;y-=yf;
+    const u=x*x*x*(x*(x*6-15)+10),v=y*y*y*(y*(y*6-15)+10);
+    const aa=perm[perm[X]+Y],ab=perm[perm[X]+Y+1],ba=perm[perm[X+1]+Y],bb=perm[perm[X+1]+Y+1];
+    const g1=g(aa,x,y),g2=g(ba,x-1,y),g3=g(ab,x,y-1),g4=g(bb,x-1,y-1);
+    const l1=g1+u*(g2-g1),l2=g3+u*(g4-g3);return(l1+v*(l2-l1))*1.4;};
+}
+function fbm(x,y,o){let s=0,a=1,f=1,n=0;for(let i=0;i<o;i++){s+=noise(x*f,y*f)*a;n+=a;a*=0.5;f*=2;}return s/n;}
+function hash2(x,z){let h=(Math.imul(x,374761393)+Math.imul(z,668265263)+Math.imul(seed,1442695041))|0;h=Math.imul(h^(h>>>13),1274126177);h^=h>>>16;return(h>>>0)/4294967296;}
+function heightAt(x,z){
+  if(flatWorld)return 4;
+  const c=fbm(x/400,z/400,3),h=fbm(x/100+50,z/100,4);
+  let m=fbm(x/220-70,z/220+30,3);m=Math.max(0,m)*1.6;
+  return Math.max(3,Math.min(H-10,Math.floor(SEA+3+c*16+h*8+m*m*45)));
+}
+
+// ===================== TEXTURES =====================
+const atlas=document.createElement('canvas');atlas.width=TILES*16;atlas.height=16;
+const actx=atlas.getContext('2d');
+function paint(t,fn){const img=actx.createImageData(16,16),r=rng(t*7919+13);
+  for(let y=0;y<16;y++)for(let x=0;x<16;x++){const c=fn(x,y,r),i=(y*16+x)*4;img.data[i]=c[0];img.data[i+1]=c[1];img.data[i+2]=c[2];img.data[i+3]=c.length>3?c[3]:255;}
+  actx.putImageData(img,t*16,0);}
+const vary=(c,r,a)=>{const k=1+(r()-0.5)*a;return[c[0]*k,c[1]*k,c[2]*k];};
+const dk=(c,k)=>[c[0]*k,c[1]*k,c[2]*k];
+(function(){
+  const R=rng(99),gd=[],sd=[];for(let i=0;i<16;i++){gd.push(3+(R()*3|0));sd.push(2+(R()*3|0));}
+  const dirt=r=>vary([134,96,67],r,0.35);
+  paint(0,(x,y,r)=>vary([92,158,52],r,0.3));
+  paint(1,(x,y,r)=>y<gd[x]?vary([92,158,52],r,0.3):dirt(r));
+  paint(2,(x,y,r)=>dirt(r));
+  paint(3,(x,y,r)=>{const c=vary([125,125,125],r,0.2);return r()<0.12?dk(c,.75):c;});
+  paint(4,(x,y,r)=>vary([219,207,163],r,0.15));
+  paint(5,(x,y,r)=>{const c=vary([104,82,50],r,0.25);return(x%4===0||(x*7+y*3)%11===0)?dk(c,.72):c;});
+  paint(6,(x,y,r)=>{const d=Math.max(Math.abs(x-7.5),Math.abs(y-7.5));if(d>6.5)return vary([104,82,50],r,0.25);return vary(Math.floor(d)%2?[176,140,86]:[150,118,70],r,0.1);});
+  paint(7,(x,y,r)=>r()<0.18?[0,0,0,0]:vary([58,128,38],r,0.45));
+  paint(8,(x,y,r)=>{const c=vary([178,140,86],r,0.15),row=y>>2;return(y%4===3||x===((row*5+3)%16))?dk(c,.68):c;});
+  const pts=[];for(let i=0;i<9;i++)pts.push([R()*16,R()*16,0.85+R()*0.3]);
+  paint(9,(x,y,r)=>{let d1=99,d2=99,k=0;for(let i=0;i<pts.length;i++)for(const ox of[-16,0,16])for(const oy of[-16,0,16]){const d=Math.hypot(x+.5-pts[i][0]-ox,y+.5-pts[i][1]-oy);if(d<d1){d2=d1;d1=d;k=i;}else if(d<d2)d2=d;}
+    if(d2-d1<1.3)return vary([78,78,78],r,0.2);return dk(vary([130,130,130],r,0.18),pts[k][2]);});
+  paint(10,(x,y,r)=>{if(x===0||y===0||x===15||y===15)return[215,235,250,255];if((x-y===5||x-y===6)&&x>6&&x<14)return[255,255,255,255];if(x-y===-7&&x<6)return[240,250,255,255];return[0,0,0,0];});
+  paint(11,(x,y,r)=>{const c=vary([45,90,205],r,0.15);c.push(165);return c;});
+  paint(12,(x,y,r)=>vary(r()<0.5?[55,55,55]:[105,105,105],r,0.25));
+  paint(13,(x,y,r)=>{const row=y>>2;if(y%4===3||(x%8)===(row%2?4:0))return vary([195,190,180],r,0.08);return vary([152,68,52],r,0.22);});
+  paint(14,(x,y,r)=>vary([240,245,252],r,0.06));
+  paint(15,(x,y,r)=>y<sd[x]?vary([240,245,252],r,0.06):dirt(r));
+  paint(16,(x,y,r)=>r()<0.1?vary([70,35,100],r,0.3):vary([22,15,34],r,0.5));
+  paint(17,(x,y,r)=>{const s=Math.sin(x*0.9+Math.sin(y*0.7)*2)*0.5+0.5;return[100+60*s,30+20*s,180+60*s,200];});
+  paint(18,(x,y,r)=>{const c=vary([112,42,42],r,0.4);return r()<0.1?dk(c,.6):c;});
+  paint(19,(x,y,r)=>r()<0.3?vary([255,232,160],r,0.1):vary([196,146,72],r,0.25));
+  paint(20,(x,y,r)=>{const s=Math.sin(x*0.6+y*0.4)+Math.sin(y*0.9-x*0.3);const c=s>1?vary([255,200,70],r,0.1):vary([225,95,20],r,0.25);c.push(240);return c;});
+  paint(21,(x,y,r)=>{const c=vary([86,64,50],r,0.35);return((x%6===2||x%6===4)&&y%7===3)||(y%7===5&&x%6>1&&x%6<5)?dk(c,.5):c;});
+  paint(22,(x,y,r)=>{const c=vary([222,224,165],r,0.12);return r()<0.08?dk(c,.85):c;});
+  paint(23,(x,y,r)=>r()<0.07?[140+r()*100,230,210,255]:[8,14+r()*12,28,245]);
+})();
+
+// ===================== WEBGL =====================
+const canvas=document.getElementById('c');
+const gl=canvas.getContext('webgl2',{antialias:false,alpha:false});
+if(!gl){document.body.innerHTML='<p style="color:#fff;padding:20px">Браузърът ти не поддържа WebGL2. Пробвай Chrome, Edge или Firefox.</p>';throw new Error('no webgl2');}
+function mkShader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(s);return s;}
+function mkProg(vs,fs,attrs){const p=gl.createProgram();gl.attachShader(p,mkShader(gl.VERTEX_SHADER,vs));gl.attachShader(p,mkShader(gl.FRAGMENT_SHADER,fs));attrs.forEach((a,i)=>gl.bindAttribLocation(p,i,a));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw gl.getProgramInfoLog(p);
+  const u={},n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);for(let i=0;i<n;i++){const nm=gl.getActiveUniform(p,i).name;u[nm]=gl.getUniformLocation(p,nm);}return{p,u};}
+const world=mkProg(`#version 300 es
+in vec3 aPos;in vec2 aUV;in float aL;
+uniform mat4 uMVP;uniform vec3 uCam;uniform vec2 uFog;
+out vec2 vUV;out float vL;out float vF;
+void main(){gl_Position=uMVP*vec4(aPos,1.0);vUV=aUV;vL=aL;float d=length(aPos-uCam);vF=clamp((d-uFog.x)/(uFog.y-uFog.x),0.0,1.0);}`,
+`#version 300 es
+precision mediump float;
+uniform sampler2D uTex;uniform vec3 uFogC;uniform float uLight;uniform int uPass;
+in vec2 vUV;in float vL;in float vF;out vec4 o;
+void main(){vec4 t=texture(uTex,vUV);float a=1.0;if(uPass==0){if(t.a<0.5)discard;}else{a=t.a;}
+float e=step(1.5,vL);float l=vL-2.0*e;
+vec3 c=t.rgb*l*mix(uLight,1.0,e);o=vec4(mix(c,uFogC,vF),a);}`,['aPos','aUV','aL']);
+const flat=mkProg(`#version 300 es
+in vec3 aPos;uniform mat4 uMVP;uniform vec3 uOff;uniform vec3 uScale;void main(){gl_Position=uMVP*vec4(aPos*uScale+uOff,1.0);}`,
+`#version 300 es
+precision mediump float;uniform vec4 uCol;out vec4 o;void main(){o=uCol;}`,['aPos']);
+
+const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,atlas);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+function staticVAO(arr){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(arr),gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);gl.bindVertexArray(null);return vao;}
+const CUBEC=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+const boxVAO=staticVAO((()=>{const a=-0.003,b=1.003,v=[];[0,1,1,2,2,3,3,0,4,5,5,6,6,7,7,4,0,4,1,5,2,6,3,7].forEach(i=>v.push(...CUBEC[i].map(t=>t?b:a)));return v;})());
+const cubeVAO=staticVAO((()=>{const v=[];[[0,1,2,0,2,3],[4,6,5,4,7,6],[0,4,5,0,5,1],[3,2,6,3,6,7],[0,3,7,0,7,4],[1,5,6,1,6,2]].forEach(f=>f.forEach(i=>v.push(...CUBEC[i])));return v;})());
+const sunVAO=gl.createVertexArray();gl.bindVertexArray(sunVAO);
+const sunBuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,sunBuf);gl.bufferData(gl.ARRAY_BUFFER,72,gl.DYNAMIC_DRAW);
+gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);gl.bindVertexArray(null);
+
+function uploadMesh(old,v,idx){
+  freeMesh(old);if(!idx.length)return null;
+  const vao=gl.createVertexArray();gl.bindVertexArray(vao);
+  const vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(v),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,24,0);
+  gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,2,gl.FLOAT,false,24,12);
+  gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,1,gl.FLOAT,false,24,20);
+  const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint32Array(idx),gl.STATIC_DRAW);
+  gl.bindVertexArray(null);return{vao,vb,ib,count:idx.length};
+}
+function freeMesh(m){if(m){gl.deleteVertexArray(m.vao);gl.deleteBuffer(m.vb);gl.deleteBuffer(m.ib);}}
+
+// ===================== WORLD GEN =====================
+const chunks=new Map();
+let edits=new Map(); // "dim:cx,cz" -> Map(index -> block)
+const ck=(cx,cz)=>cx+','+cz;
+const ek=(d,cx,cz)=>d+':'+cx+','+cz;
+const IDX=(x,y,z)=>(y*CS+z)*CS+x;
+
+function genOverworld(cx,cz,d){
+  const hs=new Int16Array(CS*CS);
+  for(let z=0;z<CS;z++)for(let x=0;x<CS;x++){
+    const wx=cx*CS+x,wz=cz*CS+z,h=heightAt(wx,wz);hs[z*CS+x]=h;
+    const beach=!flatWorld&&h<=SEA+1,snowy=h>SEA+38;
+    for(let y=0;y<H;y++){
+      let b=AIR;
+      if(y===0)b=BEDROCK;else if(y<h-3)b=STONE;else if(y<h)b=beach?SAND:DIRT;
+      else if(y===h)b=beach?SAND:(snowy?SNOW:GRASS);else if(y<=SEA&&!flatWorld)b=WATER;
+      if(b)d[IDX(x,y,z)]=b;
+    }
+    if(!flatWorld&&hash2(wx*3+1,wz*5+2)<0.3)d[IDX(x,1,z)]=BEDROCK;
+  }
+  for(let z=2;z<14;z++)for(let x=2;x<14;x++){
+    const h=hs[z*CS+x],wx=cx*CS+x,wz=cz*CS+z;
+    if(d[IDX(x,h,z)]!==GRASS||h>H-12||hash2(wx,wz)>=(flatWorld?0.004:0.014))continue;
+    const th=4+((hash2(wx+7,wz-3)*3)|0),by=h+1;
+    for(let dy=th-2;dy<=th+1;dy++){const rad=dy>=th?1:2;
+      for(let dx=-rad;dx<=rad;dx++)for(let dz=-rad;dz<=rad;dz++){
+        if(Math.abs(dx)===rad&&Math.abs(dz)===rad&&(dy===th+1||hash2(wx+dx*31,wz+dz*17+dy)<0.5))continue;
+        const i=IDX(x+dx,by+dy,z+dz);if(d[i]===AIR)d[i]=LEAVES;}}
+    for(let y=0;y<th;y++)d[IDX(x,by+y,z)]=LOG;
+  }
+}
+function genNether(cx,cz,d){
+  for(let z=0;z<CS;z++)for(let x=0;x<CS;x++){
+    const wx=cx*CS+x,wz=cz*CS+z;
+    const f=Math.floor(24+fbm(wx/70,wz/70,3)*16),c=Math.floor(80+fbm(wx/50+300,wz/50,3)*12);
+    const isl=fbm(wx/45+900,wz/45,3),soul=fbm(wx/30-400,wz/30,2)>0.25;
+    for(let y=0;y<H;y++){
+      let b=AIR;
+      if(y===0||y>=H-1)b=BEDROCK;
+      else if(y<=f||y>=c)b=(y===f&&f>27&&soul)?SOULSAND:NETHERRACK;
+      else if(isl>0.22&&y>=52-(isl-0.22)*45&&y<=52+(isl-0.22)*16)b=NETHERRACK;
+      else if(y<=27)b=LAVA;
+      if(b)d[IDX(x,y,z)]=b;
+    }
+    if(hash2(wx,wz)<0.02)for(let k=0;k<1+((hash2(wz,wx)*4)|0);k++){const y=c-1-k;if(y>f+2&&y<H-1)d[IDX(x,y,z)]=GLOWSTONE;}
+    if(isl>0.3&&hash2(wx+5,wz)<0.01){const y=Math.floor(52-(isl-0.22)*45)-1;if(y>28)d[IDX(x,y,z)]=GLOWSTONE;}
+  }
+}
+const PILLARS=[];for(let i=0;i<8;i++){const a=i*Math.PI/4;PILLARS.push([Math.round(Math.cos(a)*42),Math.round(Math.sin(a)*42),2+(i%3),68+((i*5)%15)]);}
+function genEnd(cx,cz,d){
+  for(let z=0;z<CS;z++)for(let x=0;x<CS;x++){
+    const wx=cx*CS+x,wz=cz*CS+z,r=Math.hypot(wx,wz);
+    const fill=(a,b,bl)=>{for(let y=Math.max(1,a);y<=Math.min(H-2,b);y++)d[IDX(x,y,z)]=bl;};
+    const R=85+fbm(wx/40,wz/40,2)*25;
+    if(r<R){const t=1-r/R;fill(Math.floor(50-Math.pow(t,0.6)*32),Math.floor(50+t*4+fbm(wx/25,wz/25,2)*3),ENDSTONE);}
+    if(r>150){const n=fbm(wx/60+500,wz/60,3);if(n>0.28){const th=(n-0.28)*45;fill(Math.floor(48-th),Math.floor(48+th*0.2),ENDSTONE);}}
+    for(const[px,pz,pr,ph]of PILLARS)if(Math.hypot(wx-px,wz-pz)<=pr+0.3){fill(40,ph,OBSIDIAN);}
+  }
+}
+function genChunk(cx,cz){
+  const d=new Uint8Array(CS*CS*H);
+  if(dim===1)genNether(cx,cz,d);else if(dim===2)genEnd(cx,cz,d);else genOverworld(cx,cz,d);
+  const e=edits.get(ek(dim,cx,cz));if(e)for(const[i,b]of e)d[i]=b;
+  return d;
+}
+function getBlock(x,y,z){
+  if(y<0)return dim===2?AIR:BEDROCK;if(y>=H)return AIR;
+  const cx=Math.floor(x/CS),cz=Math.floor(z/CS),c=chunks.get(ck(cx,cz));
+  if(!c)return AIR;return c.data[IDX(x-cx*CS,y,z-cz*CS)];
+}
+function getTop(x,z){let y=H-2;while(y>0&&!SOLID(getBlock(x,y,z)))y--;return y;}
+let saveDirty=false,batch=false;
+function recordEdit(d,x,y,z,b){
+  const cx=Math.floor(x/CS),cz=Math.floor(z/CS),k=ek(d,cx,cz);
+  if(!edits.has(k))edits.set(k,new Map());edits.get(k).set(IDX(x-cx*CS,y,z-cz*CS),b);saveDirty=true;
+}
+function setBlock(x,y,z,b,remote){
+  if(y<1||y>=H-1)return;
+  const cx=Math.floor(x/CS),cz=Math.floor(z/CS),c=chunks.get(ck(cx,cz));if(!c)return;
+  const lx=x-cx*CS,lz=z-cz*CS;
+  c.data[IDX(lx,y,lz)]=b;recordEdit(dim,x,y,z,b);
+  if(!remote)mpSend({t:'set',x,y,z,b,dim});
+  const todo=[c];
+  if(lx===0)todo.push(chunks.get(ck(cx-1,cz)));if(lx===CS-1)todo.push(chunks.get(ck(cx+1,cz)));
+  if(lz===0)todo.push(chunks.get(ck(cx,cz-1)));if(lz===CS-1)todo.push(chunks.get(ck(cx,cz+1)));
+  for(const t of todo)if(t){if(batch)t.dirty=true;else if(hasNeighbors(t))buildMesh(t);}
+}
+function hasNeighbors(c){return chunks.has(ck(c.cx+1,c.cz))&&chunks.has(ck(c.cx-1,c.cz))&&chunks.has(ck(c.cx,c.cz+1))&&chunks.has(ck(c.cx,c.cz-1));}
+
+// ===================== MESHING =====================
+const FD=[[0,1],[0,-1],[1,1],[1,-1],[2,1],[2,-1]];
+const SHADE=[0.8,0.8,1.0,0.5,0.65,0.65];
+const CORN_P=[[0,0],[1,0],[1,1],[0,1]],CORN_N=[[0,0],[0,1],[1,1],[1,0]];
+function buildMesh(c){
+  const sv=[],si=[],wv=[],wi=[],ox=c.cx*CS,oz=c.cz*CS,d=c.data;
+  const nb=(x,y,z)=>{if(y<0)return AIR;if(y>=H)return AIR;if(x>=0&&x<CS&&z>=0&&z<CS)return d[IDX(x,y,z)];return getBlock(ox+x,y,oz+z);};
+  const occ=(x,y,z)=>OPAQUE(nb(x,y,z))?1:0;
+  const P=[0,0,0],N=[0,0,0],Q=[0,0,0],ao=[0,0,0,0];
+  for(let y=0;y<H;y++)for(let z=0;z<CS;z++)for(let x=0;x<CS;x++){
+    const b=d[IDX(x,y,z)];if(!b)continue;
+    const tiles=FACES[b],tr=TRANS(b),em=EMIT(b);
+    const lTop=LIQUID(b)&&nb(x,y+1,z)!==b;
+    for(let f=0;f<6;f++){
+      const a=FD[f][0],s=FD[f][1];N[0]=x;N[1]=y;N[2]=z;N[a]+=s;
+      const n=nb(N[0],N[1],N[2]);
+      const vis=tr?(n!==b&&!OPAQUE(n)):(!OPAQUE(n)&&(n!==b||b===LEAVES));
+      if(!vis)continue;
+      const tile=a===1?(s>0?tiles[0]:tiles[1]):tiles[2];
+      const u=(a+1)%3,v=(a+2)%3,corn=s>0?CORN_P:CORN_N;
+      const V=tr?wv:sv,I=tr?wi:si,base=V.length/6;
+      for(let k=0;k<4;k++){
+        const cu=corn[k][0],cv=corn[k][1];
+        P[0]=x;P[1]=y;P[2]=z;P[a]+=s>0?1:0;P[u]+=cu;P[v]+=cv;
+        let A=3;
+        if(!tr&&!em){const du=cu*2-1,dv=cv*2-1;
+          Q[0]=N[0];Q[1]=N[1];Q[2]=N[2];Q[u]+=du;const s1=occ(Q[0],Q[1],Q[2]);
+          Q[0]=N[0];Q[1]=N[1];Q[2]=N[2];Q[v]+=dv;const s2=occ(Q[0],Q[1],Q[2]);
+          Q[u]+=du;const cr=occ(Q[0],Q[1],Q[2]);A=(s1&&s2)?0:3-(s1+s2+cr);}
+        ao[k]=A;
+        const lx=P[0]-x,ly=P[1]-y,lz=P[2]-z;let tu,tv;
+        if(a===1){tu=lx;tv=lz;}else if(a===0){tu=lz;tv=1-ly;}else{tu=lx;tv=1-ly;}
+        let py=P[1];if(lTop&&ly===1)py-=0.12;
+        const L=em?2+(0.85+0.15*SHADE[f]):SHADE[f]*(0.42+0.58*A/3);
+        V.push(P[0]+ox,py,P[2]+oz,(tile+0.002+tu*0.996)/TILES,0.002+tv*0.996,L);
+      }
+      if(ao[0]+ao[2]<ao[1]+ao[3])I.push(base+1,base+2,base+3,base+1,base+3,base);
+      else I.push(base,base+1,base+2,base,base+2,base+3);
+    }
+  }
+  c.solid=uploadMesh(c.solid,sv,si);c.water=uploadMesh(c.water,wv,wi);c.dirty=false;c.meshed=true;
+}
+
+// ===================== STREAMING =====================
+let ORDER=[];
+function makeOrder(){ORDER=[];const r=opts.rd+1;for(let dx=-r;dx<=r;dx++)for(let dz=-r;dz<=r;dz++){const d=dx*dx+dz*dz;if(d<=r*r+1)ORDER.push([dx,dz,d]);}ORDER.sort((p,q)=>p[2]-q[2]);}
+let unloadTimer=0;
+function updateChunks(budgetMs){
+  const t0=performance.now(),pcx=Math.floor(player.x/CS),pcz=Math.floor(player.z/CS),inner=opts.rd*opts.rd+1;
+  for(const[dx,dz]of ORDER){if(performance.now()-t0>budgetMs)break;
+    const cx=pcx+dx,cz=pcz+dz,k=ck(cx,cz);
+    if(!chunks.has(k))chunks.set(k,{cx,cz,data:genChunk(cx,cz),solid:null,water:null,dirty:true,meshed:false});}
+  for(const[dx,dz,d]of ORDER){if(d>inner)continue;if(performance.now()-t0>budgetMs*1.6)break;
+    const c=chunks.get(ck(pcx+dx,pcz+dz));if(c&&c.dirty&&hasNeighbors(c))buildMesh(c);}
+  if(++unloadTimer>90){unloadTimer=0;const lim=(opts.rd+3)*(opts.rd+3);
+    for(const[k,c]of chunks){const dx=c.cx-pcx,dz=c.cz-pcz;if(dx*dx+dz*dz>lim){freeMesh(c.solid);freeMesh(c.water);chunks.delete(k);}}}
+}
+function clearWorld(){for(const c of chunks.values()){freeMesh(c.solid);freeMesh(c.water);}chunks.clear();}
+// tasks that need nearby chunks loaded
+let tasks=[];
+function whenReady(x,z,fn){tasks.push({x,z,fn});}
+function runTasks(){
+  tasks=tasks.filter(t=>{const cx=Math.floor(t.x/CS),cz=Math.floor(t.z/CS);
+    for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)if(!chunks.has(ck(cx+a,cz+b)))return true;
+    batch=true;t.fn();batch=false;return false;});
+}
+
+// ===================== OPTIONS & MODS =====================
+const MODS=[
+  ['superJump','Супер скок','Скачаш 5 блока нагоре'],
+  ['speed','Светкавица','2× по-бързо движение'],
+  ['moon','Лунна гравитация','Падаш бавно като на Луната'],
+  ['bright','Пълна светлина','Виждаш всичко и през нощта'],
+  ['reach','Дълга ръка','Чупиш и строиш на 20 блока'],
+  ['turbo','Турбо копаене','Задръж бутона и копай мигновено'],
+  ['noclip','Дух','Минаваш през стени, докато летиш'],
+  ['dayLock','Вечен ден','Слънцето никога не залязва'],
+];
+let opts={rd:6,fov:75,sens:22,name:'Играч'+(1000+Math.random()*9000|0)};
+let mods={};
+try{Object.assign(opts,JSON.parse(localStorage.getItem('bf_opts')||'{}'));mods=JSON.parse(localStorage.getItem('bf_mods')||'{}');}catch(e){}
+function saveOpts(){try{localStorage.setItem('bf_opts',JSON.stringify(opts));localStorage.setItem('bf_mods',JSON.stringify(mods));}catch(e){}}
+makeOrder();
+
+// ===================== PLAYER =====================
+const player={x:0.5,y:80,z:0.5,vx:0,vy:0,vz:0,onGround:false,fly:false,hitH:false};
+let yaw=0,pitch=0,needSpawn=false,frozen=false,wasInPortal=true,freshWorld=false;
+let posByDim={};
+const PW=0.3,PH=1.8,EYE=1.62;
+function collides(){
+  if(player.fly&&mods.noclip)return false;
+  const x0=Math.floor(player.x-PW),x1=Math.floor(player.x+PW),y0=Math.floor(player.y),y1=Math.floor(player.y+PH),z0=Math.floor(player.z-PW),z1=Math.floor(player.z+PW);
+  for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++)for(let z=z0;z<=z1;z++)if(SOLID(getBlock(x,y,z)))return true;
+  return false;
+}
+function move(dx,dy,dz){
+  const steps=Math.max(1,Math.ceil(Math.max(Math.abs(dx),Math.abs(dy),Math.abs(dz))/0.05));
+  let sx=dx/steps,sy=dy/steps,sz=dz/steps;player.onGround=false;player.hitH=false;
+  for(let i=0;i<steps;i++){
+    if(sx){player.x+=sx;if(collides()){player.x-=sx;player.vx=0;sx=0;player.hitH=true;}}
+    if(sy){player.y+=sy;if(collides()){player.y-=sy;if(sy<0)player.onGround=true;player.vy=0;sy=0;}}
+    if(sz){player.z+=sz;if(collides()){player.z-=sz;player.vz=0;sz=0;player.hitH=true;}}
+  }
+}
+const keys={};
+function bodyBlock(off){return getBlock(Math.floor(player.x),Math.floor(player.y+off),Math.floor(player.z));}
+function physics(dt){
+  let mx=0,mz=0;if(keys.KeyW)mz+=1;if(keys.KeyS)mz-=1;if(keys.KeyD)mx+=1;if(keys.KeyA)mx-=1;
+  const l=Math.hypot(mx,mz)||1;mx/=l;mz/=l;
+  const fb=bodyBlock(0.4),inLiquid=LIQUID(fb),inLava=fb===LAVA;
+  const shift=keys.ShiftLeft||keys.ShiftRight;
+  let sp=player.fly?12:(inLiquid?(inLava?1.6:2.8):(shift?5.8:4.3));if(mods.speed)sp*=2.2;
+  const sy=Math.sin(yaw),cy=Math.cos(yaw),wx=(-sy*mz+cy*mx)*sp,wz=(-cy*mz-sy*mx)*sp;
+  const acc=(player.onGround||player.fly||inLiquid)?1-Math.pow(0.00005,dt):1-Math.pow(0.08,dt);
+  player.vx+=(wx-player.vx)*acc;player.vz+=(wz-player.vz)*acc;
+  const grav=mods.moon?6:28;
+  if(player.fly){let ty=0;if(keys.Space)ty+=sp;if(shift)ty-=sp;player.vy+=(ty-player.vy)*(1-Math.pow(0.00005,dt));}
+  else if(inLiquid){player.vy-=9*dt;player.vy*=Math.pow(0.15,dt);
+    if(keys.Space){player.vy=Math.min(player.vy+28*dt,3.5);if(player.hitH)player.vy=6.5;}
+    if(player.vy<-4)player.vy=-4;}
+  else{player.vy-=grav*dt;if(player.vy<-55)player.vy=-55;
+    if(keys.Space&&player.onGround)player.vy=mods.superJump?Math.sqrt(2*grav*5.3):(mods.moon?Math.sqrt(2*grav*1.3):8.6);}
+  move(player.vx*dt,player.vy*dt,player.vz*dt);
+  // portals
+  const b0=bodyBlock(0.1),b1=bodyBlock(1.0);
+  const portal=(b0===NPORTAL||b1===NPORTAL)?NPORTAL:(b0===EPORTAL||b1===EPORTAL)?EPORTAL:0;
+  if(portal&&!wasInPortal){wasInPortal=true;
+    if(portal===NPORTAL)switchDim(dim===1?0:1);else switchDim(dim===2?0:2);return;}
+  if(!portal)wasInPortal=false;
+  if(player.y<-30){if(dim===2)switchDim(0);else spawn();}
+}
+function spawn(){
+  let sx=0,sz=0;
+  if(!flatWorld)for(let i=0;i<400;i++){const a=i*0.7,r=i*2,x=Math.round(Math.cos(a)*r),z=Math.round(Math.sin(a)*r);if(heightAt(x,z)>SEA+1){sx=x;sz=z;break;}}
+  player.x=sx+0.5;player.z=sz+0.5;player.y=H;player.vx=player.vy=player.vz=0;needSpawn=true;
+}
+function finishSpawn(){
+  const x=Math.floor(player.x),z=Math.floor(player.z);
+  if(!chunks.has(ck(Math.floor(x/CS),Math.floor(z/CS))))return;
+  player.y=getTop(x,z)+1;needSpawn=false;
+  if(freshWorld&&dim===0){freshWorld=false;buildSpawnPortals(x,z);}
+}
+function buildSpawnPortals(x,z){
+  whenReady(x+6,z,()=>{
+    const x0=x+5,g=getTop(x0+1,z+3);
+    for(let i=0;i<4;i++)for(let j=0;j<5;j++){const edge=i===0||i===3||j===0||j===4;setBlock(x0+i,g+1+j,z+3,edge?OBSIDIAN:NPORTAL);}
+    for(let i=-1;i<5;i++)for(let j=1;j<6;j++)for(const dz of[2,4]){if(SOLID(getBlock(x0+i,g+j,z+dz))&&j>0)setBlock(x0+i,g+j,z+dz,AIR);}
+  });
+  whenReady(x-7,z,()=>{
+    const x0=x-8,g=getTop(x0,z);
+    for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){const edge=Math.abs(i)===2||Math.abs(j)===2;setBlock(x0+i,g,z+j,edge?OBSIDIAN:EPORTAL);for(let k=1;k<4;k++)setBlock(x0+i,g+k,z+j,AIR);}
+  });
+  showMsg('Порталите са до теб! Лилавият води към Нидъра,<br>черният — към Края.',6);
+}
+function switchDim(nd){
+  const from=dim;
+  posByDim[from]=[player.x,player.y,player.z,yaw,pitch];
+  clearWorld();tasks=[];dim=nd;player.vx=player.vy=player.vz=0;wasInPortal=true;needSpawn=false;frozen=false;
+  if(nd===0){const p=posByDim[0];if(p)[player.x,player.y,player.z,yaw,pitch]=p;else spawn();}
+  else if(nd===1){
+    const p=posByDim[1];
+    if(p)[player.x,player.y,player.z,yaw,pitch]=p;
+    else{const op=posByDim[0]||[0,0,0];const x=Math.floor(op[0]/8),z=Math.floor(op[2]/8),y=34;
+      player.x=x+0.5;player.y=y;player.z=z+0.5;frozen=true;
+      whenReady(x,z,()=>{
+        for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=3;dz++){setBlock(x+dx,y-1,z+dz,OBSIDIAN);for(let dy=0;dy<4;dy++)setBlock(x+dx,y+dy,z+dz,AIR);}
+        for(let dy=0;dy<3;dy++){setBlock(x-1,y+dy,z+3,OBSIDIAN);setBlock(x+1,y+dy,z+3,OBSIDIAN);setBlock(x,y+dy,z+3,NPORTAL);}
+        setBlock(x,y+3,z+3,OBSIDIAN);setBlock(x+2,y+2,z-2,GLOWSTONE);
+        frozen=false;});}
+  }else{
+    player.x=0.5;player.z=0.5;player.y=70;frozen=true;
+    whenReady(0,0,()=>{const t=getTop(0,0);player.y=t+1;
+      for(let i=3;i<=4;i++)for(let j=-1;j<=0;j++)setBlock(i,t,j,EPORTAL);frozen=false;});
+  }
+  showMsg(DIMNAMES[nd],2.5);saveDirty=true;
+}
+
+// ===================== RAYCAST =====================
+function raycast(ox,oy,oz,dx,dy,dz,max){
+  let x=Math.floor(ox),y=Math.floor(oy),z=Math.floor(oz);
+  const sx=Math.sign(dx),sy=Math.sign(dy),sz=Math.sign(dz);
+  const tdx=dx?Math.abs(1/dx):Infinity,tdy=dy?Math.abs(1/dy):Infinity,tdz=dz?Math.abs(1/dz):Infinity;
+  let tx=dx?(dx>0?(x+1-ox):(ox-x))*tdx:Infinity,ty=dy?(dy>0?(y+1-oy):(oy-y))*tdy:Infinity,tz=dz?(dz>0?(z+1-oz):(oz-z))*tdz:Infinity;
+  let t=0,nx=0,ny=0,nz=0;
+  while(t<=max){
+    const b=getBlock(x,y,z);if(b!==AIR&&!LIQUID(b))return{x,y,z,nx,ny,nz,b};
+    if(tx<ty&&tx<tz){x+=sx;t=tx;tx+=tdx;nx=-sx;ny=0;nz=0;}
+    else if(ty<tz){y+=sy;t=ty;ty+=tdy;nx=0;ny=-sy;nz=0;}
+    else{z+=sz;t=tz;tz+=tdz;nx=0;ny=0;nz=-sz;}
+  }
+  return null;
+}
+
+// ===================== MATH =====================
+function perspective(fovy,aspect,near,far){const f=1/Math.tan(fovy/2),nf=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,2*far*near*nf,0]);}
+function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+function viewMat(e,f){
+  let sx=-f[2],sz=f[0];const sl=Math.hypot(sx,sz);sx/=sl;sz/=sl;
+  const ux=-sz*f[1],uy=sz*f[0]-sx*f[2],uz=sx*f[1];
+  return new Float32Array([sx,ux,-f[0],0,0,uy,-f[1],0,sz,uz,-f[2],0,-(sx*e[0]+sz*e[2]),-(ux*e[0]+uy*e[1]+uz*e[2]),f[0]*e[0]+f[1]*e[1]+f[2]*e[2],1]);
+}
+const lerp=(a,b,t)=>a+(b-a)*t,clamp=(v,a,b)=>v<a?a:v>b?b:v;
+
+// ===================== HUD =====================
+let slots=[GRASS,DIRT,STONE,COBBLE,PLANKS,LOG,GLASS,OBSIDIAN,GLOWSTONE],sel=0;
+const $=id=>document.getElementById(id);
+const hotbar=$('hotbar'),nameEl=$('name'),infoEl=$('info');
+const iconCache={};
+function icon(b){
+  const c=document.createElement('canvas');c.width=c.height=32;
+  if(!iconCache[b]){const k=document.createElement('canvas');k.width=k.height=32;const x=k.getContext('2d');x.imageSmoothingEnabled=false;const t=FACES[b];
+    const face=(tile,m,dark)=>{x.setTransform(...m);x.globalCompositeOperation='source-over';x.drawImage(atlas,tile*16,0,16,16,0,0,16,16);
+      if(dark){x.globalCompositeOperation='source-atop';x.fillStyle='rgba(0,0,0,'+dark+')';x.fillRect(0,0,16,16);}};
+    face(t[2],[0.875,0.4375,0,1.0625,2,7],0.25);face(t[2],[0.875,-0.4375,0,1.0625,16,14],0.45);face(t[0],[0.875,0.4375,-0.875,0.4375,16,0],0);
+    iconCache[b]=k;}
+  c.getContext('2d').drawImage(iconCache[b],0,0);return c;
+}
+let nameTimer=0;
+function drawHotbar(){hotbar.innerHTML='';slots.forEach((b,i)=>{const s=document.createElement('div');s.className='slot'+(i===sel?' sel':'');s.appendChild(icon(b));const n=document.createElement('span');n.textContent=i+1;s.appendChild(n);hotbar.appendChild(s);});$('invsel').textContent='място '+(sel+1);}
+function select(i){sel=(i+9)%9;drawHotbar();nameEl.textContent=NAMES[slots[sel]];nameEl.style.opacity=1;clearTimeout(nameTimer);nameTimer=setTimeout(()=>nameEl.style.opacity=0,1500);}
+let msgT=0;function showMsg(t,s){$('msg').innerHTML=t;msgT=s;}
+(function(){const g=$('invgrid');for(let b=1;b<NAMES.length;b++){if(b===BEDROCK)continue;const s=document.createElement('div');s.className='slot';s.title=NAMES[b];s.appendChild(icon(b));
+  s.onclick=()=>{slots[sel]=b;select(sel);saveDirty=true;};g.appendChild(s);}})();
+
+// ===================== WORLD LIST / SAVE =====================
+let worlds=[];try{worlds=JSON.parse(localStorage.getItem('bf_worlds')||'[]');}catch(e){}
+// migrate older single save
+try{const old=localStorage.getItem('blockforge_save_v1');if(old&&!worlds.length){const o=JSON.parse(old);const id='w'+Date.now();worlds.push({id,name:'Моят свят',seed:o.seed,flat:false,played:Date.now()});
+  const e={};for(const k in o.edits)e['0:'+k]=o.edits[k];localStorage.setItem('bf_w_'+id,JSON.stringify({edits:e,pos:{0:o.p},dim:0,time:o.time,slots:o.slots}));localStorage.setItem('bf_worlds',JSON.stringify(worlds));}}catch(e){}
+let curWorld=null,worldTime=0.08,inGame=false;
+function saveWorlds(){try{localStorage.setItem('bf_worlds',JSON.stringify(worlds));}catch(e){}}
+function save(){
+  if(!curWorld)return;
+  try{posByDim[dim]=[player.x,player.y,player.z,yaw,pitch];
+    const e={};for(const[k,m]of edits)e[k]=[...m];
+    localStorage.setItem('bf_w_'+curWorld.id,JSON.stringify({edits:e,pos:posByDim,dim,time:worldTime,slots,fly:player.fly}));
+    curWorld.played=Date.now();saveWorlds();saveDirty=false;}catch(err){showMsg('Няма място за запис!',3);}
+}
+function loadWorldData(w){
+  try{return JSON.parse(localStorage.getItem('bf_w_'+w.id)||'null');}catch(e){return null;}
+}
+function startWorld(w){
+  curWorld=w;seed=w.seed;flatWorld=!!w.flat;noise=makeNoise(seed);clearWorld();tasks=[];
+  edits=new Map();posByDim={};dim=0;worldTime=0.08;player.fly=false;freshWorld=false;frozen=false;
+  const s=loadWorldData(w);
+  if(s){for(const k in s.edits)edits.set(k,new Map(s.edits[k]));posByDim=s.pos||{};dim=s.dim||0;worldTime=s.time||0.08;if(s.slots&&s.slots.length===9)slots=s.slots;player.fly=!!s.fly;}
+  const p=posByDim[dim];
+  if(p){[player.x,player.y,player.z,yaw,pitch]=p;needSpawn=false;}else{freshWorld=dim===0;yaw=0;pitch=0;spawn();}
+  wasInPortal=true;player.vx=player.vy=player.vz=0;
+  inGame=true;drawHotbar();mpJoin(w.id);showScreen(null);lock();
+}
+function quitWorld(){save();mpLeave();inGame=false;curWorld=null;clearWorld();show('title');}
+setInterval(()=>{if(inGame&&saveDirty)save();},4000);
+addEventListener('beforeunload',()=>{if(inGame)save();mpLeave();});
+
+// ===================== MULTIPLAYER (local tabs) =====================
+const myId=Math.random().toString(36).slice(2,9);
+let bc=null,mpRoom=null;const others=new Map();
+function mpJoin(id){mpLeave();mpRoom=id;try{bc=new BroadcastChannel('bf_mp_'+id);bc.onmessage=e=>mpRecv(e.data);}catch(e){bc=null;}}
+function mpLeave(){if(mpRoom)mpSend({t:'bye'});if(bc)bc.close();bc=null;mpRoom=null;for(const o of others.values())o.tag.remove();others.clear();}
+function mpSend(m){if(!mpRoom)return;m.id=myId;m.room=mpRoom;try{if(bc)bc.postMessage(m);}catch(e){}
+  try{localStorage.setItem('bf_mp_msg',JSON.stringify(m));}catch(e){}}
+addEventListener('storage',e=>{if(e.key==='bf_mp_msg'&&e.newValue){try{mpRecv(JSON.parse(e.newValue));}catch(err){}}});
+function mpRecv(m){
+  if(!m||m.id===myId||m.room!==mpRoom)return;
+  if(m.t==='pos'){let o=others.get(m.id);if(!o){o={tag:document.createElement('div')};o.tag.className='tag';$('tags').appendChild(o.tag);others.set(m.id,o);showMsg(m.name+' влезе в играта',3);}
+    Object.assign(o,m,{seen:performance.now()});o.tag.textContent=m.name;}
+  else if(m.t==='set'){if(m.dim===dim&&chunks.has(ck(Math.floor(m.x/CS),Math.floor(m.z/CS))))setBlock(m.x,m.y,m.z,m.b,true);else recordEdit(m.dim,m.x,m.y,m.z,m.b);}
+  else if(m.t==='bye'){const o=others.get(m.id);if(o){o.tag.remove();others.delete(m.id);showMsg(o.name+' излезе',3);}}
+}
+setInterval(()=>{if(inGame)mpSend({t:'pos',x:player.x,y:player.y,z:player.z,dim,name:opts.name,col:myId.charCodeAt(0)%6});},100);
+function openSecondPlayer(id){window.open(location.href.split('#')[0]+'#join='+id,'_blank');}
+
+// ===================== SCREENS =====================
+let current='title',returnTo='title',locked=false,invOpen=false;
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.style.display='none');current=id;
+  if(id){const s=$('s-'+id);s.style.display='flex';s.classList.toggle('bg',!inGame&&id!=='pause'&&id!=='inv');}
+  $('hud').style.display=inGame?'block':'none';$('cross').style.display=inGame&&!id?'block':'none';}
+function show(id){
+  if(id==='worlds'||id==='multi')renderWorldList(id==='worlds'?'worldlist':'mplist');
+  if(id==='mods')renderMods();
+  if(id==='options'){$('o-name').value=opts.name;$('o-rd').value=opts.rd;$('o-fov').value=opts.fov;$('o-sens').value=opts.sens;updOptLabels();}
+  showScreen(id);
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(b.dataset.go==='mods'||b.dataset.go==='options')returnTo=current;show(b.dataset.go);});
+let selWorld=null;
+function renderWorldList(el){
+  const L=$(el);L.innerHTML='';worlds.sort((a,b)=>(b.played||0)-(a.played||0));
+  if(!worlds.length)L.innerHTML='<div class="row"><small>Няма светове. Създай нов!</small></div>';
+  if(!worlds.find(w=>w===selWorld))selWorld=worlds[0]||null;
+  worlds.forEach(w=>{const r=document.createElement('div');r.className='row'+(w===selWorld?' sel':'');
+    r.innerHTML=`<span>${w.name.replace(/</g,'&lt;')}</span><small>${w.flat?'Плосък':'Нормален'} · сийд ${w.seed}</small>`;
+    r.onclick=()=>{selWorld=w;renderWorldList(el);};r.ondblclick=()=>startWorld(w);L.appendChild(r);});
+}
+$('w-play').onclick=$('mp-host').onclick=()=>{if(selWorld)startWorld(selWorld);};
+$('mp-open').onclick=()=>{if(selWorld){openSecondPlayer(selWorld.id);startWorld(selWorld);}};
+$('w-del').onclick=()=>{if(!selWorld)return;if(!confirm('Да изтрия ли „'+selWorld.name+'“ завинаги?'))return;
+  try{localStorage.removeItem('bf_w_'+selWorld.id);}catch(e){}worlds=worlds.filter(w=>w!==selWorld);selWorld=null;saveWorlds();renderWorldList('worldlist');};
+let createFlat=false;
+$('c-type').onclick=()=>{createFlat=!createFlat;$('c-type').textContent=createFlat?'Плосък':'Нормален';};
+$('c-go').onclick=()=>{
+  const sv=$('c-seed').value.trim();let sd;
+  if(!sv)sd=(Math.random()*1e9)|0;else if(/^-?\d+$/.test(sv))sd=parseInt(sv)|0;else{sd=0;for(const ch of sv)sd=Math.imul(sd,31)+ch.charCodeAt(0)|0;}
+  const w={id:'w'+Date.now()+(Math.random()*1000|0),name:$('c-name').value.trim()||'Нов свят',seed:sd,flat:createFlat,played:Date.now()};
+  worlds.push(w);saveWorlds();$('c-seed').value='';startWorld(w);
+};
+function renderMods(){const L=$('modlist');L.innerHTML='';MODS.forEach(([k,n,d])=>{const b=document.createElement('button');b.className=mods[k]?'on':'';b.innerHTML=`${n}: ${mods[k]?'ВКЛ':'ИЗКЛ'}<br><small style="font-size:11px;color:#ddd">${d}</small>`;
+  b.onclick=()=>{mods[k]=!mods[k];saveOpts();renderMods();};L.appendChild(b);});}
+$('mods-back').onclick=()=>show(returnTo);
+function updOptLabels(){$('o-rdv').textContent=$('o-rd').value;$('o-fovv').textContent=$('o-fov').value;$('o-sensv').textContent=$('o-sens').value;}
+['o-rd','o-fov','o-sens'].forEach(i=>$(i).oninput=updOptLabels);
+$('opt-back').onclick=()=>{opts.name=$('o-name').value.trim().slice(0,16)||opts.name;opts.rd=+$('o-rd').value;opts.fov=+$('o-fov').value;opts.sens=+$('o-sens').value;makeOrder();saveOpts();show(returnTo);};
+$('p-resume').onclick=()=>{showScreen(null);lock();};
+$('p-mods').onclick=()=>{returnTo='pause';show('mods');};
+$('p-opts').onclick=()=>{returnTo='pause';show('options');};
+$('p-lan').onclick=()=>{save();openSecondPlayer(curWorld.id);};
+$('p-quit').onclick=quitWorld;
+$('inv-done').onclick=()=>{invOpen=false;showScreen(null);lock();};
+
+// ===================== INPUT =====================
+function lock(){try{const r=canvas.requestPointerLock();if(r&&r.catch)r.catch(()=>{});}catch(e){}}
+document.addEventListener('pointerlockchange',()=>{
+  locked=document.pointerLockElement===canvas;
+  if(locked){if(current)showScreen(null);}
+  else{for(const k in keys)keys[k]=false;mouse[0]=mouse[2]=false;
+    if(inGame&&!invOpen&&!current)show('pause');if(inGame)save();}
+});
+canvas.addEventListener('click',()=>{if(inGame&&!locked&&!current)lock();});
+document.addEventListener('mousemove',e=>{if(!locked)return;const s=opts.sens/10000;yaw-=e.movementX*s;pitch-=e.movementY*s;pitch=clamp(pitch,-1.55,1.55);});
+document.addEventListener('keydown',e=>{
+  if(inGame&&e.code==='KeyE'&&!e.repeat&&document.activeElement.tagName!=='INPUT'){
+    if(locked){invOpen=true;show('inv');document.exitPointerLock();}else if(invOpen){invOpen=false;showScreen(null);lock();}return;}
+  if(invOpen&&e.code==='Escape'){invOpen=false;show('pause');return;}
+  if(!locked)return;
+  keys[e.code]=true;
+  if(e.code==='Space'||e.code==='Tab')e.preventDefault();
+  if(e.code.startsWith('Digit')){const n=+e.code.slice(5);if(n>=1&&n<=9)select(n-1);}
+  if(e.code==='KeyF'&&!e.repeat){player.fly=!player.fly;player.vy=0;}
+});
+document.addEventListener('keyup',e=>{keys[e.code]=false;});
+document.addEventListener('wheel',e=>{if(locked||invOpen)select(sel+(e.deltaY>0?1:-1));},{passive:true});
+document.addEventListener('contextmenu',e=>e.preventDefault());
+const mouse={0:false,2:false};let actTimer=0;
+document.addEventListener('mousedown',e=>{if(!locked)return;
+  if(e.button===1){e.preventDefault();if(target&&target.b!==BEDROCK){slots[sel]=target.b;select(sel);}return;}
+  mouse[e.button]=true;act(e.button);actTimer=mods.turbo?0.06:0.28;});
+document.addEventListener('mouseup',e=>{mouse[e.button]=false;});
+function act(btn){
+  if(!target)return;
+  if(btn===0){if(target.b!==BEDROCK)setBlock(target.x,target.y,target.z,AIR);}
+  else if(btn===2){
+    const x=target.x+target.nx,y=target.y+target.ny,z=target.z+target.nz,cur=getBlock(x,y,z);
+    if(cur!==AIR&&!LIQUID(cur))return;
+    const b=slots[sel];
+    if(SOLID(b)&&x+1>player.x-PW&&x<player.x+PW&&y+1>player.y&&y<player.y+PH&&z+1>player.z-PW&&z<player.z+PW)return;
+    setBlock(x,y,z,b);
+  }
+}
+function resize(){const r=Math.min(devicePixelRatio||1,1.5);canvas.width=innerWidth*r|0;canvas.height=innerHeight*r|0;gl.viewport(0,0,canvas.width,canvas.height);}
+addEventListener('resize',resize);resize();drawHotbar();
+
+// join from link (second player tab)
+(function(){const m=location.hash.match(/join=([\w]+)/);if(m){const w=worlds.find(w=>w.id===m[1]);if(w){opts.name=opts.name.replace(/\d+$/,'')+(1000+Math.random()*9000|0);startWorld(w);show('pause');$('p-resume').textContent='Натисни, за да влезеш';}}})();
+
+// ===================== LOOP =====================
+let target=null,last=performance.now(),fps=0,fpsAcc=0,fpsN=0,infoT=0;
+const DAY=1200,tintEl=$('tint');
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt=Math.min(0.05,(now-last)/1000);last=now;
+  fpsAcc+=dt;fpsN++;if(fpsAcc>0.5){fps=Math.round(fpsN/fpsAcc);fpsAcc=0;fpsN=0;}
+  if(msgT>0){msgT-=dt;if(msgT<=0)$('msg').innerHTML='';}
+  if(!inGame){gl.clearColor(0.07,0.07,0.07,1);gl.clear(gl.COLOR_BUFFER_BIT);return;}
+  updateChunks(locked?6:14);runTasks();
+  const pc=chunks.get(ck(Math.floor(player.x/CS),Math.floor(player.z/CS)));
+  const ready=pc&&pc.meshed&&!frozen;
+  if(needSpawn&&pc)finishSpawn();
+  if(!ready&&!$('msg').innerHTML)$('msg').innerHTML='Зареждане на света…';
+  if(ready&&$('msg').innerHTML==='Зареждане на света…')$('msg').innerHTML='';
+  if(ready&&!needSpawn&&locked)physics(dt);
+  if(!mods.dayLock)worldTime=(worldTime+dt/DAY)%1;else worldTime=0.25;
+
+  const eye=[player.x,player.y+EYE,player.z];
+  const fwd=[-Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch)];
+  target=locked?raycast(eye[0],eye[1],eye[2],fwd[0],fwd[1],fwd[2],mods.reach?20:6):null;
+  if(locked&&(mouse[0]||mouse[2])){actTimer-=dt;if(actTimer<=0){act(mouse[0]?0:2);actTimer=mods.turbo?0.06:0.22;}}
+
+  // environment per dimension
+  const ang=worldTime*Math.PI*2,sunY=Math.sin(ang),sunX=Math.cos(ang);
+  let sky,light,showOrbs=false;
+  if(dim===0){const day=clamp((sunY+0.15)/0.4,0,1),dusk=clamp(1-Math.abs(sunY)/0.25,0,1)*0.6*day;
+    sky=[lerp(lerp(0.03,0.53,day),0.95,dusk),lerp(lerp(0.05,0.73,day),0.55,dusk),lerp(lerp(0.12,1.0,day),0.35,dusk)];light=lerp(0.22,1.0,day);showOrbs=true;}
+  else if(dim===1){sky=[0.24,0.05,0.03];light=0.72;}
+  else{sky=[0.07,0.04,0.1];light=0.85;}
+  if(mods.bright)light=1;
+  const headB=getBlock(Math.floor(eye[0]),Math.floor(eye[1]),Math.floor(eye[2]));
+  let fogC=sky,fogE=opts.rd*CS*(dim===1?0.7:0.95),fogS=fogE*0.5;
+  if(headB===WATER){fogC=[0.05*light,0.15*light,0.45*light];fogS=1;fogE=22;tintEl.style.background='rgba(20,60,190,.35)';tintEl.style.display='block';}
+  else if(headB===LAVA){fogC=[0.9,0.3,0.05];fogS=0;fogE=3;tintEl.style.background='rgba(255,90,0,.5)';tintEl.style.display='block';}
+  else if(headB===NPORTAL||headB===EPORTAL){tintEl.style.background='rgba(120,40,200,.4)';tintEl.style.display='block';}
+  else tintEl.style.display='none';
+
+  gl.clearColor(fogC[0],fogC[1],fogC[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  const proj=perspective(opts.fov*Math.PI/180,canvas.width/canvas.height,0.05,600);
+  const mvp=mul(proj,viewMat(eye,fwd));
+
+  gl.disable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);
+  gl.useProgram(flat.p);gl.uniformMatrix4fv(flat.u.uMVP,false,mvp);gl.uniform3f(flat.u.uOff,eye[0],eye[1],eye[2]);gl.uniform3f(flat.u.uScale,1,1,1);
+  if(showOrbs&&headB!==WATER){gl.bindVertexArray(sunVAO);
+    const orb=(dx,dy,size,col)=>{const D=300,cx=dx*D,cy=dy*D,ux=-dy*size,uy=dx*size,v=[cx-ux,cy-uy,-size,cx+ux,cy+uy,-size,cx+ux,cy+uy,size,cx-ux,cy-uy,-size,cx+ux,cy+uy,size,cx-ux,cy-uy,size];
+      gl.bindBuffer(gl.ARRAY_BUFFER,sunBuf);gl.bufferSubData(gl.ARRAY_BUFFER,0,new Float32Array(v));gl.uniform4fv(flat.u.uCol,col);gl.drawArrays(gl.TRIANGLES,0,6);};
+    orb(sunX,sunY,22,[1,0.95,0.6,1]);orb(-sunX,-sunY,15,[0.85,0.87,0.95,1]);}
+
+  gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.disable(gl.BLEND);gl.depthMask(true);
+  gl.useProgram(world.p);
+  gl.uniformMatrix4fv(world.u.uMVP,false,mvp);gl.uniform3fv(world.u.uCam,eye);gl.uniform2f(world.u.uFog,fogS,fogE);
+  gl.uniform3fv(world.u.uFogC,fogC);gl.uniform1f(world.u.uLight,light);gl.uniform1i(world.u.uPass,0);
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(world.u.uTex,0);
+  const wl=[];
+  for(const c of chunks.values()){
+    if(c.solid){gl.bindVertexArray(c.solid.vao);gl.drawElements(gl.TRIANGLES,c.solid.count,gl.UNSIGNED_INT,0);}
+    if(c.water){const dx=c.cx*CS+8-eye[0],dz=c.cz*CS+8-eye[2];wl.push([dx*dx+dz*dz,c]);}
+  }
+  // other players + outline
+  gl.useProgram(flat.p);gl.uniformMatrix4fv(flat.u.uMVP,false,mvp);
+  const COLS=[[0.2,0.5,0.9],[0.9,0.3,0.3],[0.3,0.8,0.3],[0.9,0.7,0.2],[0.7,0.3,0.9],[0.2,0.8,0.8]];
+  gl.bindVertexArray(cubeVAO);
+  for(const[id,o]of others){
+    if(performance.now()-o.seen>3000){o.tag.remove();others.delete(id);continue;}
+    if(o.dim!==dim){o.tag.style.display='none';continue;}
+    const c=COLS[o.col||0];
+    gl.uniform3f(flat.u.uScale,0.6,0.75,0.3);gl.uniform3f(flat.u.uOff,o.x-0.3,o.y,o.z-0.15);gl.uniform4f(flat.u.uCol,0.25,0.25,0.6,1);gl.drawArrays(gl.TRIANGLES,0,36);
+    gl.uniform3f(flat.u.uScale,0.6,0.7,0.3);gl.uniform3f(flat.u.uOff,o.x-0.3,o.y+0.75,o.z-0.15);gl.uniform4f(flat.u.uCol,c[0],c[1],c[2],1);gl.drawArrays(gl.TRIANGLES,0,36);
+    gl.uniform3f(flat.u.uScale,0.5,0.5,0.5);gl.uniform3f(flat.u.uOff,o.x-0.25,o.y+1.45,o.z-0.25);gl.uniform4f(flat.u.uCol,0.9,0.72,0.55,1);gl.drawArrays(gl.TRIANGLES,0,36);
+    const X=o.x,Y=o.y+2.15,Z=o.z,cw=mvp[3]*X+mvp[7]*Y+mvp[11]*Z+mvp[15];
+    if(cw>0.1){const cx=(mvp[0]*X+mvp[4]*Y+mvp[8]*Z+mvp[12])/cw,cy=(mvp[1]*X+mvp[5]*Y+mvp[9]*Z+mvp[13])/cw;
+      o.tag.style.display='block';o.tag.style.left=((cx*0.5+0.5)*innerWidth)+'px';o.tag.style.top=((0.5-cy*0.5)*innerHeight)+'px';}else o.tag.style.display='none';
+  }
+  if(target){gl.uniform3f(flat.u.uScale,1,1,1);gl.uniform3f(flat.u.uOff,target.x,target.y,target.z);gl.uniform4f(flat.u.uCol,0,0,0,1);gl.bindVertexArray(boxVAO);gl.drawArrays(gl.LINES,0,24);}
+  // translucent
+  gl.useProgram(world.p);
+  gl.disable(gl.CULL_FACE);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.uniform1i(world.u.uPass,1);
+  wl.sort((a,b)=>b[0]-a[0]);
+  for(const[,c]of wl){gl.bindVertexArray(c.water.vao);gl.drawElements(gl.TRIANGLES,c.water.count,gl.UNSIGNED_INT,0);}
+  gl.depthMask(true);gl.disable(gl.BLEND);gl.bindVertexArray(null);
+
+  infoT-=dt;if(infoT<=0){infoT=0.25;
+    const hh=Math.floor(worldTime*24+6)%24,mm=Math.floor((worldTime*24*60)%60),on=MODS.filter(m=>mods[m[0]]).map(m=>m[1]);
+    infoEl.textContent=`BlockForge  ${fps} FPS   ${curWorld?curWorld.name:''}\n${DIMNAMES[dim]}${dim===0?'   '+String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0'):''}\nXYZ: ${player.x.toFixed(1)} / ${player.y.toFixed(1)} / ${player.z.toFixed(1)}\nИграчи онлайн: ${1+[...others.values()].length}${player.fly?'   Летене: ВКЛ':''}${on.length?'\nМодове: '+on.join(', '):''}${target?'\nГледаш: '+NAMES[target.b]:''}`;}
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
