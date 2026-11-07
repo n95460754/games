@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков любимец</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐾 Блоков любимец</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 225. Блоков любимец
+A.add({id:'blockpet',cat:'board',icon:'🐾',name:'Блоков любимец',desc:'Гледай своето блоково животинче',unit:' с',help:'Грижи се за любимеца! 1 — нахрани, 2 — играй, 3 — сън, 4 — изкъпи. Ако някоя лента падне до нула, любимецът се разболява. Колко дълго ще го опазиш щастлив?',
+  start(g){g.s={food:.8,fun:.8,sleep:.8,clean:.8};g.anim='';g.at=0;g.sick=0;},
+  act(g,i){const k=['food','fun','sleep','clean'][i];g.s[k]=Math.min(1,g.s[k]+.35);g.anim=['🍖','⚽','💤','🫧'][i];g.at=1;A.beep(500+i*100,.08);if(k==='fun')g.s.sleep-=.05;if(k==='food')g.s.clean-=.05;},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.act(g,n-1);},
+  click(g,mx,my){if(my>290){const i=Math.floor((mx-40)/100);if(i>=0&&i<4)this.act(g,i);}},
+  update(g,dt){g.score=g.t;const r=1+g.t/90;g.s.food-=dt*.02*r;g.s.fun-=dt*.025*r;g.s.sleep-=dt*.015*r;g.s.clean-=dt*.018*r;g.at-=dt;
+    const low=Object.values(g.s).some(v=>v<=0);for(const k in g.s)g.s[k]=Math.max(0,g.s[k]);if(low){g.sick+=dt;if(g.sick>4)A.over(g,'Любимецът се разболя 🤒 Грижи се по-добре!');}else g.sick=Math.max(0,g.sick-dt);},
+  draw(g){A.bg('#ffe0b2');const mood=Math.min(...Object.values(g.s)),bob=Math.sin(g.t*3)*4;A.block(190,110+bob,100,g.sick>0?'#a5d6a7':'#ffb74d',90);c.fillStyle='#000';c.fillRect(215,140+bob,12,12);c.fillRect(253,140+bob,12,12);
+    c.fillStyle='#000';if(mood>.5)c.fillRect(225,172+bob,30,5);else if(mood>.2)c.fillRect(230,175+bob,20,3);else{c.fillRect(225,178+bob,30,4);c.fillRect(222,174+bob,4,4);c.fillRect(255,174+bob,4,4);}
+    c.fillStyle='#ffb74d';c.fillRect(196,96+bob,18,18);c.fillRect(266,96+bob,18,18);if(g.at>0)A.txt(g.anim,330,120,36,'#000','center');if(g.sick>0)A.txt('🤒',150,120,30,'#000','center');
+    [['🍖 Храна','food'],['⚽ Игра','fun'],['💤 Сън','sleep'],['🫧 Баня','clean']].forEach(([n,k],i)=>{const x=40+i*100;c.fillStyle='#333';c.fillRect(x,240,90,10);c.fillStyle=g.s[k]<.25?'#e53935':'#43a047';c.fillRect(x,240,90*g.s[k],10);A.block(x,295,90,'#5a6b8c',45);A.txt((i+1)+' '+n,x+45,317,12,'#fff','center');});
+    A.txt('⏱ '+Math.floor(g.t)+' с',10,14,14,'#633');}
+});
+</script>
+</body>
+</html>

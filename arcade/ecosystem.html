@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Екосистема</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐇 Екосистема</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 218. Екосистема
+A.add({id:'ecosystem',cat:'board',icon:'🐇',name:'Екосистема',desc:'Зайци, лисици и трева',noScore:true,help:'Тревата расте, зайците ядат трева, лисиците ядат зайци. Наблюдавай как се люлеят популациите! Клик — добави зайци, десен клик — лисица. R — отначало.',
+  start(g){g.grass=new Float32Array(48*30).fill(.5);g.r=[];g.f=[];for(let i=0;i<30;i++)g.r.push(this.mk(A.rnd(0,480),A.rnd(0,300),10));for(let i=0;i<4;i++)g.f.push(this.mk(A.rnd(0,480),A.rnd(0,300),25));g.hist=[];g.ht=0;},
+  mk(x,y,e){return{x,y,a:A.rnd(0,6.28),e};},
+  key(g,k){if(k==='KeyR')this.start(g);},
+  click(g,mx,my,b){if(my>300)return;if(b===2)g.f.push(this.mk(mx,my,25));else for(let i=0;i<5;i++)g.r.push(this.mk(mx,my,10));},
+  move1(a,sp,dt){a.a+=A.rnd(-2,2)*dt;a.x=(a.x+Math.cos(a.a)*sp*dt+480)%480;a.y=(a.y+Math.sin(a.a)*sp*dt+300)%300;},
+  update(g,dt){for(let i=0;i<g.grass.length;i++)g.grass[i]=Math.min(1,g.grass[i]+dt*.03);
+    for(const r of g.r){this.move1(r,40,dt);r.e-=dt*1.2;const gi=Math.floor(r.y/10)*48+Math.floor(r.x/10);if(g.grass[gi]>.3){r.e+=g.grass[gi]*dt*6;g.grass[gi]=Math.max(0,g.grass[gi]-dt*2);}if(r.e>16){r.e=9;g.r.push(this.mk(r.x,r.y,7));}}
+    for(const f of g.f){let best=null,bd=80;for(const r of g.r){const d=Math.hypot(r.x-f.x,r.y-f.y);if(d<bd){bd=d;best=r;}}if(best)f.a=Math.atan2(best.y-f.y,best.x-f.x);this.move1(f,55,dt);f.e-=dt*1.6;
+      if(best&&bd<8){best.dead=1;f.e+=9;}if(f.e>45){f.e=25;g.f.push(this.mk(f.x,f.y,20));}}
+    g.r=g.r.filter(r=>!r.dead&&r.e>0).slice(0,400);g.f=g.f.filter(f=>f.e>0).slice(0,80);g.ht+=dt;if(g.ht>.25){g.ht=0;g.hist.push([g.r.length,g.f.length]);if(g.hist.length>240)g.hist.shift();}},
+  draw(g){for(let i=0;i<g.grass.length;i++){const v=g.grass[i];c.fillStyle='rgb('+Math.round(120-v*60)+','+Math.round(100+v*90)+',40)';c.fillRect((i%48)*10,Math.floor(i/48)*10,10,10);}
+    for(const r of g.r){c.fillStyle='#fff';c.fillRect(r.x-3,r.y-3,6,6);}for(const f of g.f){c.fillStyle='#ff6d00';c.fillRect(f.x-5,f.y-4,10,8);}
+    c.fillStyle='#111';c.fillRect(0,300,480,60);const mx=Math.max(20,...g.hist.map(h=>h[0]));c.strokeStyle='#fff';c.beginPath();g.hist.forEach((h,i)=>{const y=356-h[0]/mx*52;i?c.lineTo(i*2,y):c.moveTo(i*2,y);});c.stroke();
+    c.strokeStyle='#ff6d00';c.beginPath();g.hist.forEach((h,i)=>{const y=356-h[1]/Math.max(5,...g.hist.map(q=>q[1]))*52;i?c.lineTo(i*2,y):c.moveTo(i*2,y);});c.stroke();A.txt('🐇 '+g.r.length+'  🦊 '+g.f.length,400,315,12);}
+});
+</script>
+</body>
+</html>

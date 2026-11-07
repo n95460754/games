@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дърпане на въже</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💪 Дърпане на въже</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 157. Дърпане на въже за двама
+A.add({id:'tugofwar',cat:'action',icon:'💪',name:'Дърпане на въже',desc:'За двама: кой ще натиска по-бързо?',noScore:true,help:'Игра за ДВАМА! Синият натиска бързо A, червеният — L. Всеки натиск дърпа въжето към теб. Изкарай знамето до своята линия!',
+  start(g){g.pos=0;g.go=-1.5;},
+  key(g,k){if(g.go<0)return;if(k==='KeyA'){g.pos-=6;A.beep(300,.02);}if(k==='KeyL'){g.pos+=6;A.beep(450,.02);}
+    if(Math.abs(g.pos)>=120)A.over(g,g.pos<0?'🟦 Синият печели!':'🟥 Червеният печели!');},
+  update(g,dt){g.go+=dt;},
+  draw(g){A.bg('#7cb342');c.fillStyle='#5a8a2a';c.fillRect(0,230,480,130);c.fillStyle='#fff';c.fillRect(119,200,3,80);c.fillRect(359,200,3,80);
+    c.strokeStyle='#8d6e3f';c.lineWidth=6;c.beginPath();c.moveTo(40+g.pos,240);c.lineTo(440+g.pos,240);c.stroke();c.fillStyle=C.red;c.fillRect(236+g.pos,240,8,26);
+    A.block(30+g.pos,200,24,'#3b7bd6',50);A.block(426+g.pos,200,24,C.red,50);A.txt('A',42,320,26,'#1f5fa8','center');A.txt('L',438,320,26,'#a8322a','center');
+    if(g.go<0)A.txt(g.go<-.75?'Готови...':'Дърпай!',240,120,30,'#fff','center');}
+});
+</script>
+</body>
+</html>

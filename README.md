@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**135 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 125 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**235 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 225 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-135-5aa13a)
+![Games](https://img.shields.io/badge/games-235-5aa13a)
 
 ## 🚀 Play
 
@@ -60,9 +60,9 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 125 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 225 mini-games (`arcade/*.html`)
 
-**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 125, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
+**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 225, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
 ### ⚡ Action
 | # | Game | File | |
@@ -251,7 +251,127 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 124 | 🌳 Fractal Tree (Фрактално дърво) | [`fractal.html`](arcade/fractal.html) | Math art: angle, shrink, depth |
 | 125 | 🗺️ World Generator (Генератор на светове) | [`worldgen.html`](arcade/worldgen.html) | Infinite noise map with biomes |
 
-All 125 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+### 🧠 Brain & Math 4
+| # | Game | File | |
+|---|---|---|---|
+| 126 | ✖️ Times Tables (Таблицата) | [`multtable.html`](arcade/multtable.html) | Multiplication up to 10×10 |
+| 127 | ➗ Division (Деление) | [`division.html`](arcade/division.html) | Exact division |
+| 128 | ❓ Missing Number (Липсващото число) | [`missing.html`](arcade/missing.html) | 7 + ? = 15 |
+| 129 | ✌️ Double & Half (Двойно и половина) | [`doubling.html`](arcade/doubling.html) | Mental doubling and halving |
+| 130 | 📊 Average (Средно аритметично) | [`average.html`](arcade/average.html) | Mean of several numbers |
+| 131 | 🔺 Triangle Angles (Ъгли в триъгълник) | [`triangle.html`](arcade/triangle.html) | The angles add up to 180° |
+| 132 | 🔟 Decimals (Десетични дроби) | [`decimals.html`](arcade/decimals.html) | Add and subtract with decimals |
+| 133 | ⌛ Time Elapsed (Колко време мина) | [`timecalc.html`](arcade/timecalc.html) | Minutes between two times |
+| 134 | 🚗 Speed & Distance (Скорост и път) | [`speed.html`](arcade/speed.html) | s = v · t word problems |
+| 135 | 🛒 The Shop (Магазинът) | [`shop.html`](arcade/shop.html) | Add up the shopping bill |
+| 136 | 🔷 Shapes (Фигури) | [`shapes.html`](arcade/shapes.html) | Name the polygon |
+| 137 | 🎨 Color or Word? (Цвят или дума?) | [`stroop.html`](arcade/stroop.html) | The Stroop effect |
+| 138 | 🙃 Odd One Out (Кое не е на място?) | [`oddone.html`](arcade/oddone.html) | Which one does not belong? |
+| 139 | 🏙️ Capitals (Столици) | [`capitals.html`](arcade/capitals.html) | European capitals quiz |
+| 140 | 🏳️ Flags (Знамена) | [`flags.html`](arcade/flags.html) | Guess the country by its flag |
+| 141 | 🇬🇧 English Words (Английски думи) | [`english.html`](arcade/english.html) | Bulgarian → English |
+| 142 | 🔬 Little Scientist (Малкият учен) | [`science.html`](arcade/science.html) | Nature and space quiz |
+| 143 | 🇧🇬 Know Bulgaria? (Знаеш ли България?) | [`bulgaria.html`](arcade/bulgaria.html) | Bulgarian geography and history |
+| 144 | 🧭 How Many Paths? (Колко пътя?) | [`pathcount.html`](arcade/pathcount.html) | Grid combinatorics |
+| 145 | 📍 Number Line (Числова ос) | [`numberline.html`](arcade/numberline.html) | Click where the number is |
+
+### ⚡ Action 4
+| # | Game | File | |
+|---|---|---|---|
+| 146 | 🚁 Heli Rescue (Хеликоптер спасител) | [`helirescue.html`](arcade/helirescue.html) | Pick up people from rooftops |
+| 147 | 👻 Gem Maze (Кристали в лабиринта) | [`gemchase.html`](arcade/gemchase.html) | Collect gems, flee the zombies |
+| 148 | 🏎️ Highway (Магистрала) | [`carrace.html`](arcade/carrace.html) | Weave through traffic |
+| 149 | 🎆 Missile Defense (Ракетна защита) | [`missiles.html`](arcade/missiles.html) | Protect the cities |
+| 150 | 🪁 Kite (Хвърчило) | [`kite.html`](arcade/kite.html) | Keep the kite flying |
+| 151 | 🥚 Eggs (Яйцата) | [`eggs.html`](arcade/eggs.html) | Catch eggs from four chutes |
+| 152 | 🔥 Over the Lava (Над лавата) | [`lavahop.html`](arcade/lavahop.html) | Hop across moving blocks |
+| 153 | 🎾 Squash (Скуош) | [`squash.html`](arcade/squash.html) | Keep the ball bouncing off the wall |
+| 154 | ↗️ Zigzag (Зигзаг) | [`zigzag.html`](arcade/zigzag.html) | Switch direction, stay on the path |
+| 155 | 🌈 Color Gate (Цветна врата) | [`colorgate.html`](arcade/colorgate.html) | Match the wall color |
+| 156 | 🧟 Zombie Attack (Зомби атака) | [`zombies.html`](arcade/zombies.html) | Top-down survival shooter |
+| 157 | 💪 Tug of War (Дърпане на въже) | [`tugofwar.html`](arcade/tugofwar.html) | 2 players: mash A vs L |
+| 158 | 🏓 Tennis for Two (Тенис за двама) | [`pong2p.html`](arcade/pong2p.html) | 2 players: W/S vs ↑/↓ |
+| 159 | 🏍️ Light Cycles (Светлинни мотори) | [`lightcycles.html`](arcade/lightcycles.html) | 2 players: trails you must not hit |
+| 160 | 🏒 Air Hockey (Въздушен хокей) | [`airhockey.html`](arcade/airhockey.html) | Mouse vs the robot |
+| 161 | 🧱 Don't Get Crushed (Не бъди смачкан) | [`crusher.html`](arcade/crusher.html) | Climb the falling blocks |
+| 162 | 🕸️ Grappling Hook (Кука с въже) | [`swing.html`](arcade/swing.html) | Swing from hook to hook |
+| 163 | ✈️ Sky Shooter (Небесен стрелец) | [`skyshooter.html`](arcade/skyshooter.html) | Side-scrolling shooter with power-ups |
+| 164 | 🛸 Starship (Звезден кораб) | [`starship.html`](arcade/starship.html) | Vertical shooter with bosses |
+| 165 | 💣 Minefield (Минно поле) | [`minefield.html`](arcade/minefield.html) | Cross by memory |
+
+### 🧩 Puzzles 4
+| # | Game | File | |
+|---|---|---|---|
+| 166 | 🔟 Make 10 (Сбор 10) | [`sumten.html`](arcade/sumten.html) | Click pairs that add to 10 |
+| 167 | 🦋 Symmetry (Симетрия) | [`symmetry.html`](arcade/symmetry.html) | Complete the mirror image |
+| 168 | 🗾 Color the Map (Оцвети картата) | [`colormap.html`](arcade/colormap.html) | Four-color map puzzle |
+| 169 | ✏️ One Stroke (С една линия) | [`onestroke.html`](arcade/onestroke.html) | Visit every cell once |
+| 170 | ⚙️ Gears (Зъбни колела) | [`gears.html`](arcade/gears.html) | Which way does the last gear turn? |
+| 171 | ⚖️ Weights & Scales (Везни с тежести) | [`scales.html`](arcade/scales.html) | Algebra on a balance |
+| 172 | 🔄 Rotated Shape (Завъртяна фигура) | [`rotation.html`](arcade/rotation.html) | Find the rotation, not the mirror |
+| 173 | 🟪 Latin Square (Латински квадрат) | [`latin.html`](arcade/latin.html) | Each color once per row and column |
+| 174 | ➕ Number Cross (Числов кръст) | [`numbercross.html`](arcade/numbercross.html) | Fill 1–9 to match the sums |
+| 175 | 🏢 Skyscrapers (Небостъргачи) | [`skyscrapers.html`](arcade/skyscrapers.html) | How many towers can you see? |
+| 176 | 🗝️ Maze with a Key (Лабиринт с ключ) | [`mazekey.html`](arcade/mazekey.html) | Get the key, open the door |
+| 177 | 🧩 Picture Puzzle (Пъзел с картинка) | [`jigsaw.html`](arcade/jigsaw.html) | Swap tiles to fix the picture |
+| 178 | 📥 Tilt the Box (Наклони кутията) | [`tiltbox.html`](arcade/tiltbox.html) | All blocks slide together |
+| 179 | 🏠 One Line Drawing (Без да вдигаш молива) | [`euler.html`](arcade/euler.html) | Euler paths without lifting the pen |
+| 180 | 🎯 Guess the Number (Познай числото) | [`guessnum.html`](arcade/guessnum.html) | Binary search 1–1000 |
+| 181 | 🔤 Anagrams (Анаграми) | [`anagram.html`](arcade/anagram.html) | Unscramble the word |
+| 182 | 🔥 Hot & Cold (Студено-топло) | [`hotcold.html`](arcade/hotcold.html) | Find treasure by distance |
+| 183 | 🌈 Color Gradient (Цветна дъга) | [`gradient.html`](arcade/gradient.html) | Sort the shades |
+| 184 | 💡 Logic Gates (Логически схеми) | [`logicgates.html`](arcade/logicgates.html) | AND, OR, XOR, NOT: light the lamp |
+| 185 | 👑 Eight Queens (Осем царици) | [`queens.html`](arcade/queens.html) | No queen attacks another |
+
+### 🎯 Skills 4
+| # | Game | File | |
+|---|---|---|---|
+| 186 | 🔢 Connect in Order (Свържи по ред) | [`connectdots.html`](arcade/connectdots.html) | Click 1 to 25 fast |
+| 187 | 🎯 Darts (Дартс) | [`darts.html`](arcade/darts.html) | The aim wobbles! |
+| 188 | ⚽ Penalties (Дузпи) | [`penalty.html`](arcade/penalty.html) | Shoot and save |
+| 189 | 🔍 Spot the Difference (Открий разликите) | [`spotdiff.html`](arcade/spotdiff.html) | Find 5 differences |
+| 190 | 👆 Click Mania (Кликомания) | [`fastclick.html`](arcade/fastclick.html) | Clicks in 10 seconds |
+| 191 | ⬆️ Lightning Arrows (Светкавица) | [`arrows.html`](arcade/arrows.html) | Press the arrow, or the opposite if it is red |
+| 192 | 🕹️ Combo (Комбо) | [`combo.html`](arcade/combo.html) | Type the key sequence |
+| 193 | 🪰 Catch the Fly (Хвани мухата) | [`catchfly.html`](arcade/catchfly.html) | Swat the speedy fly |
+| 194 | 🥛 Pour Exactly (Налей точно) | [`pour.html`](arcade/pour.html) | Stop at the line |
+| 195 | 🍬 Cut the Rope (Отрежи въжето) | [`cutrope.html`](arcade/cutrope.html) | Drop the candy in the basket |
+| 196 | 🥁 Metronome (Метроном) | [`metronome.html`](arcade/metronome.html) | Keep the beat on your own |
+| 197 | ⭕ Draw a Circle (Нарисувай кръг) | [`drawcircle.html`](arcade/drawcircle.html) | How perfect is your circle? |
+| 198 | 📏 Measure by Eye (Отмери на око) | [`measure.html`](arcade/measure.html) | Match the length |
+| 199 | 🅿️ Parking (Паркиране) | [`parking.html`](arcade/parking.html) | Park without a scratch |
+| 200 | 🔴 Laser Ring (Лазерен кръг) | [`laserring.html`](arcade/laserring.html) | Dodge the rotating beams |
+| 201 | 📌 Where Was It? (Къде беше?) | [`pinpoint.html`](arcade/pinpoint.html) | Remember and point |
+| 202 | 🚦 Traffic Lights (Светофар) | [`traffic.html`](arcade/traffic.html) | Prevent crashes at the crossroads |
+| 203 | 🥞 Pancakes (Палачинки) | [`pancakes.html`](arcade/pancakes.html) | Flip and serve on time |
+| 204 | 🫥 Invisible Maze (Невидим лабиринт) | [`invismaze.html`](arcade/invismaze.html) | Memorize the path |
+| 205 | 🔨 Strength Tester (Силомер) | [`strength.html`](arcade/strength.html) | Hit at the peak |
+
+### ♟️ Board & Sandbox 4
+| # | Game | File | |
+|---|---|---|---|
+| 206 | #️⃣ Ultimate Tic-Tac-Toe (Супер морски шах) | [`ultimate.html`](arcade/ultimate.html) | Tic-tac-toe inside tic-tac-toe |
+| 207 | ⬡ Hex (Хекс) | [`hex.html`](arcade/hex.html) | Connect your two sides |
+| 208 | 🎲 Snakes & Ladders (Змии и стълби) | [`snakesladders.html`](arcade/snakesladders.html) | Classic dice race to 100 |
+| 209 | 🎱 Bingo (Бинго) | [`bingo.html`](arcade/bingo.html) | Mark numbers faster than the robot |
+| 210 | 🖌️ Paint by Numbers (Оцвети по номера) | [`paintbynum.html`](arcade/paintbynum.html) | Pixel art by digits |
+| 211 | 🔮 Kaleidoscope (Калейдоскоп) | [`kaleido.html`](arcade/kaleido.html) | Draw with 8-fold symmetry |
+| 212 | 🌀 Spirograph (Спирограф) | [`spiro.html`](arcade/spiro.html) | Rolling-circle math art |
+| 213 | 🐚 Mandelbrot (Манделброт) | [`mandelbrot.html`](arcade/mandelbrot.html) | Zoom into the infinite fractal |
+| 214 | 🌍 Planet Gravity (Гравитация на планети) | [`planets.html`](arcade/planets.html) | Launch planets into orbit |
+| 215 | 🎹 Piano (Пиано) | [`piano.html`](arcade/piano.html) | Play, record and replay |
+| 216 | 🥁 Beat Machine (Ритъм машина) | [`drums.html`](arcade/drums.html) | 16-step drum sequencer |
+| 217 | 🀱 Domino Effect (Домино ефект) | [`dominofall.html`](arcade/dominofall.html) | Set them up and push |
+| 218 | 🐇 Ecosystem (Екосистема) | [`ecosystem.html`](arcade/ecosystem.html) | Rabbits, foxes and grass |
+| 219 | 🐦 Flock of Birds (Ято птици) | [`flock.html`](arcade/flock.html) | Three simple rules = a flock |
+| 220 | 🐠 Aquarium (Аквариум) | [`aquarium.html`](arcade/aquarium.html) | Keep the fish fed |
+| 221 | 🏘️ Little Town (Градче) | [`isocity.html`](arcade/isocity.html) | Build an isometric town |
+| 222 | 🖍️ Coloring Book (Книжка за оцветяване) | [`coloring.html`](arcade/coloring.html) | Paint-bucket fill |
+| 223 | 📈 Dice Statistics (Хвърляне на зарове) | [`dicestats.html`](arcade/dicestats.html) | Law of large numbers, live |
+| 224 | 🔵 Marble Run (Пързалка за топчета) | [`marbles.html`](arcade/marbles.html) | Draw ramps for falling marbles |
+| 225 | 🐾 Block Pet (Блоков любимец) | [`blockpet.html`](arcade/blockpet.html) | Take care of your pet |
+
+All 225 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -279,8 +399,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–124
-│   └── worldgen.html       # 125. World Generator
+│   ├── ...                 # games 51–224
+│   └── blockpet.html       # 225. Block Pet
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
@@ -301,6 +421,10 @@ minecraft/
 - **Snakes for Two:** the first 2-player game: two people on one keyboard.
 - **Free the Minecart:** each puzzle starts solved and is scrambled with random legal moves, so it can always be solved.
 - **Kalah, Checkers, Code Breaker:** the robot plays real strategies (greedy simulation, mandatory captures, bulls & cows feedback).
+- **Four 2-player games:** Snakes for Two, Tug of War, Tennis for Two and Light Cycles are played by two people on one keyboard.
+- **Quizzes:** capitals, flags, English words, science and Bulgaria use a shared `quizGame` template in the engine. A new quiz is just a list of questions!
+- **One Line Drawing:** every figure was checked to have 0 or 2 points with an odd number of lines (Euler's rule), so it can really be drawn in one stroke.
+- **Math art:** Mandelbrot, Spirograph, Fractal Tree and Kaleidoscope draw beautiful pictures from short formulas.
 - **Sounds:** all made live with the Web Audio API (`OscillatorNode`), with no sound files.
 
 ## 🛠️ Ideas for the future

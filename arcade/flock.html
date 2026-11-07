@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ято птици</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐦 Ято птици</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 219. Ято птици
+A.add({id:'flock',cat:'board',icon:'🐦',name:'Ято птици',desc:'Три прости правила = ято',noScore:true,help:'Всяка птица следва 3 правила: не се блъскай в съседите, лети накъдето летят те и стой близо до тях. Мишката е ястреб — птиците бягат! ↑ ↓ — брой птици.',
+  start(g){g.b=[];for(let i=0;i<80;i++)g.b.push({x:A.rnd(0,480),y:A.rnd(0,360),vx:A.rnd(-1,1)*60,vy:A.rnd(-1,1)*60});},
+  key(g,k){if(k==='ArrowUp')for(let i=0;i<20;i++)g.b.push({x:A.rnd(0,480),y:A.rnd(0,360),vx:A.rnd(-60,60),vy:A.rnd(-60,60)});if(k==='ArrowDown')g.b.splice(0,20);},
+  update(g,dt){for(const b of g.b){let cx=0,cy=0,ax=0,ay=0,sx=0,sy=0,n=0;for(const o of g.b){if(o===b)continue;const dx=o.x-b.x,dy=o.y-b.y,d=Math.hypot(dx,dy);if(d<50){n++;cx+=o.x;cy+=o.y;ax+=o.vx;ay+=o.vy;if(d<14){sx-=dx/d;sy-=dy/d;}}}
+      if(n){b.vx+=((cx/n-b.x)*.6+(ax/n-b.vx)*1.2+sx*80)*dt;b.vy+=((cy/n-b.y)*.6+(ay/n-b.vy)*1.2+sy*80)*dt;}
+      const hx=b.x-A.mouse.x,hy=b.y-A.mouse.y,hd=Math.hypot(hx,hy);if(hd<70){b.vx+=hx/hd*400*dt;b.vy+=hy/hd*400*dt;}
+      const sp=Math.hypot(b.vx,b.vy);if(sp>110){b.vx*=110/sp;b.vy*=110/sp;}if(sp<40){b.vx*=1.05;b.vy*=1.05;}b.x=(b.x+b.vx*dt+480)%480;b.y=(b.y+b.vy*dt+360)%360;}},
+  draw(g){A.bg('#87ceeb');for(const b of g.b){const a=Math.atan2(b.vy,b.vx);c.save();c.translate(b.x,b.y);c.rotate(a);c.fillStyle='#263238';c.beginPath();c.moveTo(7,0);c.lineTo(-5,-4);c.lineTo(-5,4);c.fill();c.restore();}
+    c.fillStyle='#6d4c41';c.fillRect(A.mouse.x-6,A.mouse.y-4,12,8);A.txt('Птици: '+g.b.length,8,12,12,'#123');}
+});
+</script>
+</body>
+</html>

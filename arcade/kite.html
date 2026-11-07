@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвърчило</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪁 Хвърчило</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 150. Хвърчило
+A.add({id:'kite',cat:'action',icon:'🪁',name:'Хвърчило',desc:'Дръж хвърчилото във въздуха',help:'Дръж Space / мишката — хвърчилото се издига. Пусни — пада. Мини между облаците и птиците, събирай звезди.',
+  start(g){g.y=150;g.v=0;g.ob=[];g.sp=0;},
+  update(g,dt){const up=A.keys.Space||A.mouse.down;g.v+=(up?-420:300)*dt;g.v=A.clamp(g.v,-200,220);g.y+=g.v*dt;if(g.y<15||g.y>320)return A.over(g,g.y<15?'Вятърът го отнесе!':'Падна на земята!');
+    g.sp-=dt;if(g.sp<=0){g.sp=A.rnd(.6,1.2);g.ob.push({x:500,y:A.ri(20,300),k:Math.random()<.35?'star':Math.random()<.5?'bird':'cloud'});}
+    const sp=150+g.t*3;for(const o of g.ob){o.x-=sp*dt;if(o.k==='bird')o.y+=Math.sin(g.t*4+o.x*.02)*40*dt;if(!o.done&&Math.abs(o.x-120)<(o.k==='cloud'?40:18)&&Math.abs(o.y-g.y)<(o.k==='cloud'?20:16)){o.done=1;if(o.k==='star'){g.score+=5;A.beep(1100,.05);}else return A.over(g,o.k==='bird'?'Птица скъса хвърчилото!':'Облакът го заплете!');}}
+    g.ob=g.ob.filter(o=>o.x>-60&&!(o.done&&o.k==='star'));g.score+=dt*0;},
+  draw(g){A.bg('#9fd8f5');for(let x=0;x<480;x+=20)A.block(x,330,20,C.grass,30);c.strokeStyle='#555';c.lineWidth=1;c.beginPath();c.moveTo(40,330);c.quadraticCurveTo(80,g.y+60,120,g.y+14);c.stroke();
+    c.fillStyle=C.red;c.beginPath();c.moveTo(120,g.y-16);c.lineTo(134,g.y);c.lineTo(120,g.y+16);c.lineTo(106,g.y);c.fill();c.fillStyle=C.gold;c.fillRect(119,g.y+16,2,14);
+    for(const o of g.ob){if(o.k==='cloud'){A.block(o.x-40,o.y-14,80,'#fff',28);}else if(o.k==='bird'){c.fillStyle='#333';c.fillRect(o.x-10,o.y,20,5);c.fillRect(o.x-8+(Math.sin(g.t*20)>0?0:4),o.y-6,6,6);}else{A.block(o.x-9,o.y-9,18,C.gold);}}A.txt('⭐ '+g.score,10,14,14,'#123');}
+});
+</script>
+</body>
+</html>

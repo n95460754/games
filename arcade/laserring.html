@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лазерен кръг</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔴 Лазерен кръг</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 200. Лазерен кръг
+A.add({id:'laserring',cat:'skill',icon:'🔴',name:'Лазерен кръг',desc:'Бягай от въртящите се лъчи',unit:' с',dec:1,help:'← → — движиш се по кръга. Лазерните лъчи се въртят от центъра. Не ги докосвай! Резултатът е времето.',
+  start(g){g.a=0;g.L=[{a:Math.PI,sp:1}];g.add=8;},
+  update(g,dt){g.score=g.t;if(A.keys.ArrowLeft||A.keys.KeyA)g.a-=3*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.a+=3*dt;g.add-=dt;if(g.add<=0){g.add=8;g.L.push({a:A.rnd(0,6.28),sp:A.pick([-1,1])*A.rnd(.6,1.4)});}
+    for(const l of g.L){l.a+=l.sp*(.6+g.t*.01)*dt;let d=Math.abs(((g.a-l.a)%6.283+9.425)%6.283-3.1416);if(d<.09)return A.over(g,'Лазерът те удари!');}},
+  draw(g){A.bg('#0b0b14');c.strokeStyle='#333';c.lineWidth=2;c.beginPath();c.arc(240,180,130,0,7);c.stroke();for(const l of g.L){c.strokeStyle='#ff1744';c.lineWidth=5;c.beginPath();c.moveTo(240,180);c.lineTo(240+Math.cos(l.a)*170,180+Math.sin(l.a)*170);c.stroke();}
+    A.block(230,170,20,'#555');A.block(240+Math.cos(g.a)*130-9,180+Math.sin(g.a)*130-9,18,C.gem);A.txt('Лъчи: '+g.L.length,10,14,13);}
+});
+</script>
+</body>
+</html>

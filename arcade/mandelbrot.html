@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Манделброт</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐚 Манделброт</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 213. Фракталът на Манделброт
+A.add({id:'mandelbrot',cat:'board',icon:'🐚',name:'Манделброт',desc:'Безкраен фрактал — увеличавай!',noScore:true,help:'Кликни, за да увеличиш там (×3). Десен клик — намали. R — отначало. Колкото и да увеличаваш, все има нови шарки! Формулата е само z → z² + c.',
+  start(g){g.cx=-.6;g.cy=0;g.sc=3.2/480;this.render(g);},
+  render(g){const W=240,H=180;if(!g.cv){g.cv=document.createElement('canvas');g.cv.width=W;g.cv.height=H;}const x=g.cv.getContext('2d'),img=x.createImageData(W,H),d=img.data;const it=Math.min(400,60+Math.floor(-Math.log(g.sc)*12));
+    for(let py=0;py<H;py++)for(let px=0;px<W;px++){const cr=g.cx+(px*2-240)*g.sc,ci=g.cy+(py*2-180)*g.sc;let zr=0,zi=0,n=0;while(n<it&&zr*zr+zi*zi<4){const t=zr*zr-zi*zi+cr;zi=2*zr*zi+ci;zr=t;n++;}
+      const o=(py*W+px)*4;if(n===it){d[o]=d[o+1]=d[o+2]=0;}else{const v=n/it;d[o]=Math.floor(9*(1-v)*v*v*v*255);d[o+1]=Math.floor(15*(1-v)*(1-v)*v*v*255);d[o+2]=Math.floor(8.5*(1-v)**3*v*255);}d[o+3]=255;}x.putImageData(img,0,0);},
+  click(g,mx,my,b){g.cx+=(mx-240)*g.sc;g.cy+=(my-180)*g.sc;g.sc*=b===2?3:1/3;A.beep(400,.04);this.render(g);},
+  key(g,k){if(k==='KeyR'){g.cx=-.6;g.cy=0;g.sc=3.2/480;this.render(g);}},
+  draw(g){c.imageSmoothingEnabled=false;c.drawImage(g.cv,0,0,480,360);A.txt('Увеличение ×'+Math.round(3.2/480/g.sc),8,12,12,'#fff');}
+});
+</script>
+</body>
+</html>

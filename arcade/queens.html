@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Осем царици</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👑 Осем царици</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 185. Осем царици
+A.add({id:'queens',cat:'puzzle',icon:'👑',name:'Осем царици',desc:'Нито една да не напада друга',low:true,unit:' с',help:'Сложи 8 царици на дъската (клик), така че никоя да не е на един ред, колона или диагонал с друга. Червените са в конфликт. Клик пак — маха царицата.',
+  start(g){g.q=new Set();},
+  conflicts(g){const bad=new Set(),Q=[...g.q].map(k=>k.split(',').map(Number));for(let i=0;i<Q.length;i++)for(let j=i+1;j<Q.length;j++){const[a,b]=[Q[i],Q[j]];if(a[0]===b[0]||a[1]===b[1]||Math.abs(a[0]-b[0])===Math.abs(a[1]-b[1])){bad.add(a.join());bad.add(b.join());}}return bad;},
+  click(g,mx,my){const x=Math.floor((mx-100)/35),y=Math.floor((my-40)/35);if(x<0||y<0||x>7||y>7)return;const k=x+','+y;if(g.q.has(k))g.q.delete(k);else g.q.add(k);A.beep(400,.03);
+    if(g.q.size===8&&!this.conflicts(g).size){g.score=g.t;A.tune([523,659,784,1046]);A.over(g,'👑 Решено за '+Math.round(g.t)+' с!');}},
+  draw(g){A.bg('#2a2018');const bad=this.conflicts(g);for(let i=0;i<64;i++){const x=i%8,y=Math.floor(i/8);c.fillStyle=(x+y)%2?'#7a5233':'#e0c068';c.fillRect(100+x*35,40+y*35,35,35);
+      if(g.q.has(x+','+y))A.txt('♛',117+x*35,58+y*35,26,bad.has(x+','+y)?'#ff1744':'#fff','center');}A.txt('Царици: '+g.q.size+'/8   ⏱ '+Math.floor(g.t),240,20,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

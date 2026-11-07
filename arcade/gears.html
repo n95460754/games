@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зъбни колела</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚙️ Зъбни колела</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 170. Зъбни колела
+A.add({id:'gears',cat:'puzzle',icon:'⚙️',name:'Зъбни колела',desc:'Накъде се върти последното?',help:'Първото колело се върти по часовника. Съседните колела се въртят наобратно. Накъде ще се върти последното (червеното)? ← обратно, → по часовника. 60 секунди.',
+  start(g){g.time=60;this.make(g);},
+  make(g){const n=A.ri(2,Math.min(9,3+g.score));g.gs=[];let x=40,y=A.ri(120,220);for(let i=0;i<n;i++){g.gs.push({x,y,r:A.ri(18,28)});x+=A.ri(42,52);y=A.clamp(y+A.ri(-40,40),70,270);}
+    g.gs.forEach((q,i)=>{if(i){const p=g.gs[i-1],d=Math.hypot(q.x-p.x,q.y-p.y);q.r=Math.max(10,d-p.r-2);}});g.ans=(n-1)%2===0?'cw':'ccw';},
+  key(g,k){const a={ArrowLeft:'ccw',KeyA:'ccw',ArrowRight:'cw',KeyD:'cw'}[k];if(!a)return;const ok=a===g.ans;flash(g,ok);if(ok)g.score++;else g.score=Math.max(0,g.score-1);this.make(g);},
+  click(g,mx){this.key(g,mx<240?'ArrowLeft':'ArrowRight');},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#2a2420');g.gs.forEach((q,i)=>{const rot=(i%2?-1:1)*g.t*(30/q.r);c.save();c.translate(q.x,q.y);c.rotate(rot);c.fillStyle=i===g.gs.length-1?C.red:i===0?C.grass:'#9e9e9e';
+      for(let k=0;k<8;k++){c.rotate(Math.PI/4);c.fillRect(-3,-q.r-4,6,8);}c.beginPath();c.arc(0,0,q.r,0,7);c.fill();c.fillStyle='#333';c.fillRect(-3,-3,6,6);c.restore();});
+    A.txt('↺ обратно',90,320,16,'#9ecbff','center');A.txt('по часовника ↻',390,320,16,'#ffb74d','center');A.txt('⏱ '+Math.ceil(g.time),10,14,14);drawFlash(g);}
+});
+</script>
+</body>
+</html>

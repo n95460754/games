@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фигури</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔷 Фигури</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 136. Фигури
+A.add(choiceGame({id:'shapes',cat:'brain',icon:'🔷',name:'Фигури',desc:'Как се казва фигурата?',help:'Избери името на фигурата (клик или 1–4). 60 секунди.',
+  S:[['триъгълник',3],['квадрат',4],['петоъгълник',5],['шестоъгълник',6],['седмоъгълник',7],['осмоъгълник',8],['кръг',0],['ромб','r'],['трапец','t'],['правоъгълник','p']],
+  next(g){const s=A.pick(this.S);g.s=s;g.ans=s[0];g.rot=A.rnd(0,1);g.opts=opts4(g.ans,()=>A.pick(this.S)[0]);},
+  pic(g){const s=g.s[1],cx=240,cy=135;c.fillStyle=C.gem;c.beginPath();
+    if(s===0)c.arc(cx,cy,80,0,7);else if(s==='r'){c.moveTo(cx,cy-95);c.lineTo(cx+65,cy);c.lineTo(cx,cy+95);c.lineTo(cx-65,cy);}
+    else if(s==='t'){c.moveTo(cx-60,cy-60);c.lineTo(cx+60,cy-60);c.lineTo(cx+110,cy+60);c.lineTo(cx-110,cy+60);}else if(s==='p'){c.rect(cx-120,cy-60,240,120);}
+    else for(let i=0;i<s;i++){const a=i/s*6.283-1.5708+(s===4?.785:0);i?c.lineTo(cx+Math.cos(a)*90,cy+Math.sin(a)*90):c.moveTo(cx+Math.cos(a)*90,cy+Math.sin(a)*90);}c.fill();}}));
+</script>
+</body>
+</html>

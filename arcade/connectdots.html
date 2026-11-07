@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Свържи по ред</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Свържи по ред</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 186. Свържи по ред
+A.add({id:'connectdots',cat:'skill',icon:'🔢',name:'Свържи по ред',desc:'Кликай числата 1, 2, 3… бързо',low:true,unit:' с',dec:1,help:'Кликни числата по ред от 1 до 25 колкото можеш по-бързо. Грешен клик = +2 секунди.',
+  start(g){g.p=[];for(let i=1;i<=25;i++){let x,y;do{x=A.ri(30,450);y=A.ri(40,330);}while(g.p.some(q=>Math.hypot(q.x-x,q.y-y)<44));g.p.push({n:i,x,y});}g.next=1;g.pen=0;},
+  click(g,mx,my){const q=g.p.find(q=>Math.hypot(q.x-mx,q.y-my)<20);if(!q)return;if(q.n===g.next){g.next++;A.beep(400+g.next*20,.03);if(g.next>25){g.score=g.t+g.pen;A.over(g,'Готово за '+g.score.toFixed(1)+' с');}}else{g.pen+=2;A.beep(120,.1);}},
+  draw(g){A.bg('#f0e6d2');c.strokeStyle='#d84a3a';c.lineWidth=2;c.beginPath();for(let i=0;i<g.next-1;i++){const q=g.p[i];i?c.lineTo(q.x,q.y):c.moveTo(q.x,q.y);}c.stroke();
+    for(const q of g.p){A.block(q.x-17,q.y-17,34,q.n<g.next?'#9ccc65':'#5a6b8c');A.txt(q.n,q.x,q.y,14,'#fff','center');}A.txt('⏱ '+(g.t+g.pen).toFixed(1)+'  следващо: '+Math.min(25,g.next),10,14,13,'#333');}
+});
+</script>
+</body>
+</html>

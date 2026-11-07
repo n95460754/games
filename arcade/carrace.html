@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Магистрала</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏎️ Магистрала</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 148. Магистрала
+A.add({id:'carrace',cat:'action',icon:'🏎️',name:'Магистрала',desc:'Изпреварвай колите',help:'← → смени лентата (или мишка). Не удряй колите. Събирай монети. Скоростта расте!',
+  start(g){g.lane=1;g.x=240;g.cars=[];g.sp=0;g.off=0;},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')g.lane=Math.max(0,g.lane-1);if(k==='ArrowRight'||k==='KeyD')g.lane=Math.min(3,g.lane+1);},
+  move(g,x){g.lane=A.clamp(Math.floor((x-80)/80),0,3);},
+  update(g,dt){const v=250+g.t*5;g.off=(g.off+v*dt)%40;g.score=Math.floor(g.t*5)+(g.bonus||0);g.x+=(120+g.lane*80-g.x)*Math.min(1,dt*12);
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.35,.9-g.t*.01);const l=A.ri(0,3);g.cars.push({l,y:-60,coin:Math.random()<.25,col:A.pick([C.water,C.purple,'#ff8c1a','#eee',C.grass])});}
+    for(const c2 of g.cars){c2.y+=(c2.coin?v:v*.55)*dt;const cx=120+c2.l*80;if(Math.abs(cx-g.x)<30&&Math.abs(c2.y-290)<(c2.coin?24:46)){if(c2.coin){c2.y=999;g.bonus=(g.bonus||0)+10;A.beep(1100,.05);}else return A.over(g,'Катастрофа!');}}g.cars=g.cars.filter(c2=>c2.y<400);},
+  draw(g){A.bg('#2e7d32');c.fillStyle='#444';c.fillRect(80,0,320,360);c.fillStyle='#fff';for(let l=1;l<4;l++)for(let y=-40+g.off;y<360;y+=40)c.fillRect(78+l*80,y,4,20);
+    for(const c2 of g.cars){const x=120+c2.l*80;if(c2.coin){A.block(x-10,c2.y-10,20,C.gold);}else{A.block(x-20,c2.y-34,40,c2.col,68);c.fillStyle='#223';c.fillRect(x-14,c2.y+8,28,12);}}
+    A.block(g.x-20,256,40,C.red,68);c.fillStyle='#223';c.fillRect(g.x-14,264,28,12);}
+});
+</script>
+</body>
+</html>

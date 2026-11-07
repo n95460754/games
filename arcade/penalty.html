@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дузпи</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚽ Дузпи</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 188. Дузпи
+A.add({id:'penalty',cat:'skill',icon:'⚽',name:'Дузпи',desc:'Бий и пази',help:'Като стреляш: кликни къде във вратата да отиде топката (вратарят се хвърля случайно). Като пазиш: натисни ← ↑ → (или клик ляво/среда/дясно), за да се хвърлиш. 5 удара всеки.',
+  start(g){g.round=0;g.me=0;g.ai=0;g.phase='shoot';g.anim=0;g.res='';},
+  next(g){g.round+=g.phase==='save'?1:0;g.phase=g.phase==='shoot'?'save':'shoot';if(g.round>=5){g.score=g.me;A.over(g,g.me>g.ai?'🏆 Победа '+g.me+':'+g.ai:g.me<g.ai?'Загуба '+g.me+':'+g.ai:'Равенство '+g.me+':'+g.ai);}
+    if(g.phase==='save'){g.kick=A.ri(0,2);g.wait=A.rnd(.8,1.6);g.dive=-1;}},
+  click(g,mx,my){if(g.anim>0)return;if(g.phase==='shoot'){if(mx<120||mx>360||my<60||my>200)return;const zone=mx<200?0:mx<280?1:2;const gk=A.ri(0,2);g.ball=[mx,my];g.gk=gk;const goal=gk!==zone||(my<85&&Math.random()<.5);if(goal)g.me++;g.res=goal?'ГОЛ! ⚽':'Спасено!';A.beep(goal?900:200,.15);g.anim=1.2;}
+    else this.key(g,mx<200?'ArrowLeft':mx<280?'ArrowUp':'ArrowRight');},
+  key(g,k){if(g.phase!=='save'||g.dive>=0||g.anim>0)return;const d={ArrowLeft:0,ArrowUp:1,ArrowRight:2}[k];if(d===undefined)return;g.dive=d;},
+  update(g,dt){if(g.anim>0){g.anim-=dt;if(g.anim<=0)this.next(g);return;}if(g.phase==='save'){g.wait-=dt;if(g.wait<=0){const saved=g.dive===g.kick;if(!saved)g.ai++;g.res=saved?'Спаси! 🧤':'Гол за робота';g.ball=[160+g.kick*80,130];g.gk=g.dive<0?1:g.dive;A.beep(saved?900:200,.15);g.anim=1.2;}}},
+  draw(g){A.bg('#2e7d32');c.fillStyle='#fff';c.fillRect(116,56,248,6);c.fillRect(116,56,6,150);c.fillRect(358,56,6,150);c.strokeStyle='rgba(255,255,255,.3)';for(let x=122;x<358;x+=16){c.beginPath();c.moveTo(x,62);c.lineTo(x,206);c.stroke();}
+    const gx=g.anim>0?160+(g.gk||1)*80:240;A.block(gx-14,130,28,g.phase==='shoot'?C.red:'#3b7bd6',60);
+    if(g.anim>0&&g.ball){c.fillStyle='#fff';c.beginPath();c.arc(g.ball[0],g.ball[1],9,0,7);c.fill();}else{c.fillStyle='#fff';c.beginPath();c.arc(240,300,9,0,7);c.fill();}
+    A.txt(g.phase==='shoot'?'Ти биеш: кликни във вратата':'Ти пазиш: ← ↑ →',240,240,15,'#fff','center');if(g.anim>0)A.txt(g.res,240,30,22,'#ffd54f','center');A.txt('Ти '+g.me+' : '+g.ai+' Робот   (удар '+Math.min(5,g.round+1)+'/5)',240,345,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

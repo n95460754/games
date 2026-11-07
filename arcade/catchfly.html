@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвани мухата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪰 Хвани мухата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 193. Хвани мухата
+A.add({id:'catchfly',cat:'skill',icon:'🪰',name:'Хвани мухата',desc:'Шляпни бързата муха',help:'Мухата лети насам-натам. Кликни върху нея, за да я хванеш. Всяка следваща е по-бърза! 30 секунди.',
+  start(g){g.time=30;this.fly(g);g.miss=0;},
+  fly(g){g.f={x:A.ri(40,440),y:A.ri(40,320),a:A.rnd(0,6),v:120+g.score*25};},
+  click(g,mx,my){if(Math.hypot(mx-g.f.x,my-g.f.y)<18){g.score++;A.beep(900,.05);g.sw={x:mx,y:my,t:.3};this.fly(g);}else{A.beep(200,.03);g.sw={x:mx,y:my,t:.15};}},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');const f=g.f;f.a+=A.rnd(-6,6)*dt;f.x+=Math.cos(f.a)*f.v*dt;f.y+=Math.sin(f.a)*f.v*dt;if(f.x<15||f.x>465)f.a=Math.PI-f.a;if(f.y<15||f.y>345)f.a=-f.a;f.x=A.clamp(f.x,15,465);f.y=A.clamp(f.y,15,345);if(g.sw)g.sw.t-=dt;},
+  draw(g){A.bg('#f5f0e6');const f=g.f,w=Math.sin(g.t*60)>0;c.fillStyle='#222';c.fillRect(f.x-5,f.y-4,10,8);c.fillStyle='rgba(150,200,255,.7)';c.fillRect(f.x-8,f.y-(w?10:7),6,5);c.fillRect(f.x+2,f.y-(w?10:7),6,5);
+    if(g.sw&&g.sw.t>0)A.block(g.sw.x-20,g.sw.y-20,40,'rgba(216,74,58,.6)');A.txt('⏱ '+Math.ceil(g.time),10,14,14,'#333');}
+});
+</script>
+</body>
+</html>

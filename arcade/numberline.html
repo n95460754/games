@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числова ос</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📍 Числова ос</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 145. Числова ос
+A.add({id:'numberline',cat:'brain',icon:'📍',name:'Числова ос',desc:'Покажи къде е числото',help:'Кликни мястото на числото върху оста. Колкото по-точно, толкова повече точки (до 10). 10 въпроса.',
+  start(g){g.n=0;this.next(g);},
+  next(g){g.n++;if(g.n>10)return A.over(g,'Готово!');const max=A.pick([10,20,50,100,1000]);g.max=max;g.v=Math.random()<.3&&max<=20?A.ri(1,max*2-1)/2:A.ri(1,max-1);g.res=null;},
+  click(g,mx){if(g.res){this.next(g);return;}const v=(mx-40)/400*g.max;const err=Math.abs(v-g.v)/g.max;const pts=Math.max(0,10-Math.round(err*100));g.score+=pts;g.res={x:mx,pts};A.beep(300+pts*60,.08);},
+  key(g,k){if(k==='Space'&&g.res)this.next(g);},
+  draw(g){A.bg('#1d2b3a');A.txt('Къде е '+String(g.v).replace('.',',')+' ?',240,70,30,'#fff','center');c.fillStyle='#fff';c.fillRect(40,200,400,4);
+    for(let i=0;i<=10;i++){c.fillRect(40+i*40-1,192,2,20);}A.txt('0',40,230,14,'#bbb','center');A.txt(g.max,440,230,14,'#bbb','center');
+    if(g.res){const tx=40+g.v/g.max*400;A.block(tx-6,180,12,C.grass);c.fillStyle=C.red;c.fillRect(g.res.x-2,170,4,40);A.txt('+'+g.res.pts+'  (клик за следващо)',240,290,16,'#ffd54f','center');}
+    A.txt('Въпрос '+Math.min(10,g.n)+'/10',10,14,13);}
+});
+</script>
+</body>
+</html>

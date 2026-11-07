@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Симетрия</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🦋 Симетрия</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 167. Симетрия
+A.add({id:'symmetry',cat:'puzzle',icon:'🦋',name:'Симетрия',desc:'Довърши огледалния образ',help:'Лявата половина е нарисувана. Кликни клетки от дясната половина, така че картинката да стане симетрична спрямо червената линия. 3 минути.',
+  start(g){g.time=180;this.make(g);},
+  make(g){g.N=Math.min(8,4+Math.floor(g.score/2))*2;g.H=Math.min(8,4+Math.floor(g.score/2));g.L=[];for(let i=0;i<g.H*g.N/2;i++)g.L.push(Math.random()<.45?1:0);g.R=Array(g.H*g.N/2).fill(0);},
+  click(g,mx,my){const T=Math.floor(Math.min(400/g.N,300/g.H)),ox=240-g.N/2*T,x=Math.floor((mx-ox)/T)-g.N/2,y=Math.floor((my-40)/T);if(x<0||y<0||x>=g.N/2||y>=g.H)return;g.R[y*g.N/2+x]^=1;A.beep(400,.02);
+    const h=g.N/2;let ok=true;for(let yy=0;yy<g.H;yy++)for(let xx=0;xx<h;xx++)if(g.R[yy*h+xx]!==g.L[yy*h+(h-1-xx)])ok=false;if(ok){g.score++;A.tune([660,880]);this.make(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1d2433');const T=Math.floor(Math.min(400/g.N,300/g.H)),ox=240-g.N/2*T,h=g.N/2;for(let y=0;y<g.H;y++)for(let x=0;x<h;x++){
+      if(g.L[y*h+x])A.block(ox+x*T,40+y*T,T,C.purple);else{c.fillStyle='#2b3646';c.fillRect(ox+x*T+1,40+y*T+1,T-2,T-2);}
+      if(g.R[y*h+x])A.block(240+x*T,40+y*T,T,C.gem);else{c.fillStyle='#323e52';c.fillRect(240+x*T+1,40+y*T+1,T-2,T-2);}}
+    c.fillStyle=C.red;c.fillRect(238,34,4,g.H*T+12);A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

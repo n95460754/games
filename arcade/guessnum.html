@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Познай числото</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎯 Познай числото</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 180. Познай числото
+A.add({id:'guessnum',cat:'puzzle',icon:'🎯',name:'Познай числото',desc:'Двоично търсене',low:true,unit:' опита',help:'Роботът е намислил число от 1 до 1000. Напиши предположение и Enter — ще ти каже „по-голямо“ или „по-малко“. Може да стане с 10 опита, ако всеки път делиш на половина!',
+  start(g){g.n=A.ri(1,1000);g.inp='';g.tries=0;g.lo=1;g.hi=1000;g.msg='Намислих число от 1 до 1000';},
+  key(g,k,ch){if(typeNum(g,k,ch)&&g.inp){const v=+g.inp;g.inp='';g.tries++;g.score=g.tries;if(v===g.n){A.tune([523,659,784]);return A.over(g,'🎯 Позна '+g.n+' с '+g.tries+' опита!');}
+    if(v<g.n){g.msg=v+' → ПО-ГОЛЯМО ⬆';g.lo=Math.max(g.lo,v+1);}else{g.msg=v+' → ПО-МАЛКО ⬇';g.hi=Math.min(g.hi,v-1);}A.beep(v<g.n?600:300,.06);}},
+  draw(g){A.bg('#1d2433');A.txt(g.msg,240,80,22,'#ffd54f','center');inputBox(g,160);c.fillStyle='#333';c.fillRect(40,250,400,16);c.fillStyle=C.grass;c.fillRect(40+(g.lo-1)/1000*400,250,Math.max(2,(g.hi-g.lo+1)/1000*400),16);
+    A.txt('Остава между '+g.lo+' и '+g.hi,240,290,14,'#bbb','center');A.txt('Опити: '+g.tries,10,14,14);}
+});
+</script>
+</body>
+</html>

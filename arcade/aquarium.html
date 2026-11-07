@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Аквариум</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐠 Аквариум</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 220. Аквариум
+A.add({id:'aquarium',cat:'board',icon:'🐠',name:'Аквариум',desc:'Грижи се за рибките',help:'Кликни във водата, за да пуснеш храна. Рибките гладуват с времето — нахрани ги, преди да станат сиви! Всяка нахранена рибка = точка. Ако умре риба — край.',
+  start(g){g.fish=[];for(let i=0;i<5;i++)g.fish.push({x:A.rnd(40,440),y:A.rnd(60,280),vx:A.rnd(-40,40),vy:0,h:A.rnd(.6,1),col:A.pick(['#ff7043','#ffd23f','#4fc3f7','#ba68c8','#81c784'])});g.food=[];g.bub=[];},
+  click(g,mx,my){for(let i=0;i<3;i++)g.food.push({x:mx+A.rnd(-8,8),y:Math.min(my,40)});A.beep(700,.03);},
+  update(g,dt){for(const f of g.fish){f.h-=dt*.025*(1+g.t/120);let t=null,bd=1e9;for(const q of g.food){const d=Math.hypot(q.x-f.x,q.y-f.y);if(d<bd){bd=d;t=q;}}
+      if(t&&f.h<.9){f.vx+=(t.x-f.x)*1.5*dt;f.vy+=(t.y-f.y)*1.5*dt;if(bd<10){t.eaten=1;f.h=Math.min(1,f.h+.3);g.score++;A.beep(900,.03);}}else{f.vx+=A.rnd(-30,30)*dt;f.vy+=A.rnd(-20,20)*dt;}
+      const sp=Math.hypot(f.vx,f.vy);if(sp>80){f.vx*=80/sp;f.vy*=80/sp;}f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.x<20||f.x>460)f.vx*=-1;if(f.y<50||f.y>300)f.vy*=-1;f.x=A.clamp(f.x,20,460);f.y=A.clamp(f.y,50,300);
+      if(f.h<=0)return A.over(g,'Една рибка умря от глад 😢');}
+    for(const q of g.food){q.y+=30*dt;}g.food=g.food.filter(q=>!q.eaten&&q.y<320);if(Math.random()<dt*3)g.bub.push({x:A.rnd(20,460),y:320});for(const b of g.bub)b.y-=40*dt;g.bub=g.bub.filter(b=>b.y>40);},
+  draw(g){A.bg('#87ceeb');c.fillStyle='#0277bd';c.fillRect(0,40,480,290);c.fillStyle=C.sand;c.fillRect(0,310,480,50);for(let x=30;x<480;x+=90){c.fillStyle='#2e7d32';c.fillRect(x,250+Math.sin(g.t+x)*5,6,60);}
+    c.fillStyle='rgba(255,255,255,.5)';for(const b of g.bub)c.fillRect(b.x,b.y,4,4);c.fillStyle='#8d6e3f';for(const q of g.food)c.fillRect(q.x-2,q.y-2,4,4);
+    for(const f of g.fish){const d=f.vx>0?1:-1;c.fillStyle=f.h<.3?'#999':f.col;c.fillRect(f.x-10,f.y-6,20,12);c.fillRect(f.x-d*10-d*6,f.y-5,6,10);c.fillStyle='#000';c.fillRect(f.x+d*5-1,f.y-3,3,3);c.fillStyle='#000';c.fillRect(f.x-10,f.y-12,20,3);c.fillStyle=f.h<.3?'#f33':'#5f5';c.fillRect(f.x-10,f.y-12,20*f.h,3);}
+    A.txt('Нахранени: '+g.score,8,20,13,'#123');}
+});
+</script>
+</body>
+</html>

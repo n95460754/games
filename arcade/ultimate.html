@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Супер морски шах</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">#️⃣ Супер морски шах</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 206. Супер морски шах
+A.add({id:'ultimate',cat:'board',icon:'#️⃣',name:'Супер морски шах',desc:'Морски шах в морски шах',help:'9 малки дъски в една голяма. Където играеш в малката дъска, там (в голямата) трябва да играе противникът! Спечели 3 малки дъски в ред. Светлите дъски са позволените.',
+  L:[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],
+  start(g){g.b=Array(81).fill(0);g.big=Array(9).fill(0);g.next=-1;g.turn=1;g.ai=0;},
+  win(a){for(const[x,y,z]of this.L)if(a[x]&&a[x]!==3&&a[x]===a[y]&&a[x]===a[z])return a[x];return a.every(Boolean)?3:0;},
+  legal(g){const r=[];for(let B=0;B<9;B++){if(g.big[B]||(g.next>=0&&g.next!==B&&!g.big[g.next]))continue;for(let k=0;k<9;k++)if(!g.b[B*9+k])r.push(B*9+k);}return r;},
+  play(g,i,p){g.b[i]=p;const B=Math.floor(i/9),k=i%9;if(!g.big[B])g.big[B]=this.win(g.b.slice(B*9,B*9+9));g.next=g.big[k]?-1:k;A.beep(p===1?600:300,.04);
+    const w=this.win(g.big);if(w===1){g.score=1;A.tune([523,659,784]);return A.over(g,'🏆 Победа!');}if(w===2)return A.over(g,'Роботът победи');if(w===3||!this.legal(g).length)return A.over(g,'Равенство');g.turn=3-p;if(g.turn===2)g.ai=.5;},
+  cell(mx,my){const X=Math.floor((mx-105)/30),Y=Math.floor((my-45)/30);if(X<0||Y<0||X>8||Y>8)return-1;return(Math.floor(Y/3)*3+Math.floor(X/3))*9+(Y%3)*3+X%3;},
+  click(g,mx,my){if(g.turn!==1)return;const i=this.cell(mx,my);if(i>=0&&this.legal(g).includes(i))this.play(g,i,1);},
+  update(g,dt){if(g.turn!==2)return;g.ai-=dt;if(g.ai>0)return;const L=this.legal(g);let best=L[0],bs=-1e9;
+    for(const i of L){const B=Math.floor(i/9),k=i%9,sub=g.b.slice(B*9,B*9+9);let s=Math.random();sub[k]=2;if(this.win(sub)===2)s+=50;sub[k]=1;if(this.win(sub)===1)s+=30;if(g.big[k])s-=10;else{const nb=g.b.slice(k*9,k*9+9);for(let q=0;q<9;q++)if(!nb[q]){nb[q]=1;if(this.win(nb)===1)s-=20;nb[q]=0;}}if(k===4)s+=2;if(s>bs){bs=s;best=i;}}
+    this.play(g,best,2);},
+  draw(g){A.bg('#1d2433');const L=new Set(this.legal(g));for(let B=0;B<9;B++){const bx=105+(B%3)*90,by=45+Math.floor(B/3)*90;c.fillStyle=g.big[B]===1?'#2a4a7a':g.big[B]===2?'#6a2a2a':[...L].some(i=>Math.floor(i/9)===B)&&g.turn===1?'#3a4a60':'#262f40';c.fillRect(bx+2,by+2,86,86);
+      for(let k=0;k<9;k++){const v=g.b[B*9+k],x=bx+(k%3)*30,y=by+Math.floor(k/3)*30;c.strokeStyle='#556';c.strokeRect(x+3,y+3,24,24);if(v)A.block(x+6,y+6,18,v===1?'#3b7bd6':C.red);}
+      if(g.big[B]===1||g.big[B]===2)A.txt(g.big[B]===1?'🟦':'🟥',bx+45,by+45,40,'#fff','center');}
+    A.txt(g.turn===1?'Твой ход (син)':'Роботът...',240,22,15,'#fff','center');}
+});
+</script>
+</body>
+</html>

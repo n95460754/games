@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Силомер</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔨 Силомер</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 205. Силомер
+A.add({id:'strength',cat:'skill',icon:'🔨',name:'Силомер',desc:'Удари точно на върха',help:'Стрелката тича нагоре-надолу. Натисни Space / клик, когато е НАЙ-ГОРЕ, за да удариш с максимална сила и да звъннеш на звънеца! 5 удара.',
+  start(g){g.n=5;g.ph=0;g.st='aim';},
+  hit(g){if(g.st!=='aim')return;g.pow=Math.abs(Math.sin(g.ph));g.st='fly';g.y=0;A.beep(200,.1);},
+  click(g){this.hit(g);},key(g,k){if(k==='Space')this.hit(g);},
+  update(g,dt){if(g.st==='aim')g.ph+=dt*(2.5+(5-g.n)*.6);if(g.st==='fly'){g.y+=dt*500;if(g.y>=g.pow*260){g.y=g.pow*260;g.st='show';g.w=1.2;const p=Math.round(g.pow*100);g.score+=p;g.last=p;if(p>=98)A.tune([1046,1318,1568]);else A.beep(300+p*5,.1);}}
+    if(g.st==='show'){g.w-=dt;if(g.w<=0){g.n--;if(!g.n)return A.over(g,'Общо '+g.score+' сила');g.st='aim';}}},
+  draw(g){A.bg('#2a1f3a');c.fillStyle='#ddd';c.fillRect(230,40,20,280);for(let i=0;i<10;i++){c.fillStyle='hsl('+(120-i*12)+',70%,50%)';c.fillRect(250,300-i*28,30,26);}A.block(222,20,36,C.gold,24);
+    if(g.st!=='aim')A.block(226,300-g.y-10,28,C.red,14);c.fillStyle='#000';c.fillRect(120,60,24,260);c.fillStyle='#ffd54f';const pw=Math.abs(Math.sin(g.ph));c.fillRect(120,320-pw*260,24,6);
+    A.txt('Удари: '+g.n,10,14,13);if(g.st==='show')A.txt(g.last+'%',340,180,26,g.last>=98?'#ffd54f':'#fff');}
+});
+</script>
+</body>
+</html>

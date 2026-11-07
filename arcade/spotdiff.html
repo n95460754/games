@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Открий разликите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔍 Открий разликите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 189. Открий разликите
+A.add({id:'spotdiff',cat:'skill',icon:'🔍',name:'Открий разликите',desc:'Намери 5-те разлики',help:'Двете картинки се различават на 5 места. Кликни разликите в ДЕСНАТА картинка. Грешен клик = −5 секунди. 60 секунди за колкото може повече картинки.',
+  start(g){g.time=60;this.make(g);},
+  make(g){const cols=[C.grass,C.dirt,C.stone,C.wood,C.gold,C.water,C.red,C.leaf];g.L=[];for(let i=0;i<64;i++)g.L.push(A.pick(cols));g.R=g.L.slice();g.diff=new Set();while(g.diff.size<5){const i=A.ri(0,63);if(g.diff.has(i))continue;let v;do{v=A.pick(cols);}while(v===g.L[i]);g.R[i]=v;g.diff.add(i);}g.found=new Set();},
+  click(g,mx,my){if(mx<250)return;const x=Math.floor((mx-250)/26),y=Math.floor((my-60)/26);if(x<0||y<0||x>7||y>7)return;const i=y*8+x;
+    if(g.diff.has(i)&&!g.found.has(i)){g.found.add(i);g.score++;A.beep(900,.05);if(g.found.size===5){A.tune([660,880]);g.time+=5;this.make(g);}}else if(!g.found.has(i)){g.time-=5;A.beep(120,.1);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#2a2420');for(const[ox,arr]of[[22,g.L],[250,g.R]])arr.forEach((v,i)=>{A.block(ox+(i%8)*26,60+Math.floor(i/8)*26,26,v);if(ox===250&&g.found.has(i)){c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(ox+(i%8)*26+1,60+Math.floor(i/8)*26+1,24,24);}});
+    A.txt('Намерени '+g.found.size+'/5   ⏱ '+Math.ceil(g.time),240,30,15,'#fff','center');}
+});
+</script>
+</body>
+</html>

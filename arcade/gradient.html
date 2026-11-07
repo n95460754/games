@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цветна дъга</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌈 Цветна дъга</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 183. Цветна дъга
+A.add({id:'gradient',cat:'puzzle',icon:'🌈',name:'Цветна дъга',desc:'Подреди нюансите',low:true,unit:' хода',help:'Ъглите са на място (с точка). Размествай останалите плочки (клик на две), за да направиш плавен преход на цветовете.',
+  start(g){const N=5;g.N=N;const C4=[[A.ri(0,255),A.ri(0,255),A.ri(0,255)],[A.ri(0,255),A.ri(0,255),A.ri(0,255)],[A.ri(0,255),A.ri(0,255),A.ri(0,255)],[A.ri(0,255),A.ri(0,255),A.ri(0,255)]];
+    g.sol=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++){const u=x/(N-1),v=y/(N-1),m=(a,b,t)=>a.map((q,i)=>q+(b[i]-q)*t);const top=m(C4[0],C4[1],u),bot=m(C4[2],C4[3],u);g.sol.push('rgb('+m(top,bot,v).map(Math.round)+')');}
+    g.fix=g.sol.map((_,i)=>[0,N-1,N*(N-1),N*N-1].includes(i));const free=[...g.sol.keys()].filter(i=>!g.fix[i]);const sh=A.shuffle(free.slice());g.cur=g.sol.slice();free.forEach((i,k)=>g.cur[i]=g.sol[sh[k]]);g.sel=-1;g.moves=0;},
+  click(g,mx,my){const x=Math.floor((mx-115)/50),y=Math.floor((my-30)/50);if(x<0||y<0||x>=g.N||y>=g.N)return;const i=y*g.N+x;if(g.fix[i])return;if(g.sel<0){g.sel=i;return;}
+    [g.cur[i],g.cur[g.sel]]=[g.cur[g.sel],g.cur[i]];g.sel=-1;g.moves++;g.score=g.moves;A.beep(400,.03);if(g.cur.every((v,k)=>v===g.sol[k]))A.over(g,'🌈 Перфектен преход!');},
+  draw(g){A.bg('#222');g.cur.forEach((v,i)=>{const x=115+(i%g.N)*50,y=30+Math.floor(i/g.N)*50;c.fillStyle=v;c.fillRect(x+1,y+1,48,48);if(g.fix[i]){c.fillStyle='#000';c.fillRect(x+21,y+21,8,8);}if(i===g.sel){c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(x+2,y+2,46,46);}});A.txt('Ходове '+g.moves,10,14,13);}
+});
+</script>
+</body>
+</html>

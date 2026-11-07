@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Наклони кутията</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📥 Наклони кутията</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 178. Наклони кутията
+A.add({id:'tiltbox',cat:'puzzle',icon:'📥',name:'Наклони кутията',desc:'Всички блокове се плъзгат заедно',help:'Стрелките накланят кутията — ВСИЧКИ блокове се плъзгат докрай. Вкарай червения блок в зелената дупка. 3 минути.',
+  start(g){g.time=180;this.make(g);},
+  tilt(b,walls,dx,dy){let moved=true;b=b.map(q=>({...q}));while(moved){moved=false;for(const q of b){const X=q.x+dx,Y=q.y+dy;if(X<0||Y<0||X>6||Y>6||walls.has(X+','+Y)||b.some(o=>o.x===X&&o.y===Y))continue;q.x=X;q.y=Y;moved=true;}}return b;},
+  make(g){for(let t=0;t<500;t++){const walls=new Set();for(let i=0;i<A.ri(4,8);i++)walls.add(A.ri(0,6)+','+A.ri(0,6));const b=[];const used=new Set(walls);
+      for(let i=0;i<1+Math.min(3,g.score);i++){let x,y;do{x=A.ri(0,6);y=A.ri(0,6);}while(used.has(x+','+y));used.add(x+','+y);b.push({x,y,red:i===0});}
+      let hx,hy;do{hx=A.ri(0,6);hy=A.ri(0,6);}while(used.has(hx+','+hy));
+      const key=s=>s.map(q=>q.x+','+q.y).join('|');const seen=new Map([[key(b),0]]),q=[b];let d=-1;while(q.length){const s=q.shift();const r=s[0];if(r.x===hx&&r.y===hy){d=seen.get(key(s));break;}if(seen.get(key(s))>8)continue;
+        for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const n=this.tilt(s,walls,dx,dy);const k=key(n);if(!seen.has(k)){seen.set(k,seen.get(key(s))+1);q.push(n);}}}
+      if(d>=2||(t>400&&d>=1)){g.walls=walls;g.b=b;g.hx=hx;g.hy=hy;g.min=d;g.moves=0;return;}}
+    g.walls=new Set();g.b=[{x:0,y:3,red:true}];g.hx=6;g.hy=3;g.min=1;g.moves=0;},
+  key(g,k){const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(k==='KeyR'){this.make(g);return;}if(!m)return;
+    let b=g.b.map(q=>({...q}));let moved=true;const walls=g.walls;while(moved){moved=false;for(const q of b){const X=q.x+m[0],Y=q.y+m[1];if(X<0||Y<0||X>6||Y>6||walls.has(X+','+Y)||b.some(o=>o.x===X&&o.y===Y))continue;q.x=X;q.y=Y;moved=true;}}
+    g.b=b;g.moves++;A.beep(250,.04);const r=g.b[0];if(r.x===g.hx&&r.y===g.hy){g.score++;A.tune([523,659,784]);this.make(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#2a2420');const T=44,ox=86,oy=22;c.fillStyle='#4a3a2a';c.fillRect(ox-6,oy-6,T*7+12,T*7+12);c.fillStyle='#3a322b';c.fillRect(ox,oy,T*7,T*7);
+    for(const w of g.walls){const[x,y]=w.split(',').map(Number);A.block(ox+x*T,oy+y*T,T,C.stone);}c.fillStyle='#1b5e20';c.fillRect(ox+g.hx*T+6,oy+g.hy*T+6,T-12,T-12);
+    for(const q of g.b)A.block(ox+q.x*T+4,oy+q.y*T+4,T-8,q.red?C.red:C.wood);A.txt('Ходове '+g.moves+' (може за '+g.min+')  R = ново',10,12,12);A.txt('⏱ '+Math.ceil(g.time),470,12,12,'#fff','right');}
+});
+</script>
+</body>
+</html>

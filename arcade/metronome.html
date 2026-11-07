@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Метроном</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🥁 Метроном</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 196. Метроном
+A.add({id:'metronome',cat:'skill',icon:'🥁',name:'Метроном',desc:'Удряй точно в ритъм',help:'Метрономът цъка. Натискай Space (или клик) точно в такт. Първите 4 удара само слушай, после следващите 4 удара метрономът млъква — продължи сам! 5 рунда.',
+  start(g){g.round=0;this.next(g);},
+  next(g){g.round++;if(g.round>5)return A.over(g,'Ритъм: '+g.score+' точки');g.bpm=A.ri(70,130);g.iv=60/g.bpm;g.t0=g.t+.5;g.taps=[];g.msg='';},
+  tap(g){const k=(g.t-g.t0)/g.iv;if(k<3.5)return;const n=Math.round(k);if(n<4||n>7)return;const err=Math.abs(k-n)*g.iv*1000;const pts=Math.max(0,10-Math.round(err/15));g.score+=pts;g.taps.push(pts);A.beep(700,.04);g.msg='+'+pts+' ('+Math.round(err)+' мс)';},
+  click(g){this.tap(g);},key(g,k){if(k==='Space')this.tap(g);},
+  update(g){const k=(g.t-g.t0)/g.iv;const n=Math.floor(k);if(n!==g.lastBeat&&n>=0&&n<4){g.lastBeat=n;A.beep(1000,.05,'square',.08);}if(n!==g.lastBeat&&n>=0)g.lastBeat=n;if(k>8.5)this.next(g);},
+  draw(g){A.bg('#20182c');const k=(g.t-g.t0)/g.iv,ph=k-Math.floor(k);c.save();c.translate(240,250);c.rotate(Math.sin(k*Math.PI)*.5);c.fillStyle='#ddd';c.fillRect(-3,-160,6,160);A.block(-12,-120,24,C.gold);c.restore();
+    for(let i=0;i<8;i++){A.block(120+i*30,290,24,i<4?(k>i?'#5a6b8c':'#333'):(k>i?'#9c7a4f':'#333'));}A.txt(k<4?'Слушай...':k<8?'Сега ти! Space в такт':'',240,40,18,'#ffd54f','center');
+    A.txt(g.bpm+' удара/мин   Рунд '+Math.min(5,g.round)+'/5',10,14,13);if(g.msg)A.txt(g.msg,240,330,15,'#fff','center');}
+});
+</script>
+</body>
+</html>

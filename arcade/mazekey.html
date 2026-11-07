@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лабиринт с ключ</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🗝️ Лабиринт с ключ</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 176. Лабиринт с ключ
+A.add({id:'mazekey',cat:'puzzle',icon:'🗝️',name:'Лабиринт с ключ',desc:'Вземи ключа, отключи вратата',help:'Стрелки — движи се. Първо вземи ключа 🗝️, после иди до вратата 🚪. 2 минути — колкото може повече лабиринти.',
+  start(g){g.time=120;this.make(g);},
+  make(g){const n=Math.min(13,6+g.score),W=[];for(let i=0;i<n*n;i++)W.push([1,1,1,1]);const vis=new Set([0]),st=[0];
+    while(st.length){const cur=st[st.length-1],x=cur%n,y=Math.floor(cur/n);const o=[[0,-1,0,2],[1,0,1,3],[0,1,2,0],[-1,0,3,1]].filter(([dx,dy])=>{const X=x+dx,Y=y+dy;return X>=0&&Y>=0&&X<n&&Y<n&&!vis.has(Y*n+X);});
+      if(!o.length){st.pop();continue;}const[dx,dy,a,b]=A.pick(o),nx=(y+dy)*n+x+dx;W[cur][a]=0;W[nx][b]=0;vis.add(nx);st.push(nx);}
+    g.n=n;g.W=W;g.px=0;g.py=0;g.key=false;g.kx=A.ri(n>>1,n-1);g.ky=A.ri(0,n-1);g.dx=A.ri(0,n>>1);g.dy=n-1;if(g.dx===0&&g.dy===0)g.dx=1;},
+  key(g,k){const m={ArrowUp:[0,-1,0],KeyW:[0,-1,0],ArrowRight:[1,0,1],KeyD:[1,0,1],ArrowDown:[0,1,2],KeyS:[0,1,2],ArrowLeft:[-1,0,3],KeyA:[-1,0,3]}[k];if(!m||g.W[g.py*g.n+g.px][m[2]])return;g.px+=m[0];g.py+=m[1];
+    if(g.px===g.kx&&g.py===g.ky&&!g.key){g.key=true;A.beep(900,.08);}if(g.px===g.dx&&g.py===g.dy){if(g.key){g.score++;A.tune([523,659,784]);this.make(g);}else A.beep(150,.05);}},
+  repeat:true,
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#14101c');const T=Math.floor(320/g.n),ox=(480-g.n*T)/2,oy=26;c.fillStyle='#2a2a3a';c.fillRect(ox,oy,g.n*T,g.n*T);c.fillStyle='#bbb';
+    g.W.forEach((w,i)=>{const x=ox+(i%g.n)*T,y=oy+Math.floor(i/g.n)*T;if(w[0])c.fillRect(x,y,T+2,2);if(w[1])c.fillRect(x+T,y,2,T+2);if(w[2])c.fillRect(x,y+T,T+2,2);if(w[3])c.fillRect(x,y,2,T+2);});
+    if(!g.key)A.txt('🗝️',ox+g.kx*T+T/2,oy+g.ky*T+T/2,T*.6,'#fff','center');A.txt('🚪',ox+g.dx*T+T/2,oy+g.dy*T+T/2,T*.6,'#fff','center');A.block(ox+g.px*T+T*.2,oy+g.py*T+T*.2,T*.6,g.key?C.gold:'#3b7bd6');
+    A.txt('⏱ '+Math.ceil(g.time)+(g.key?'  🗝️ имаш ключа':''),10,12,13);}
+});
+</script>
+</body>
+</html>

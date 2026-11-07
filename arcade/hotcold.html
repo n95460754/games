@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Студено-топло</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔥 Студено-топло</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 182. Студено-топло
+A.add({id:'hotcold',cat:'puzzle',icon:'🔥',name:'Студено-топло',desc:'Намери съкровището по разстояние',low:true,unit:' копания',help:'Съкровището е закопано някъде. Кликни поле — ще видиш на колко стъпки е (по хоризонтала + вертикала). Намери го с най-малко копания!',
+  start(g){g.tx=A.ri(0,14);g.ty=A.ri(0,9);g.dug=[];},
+  click(g,mx,my){const x=Math.floor(mx/32),y=Math.floor((my-20)/32);if(x<0||y<0||x>14||y>9||g.dug.some(d=>d.x===x&&d.y===y))return;const d=Math.abs(x-g.tx)+Math.abs(y-g.ty);g.dug.push({x,y,d});g.score=g.dug.length;A.beep(200+Math.max(0,800-d*60),.06);
+    if(!d){A.tune([523,659,784,1046]);A.over(g,'💎 Намери съкровището!');}},
+  draw(g){A.bg('#3a5a2a');for(let y=0;y<10;y++)for(let x=0;x<15;x++)A.block(x*32,20+y*32,32,(x+y)%2?'#5a8a3a':'#527f35');
+    for(const d of g.dug){c.fillStyle=C.dirt;c.fillRect(d.x*32+2,20+d.y*32+2,28,28);const h=Math.max(0,1-d.d/12);A.txt(d.d,d.x*32+16,20+d.y*32+16,15,'rgb(255,'+Math.round(255-h*200)+','+Math.round(255-h*255)+')','center');}A.txt('Копания: '+g.dug.length,8,10,12);}
+});
+</script>
+</body>
+</html>

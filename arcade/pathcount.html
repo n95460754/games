@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Колко пътя?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧭 Колко пътя?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 144. Колко пътя
+A.add(numGame({id:'pathcount',cat:'brain',icon:'🧭',name:'Колко пътя?',desc:'Комбинаторика в мрежа',lives:true,help:'Тръгваш от горния ляв ъгъл и стигаш долния десен, движейки се САМО надясно и надолу. По колко различни пътя? (Подсказка: във всяко поле = сбора отгоре и отляво.) 3 грешки и край.',
+  next(g){const w=A.ri(1,Math.min(5,2+Math.floor(g.score/2))),h=A.ri(1,Math.min(4,1+Math.floor(g.score/2)));g.w=w;g.h=h;let r=1;for(let i=1;i<=h;i++)r=r*(w+i)/i;g.ans=Math.round(r);g.q='Пътища = ?';},
+  pic(g){const T=36,ox=240-g.w*T/2,oy=90;c.strokeStyle='#9ecbff';c.lineWidth=3;for(let i=0;i<=g.w;i++){c.beginPath();c.moveTo(ox+i*T,oy);c.lineTo(ox+i*T,oy+g.h*T);c.stroke();}for(let j=0;j<=g.h;j++){c.beginPath();c.moveTo(ox,oy+j*T);c.lineTo(ox+g.w*T,oy+j*T);c.stroke();}
+    A.block(ox-7,oy-7,14,C.grass);A.block(ox+g.w*T-7,oy+g.h*T-7,14,C.red);}}));
+</script>
+</body>
+</html>

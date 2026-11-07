@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кое не е на място?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🙃 Кое не е на място?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 138. Кое не е на място
+A.add(quizGame({id:'oddone',cat:'brain',icon:'🙃',name:'Кое не е на място?',desc:'Намери различното',help:'Три от думите си приличат. Избери тази, която НЕ е като другите (клик или 1–4). 90 секунди.',
+  Q:[['Кое не е на място?','морков','ябълка','круша','слива'],['Кое не е на място?','стол','куче','котка','кон'],['Кое не е на място?','Дунав','София','Пловдив','Варна'],['Кое не е на място?','квадрат','червено','синьо','зелено'],
+    ['Кое не е на място?','12','3','5','7'],['Кое не е на място?','Марс','Европа','Азия','Африка'],['Кое не е на място?','лъжица','китара','цигулка','тъпан'],['Кое не е на място?','10','2','4','8'],
+    ['Кое не е на място?','шапка','пшеница','царевица','ечемик'],['Кое не е на място?','орел','сьомга','шаран','пъстърва'],['Кое не е на място?','лъв','роза','лале','мак'],['Кое не е на място?','10','16','25','36'],
+    ['Кое не е на място?','влак','лъв','тигър','леопард'],['Кое не е на място?','зима','понеделник','сряда','петък'],['Кое не е на място?','молив','кирка','лопата','мотика']]}));
+</script>
+</body>
+</html>

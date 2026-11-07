@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Звезден кораб</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛸 Звезден кораб</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 164. Звезден кораб
+A.add({id:'starship',cat:'action',icon:'🛸',name:'Звезден кораб',desc:'Вертикален стрелец с босове',help:'Мишка или ← → — местиш кораба. Стрелбата е автоматична. На всеки 30 секунди идва БОС!',
+  start(g){g.x=240;g.b=[];g.e=[];g.eb=[];g.sp=0;g.cd=0;g.hp=5;g.boss=null;g.next=30;},
+  move(g,x){g.tx=x;},
+  update(g,dt){if(A.keys.ArrowLeft||A.keys.KeyA){g.x-=280*dt;g.tx=undefined;}if(A.keys.ArrowRight||A.keys.KeyD){g.x+=280*dt;g.tx=undefined;}if(g.tx!==undefined)g.x+=(g.tx-g.x)*Math.min(1,dt*10);g.x=A.clamp(g.x,12,468);
+    g.cd-=dt;if(g.cd<=0){g.cd=.22;g.b.push({x:g.x,y:310});}g.next-=dt;if(g.next<=0&&!g.boss){g.boss={x:240,hp:40+g.t,max:40+g.t,cd:1};}
+    g.sp-=dt;if(g.sp<=0&&!g.boss){g.sp=Math.max(.3,.9-g.t*.008);g.e.push({x:A.ri(20,460),y:-20,v:A.rnd(70,130)});}
+    for(const b of g.b)b.y-=420*dt;for(const e of g.e){e.y+=e.v*dt;for(const b of g.b)if(Math.abs(b.x-e.x)<14&&Math.abs(b.y-e.y)<14){b.y=-99;e.dead=1;g.score++;A.beep(300,.03);}if(!e.dead&&e.y>300&&Math.abs(e.x-g.x)<20){e.dead=1;this.hurt(g);}}
+    if(g.boss){const B=g.boss;B.x=240+Math.sin(g.t)*150;B.cd-=dt;if(B.cd<=0){B.cd=.6;for(const a of[-.4,0,.4])g.eb.push({x:B.x,y:80,vx:Math.sin(a)*160,vy:Math.cos(a)*160});}
+      for(const b of g.b)if(Math.abs(b.x-B.x)<50&&b.y<90&&b.y>30){b.y=-99;B.hp--;}if(B.hp<=0){g.score+=50;g.boss=null;g.next=30;A.tune([523,659,784,1046]);}}
+    for(const q of g.eb){q.x+=q.vx*dt;q.y+=q.vy*dt;if(Math.abs(q.x-g.x)<12&&Math.abs(q.y-320)<12){q.y=999;this.hurt(g);}}
+    g.b=g.b.filter(b=>b.y>-10);g.e=g.e.filter(e=>!e.dead&&e.y<380);g.eb=g.eb.filter(q=>q.y<380);},
+  hurt(g){g.hp--;A.beep(80,.2,'sawtooth');if(g.hp<=0)A.over(g,'Корабът е унищожен');},
+  draw(g){A.bg('#05060f');c.fillStyle='#fff';for(let i=0;i<50;i++)c.fillRect((i*97)%480,(i*61+g.t*80)%360,1,2);
+    for(const e of g.e)A.block(e.x-12,e.y-12,24,C.purple);if(g.boss){const B=g.boss;A.block(B.x-50,30,100,'#5a0f2a',50);c.fillStyle='#f33';c.fillRect(B.x-30,45,12,10);c.fillRect(B.x+18,45,12,10);c.fillStyle='#000';c.fillRect(140,8,200,8);c.fillStyle='#f33';c.fillRect(140,8,200*B.hp/B.max,8);}
+    c.fillStyle='#4de8f5';for(const b of g.b)c.fillRect(b.x-2,b.y-6,4,10);c.fillStyle='#ff5722';for(const q of g.eb)c.fillRect(q.x-4,q.y-4,8,8);
+    c.fillStyle='#ddd';c.beginPath();c.moveTo(g.x,300);c.lineTo(g.x+14,330);c.lineTo(g.x-14,330);c.fill();A.txt('❤'.repeat(g.hp),10,346,13,'#f55');}
+});
+</script>
+</body>
+</html>

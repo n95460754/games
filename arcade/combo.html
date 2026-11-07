@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Комбо</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🕹️ Комбо</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 192. Комбо
+A.add({id:'combo',cat:'skill',icon:'🕹️',name:'Комбо',desc:'Напиши комбинацията бързо',help:'Показва се поредица от букви. Натисни ги по ред (латински клавиши, работи и на българска подредба). Грешка — започваш комбото отначало. 45 секунди.',
+  start(g){g.time=45;this.next(g);},
+  next(g){const n=Math.min(10,3+Math.floor(g.score/2));g.seq=[...Array(n)].map(()=>'ASDFJKL'[A.ri(0,6)]);g.pos=0;},
+  key(g,k){if(!k.startsWith('Key'))return;const ch=k.slice(3);if(ch===g.seq[g.pos]){g.pos++;A.beep(500+g.pos*60,.03);if(g.pos===g.seq.length){g.score++;A.tune([880,1100]);this.next(g);}}else{g.pos=0;A.beep(120,.1);}},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#20182c');const w=Math.min(44,420/g.seq.length);g.seq.forEach((ch,i)=>{const x=240-g.seq.length*w/2+i*w;A.block(x+2,140,w-4,i<g.pos?C.grass:'#5a6b8c',50);A.txt(ch,x+w/2,165,20,'#fff','center');});A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

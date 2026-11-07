@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хеликоптер спасител</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚁 Хеликоптер спасител</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 146. Хеликоптер спасител
+A.add({id:'helirescue',cat:'action',icon:'🚁',name:'Хеликоптер спасител',desc:'Спаси хората от покривите',help:'Стрелки — летиш. Кацни бавно на покрив до човечето, за да го вземеш (до 3), после ги закарай до болницата вляво. Не се блъскай!',
+  start(g){g.x=40;g.y=200;g.vx=0;g.vy=0;g.load=0;g.roofs=[];for(let i=0;i<4;i++)g.roofs.push({x:130+i*85,h:A.ri(80,200),p:A.ri(1,2)});g.fuel=100;},
+  update(g,dt){const ax=(A.keys.ArrowRight||A.keys.KeyD?1:0)-(A.keys.ArrowLeft||A.keys.KeyA?1:0),ay=(A.keys.ArrowDown||A.keys.KeyS?1:0)-(A.keys.ArrowUp||A.keys.KeyW?1:0);
+    g.vx+=ax*300*dt;g.vy+=(ay*300+80)*dt;g.vx*=.97;g.vy*=.97;g.x+=g.vx*dt;g.y+=g.vy*dt;g.fuel-=dt*1.5;if(g.fuel<=0)return A.over(g,'Свърши горивото!');
+    if(g.x<10||g.x>470||g.y<10)return A.over(g,'Излетя от картата!');
+    const land=(top)=>{if(g.y+12>=top){if(Math.abs(g.vy)>90||Math.abs(g.vx)>90)return A.over(g,'Разби се!')||'x';g.y=top-12;g.vy=0;g.vx*=.5;return true;}return false;};
+    if(g.x<90){const r=land(300);if(r==='x')return;if(r&&g.load){g.score+=g.load;g.load=0;g.fuel=100;A.tune([523,659,784]);}}
+    for(const r of g.roofs)if(g.x>r.x-4&&g.x<r.x+64){const l=land(330-r.h);if(l==='x')return;if(l&&r.p&&g.load<3){r.p--;g.load++;A.beep(800,.06);}}
+    if(g.y+12>=330&&g.x>=90){if(land(330)==='x')return;}
+    if(g.roofs.every(r=>!r.p)&&!g.load){g.roofs.forEach(r=>{r.p=A.ri(1,3);r.h=A.ri(80,220);});}},
+  draw(g){A.bg('#87ceeb');for(let x=0;x<480;x+=20)A.block(x,330,20,'#555',30);A.block(0,300,90,'#fff',30);c.fillStyle=C.red;c.fillRect(37,305,16,20);c.fillRect(30,312,30,6);
+    for(const r of g.roofs){A.block(r.x,330-r.h,60,'#8d6e63',r.h);for(let k=0;k<r.p;k++){c.fillStyle='#e67e22';c.fillRect(r.x+8+k*16,330-r.h-14,8,14);c.fillStyle='#f1c27d';c.fillRect(r.x+8+k*16,330-r.h-20,8,6);}}
+    A.block(g.x-16,g.y-8,32,C.red,16);c.fillStyle='#333';c.fillRect(g.x-26+(g.t*80%20),g.y-14,30,3);c.fillRect(g.x-14,g.y+8,28,3);
+    A.txt('Пътници '+g.load+'/3   Гориво '+Math.round(g.fuel),10,14,13,'#123');}
+});
+</script>
+</body>
+</html>

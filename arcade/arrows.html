@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Светкавица</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⬆️ Светкавица</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 191. Светкавица
+A.add({id:'arrows',cat:'skill',icon:'⬆️',name:'Светкавица',desc:'Натисни показаната стрелка',help:'Появява се стрелка — натисни същата на клавиатурата колкото по-бързо можеш. Внимавай: ако стрелката е ЧЕРВЕНА, натисни ОБРАТНАТА! 30 секунди.',
+  start(g){g.time=30;this.next(g);},
+  next(g){g.d=A.pick(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight']);g.red=g.score>4&&Math.random()<.3;},
+  key(g,k){const map={KeyW:'ArrowUp',KeyS:'ArrowDown',KeyA:'ArrowLeft',KeyD:'ArrowRight'};k=map[k]||k;if(!k.startsWith('Arrow'))return;const opp={ArrowUp:'ArrowDown',ArrowDown:'ArrowUp',ArrowLeft:'ArrowRight',ArrowRight:'ArrowLeft'};
+    const want=g.red?opp[g.d]:g.d;const ok=k===want;flash(g,ok);if(ok)g.score++;else g.score=Math.max(0,g.score-1);this.next(g);},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#1d2b3a');const a={ArrowUp:-Math.PI/2,ArrowDown:Math.PI/2,ArrowLeft:Math.PI,ArrowRight:0}[g.d];c.save();c.translate(240,170);c.rotate(a);c.fillStyle=g.red?C.red:C.grass;c.fillRect(-60,-20,70,40);c.beginPath();c.moveTo(10,-55);c.lineTo(70,0);c.lineTo(10,55);c.fill();c.restore();
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);drawFlash(g);}
+});
+</script>
+</body>
+</html>

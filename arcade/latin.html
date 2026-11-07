@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Латински квадрат</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟪 Латински квадрат</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 173. Латински квадрат
+A.add({id:'latin',cat:'puzzle',icon:'🟪',name:'Латински квадрат',desc:'Всеки цвят веднъж на ред и колона',help:'Кликни празна клетка, после цвят отдолу (или 1–5). Във всеки ред и всяка колона всеки цвят трябва да е точно веднъж. 4 минути.',
+  cols:[C.red,C.gold,C.grass,C.water,C.purple],
+  start(g){g.time=240;this.make(g);},
+  make(g){const N=g.score<2?4:5;g.N=N;const p=A.shuffle([...Array(N).keys()]),r=A.shuffle([...Array(N).keys()]),cc=A.shuffle([...Array(N).keys()]);g.sol=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++)g.sol.push(p[(r[y]+cc[x])%N]);
+    g.fix=g.sol.map(()=>Math.random()<.45);g.cur=g.sol.map((v,i)=>g.fix[i]?v:-1);g.sel=g.fix.indexOf(false);},
+  set(g,v){if(g.sel<0||g.fix[g.sel])return;g.cur[g.sel]=v;A.beep(400+v*60,.03);const N=g.N;let ok=g.cur.every(v=>v>=0);
+    for(let i=0;i<N&&ok;i++){if(new Set(g.cur.slice(i*N,i*N+N)).size<N)ok=false;if(new Set(g.cur.filter((_,k)=>k%N===i)).size<N)ok=false;}if(ok){g.score++;A.tune([523,659,784]);this.make(g);}},
+  click(g,mx,my){if(my>310){const i=Math.floor((mx-120)/50);if(i>=0&&i<g.N)this.set(g,i);return;}const T=50,ox=240-g.N*T/2,x=Math.floor((mx-ox)/T),y=Math.floor((my-30)/T);if(x>=0&&y>=0&&x<g.N&&y<g.N&&!g.fix[y*g.N+x])g.sel=y*g.N+x;},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=g.N)this.set(g,n-1);},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1d2433');const T=50,ox=240-g.N*T/2;g.cur.forEach((v,i)=>{const x=ox+(i%g.N)*T,y=30+Math.floor(i/g.N)*T;c.fillStyle=i===g.sel?'#5a6b8c':'#2b3646';c.fillRect(x+1,y+1,T-2,T-2);if(v>=0)A.block(x+6,y+6,T-12,this.cols[v]);if(g.fix[i]){c.fillStyle='#000';c.fillRect(x+T/2-3,y+T/2-3,6,6);}});
+    for(let i=0;i<g.N;i++){A.block(120+i*50+5,315,40,this.cols[i],34);A.txt(i+1,145+i*50,332,13,'#000','center');}A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числов кръст</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">➕ Числов кръст</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 174. Числов кръстопът
+A.add({id:'numbercross',cat:'puzzle',icon:'➕',name:'Числов кръст',desc:'Сумите на редове и колони',help:'Попълни 3×3 мрежата с числата 1–9 (всяко веднъж). Сборът на всеки ред и колона трябва да е като числата отстрани. Кликни клетка и напиши цифра. 4 минути.',
+  start(g){g.time=240;this.make(g);},
+  make(g){const s=A.shuffle([1,2,3,4,5,6,7,8,9]);g.rs=[0,1,2].map(r=>s[r*3]+s[r*3+1]+s[r*3+2]);g.cs=[0,1,2].map(c2=>s[c2]+s[3+c2]+s[6+c2]);g.cur=Array(9).fill(0);g.fix=Array(9).fill(false);
+    for(const i of A.shuffle([...Array(9).keys()]).slice(0,Math.max(0,4-g.score))){g.fix[i]=true;g.cur[i]=s[i];}g.sel=g.fix.indexOf(false);},
+  click(g,mx,my){const x=Math.floor((mx-150)/60),y=Math.floor((my-60)/60);if(x>=0&&y>=0&&x<3&&y<3&&!g.fix[y*3+x])g.sel=y*3+x;},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=9&&g.sel>=0&&!g.fix[g.sel]){g.cur[g.sel]=n;A.beep(400+n*30,.03);const nx=g.cur.findIndex((v,i)=>!v&&!g.fix[i]);if(nx>=0)g.sel=nx;}
+    if(k==='Backspace'&&!g.fix[g.sel])g.cur[g.sel]=0;
+    if(g.cur.every(v=>v)&&new Set(g.cur).size===9&&[0,1,2].every(r=>g.cur[r*3]+g.cur[r*3+1]+g.cur[r*3+2]===g.rs[r])&&[0,1,2].every(c2=>g.cur[c2]+g.cur[3+c2]+g.cur[6+c2]===g.cs[c2])){g.score++;A.tune([523,659,784]);this.make(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#20182c');for(let i=0;i<9;i++){const x=150+(i%3)*60,y=60+Math.floor(i/3)*60;c.fillStyle=i===g.sel?'#5a6b8c':g.fix[i]?'#4a3a60':'#2b3646';c.fillRect(x+2,y+2,56,56);if(g.cur[i])A.txt(g.cur[i],x+30,y+31,26,g.fix[i]?'#ffd54f':'#fff','center');}
+    for(let r=0;r<3;r++){const s=g.cur[r*3]+g.cur[r*3+1]+g.cur[r*3+2];A.txt('= '+g.rs[r],345,90+r*60,18,s===g.rs[r]?'#9ccc65':'#fff');}
+    for(let c2=0;c2<3;c2++){const s=g.cur[c2]+g.cur[3+c2]+g.cur[6+c2];A.txt(g.cs[c2],180+c2*60,255,18,s===g.cs[c2]?'#9ccc65':'#fff','center');}
+    const used=new Set(g.cur.filter(Boolean));A.txt('Свободни: '+[1,2,3,4,5,6,7,8,9].filter(v=>!used.has(v)).join(' '),240,300,14,'#bbb','center');A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>
