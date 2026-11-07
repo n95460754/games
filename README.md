@@ -441,9 +441,14 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 
 *This is a fan project and is not affiliated with Mojang or Microsoft. "Minecraft" is a trademark of Mojang Studios.*
 
+## 👥 Contributors
+
+- **[@n95460754](https://github.com/n95460754)** — project owner and game creator.
+- **ChatGPT (OpenAI)** — AI assistant; helped configure the GitHub Actions automation and README updates.
+
 ## 🤖 Auto Games
 
-A new mini-game is generated and added here automatically **every 10 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
+A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
 **2 auto games so far.** Newest first:
