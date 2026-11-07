@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New World — игра в браузъра</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Courier New",monospace}
+canvas#c{display:block;width:100vw;height:100vh}
+#cross{position:fixed;left:50%;top:50%;width:20px;height:20px;margin:-10px 0 0 -10px;pointer-events:none}
+#cross:before,#cross:after{content:"";position:absolute;background:#fff;mix-blend-mode:difference}
+#cross:before{left:9px;top:0;width:2px;height:20px}
+#cross:after{top:9px;left:0;height:2px;width:20px}
+#hud{position:fixed;left:8px;top:8px;color:#fff;text-shadow:2px 2px 0 #000;font-size:14px;line-height:1.45;pointer-events:none;white-space:pre}
+#hotbar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;background:rgba(0,0,0,.45);border:3px solid #222}
+.slot{width:46px;height:46px;border:3px solid #555;position:relative;image-rendering:pixelated;background-size:100% 100%;cursor:pointer}
+.slot.sel{border-color:#fff;box-shadow:0 0 0 2px #000}
+.slot span{position:absolute;left:2px;top:0;color:#fff;font-size:11px;text-shadow:1px 1px 0 #000}
+#name{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);color:#fff;text-shadow:2px 2px 0 #000;font-size:16px;pointer-events:none;transition:opacity .4s}
+#water{position:fixed;inset:0;background:rgba(30,70,200,.38);display:none;pointer-events:none}
+#menu{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);color:#fff}
+.box{background:#2b2b2b;border:4px solid #000;box-shadow:inset 4px 4px 0 #555,inset -4px -4px 0 #151515;padding:24px 32px;max-width:480px;text-align:center}
+h1{margin:0 0 4px;font-size:42px;text-shadow:3px 3px 0 #000;color:#ffd84a}
+.sub{color:#bbb;margin-bottom:14px}
+button{font:inherit;font-size:18px;padding:10px 26px;margin:6px;background:#6d6d6d;color:#fff;border:3px solid #000;box-shadow:inset 3px 3px 0 #a0a0a0,inset -3px -3px 0 #3c3c3c;cursor:pointer}
+button:hover{background:#7d8fd0}
+button.small{font-size:13px;padding:6px 12px}
+table{margin:14px auto 0;text-align:left;font-size:14px;border-spacing:10px 3px}
+td:first-child{color:#ffd84a;text-align:right}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="water"></div>
+<div id="cross"></div>
+<div id="hud"></div>
+<div id="name"></div>
+<div id="hotbar"></div>
+<div id="menu"><div class="box">
+  <h1>New World</h1>
+  <div class="sub">Воксел свят · Оцеляване · Нормална трудност</div>
+  <button id="play">▶ Играй</button>
+  <table>
+    <tr><td>W A S D</td><td>движение</td></tr>
+    <tr><td>Мишка</td><td>оглеждане</td></tr>
+    <tr><td>Space</td><td>скок / плуване / нагоре при летене</td></tr>
+    <tr><td>Shift</td><td>спринт / надолу при летене</td></tr>
+    <tr><td>F</td><td>летене вкл./изкл.</td></tr>
+    <tr><td>Ляв клик</td><td>чупене на блок</td></tr>
+    <tr><td>Десен клик</td><td>поставяне на блок</td></tr>
+    <tr><td>1–9 / колелце</td><td>избор на блок</td></tr>
+    <tr><td>Esc</td><td>пауза</td></tr>
+  </table>
+  <div style="margin-top:14px;font-size:12px;color:#999">Светът се запазва автоматично в браузъра.</div>
+  <button class="small" id="reset">Изтрий промените и започни отначало</button>
+</div></div>
+
+<script>
+"use strict";
+// ---------- константи ----------
+const CS=16, H=96, WATER=34, RADIUS=6, SEED=20261107;
+const SAVE_KEY='newworld-save-v1';
+// блокове: 0 въздух,1 трева,2 пръст,3 камък,4 пясък,5 вода,6 дърво,7 листа,8 дъски,9 калдъръм,10 стъкло,11 скална основа,12 сняг
+const NAMES=['Въздух','Трева','Пръст','Камък','Пясък','Вода','Дървен ствол','Листа','Дъски','Калдъръм','Стъкло','Скална основа','Сняг'];
+const TEX=[null,[0,1,2],[2,2,2],[3,3,3],[4,4,4],[5,5,5],[7,6,7],[8,8,8],[9,9,9],[10,10,10],[11,11,11],[12,12,12],[13,14,2]];
+const TRANS=new Uint8Array(16); TRANS[0]=TRANS[5]=TRANS[7]=TRANS[10]=1;
+const HOTBAR=[1,2,3,9,8,6,10,4,7];
+
+// ---------- шум ----------
+function hash2(x,z,s){let h=Math.imul(x,374761393)+Math.imul(z,668265263)+Math.imul(s,1442695041)|0;h=Math.imul(h^(h>>>13),1274126177);return ((h^(h>>>16))>>>0)/4294967296;}
+function vnoise(x,z,s){const ix=Math.floor(x),iz=Math.floor(z);let fx=x-ix,fz=z-iz;fx=fx*fx*(3-2*fx);fz=fz*fz*(3-2*fz);
+  const a=hash2(ix,iz,s),b=hash2(ix+1,iz,s),c=hash2(ix,iz+1,s),d=hash2(ix+1,iz+1,s);
+  return (a+(b-a)*fx+(c-a)*fz+(a-b-c+d)*fx*fz)*2-1;}
+function fbm(x,z,s,o=4){let t=0,a=1,n=0;for(let i=0;i<o;i++){t+=vnoise(x,z,s+i*31)*a;n+=a;a*=.5;x*=2;z*=2;}return t/n;}
+function terrainH(x,z){
+  let h=36+fbm(x/110,z/110,SEED)*16+fbm(x/28,z/28,SEED+7,3)*4;
+  const m=Math.max(0,fbm(x/220,z/220,SEED+99,3)*1.7-0.25);
+  h+=m*m*55;
+  return Math.max(2,Math.min(H-12,Math.floor(h)));
+}
+
+// ---------- запис ----------
+let save={mods:{},player:null};
+try{const s=localStorage.getItem(SAVE_KEY);if(s)save=JSON.parse(s);}catch(e){}
+if(!save.mods)save.mods={};
+let saveTimer=0;
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
+function schedSave(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,800);}
+
+// ---------- свят ----------
+const chunks=new Map();
+const ck=(cx,cz)=>cx+','+cz;
+function genChunk(cx,cz){
+  const d=new Uint8Array(CS*CS*H), bx=cx*CS, bz=cz*CS;
+  const hs=new Int16Array(CS*CS);
+  for(let z=0;z<CS;z++)for(let x=0;x<CS;x++){
+    const h=terrainH(bx+x,bz+z); hs[x+z*CS]=h;
+    for(let y=0;y<H;y++){
+      let b=0;
+      if(y===0)b=11;
+      else if(y<h-3)b=3;
+      else if(y<h)b=(h<=WATER+1)?4:2;
+      else if(y===h)b=(h<=WATER+1)?4:(h>66?12:1);
+      else if(y<=WATER)b=5;
+      if(b)d[x+z*CS+y*256]=b;
+    }
+  }
+  // дървета (само във вътрешността на чънка)
+  for(let z=2;z<CS-2;z++)for(let x=2;x<CS-2;x++){
+    const h=hs[x+z*CS]; if(h<=WATER+1||h>62)continue;
+    if(hash2(bx+x,bz+z,SEED+5)>0.012)continue;
+    const th=4+Math.floor(hash2(bx+x,bz+z,SEED+6)*2);
+    for(let ly=h+th-2;ly<=h+th+1;ly++){
+      const r=ly>=h+th?1:2;
+      for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){
+        if(r===2&&Math.abs(dx)===2&&Math.abs(dz)===2&&hash2(bx+x+dx,ly,bz+z+dz)<.6)continue;
+        const i=(x+dx)+(z+dz)*CS+ly*256; if(ly<H&&!d[i])d[i]=7;
+      }
+    }
+    for(let ly=h+1;ly<=h+th;ly++)d[x+z*CS+ly*256]=6;
+  }
+  const m=save.mods[ck(cx,cz)];
+  if(m)for(const k in m)d[+k]=m[k];
+  const ch={cx,cz,data:d,mesh:null,dirty:true};
+  chunks.set(ck(cx,cz),ch); return ch;
+}
+function getChunk(cx,cz){return chunks.get(ck(cx,cz))||genChunk(cx,cz);}
+function getBlock(x,y,z){
+  if(y<0)return 11; if(y>=H)return 0;
+  const cx=Math.floor(x/CS),cz=Math.floor(z/CS);
+  return getChunk(cx,cz).data[(x-cx*CS)+(z-cz*CS)*CS+y*256];
+}
+function setBlock(x,y,z,id){
+  if(y<1||y>=H)return;
+  const cx=Math.floor(x/CS),cz=Math.floor(z/CS),ch=getChunk(cx,cz);
+  const lx=x-cx*CS,lz=z-cz*CS,i=lx+lz*CS+y*256;
+  ch.data[i]=id; ch.dirty=true;
+  const k=ck(cx,cz); (save.mods[k]||(save.mods[k]={}))[i]=id; schedSave();
+  const mark=(a,b)=>{const c=chunks.get(ck(a,b));if(c)c.dirty=true;};
+  if(lx===0)mark(cx-1,cz); if(lx===CS-1)mark(cx+1,cz);
+  if(lz===0)mark(cx,cz-1); if(lz===CS-1)mark(cx,cz+1);
+}
+
+// ---------- текстури ----------
+const atlas=document.createElement('canvas');atlas.width=atlas.height=64;
+const ax=atlas.getContext('2d');
+function rng(s){return()=>{s=Math.imul(s^(s>>>15),2246822507)+0x6D2B79F5|0;s^=s>>>13;return((s>>>0)%100000)/100000;};}
+const V=(c,r,a)=>{const k=(r()-.5)*a;return[c[0]+k,c[1]+k,c[2]+k,c[3]===undefined?1:c[3]];};
+function tile(i,fn){const ox=(i%4)*16,oy=Math.floor(i/4)*16,r=rng(i*977+13);
+  for(let y=0;y<16;y++)for(let x=0;x<16;x++){const c=fn(x,y,r);if(c[3]===0)continue;
+    ax.fillStyle=`rgba(${c[0]|0},${c[1]|0},${c[2]|0},${c[3]})`;ax.fillRect(ox+x,oy+y,1,1);}}
+const GR=[95,159,53],DI=[121,85,58],BARK=[102,81,51],PL=[170,135,85],SN=[240,245,250];
+tile(0,(x,y,r)=>V(GR,r,32));
+tile(1,(x,y,r)=>(y<3||(y===3&&r()<.5))?V(GR,r,30):V(DI,r,26));
+tile(2,(x,y,r)=>V(DI,r,26));
+tile(3,(x,y,r)=>V([125,125,125],r,26));
+tile(4,(x,y,r)=>V([219,207,160],r,18));
+tile(5,(x,y,r)=>V([48,92,205,.72],r,22));
+tile(6,(x,y,r)=>x%4===0?V([78,60,36],r,10):V(BARK,r,16));
+tile(7,(x,y,r)=>{const d=Math.max(Math.abs(x-7.5),Math.abs(y-7.5));return d>6.5?V(BARK,r,12):(Math.floor(d)%2?V(PL,r,10):V([148,116,70],r,10));});
+tile(8,(x,y,r)=>r()<.16?[0,0,0,0]:V([58,128,38],r,44));
+tile(9,(x,y,r)=>(y%4===3||(x===((y>>2)*5)%16))?V([118,88,50],r,8):V(PL,r,12));
+tile(10,(x,y,r)=>{const n=hash2(x>>2,(y+(x>>2))>>2,3);return V(n>.5?[132,132,132]:[98,98,98],r,30);});
+tile(11,(x,y,r)=>(x===0||y===0||x===15||y===15)?[215,235,250,1]:((x===y+2&&x>4&&x<10)?[255,255,255,1]:[0,0,0,0]));
+tile(12,(x,y,r)=>V([62,62,62],r,70));
+tile(13,(x,y,r)=>V(SN,r,10));
+tile(14,(x,y,r)=>(y<4||(y===4&&r()<.5))?V(SN,r,10):V(DI,r,26));
+
+// ---------- WebGL ----------
+const cv=document.getElementById('c');
+const gl=cv.getContext('webgl',{antialias:false});
+if(!gl){document.body.innerHTML='<p style="color:#fff;padding:20px">Браузърът ти не поддържа WebGL.</p>';}
+function sh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o;}
+function prog(vs,fs){const p=gl.createProgram();gl.attachShader(p,sh(gl.VERTEX_SHADER,vs));gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);return p;}
+const P1=prog(`attribute vec3 p;attribute vec2 uv;attribute float l;uniform mat4 m;varying vec2 vUv;varying float vL;varying float vD;
+void main(){gl_Position=m*vec4(p,1.);vUv=uv;vL=l;vD=gl_Position.w;}`,
+`precision mediump float;uniform sampler2D t;uniform vec3 sky;uniform vec2 fog;varying vec2 vUv;varying float vL;varying float vD;
+void main(){vec4 c=texture2D(t,vUv);if(c.a<.5)discard;float f=smoothstep(fog.x,fog.y,vD);gl_FragColor=vec4(mix(c.rgb*vL,sky,f),c.a);}`);
+const A={p:gl.getAttribLocation(P1,'p'),uv:gl.getAttribLocation(P1,'uv'),l:gl.getAttribLocation(P1,'l')};
+const U={m:gl.getUniformLocation(P1,'m'),sky:gl.getUniformLocation(P1,'sky'),fog:gl.getUniformLocation(P1,'fog'),t:gl.getUniformLocation(P1,'t')};
+const P2=prog(`attribute vec3 p;uniform mat4 m;void main(){gl_Position=m*vec4(p,1.);}`,`precision mediump float;void main(){gl_FragColor=vec4(0.,0.,0.,1.);}`);
+const A2=gl.getAttribLocation(P2,'p'),U2=gl.getUniformLocation(P2,'m');
+const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,atlas);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+gl.enable(gl.DEPTH_TEST);
+
+// ---------- мешове ----------
+const FACES=[
+ {n:[1,0,0],c:[[1,0,1],[1,1,1],[1,1,0],[1,0,0]],l:.8},
+ {n:[-1,0,0],c:[[0,0,0],[0,1,0],[0,1,1],[0,0,1]],l:.8},
+ {n:[0,0,1],c:[[0,0,1],[0,1,1],[1,1,1],[1,0,1]],l:.65},
+ {n:[0,0,-1],c:[[1,0,0],[1,1,0],[0,1,0],[0,0,0]],l:.65},
+ {n:[0,1,0],c:[[0,1,1],[0,1,0],[1,1,0],[1,1,1]],l:1},
+ {n:[0,-1,0],c:[[0,0,0],[0,0,1],[1,0,1],[1,0,0]],l:.5}];
+const TRI=[0,1,2,0,2,3];
+function addFace(a,x,y,z,F,t,top){
+  const e=.0008,u0=(t%4)/4+e,u1=(t%4+1)/4-e,v0=Math.floor(t/4)/4+e,v1=(Math.floor(t/4)+1)/4-e;
+  const UV=[[u0,v1],[u0,v0],[u1,v0],[u1,v1]];
+  for(const i of TRI){const c=F.c[i];a.push(x+c[0],y+(c[1]?top:0),z+c[2],UV[i][0],UV[i][1],F.l);}
+}
+function buildMesh(ch){
+  const o=[],w=[],d=ch.data,bx=ch.cx*CS,bz=ch.cz*CS;
+  for(let y=0;y<H;y++)for(let z=0;z<CS;z++)for(let x=0;x<CS;x++){
+    const b=d[x+z*CS+y*256]; if(!b)continue;
+    for(let f=0;f<6;f++){
+      const F=FACES[f],nx=x+F.n[0],ny=y+F.n[1],nz=z+F.n[2];
+      let n; if(ny<0)n=11; else if(ny>=H)n=0;
+      else if(nx>=0&&nx<CS&&nz>=0&&nz<CS)n=d[nx+nz*CS+ny*256];
+      else n=getBlock(bx+nx,ny,bz+nz);
+      if(b===5){ if(n!==0)continue;
+        const top=(getBlock(bx+x,y+1,bz+z)===5)?1:.88;
+        addFace(w,bx+x,y,bz+z,F,5,top);
+      } else {
+        if(!TRANS[n])continue; if(n===b&&b!==7)continue;
+        addFace(o,bx+x,y,bz+z,F,TEX[b][f===4?0:f===5?2:1],1);
+      }
+    }
+  }
+  freeMesh(ch);
+  const mk=a=>{if(!a.length)return null;const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(a),gl.STATIC_DRAW);return{b,n:a.length/6};};
+  ch.mesh={o:mk(o),w:mk(w)}; ch.dirty=false;
+}
+function freeMesh(ch){if(ch.mesh){if(ch.mesh.o)gl.deleteBuffer(ch.mesh.o.b);if(ch.mesh.w)gl.deleteBuffer(ch.mesh.w.b);ch.mesh=null;}}
+function drawBuf(m){gl.bindBuffer(gl.ARRAY_BUFFER,m.b);
+  gl.vertexAttribPointer(A.p,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(A.uv,2,gl.FLOAT,false,24,12);gl.vertexAttribPointer(A.l,1,gl.FLOAT,false,24,20);
+  gl.drawArrays(gl.TRIANGLES,0,m.n);}
+
+// контур на избрания блок
+const edge=[];{const q=[[0,0,0],[1,0,0],[1,0,1],[0,0,1],[0,1,0],[1,1,0],[1,1,1],[0,1,1]];
+ for(const [a,b] of [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]])edge.push(...q[a],...q[b]);}
+const edgeBuf=gl.createBuffer();
+
+// ---------- матрици ----------
+function persp(fov,a,n,f){const t=1/Math.tan(fov/2);return[t/a,0,0,0,0,t,0,0,0,0,(f+n)/(n-f),-1,0,0,2*f*n/(n-f),0];}
+function lookDir(e,d){const z=[-d[0],-d[1],-d[2]];let x=[z[2],0,-z[0]];const xl=Math.hypot(x[0],x[2])||1;x=[x[0]/xl,0,x[2]/xl];
+  const y=[z[1]*x[2]-z[2]*x[1],z[2]*x[0]-z[0]*x[2],z[0]*x[1]-z[1]*x[0]];
+  const dt=(a)=>a[0]*e[0]+a[1]*e[1]+a[2]*e[2];
+  return[x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dt(x),-dt(y),-dt(z),1];}
+function mul(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++){let s=0;for(let k=0;k<4;k++)s+=a[k*4+r]*b[c*4+k];o[c*4+r]=s;}return o;}
+
+// ---------- играч ----------
+const P={pos:[.5,80,.5],vel:[0,0,0],yaw:0,pitch:0,ground:false,fly:false};
+if(save.player){Object.assign(P,save.player);P.vel=[0,0,0];}
+else{ // търси суша близо до 0,0
+  let sx=0,sz=0;outer:for(let r=0;r<300;r+=4)for(let a=0;a<8;a++){const x=Math.round(Math.cos(a*.785)*r),z=Math.round(Math.sin(a*.785)*r);
+    if(terrainH(x,z)>WATER+1){sx=x;sz=z;break outer;}}
+  P.pos=[sx+.5,terrainH(sx,sz)+1.01,sz+.5];
+}
+function collides(px,py,pz){
+  const x0=Math.floor(px-.3+1e-4),x1=Math.floor(px+.3-1e-4),y0=Math.floor(py+1e-4),y1=Math.floor(py+1.8-1e-4),z0=Math.floor(pz-.3+1e-4),z1=Math.floor(pz+.3-1e-4);
+  for(let y=y0;y<=y1;y++)for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++){const b=getBlock(x,y,z);if(b&&b!==5)return true;}
+  return false;
+}
+function moveAxis(a,dist){
+  const steps=Math.max(1,Math.ceil(Math.abs(dist)/.25)),s=dist/steps;
+  for(let i=0;i<steps;i++){
+    P.pos[a]+=s;
+    if(collides(P.pos[0],P.pos[1],P.pos[2])){
+      P.pos[a]-=s; let lo=0,hi=s;
+      for(let k=0;k<10;k++){const m=(lo+hi)/2;P.pos[a]+=m;if(collides(P.pos[0],P.pos[1],P.pos[2]))hi=m;else lo=m;P.pos[a]-=m;}
+      P.pos[a]+=lo; return true;
+    }
+  }
+  return false;
+}
+// пренасяне нагоре ако сме заседнали в блок
+for(let i=0;i<H&&collides(P.pos[0],P.pos[1],P.pos[2]);i++)P.pos[1]+=1;
+
+// ---------- вход ----------
+const keys={};let locked=false,sel=0;
+addEventListener('keydown',e=>{keys[e.code]=true;
+  if(e.code==='KeyF'&&locked){P.fly=!P.fly;P.vel[1]=0;}
+  if(e.code.startsWith('Digit')){const n=+e.code.slice(5)-1;if(n>=0&&n<9)selSlot(n);}
+  if(locked&&e.code==='Space')e.preventDefault();
+});
+addEventListener('keyup',e=>{keys[e.code]=false;});
+addEventListener('blur',()=>{for(const k in keys)keys[k]=false;});
+addEventListener('mousemove',e=>{if(!locked)return;P.yaw-=e.movementX*.0025;P.pitch=Math.max(-1.55,Math.min(1.55,P.pitch-e.movementY*.0025));});
+addEventListener('wheel',e=>{if(locked)selSlot((sel+(e.deltaY>0?1:8))%9);});
+addEventListener('contextmenu',e=>e.preventDefault());
+cv.addEventListener('mousedown',e=>{
+  if(!locked)return; const h=raycast();if(!h)return;
+  if(e.button===0){if(getBlock(h.x,h.y,h.z)!==11)setBlock(h.x,h.y,h.z,0);}
+  else if(e.button===2){
+    const {px,py,pz}=h, p=P.pos;
+    const hit=px+1>p[0]-.3&&px<p[0]+.3&&py+1>p[1]&&py<p[1]+1.8&&pz+1>p[2]-.3&&pz<p[2]+.3;
+    if(!hit&&py>0&&py<H){const t=getBlock(px,py,pz);if(t===0||t===5)setBlock(px,py,pz,HOTBAR[sel]);}
+  }
+});
+const menu=document.getElementById('menu');
+document.getElementById('play').onclick=()=>cv.requestPointerLock();
+document.getElementById('reset').onclick=()=>{try{localStorage.removeItem(SAVE_KEY);}catch(e){}save={mods:{},player:null};location.reload();};
+document.addEventListener('pointerlockchange',()=>{locked=document.pointerLockElement===cv;menu.style.display=locked?'none':'flex';
+  document.getElementById('play').textContent=locked?'▶ Играй':'▶ Продължи';if(!locked)savePlayer();});
+
+// хотбар
+const hb=document.getElementById('hotbar'),nameEl=document.getElementById('name');let nameT=0;
+HOTBAR.forEach((b,i)=>{const c=document.createElement('canvas');c.width=c.height=16;const t=TEX[b][1];
+  c.getContext('2d').drawImage(atlas,(t%4)*16,Math.floor(t/4)*16,16,16,0,0,16,16);
+  const s=document.createElement('div');s.className='slot';s.style.backgroundImage=`url(${c.toDataURL()})`;s.innerHTML=`<span>${i+1}</span>`;
+  s.onclick=()=>selSlot(i);hb.appendChild(s);});
+function selSlot(i){sel=i;[...hb.children].forEach((s,j)=>s.classList.toggle('sel',j===i));
+  nameEl.textContent=NAMES[HOTBAR[i]];nameEl.style.opacity=1;clearTimeout(nameT);nameT=setTimeout(()=>nameEl.style.opacity=0,1500);}
+selSlot(0);
+
+// ---------- raycast ----------
+function lookVec(){const c=Math.cos(P.pitch);return[-Math.sin(P.yaw)*c,Math.sin(P.pitch),-Math.cos(P.yaw)*c];}
+function raycast(){
+  const o=[P.pos[0],P.pos[1]+1.62,P.pos[2]],d=lookVec();
+  let x=Math.floor(o[0]),y=Math.floor(o[1]),z=Math.floor(o[2]);
+  const st=d.map(v=>v>0?1:-1),td=d.map(v=>Math.abs(1/(v||1e-9)));
+  const tm=[0,1,2].map(i=>((d[i]>0?Math.floor(o[i])+1-o[i]:o[i]-Math.floor(o[i])))*td[i]);
+  let px=x,py=y,pz=z,t=0;
+  for(let i=0;i<64&&t<=6;i++){
+    const b=getBlock(x,y,z); if(b&&b!==5)return{x,y,z,px,py,pz};
+    px=x;py=y;pz=z;
+    if(tm[0]<tm[1]&&tm[0]<tm[2]){x+=st[0];t=tm[0];tm[0]+=td[0];}
+    else if(tm[1]<tm[2]){y+=st[1];t=tm[1];tm[1]+=td[1];}
+    else{z+=st[2];t=tm[2];tm[2]+=td[2];}
+  }
+  return null;
+}
+
+// ---------- цикъл ----------
+function savePlayer(){save.player={pos:P.pos.slice(),yaw:P.yaw,pitch:P.pitch,fly:P.fly};persist();}
+setInterval(()=>{if(locked)savePlayer();},5000);
+addEventListener('beforeunload',savePlayer);
+
+function physics(dt){
+  const f=[-Math.sin(P.yaw),-Math.cos(P.yaw)],r=[Math.cos(P.yaw),-Math.sin(P.yaw)];
+  let mx=0,mz=0;
+  if(keys.KeyW){mx+=f[0];mz+=f[1];} if(keys.KeyS){mx-=f[0];mz-=f[1];}
+  if(keys.KeyD){mx+=r[0];mz+=r[1];} if(keys.KeyA){mx-=r[0];mz-=r[1];}
+  const l=Math.hypot(mx,mz)||1; mx/=l;mz/=l;
+  const inWater=getBlock(Math.floor(P.pos[0]),Math.floor(P.pos[1]+.4),Math.floor(P.pos[2]))===5;
+  let sp=P.fly?11:(keys.ShiftLeft||keys.ShiftRight?5.8:4.3); if(inWater&&!P.fly)sp*=.55;
+  P.vel[0]=mx*sp;P.vel[2]=mz*sp;
+  if(P.fly){P.vel[1]=(keys.Space?8:0)-(keys.ShiftLeft||keys.ShiftRight?8:0);}
+  else if(inWater){P.vel[1]=Math.max(-3,P.vel[1]-8*dt);if(keys.Space)P.vel[1]=3.6;}
+  else{P.vel[1]=Math.max(-50,P.vel[1]-28*dt);if(keys.Space&&P.ground)P.vel[1]=8.6;}
+  moveAxis(0,P.vel[0]*dt);
+  moveAxis(2,P.vel[2]*dt);
+  if(moveAxis(1,P.vel[1]*dt))P.vel[1]=0;
+  P.ground=collides(P.pos[0],P.pos[1]-.03,P.pos[2]);
+  if(P.ground&&P.fly&&keys.ShiftLeft)P.fly=false;
+  if(P.pos[1]<-20){P.pos[1]=terrainH(Math.floor(P.pos[0]),Math.floor(P.pos[2]))+2;P.vel[1]=0;}
+}
+
+function updateChunks(){
+  const pcx=Math.floor(P.pos[0]/CS),pcz=Math.floor(P.pos[2]/CS);
+  const need=[];
+  for(let dz=-RADIUS;dz<=RADIUS;dz++)for(let dx=-RADIUS;dx<=RADIUS;dx++){
+    const d=dx*dx+dz*dz;if(d>RADIUS*RADIUS+1)continue;
+    const ch=getChunk(pcx+dx,pcz+dz); if(ch.dirty)need.push([d,ch]);
+  }
+  need.sort((a,b)=>a[0]-b[0]);
+  let built=0;for(const [d,ch] of need){if(d>2&&built>=2)break;buildMesh(ch);built++;}
+  for(const [k,ch] of chunks){const dx=ch.cx-pcx,dz=ch.cz-pcz;
+    if(Math.abs(dx)>RADIUS+2||Math.abs(dz)>RADIUS+2){if(ch.mesh){freeMesh(ch);ch.dirty=true;}}
+    if(Math.abs(dx)>RADIUS+5||Math.abs(dz)>RADIUS+5)chunks.delete(k);}
+}
+
+const hud=document.getElementById('hud'),wov=document.getElementById('water');
+let last=performance.now(),fpsN=0,fpsT=0,fps=0;
+const SKY=[.53,.73,.98];
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  fpsN++;fpsT+=dt;if(fpsT>=.5){fps=Math.round(fpsN/fpsT);fpsN=0;fpsT=0;
+    hud.textContent=`New World\nXYZ: ${P.pos[0].toFixed(1)} / ${P.pos[1].toFixed(1)} / ${P.pos[2].toFixed(1)}\nFPS: ${fps}${P.fly?'\nРежим: летене':''}`;}
+  if(locked)physics(dt);
+  updateChunks();
+
+  const dpr=Math.min(devicePixelRatio||1,1.5),w=Math.floor(innerWidth*dpr),h=Math.floor(innerHeight*dpr);
+  if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;}
+  gl.viewport(0,0,w,h);
+  const eye=[P.pos[0],P.pos[1]+1.62,P.pos[2]];
+  const under=getBlock(Math.floor(eye[0]),Math.floor(eye[1]),Math.floor(eye[2]))===5;
+  wov.style.display=under?'block':'none';
+  const sky=under?[.12,.25,.6]:SKY;
+  gl.clearColor(sky[0],sky[1],sky[2],1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  const M=mul(persp(1.25,w/h,.05,400),lookDir(eye,lookVec()));
+
+  gl.useProgram(P1);
+  gl.uniformMatrix4fv(U.m,false,M);gl.uniform3fv(U.sky,sky);
+  gl.uniform2f(U.fog,under?2:RADIUS*CS*.55,under?24:RADIUS*CS-6);
+  gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(U.t,0);
+  gl.enableVertexAttribArray(A.p);gl.enableVertexAttribArray(A.uv);gl.enableVertexAttribArray(A.l);
+  gl.disable(gl.BLEND);gl.depthMask(true);
+  for(const ch of chunks.values())if(ch.mesh&&ch.mesh.o)drawBuf(ch.mesh.o);
+  gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
+  for(const ch of chunks.values())if(ch.mesh&&ch.mesh.w)drawBuf(ch.mesh.w);
+  gl.depthMask(true);gl.disable(gl.BLEND);
+  gl.disableVertexAttribArray(A.uv);gl.disableVertexAttribArray(A.l);
+
+  const t=locked?raycast():null;
+  if(t){
+    const e=.002,v=edge.map((c,i)=>{const o=[t.x,t.y,t.z][i%3];return o+(c?1+e:-e);});
+    gl.useProgram(P2);gl.uniformMatrix4fv(U2,false,M);
+    gl.bindBuffer(gl.ARRAY_BUFFER,edgeBuf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(v),gl.DYNAMIC_DRAW);
+    gl.vertexAttribPointer(A2,3,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(A2);
+    gl.drawArrays(gl.LINES,0,24);
+  }
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
