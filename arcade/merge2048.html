@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сливане на руди 2048</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Сливане 2048</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 227. Сливане на руди 2048
+A.add({id:'merge2048',cat:'puzzle',icon:'🔢',name:'Сливане 2048',desc:'Сливай еднаквите руди до 2048',help:'Стрелки / WASD, плъзгане с мишка или пръст, или клик от страната на дъската — всички блокове се плъзгат натам. Два еднакви блока се сливат в по-ценна руда. Стигни до 2048!',
+  start(g){g.b=Array.from({length:4},()=>[0,0,0,0]);g.pop={};g.win=false;g.msg=0;this.add(g);this.add(g);},
+  add(g){const e=[];for(let y=0;y<4;y++)for(let x=0;x<4;x++)if(!g.b[y][x])e.push([x,y]);if(!e.length)return;const [x,y]=A.pick(e);g.b[y][x]=Math.random()<.9?2:4;g.pop[x+','+y]=.15;},
+  line(a){const v=a.filter(n=>n),o=[];let gain=0;for(let i=0;i<v.length;i++){if(v[i]===v[i+1]){o.push(v[i]*2);gain+=v[i]*2;i++;}else o.push(v[i]);}while(o.length<4)o.push(0);return [o,gain];},
+  move(g,dx,dy){let moved=false,gain=0,best=0;
+    for(let i=0;i<4;i++){const cells=[];for(let j=0;j<4;j++){const k=(dx>0||dy>0)?3-j:j;cells.push(dx?[k,i]:[i,k]);}
+      const [o,gn]=this.line(cells.map(([x,y])=>g.b[y][x]));gain+=gn;
+      cells.forEach(([x,y],j)=>{if(g.b[y][x]!==o[j]){moved=true;if(o[j]>g.b[y][x]&&g.b[y][x])g.pop[x+','+y]=.15;g.b[y][x]=o[j];}best=Math.max(best,o[j]);});}
+    if(!moved)return;g.score+=gain;A.beep(gain?300+Math.log2(gain)*60:200,.05,'triangle');this.add(g);
+    if(best>=2048&&!g.win){g.win=true;g.msg=3;A.tune([660,880,1100,1320]);}
+    if(!this.can(g))A.over(g,'Няма повече ходове!');},
+  can(g){for(let y=0;y<4;y++)for(let x=0;x<4;x++){const v=g.b[y][x];if(!v||(x<3&&g.b[y][x+1]===v)||(y<3&&g.b[y+1][x]===v))return true;}return false;},
+  key(g,k){const m={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];if(m)this.move(g,m[0],m[1]);},
+  click(g,mx,my){g.down=[mx,my];},
+  release(g,mx,my){if(!g.down)return;let dx=mx-g.down[0],dy=my-g.down[1];if(Math.max(Math.abs(dx),Math.abs(dy))<20){dx=g.down[0]-240;dy=g.down[1]-189;}g.down=null;
+    if(Math.abs(dx)>Math.abs(dy))this.move(g,Math.sign(dx),0);else if(dy)this.move(g,0,Math.sign(dy));},
+  update(g,dt){for(const k in g.pop){g.pop[k]-=dt;if(g.pop[k]<=0)delete g.pop[k];}if(g.msg>0)g.msg-=dt;},
+  draw(g){A.bg('#2b2118');for(let x=0;x<480;x+=30)for(let y=0;y<360;y+=30)if((x+y)/30%2){c.fillStyle='#33281d';c.fillRect(x,y,30,30);}
+    const col={2:C.dirt,4:C.stone,8:C.coal,16:C.iron,32:C.gold,64:C.red,128:C.gem,256:'#2ecc71',512:C.lava,1024:C.purple,2048:C.snow},nm={2:'пръст',4:'камък',8:'въглища',16:'желязо',32:'злато',64:'рубин',128:'диамант',256:'смарагд',512:'лава',1024:'аметист',2048:'звезда'};
+    c.fillStyle='#000';c.fillRect(78,27,324,324);c.fillStyle='#4a3a2a';c.fillRect(81,30,318,318);
+    for(let y=0;y<4;y++)for(let x=0;x<4;x++){const v=g.b[y][x],px=87+x*78,py=36+y*78;c.fillStyle='#3a2d20';c.fillRect(px,py,72,72);if(!v)continue;
+      const p=g.pop[x+','+y],s=p?72*(1-p*1.5):72,o=(72-s)/2;A.block(px+o,py+o,s,col[v]||'#fff');
+      if(v>=128){c.fillStyle='rgba(255,255,255,.5)';c.fillRect(px+o+s*.2,py+o+s*.2,s*.15,s*.15);c.fillRect(px+o+s*.6,py+o+s*.55,s*.12,s*.12);}
+      const dark=v===4||v===16||v===32||v===128||v===2048;A.txt(''+v,px+36,py+32,v>=1024?20:v>=128?24:28,dark?'#222':'#fff','center');A.txt(nm[v]||'',px+36,py+58,10,dark?'#333':'#eee','center');}
+    if(g.msg>0)A.txt('🌟 2048! Продължавай!',240,18,18,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

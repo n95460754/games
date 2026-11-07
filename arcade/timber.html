@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дървосекач</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪓 Дървосекач</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 226. Дървосекач
+A.add({id:'timber',cat:'action',icon:'🪓',name:'Дървосекач',desc:'Сечи дървото, пази се от клоните',help:'← / A и → / D (или клик/докосване вляво и вдясно) — застани от тази страна и отсечи блок. Не стой под клон! Всяко сечене пълни лентата с време.',
+  start(g){g.side=-1;g.tr=[];g.last=0;for(let i=0;i<9;i++)g.tr.push(i<2?0:this.gen(g));g.time=1;g.go=false;g.chips=[];g.sw=0;},
+  gen(g){let b=0;if(g.last===0&&Math.random()<.7)b=Math.random()<.5?-1:1;g.last=b;return b;},
+  chop(g,s){g.side=s;if(g.tr[0]===s)return A.over(g,'Удари те клон! 🌳');
+    const t=g.tr.shift();g.tr.push(this.gen(g));g.go=true;g.sw=.12;g.score++;g.time=Math.min(1,g.time+.07);A.beep(300+Math.random()*80,.05,'square',.05);
+    g.chips.push({x:240,y:300,vx:-s*A.rnd(120,220),vy:-160,r:0,b:t});
+    if(g.score%50===0)A.tune([660,880,1100]);
+    if(g.tr[0]===s)A.over(g,'Клонът падна върху теб! 🌳');},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')this.chop(g,-1);else if(k==='ArrowRight'||k==='KeyD')this.chop(g,1);},
+  click(g,mx){this.chop(g,mx<240?-1:1);},
+  update(g,dt){g.sw-=dt;if(g.go){g.time-=dt*(.16+Math.min(.5,g.score*.004));if(g.time<=0){g.time=0;A.over(g,'Времето свърши! ⏱');}}
+    g.chips.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.r+=dt*8;});g.chips=g.chips.filter(p=>p.y<400);},
+  draw(g){A.bg(C.sky);c.fillStyle='#fff';[[60,50],[350,80],[200,30]].forEach(([x,y])=>{c.fillRect(x,y,60,16);c.fillRect(x+14,y-10,34,12);});
+    for(let x=0;x<480;x+=24){A.block(x,320,24,C.grass,8);A.block(x,328,24,C.dirt,32);}
+    for(let i=0;i<9;i++){const y=280-i*40;A.block(220,y,40,C.wood);c.fillStyle='#6d4a26';c.fillRect(228,y+8,4,24);c.fillRect(246,y+14,4,18);
+      const b=g.tr[i];if(b){const bx=b<0?140:260;A.block(bx,y+12,80,'#8a5a2c',16);for(let j=0;j<3;j++)A.block(b<0?bx+j*26-6:bx+j*26+6,y-8,26,j===1?'#357a1e':C.leaf);}}
+    for(let i=0;i<5;i++)A.block(160+i*32,-30+((i%2)*10),32,C.leaf);
+    g.chips.forEach(p=>{c.save();c.translate(p.x,p.y);c.rotate(p.r);A.block(-20,-20,40,C.wood);c.restore();});
+    const px=g.side<0?170:278,sw=g.sw>0;
+    A.block(px,288,32,'#3b6fd6',24);A.block(px+4,262,24,'#c69c6d');c.fillStyle='#3a2a1a';c.fillRect(px+4,262,24,7);c.fillStyle='#fff';c.fillRect(px+8,272,5,4);c.fillRect(px+19,272,5,4);
+    c.fillStyle='#244a9a';c.fillRect(px+4,312,10,8);c.fillRect(px+18,312,10,8);
+    const ax=g.side<0?px+32:px-14,ay=sw?286:270;c.fillStyle='#8a5a2c';c.fillRect(ax+4,ay,5,24);c.fillStyle='#ccc';c.fillRect(g.side<0?ax+6:ax-6,ay,12,10);
+    c.fillStyle='#000';c.fillRect(140,8,200,14);c.fillStyle=g.time<.3?'#e53935':'#ffb300';c.fillRect(142,10,196*g.time,10);
+    if(!g.go)A.txt('← или → за сечене',240,200,18,'#fff','center');}
+});
+</script>
+</body>
+</html>

@@ -208,7 +208,10 @@ const GAMES=[
   {"id": "coloring", "cat": "board", "icon": "🖍️", "name": "Книжка за оцветяване", "desc": "Оцветявай с кофичка", "unit": "", "dec": 0, "low": false, "noScore": true},
   {"id": "dicestats", "cat": "board", "icon": "📈", "name": "Хвърляне на зарове", "desc": "Вероятност наживо", "unit": "", "dec": 0, "low": false, "noScore": true},
   {"id": "marbles", "cat": "board", "icon": "🔵", "name": "Пързалка за топчета", "desc": "Начертай пързалки", "unit": "", "dec": 0, "low": false, "noScore": true},
-  {"id": "blockpet", "cat": "board", "icon": "🐾", "name": "Блоков любимец", "desc": "Гледай своето блоково животинче", "unit": " с", "dec": 0, "low": false, "noScore": false}
+  {"id": "blockpet", "cat": "board", "icon": "🐾", "name": "Блоков любимец", "desc": "Гледай своето блоково животинче", "unit": " с", "dec": 0, "low": false, "noScore": false},
+  {"id": "timber", "cat": "action", "icon": "🪓", "name": "Дървосекач", "desc": "Сечи дървото, пази се от клоните", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "merge2048", "cat": "puzzle", "icon": "🔢", "name": "Сливане 2048", "desc": "Сливай еднаквите руди до 2048", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "digitspan", "cat": "brain", "icon": "🧮", "name": "Запомни числото", "desc": "Запомни все по-дълги числа", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
