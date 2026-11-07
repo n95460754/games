@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ритъм машина</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🥁 Ритъм машина</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 216. Барабани
+A.add({id:'drums',cat:'board',icon:'🥁',name:'Ритъм машина',desc:'Направи си бийт',noScore:true,help:'Кликай квадратчетата, за да включиш удар. Машината свири в кръг 16 такта. ↑ ↓ — темпо, C — изчисти, Space — пауза.',
+  R:[['Бас',60,'sine'],['Малък',200,'square'],['Чинел',1200,'sawtooth'],['Хлоп',800,'triangle'],['Мелодия 1',523,'triangle'],['Мелодия 2',392,'triangle']],
+  start(g){g.grid=this.R.map(()=>Array(16).fill(0));[0,4,8,12].forEach(i=>g.grid[0][i]=1);[4,12].forEach(i=>g.grid[1][i]=1);for(let i=0;i<16;i+=2)g.grid[2][i]=1;g.bpm=110;g.step=0;g.acc=0;g.run=true;},
+  click(g,mx,my){const x=Math.floor((mx-110)/22),y=Math.floor((my-60)/40);if(x>=0&&y>=0&&x<16&&y<this.R.length){g.grid[y][x]^=1;A.beep(800,.02);}},
+  key(g,k){if(k==='ArrowUp')g.bpm=Math.min(200,g.bpm+10);if(k==='ArrowDown')g.bpm=Math.max(60,g.bpm-10);if(k==='KeyC')g.grid.forEach(r=>r.fill(0));if(k==='Space')g.run=!g.run;},
+  update(g,dt){if(!g.run)return;g.acc+=dt;const iv=60/g.bpm/4;while(g.acc>=iv){g.acc-=iv;g.step=(g.step+1)%16;this.R.forEach((r,i)=>{if(g.grid[i][g.step])A.beep(r[1]*(i===0?1:1),i===0?.15:i===2?.04:.08,r[2],i===2?.03:.09);});}},
+  draw(g){A.bg('#14101c');const cols=[C.red,C.gold,C.gem,C.grass,C.purple,'#ff8c1a'];this.R.forEach((r,y)=>{A.txt(r[0],10,80+y*40,12,'#ddd');for(let x=0;x<16;x++){const X=110+x*22,Y=60+y*40;c.fillStyle=g.grid[y][x]?cols[y]:(x%4?'#2b2b38':'#3a3a4a');c.fillRect(X+1,Y+1,20,36);if(x===g.step){c.strokeStyle='#fff';c.strokeRect(X+1,Y+1,20,36);}}});
+    A.txt((g.run?'▶ ':'⏸ ')+g.bpm+' BPM',240,330,16,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Не бъди смачкан</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧱 Не бъди смачкан</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 161. Не бъди смачкан
+A.add({id:'crusher',cat:'action',icon:'🧱',name:'Не бъди смачкан',desc:'Катери се по падащите блокове',help:'← → — ход, Space / ↑ — скок. Блоковете падат и се трупат. Качвай се по тях и не се оставяй да те смачкат!',
+  start(g){g.cols=Array(16).fill(0);g.fall=[];g.x=232;g.y=340;g.vy=0;g.sp=0;},
+  ground(g,x){const a=Math.floor((x+2)/30),b=Math.floor((x+14)/30);return 360-Math.max(g.cols[a]||0,g.cols[b]||0)*30;},
+  key(g,k){if((k==='Space'||k==='ArrowUp'||k==='KeyW')&&g.y>=this.ground(g,g.x)-.5){g.vy=-430;A.beep(500,.03);}},
+  update(g,dt){const sp=150;let nx=g.x+((A.keys.ArrowRight||A.keys.KeyD?1:0)-(A.keys.ArrowLeft||A.keys.KeyA?1:0))*sp*dt;nx=A.clamp(nx,0,464);
+    if(this.ground(g,nx)>=g.y-1)g.x=nx;g.vy+=1200*dt;g.y+=g.vy*dt;const gr=this.ground(g,g.x);if(g.y>gr){g.y=gr;g.vy=0;}
+    g.score=Math.max(g.score,Math.floor((360-g.y)/30));
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.35,1.1-g.t*.01);g.fall.push({c:A.ri(0,15),y:-30,col:A.pick([C.stone,C.dirt,C.wood,C.sand,C.gold])});}
+    for(const f of g.fall){f.y+=260*dt;const top=360-(g.cols[f.c]+1)*30;if(f.y>=top){f.y=top;f.done=1;g.cols[f.c]++;
+        if(g.x+14>f.c*30&&g.x+2<f.c*30+30&&g.y>top&&g.y-20<top+30)return A.over(g,'Смачка те!');}
+      else if(g.x+14>f.c*30&&g.x+2<f.c*30+30&&f.y+30>g.y-20&&f.y<g.y)return A.over(g,'Смачка те!');}
+    g.fall=g.fall.filter(f=>!f.done);if(Math.min(...g.cols)>=11){g.cols=g.cols.map(v=>v-1);g.y+=30;}},
+  draw(g){A.bg('#87ceeb');g.cols.forEach((h,i)=>{for(let k=0;k<h;k++)A.block(i*30,360-(k+1)*30,30,k%3?C.stone:C.dirt);});for(const f of g.fall)A.block(f.c*30,f.y,30,f.col);A.block(g.x,g.y-20,16,'#e67e22',20);A.txt('Височина '+g.score,10,14,14,'#123');}
+});
+</script>
+</body>
+</html>

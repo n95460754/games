@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зомби атака</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧟 Зомби атака</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 156. Зомби атака
+A.add({id:'zombies',cat:'action',icon:'🧟',name:'Зомби атака',desc:'Оцелей срещу ордите',help:'WASD — ход, мишката — прицел, клик (задръж) — стрелба. Зомбитата идват от всички страни. 3 живота.',
+  start(g){g.x=240;g.y=180;g.z=[];g.b=[];g.sp=0;g.cd=0;g.hp=3;g.inv=0;},
+  update(g,dt){let dx=(A.keys.KeyD||A.keys.ArrowRight?1:0)-(A.keys.KeyA||A.keys.ArrowLeft?1:0),dy=(A.keys.KeyS||A.keys.ArrowDown?1:0)-(A.keys.KeyW||A.keys.ArrowUp?1:0);g.x=A.clamp(g.x+dx*170*dt,10,470);g.y=A.clamp(g.y+dy*170*dt,10,350);
+    g.cd-=dt;g.inv-=dt;if(A.mouse.down&&g.cd<=0){g.cd=.2;const a=Math.atan2(A.mouse.y-g.y,A.mouse.x-g.x);g.b.push({x:g.x,y:g.y,vx:Math.cos(a)*420,vy:Math.sin(a)*420});A.beep(700,.02);}
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.3,1.2-g.t*.015);const a=A.rnd(0,6.28);g.z.push({x:240+Math.cos(a)*320,y:180+Math.sin(a)*260,hp:Math.random()<.15?3:1,v:A.rnd(40,70)+g.t});}
+    for(const b of g.b){b.x+=b.vx*dt;b.y+=b.vy*dt;}
+    for(const z of g.z){const a=Math.atan2(g.y-z.y,g.x-z.x);z.x+=Math.cos(a)*z.v*dt;z.y+=Math.sin(a)*z.v*dt;
+      for(const b of g.b)if(Math.abs(b.x-z.x)<12&&Math.abs(b.y-z.y)<12){b.x=-999;z.hp--;if(z.hp<=0){z.dead=1;g.score++;A.beep(150,.05);}}
+      if(!z.dead&&g.inv<=0&&Math.abs(z.x-g.x)<16&&Math.abs(z.y-g.y)<16){g.hp--;g.inv=1.5;A.beep(80,.3,'sawtooth');if(!g.hp)return A.over(g,'Зомбитата те хванаха');}}
+    g.z=g.z.filter(z=>!z.dead);g.b=g.b.filter(b=>b.x>-10&&b.x<490&&b.y>-10&&b.y<370);},
+  draw(g){A.bg('#3a4a2a');for(const z of g.z){A.block(z.x-10,z.y-10,20,z.hp>1?'#33691e':'#7cb342');c.fillStyle='#300';c.fillRect(z.x-6,z.y-4,4,4);c.fillRect(z.x+2,z.y-4,4,4);}
+    c.fillStyle='#ff0';for(const b of g.b)c.fillRect(b.x-2,b.y-2,4,4);if(g.inv<=0||Math.sin(g.t*25)>0)A.block(g.x-9,g.y-9,18,'#3b7bd6');
+    c.strokeStyle='#fff';c.beginPath();c.arc(A.mouse.x,A.mouse.y,8,0,7);c.stroke();A.txt('❤'.repeat(g.hp),10,14,14,'#f55');}
+});
+</script>
+</body>
+</html>

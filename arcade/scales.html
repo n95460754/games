@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Везни с тежести</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚖️ Везни с тежести</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 171. Везни с тежести
+A.add(numGame({id:'scales',cat:'puzzle',icon:'⚖️',name:'Везни с тежести',desc:'Колко тежи кубчето?',lives:true,help:'Везните са в равновесие. Колко килограма тежи едно кубче? (Числата са тежести в кг.) 3 грешки и край.',
+  next(g){const x=A.ri(1,12),n=A.ri(1,Math.min(4,1+Math.floor(g.score/2))),k=A.ri(0,Math.min(3,g.score));const w=A.ri(0,15);g.n=n;g.k=k;g.L=w;g.R=n*x+w-0;g.ans=x;
+    g.left=[...Array(n)].map(()=>'x');if(w)g.left.push(w);g.right=[n*x+w];g.q='Едно кубче = ? кг';},
+  pic(g){c.fillStyle=C.wood;c.fillRect(80,180,320,8);c.fillRect(236,180,8,90);g.left.forEach((v,i)=>{if(v==='x')A.block(90+i*34,148,30,C.purple);else{A.block(90+i*34,152,30,'#777',26);A.txt(v,105+i*34,165,13,'#fff','center');}});
+    g.right.forEach((v,i)=>{A.block(330-i*40,140,40,'#777',38);A.txt(v,350-i*40,159,15,'#fff','center');});}}));
+</script>
+</body>
+</html>

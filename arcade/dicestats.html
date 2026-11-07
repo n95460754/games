@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хвърляне на зарове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📈 Хвърляне на зарове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 223. Закон за големите числа
+A.add({id:'dicestats',cat:'board',icon:'📈',name:'Хвърляне на зарове',desc:'Вероятност наживо',noScore:true,help:'Хвърляме 2 зара хиляди пъти и броим сбора. Виж как графиката се оформя като планина — 7 е най-честият сбор! 1/2/3 — колко зара, Space — пауза, C — изчисти.',
+  start(g){g.n=2;g.cnt={};g.total=0;g.run=true;},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=3){g.n=n;g.cnt={};g.total=0;}if(k==='Space')g.run=!g.run;if(k==='KeyC'){g.cnt={};g.total=0;}},
+  update(g,dt){if(!g.run)return;const k=Math.min(200,5+Math.floor(g.total/20));for(let i=0;i<k;i++){let s=0;for(let d=0;d<g.n;d++)s+=A.ri(1,6);g.cnt[s]=(g.cnt[s]||0)+1;g.total++;}},
+  draw(g){A.bg('#1d2433');const lo=g.n,hi=g.n*6,w=420/(hi-lo+1),mx=Math.max(1,...Object.values(g.cnt));for(let s=lo;s<=hi;s++){const v=g.cnt[s]||0,h=v/mx*250;A.block(30+(s-lo)*w+2,300-h,w-4,C.gem,Math.max(1,h));A.txt(s,30+(s-lo)*w+w/2,315,12,'#fff','center');
+      if(g.total)A.txt((v/g.total*100).toFixed(1)+'%',30+(s-lo)*w+w/2,290-h,9,'#bbb','center');}
+    A.txt(g.n+' зар(а) · хвърляния: '+g.total,240,20,15,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

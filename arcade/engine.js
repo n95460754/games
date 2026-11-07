@@ -74,7 +74,19 @@ function choiceGame(o){return Object.assign({
   key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.pick2(g,n-1);},
   click(g,mx,my){if(my>250&&my<350){const i=Math.floor(mx/120);if(i>=0&&i<4)this.pick2(g,i);}},
   update(g,dt){tick(g,dt);},
-  draw(g){A.bg(o.bg||'#1d2b3a');this.pic(g);g.opts.forEach((v,i)=>{A.block(i*120+8,262,104,'#5a6b8c',60);A.txt((i+1)+') '+v,i*120+60,292,17,'#fff','center');});
+  draw(g){A.bg(o.bg||'#1d2b3a');this.pic(g);g.opts.forEach((v,i)=>{A.block(i*120+8,262,104,'#5a6b8c',60);const t=(i+1)+') '+v;A.txt(t,i*120+60,292,t.length>13?11:t.length>9?14:17,'#fff','center');});
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);if(g.why)A.txt(g.why,470,14,12,'#bbb','right');drawFlash(g);}
+},o);}
+// тест с 4 широки отговора: o.Q = [[въпрос, верен, грешен, грешен, грешен], ...]
+function quizGame(o){return Object.assign({
+  start(g){g.time=o.time||90;g.deck=A.shuffle(o.Q.map((q,i)=>i));this.next(g);},
+  next(g){if(!g.deck.length)g.deck=A.shuffle(o.Q.map((q,i)=>i));const q=o.Q[g.deck.pop()];g.q=q[0];g.ans=q[1];g.opts=A.shuffle(q.slice(1,5));},
+  pick2(g,i){if(g.opts[i]===undefined)return;const ok=g.opts[i]===g.ans;flash(g,ok);if(ok)g.score++;else g.why='Беше: '+g.ans;this.next(g);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.pick2(g,n-1);},
+  click(g,mx,my){if(my>170&&my<330){const i=(mx<240?0:1)+(my>250?2:0);this.pick2(g,i);}},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg(o.bg||'#1d2b3a');if(this.pic)this.pic(g);else{const w=g.q.length>26?18:24;A.txt(g.q,240,95,w,'#fff','center');}
+    g.opts.forEach((v,i)=>{const x=(i%2)*236+8,y=175+(i>1?80:0);A.block(x,y,228,'#5a6b8c',70);A.txt((i+1)+') '+v,x+114,y+35,v.length>16?13:16,'#fff','center');});
     A.txt('⏱ '+Math.ceil(g.time),10,14,14);if(g.why)A.txt(g.why,470,14,12,'#bbb','right');drawFlash(g);}
 },o);}
 function opts4(ans,gen){const s=new Set([ans]);let n=0;while(s.size<4&&n++<200)s.add(gen());return A.shuffle([...s]);}

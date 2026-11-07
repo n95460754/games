@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пъзел с картинка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧩 Пъзел с картинка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 177. Пъзел с картинка
+A.add({id:'jigsaw',cat:'puzzle',icon:'🧩',name:'Пъзел с картинка',desc:'Нареди парчетата',low:true,unit:' хода',help:'Картинката е разбъркана. Кликни две парчета, за да ги размениш. Подреди пейзажа!',
+  start(g){g.N=4;g.pic=document.createElement('canvas');g.pic.width=320;g.pic.height=320;const p=g.pic.getContext('2d');
+    p.fillStyle='#87ceeb';p.fillRect(0,0,320,320);p.fillStyle='#fff8b0';p.fillRect(240,30,50,50);for(let i=0;i<3;i++){p.fillStyle='#fff';p.fillRect(30+i*80,40+i*15,60,18);}
+    p.fillStyle='#7d7d7d';p.beginPath();p.moveTo(0,220);p.lineTo(90,110);p.lineTo(180,220);p.fill();p.fillStyle='#fff';p.beginPath();p.moveTo(68,137);p.lineTo(90,110);p.lineTo(112,137);p.fill();
+    for(let x=0;x<320;x+=20){p.fillStyle='#5aa13a';p.fillRect(x,220,20,20);p.fillStyle='#7a5233';p.fillRect(x,240,20,80);}p.fillStyle='#6b4a2a';p.fillRect(230,160,16,60);p.fillStyle='#3f8a24';p.fillRect(208,120,60,50);
+    p.fillStyle='#9a6a3a';p.fillRect(110,180,50,40);p.fillStyle='#d84a3a';p.beginPath();p.moveTo(104,180);p.lineTo(135,150);p.lineTo(166,180);p.fill();p.fillStyle='#3b7bd6';p.fillRect(280,230,40,30);
+    g.t2=A.shuffle([...Array(16).keys()]);g.sel=-1;g.moves=0;},
+  click(g,mx,my){const x=Math.floor((mx-80)/80),y=Math.floor((my-20)/80);if(x<0||y<0||x>3||y>3)return;const i=y*4+x;if(g.sel<0){g.sel=i;return;}
+    [g.t2[i],g.t2[g.sel]]=[g.t2[g.sel],g.t2[i]];g.sel=-1;g.moves++;g.score=g.moves;A.beep(400,.03);if(g.t2.every((v,k)=>v===k))A.over(g,'🧩 Картинката е подредена!');},
+  draw(g){A.bg('#2a2018');const s=320/4;g.t2.forEach((v,i)=>{const dx=80+(i%4)*s*.8*1.25*.8,dy=20+Math.floor(i/4)*s*.8*1.25*.8;c.drawImage(g.pic,(v%4)*s,Math.floor(v/4)*s,s,s,80+(i%4)*80,20+Math.floor(i/4)*80,78,78);if(i===g.sel){c.strokeStyle=C.gold;c.lineWidth=3;c.strokeRect(80+(i%4)*80,20+Math.floor(i/4)*80,78,78);}});
+    c.drawImage(g.pic,410,20,60,60);A.txt('Ходове '+g.moves,410,100,12);}
+});
+</script>
+</body>
+</html>

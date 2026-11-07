@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Къде беше?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📌 Къде беше?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 201. Къде беше точката
+A.add({id:'pinpoint',cat:'skill',icon:'📌',name:'Къде беше?',desc:'Запомни и посочи',help:'Точка светва за миг и изчезва. Кликни ТОЧНО там, където беше. Колкото по-близо, толкова повече точки. 10 опита.',
+  start(g){g.n=10;this.next(g);},
+  next(g){g.p=[A.ri(30,450),A.ri(30,330)];g.show=Math.max(.25,.6-g.score*.01);g.res=null;g.wait=A.rnd(.5,1);},
+  click(g,mx,my){if(g.show>0||g.wait>0||g.res)return;const d=Math.hypot(mx-g.p[0],my-g.p[1]);const p=Math.max(0,10-Math.round(d/5));g.score+=p;g.res={x:mx,y:my,p,t:1};A.beep(300+p*60,.06);},
+  update(g,dt){if(g.wait>0){g.wait-=dt;return;}if(g.show>0)g.show-=dt;if(g.res){g.res.t-=dt;if(g.res.t<=0){g.n--;if(!g.n)return A.over(g,'Край! '+g.score+' точки');this.next(g);}}},
+  draw(g){A.bg('#1b1b24');if(g.wait<=0&&g.show>0)A.block(g.p[0]-8,g.p[1]-8,16,C.gold);if(g.res){A.block(g.p[0]-8,g.p[1]-8,16,C.gold);c.strokeStyle='#fff';c.beginPath();c.moveTo(g.p[0],g.p[1]);c.lineTo(g.res.x,g.res.y);c.stroke();c.fillStyle=C.red;c.fillRect(g.res.x-3,g.res.y-3,6,6);A.txt('+'+g.res.p,240,20,16,'#ffd54f','center');}
+    A.txt('Опити: '+g.n,10,345,13);}
+});
+</script>
+</body>
+</html>

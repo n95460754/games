@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кристали в лабиринта</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👻 Кристали в лабиринта</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 147. Кристалите в лабиринта
+A.add({id:'gemchase',cat:'action',icon:'👻',name:'Кристали в лабиринта',desc:'Събери всичко, бягай от зомбитата',help:'Стрелки — движи се из лабиринта. Събери всички кристали. Зомбитата те гонят! Голям кристал = за кратко ти ги гониш.',
+  M:['###############','#.....#.#.....#','#.###.#.#.###.#','#O#.........#O#','#.#.##.#.##.#.#','#......#......#','###.#.###.#.###','#...#.....#...#','#.#.#######.#.#','#.............#','###############'],
+  start(g){g.m=this.M.map(r=>r.split(''));g.px=7;g.py=9;g.m[9][7]=' ';g.d=[0,0];g.nd=[0,0];g.mt=0;g.z=[{x:1,y:1},{x:13,y:1}];g.zt=0;g.pw=0;},
+  key(g,k){const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(m)g.nd=m;},
+  open(g,x,y){return g.m[y]&&g.m[y][x]!=='#'&&g.m[y][x]!==undefined;},
+  update(g,dt){g.pw=Math.max(0,g.pw-dt);g.mt+=dt;if(g.mt>.15){g.mt=0;if(this.open(g,g.px+g.nd[0],g.py+g.nd[1]))g.d=g.nd;if(this.open(g,g.px+g.d[0],g.py+g.d[1])){g.px+=g.d[0];g.py+=g.d[1];}
+      const t=g.m[g.py][g.px];if(t==='.'){g.score++;g.m[g.py][g.px]=' ';A.beep(900,.02);}if(t==='O'){g.pw=6;g.m[g.py][g.px]=' ';A.beep(400,.2);}
+      if(!g.m.some(r=>r.includes('.')||r.includes('O'))){g.score+=50;A.tune([523,659,784]);const s=g.score;this.start(g);g.score=s;}}
+    g.zt+=dt;if(g.zt>(g.pw?.35:.24)){g.zt=0;for(const z of g.z){const opts=[[1,0],[-1,0],[0,1],[0,-1]].filter(([dx,dy])=>this.open(g,z.x+dx,z.y+dy));
+      opts.sort((a,b)=>{const da=Math.abs(z.x+a[0]-g.px)+Math.abs(z.y+a[1]-g.py),db=Math.abs(z.x+b[0]-g.px)+Math.abs(z.y+b[1]-g.py);return(g.pw?db-da:da-db)+A.rnd(-1.5,1.5);});
+      if(opts.length){z.x+=opts[0][0];z.y+=opts[0][1];}}}
+    for(const z of g.z)if(z.x===g.px&&z.y===g.py){if(g.pw){z.x=7;z.y=5;g.score+=20;A.beep(1200,.1);}else return A.over(g,'Зомби те хвана!');}},
+  draw(g){A.bg('#0b0b14');const T=32;g.m.forEach((r,y)=>r.forEach((ch,x)=>{if(ch==='#')A.block(x*T,y*T+4,T,'#2b3a8c');if(ch==='.'){c.fillStyle=C.gem;c.fillRect(x*T+13,y*T+17,6,6);}if(ch==='O'){c.fillStyle=C.gold;c.fillRect(x*T+9,y*T+13,14,14);}}));
+    for(const z of g.z){A.block(z.x*T+5,z.y*T+9,22,g.pw?'#5a6b8c':'#4caf50');c.fillStyle='#000';c.fillRect(z.x*T+9,z.y*T+15,5,4);c.fillRect(z.x*T+18,z.y*T+15,5,4);}
+    A.block(g.px*T+5,g.py*T+9,22,C.gold);c.fillStyle='#000';c.fillRect(g.px*T+11,g.py*T+15,3,3);c.fillRect(g.px*T+18,g.py*T+15,3,3);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Палачинки</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🥞 Палачинки</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 203. Палачинки
+A.add({id:'pancakes',cat:'skill',icon:'🥞',name:'Палачинки',desc:'Обърни навреме, свали навреме',help:'Четири тигана (клавиши 1–4 или клик). Палачинката пожълтява: натисни веднъж, за да я обърнеш, когато е ЗЛАТИСТА, после пак, за да я свалиш. Изгорена = загубена. 60 секунди.',
+  start(g){g.time=60;g.p=[0,1,2,3].map(()=>({t:-A.rnd(0,2),side:0}));},
+  act(g,i){const p=g.p[i];if(p.t<0)return;const q=p.t;const good=q>.55&&q<.8;if(p.side===0){p.side=1;p.score1=good;p.t=0;A.beep(good?700:300,.05);}else{const pts=(p.score1?1:0)+(good?1:0);g.score+=pts;A.beep(pts===2?1000:pts?600:200,.08);p.t=-A.rnd(.5,1.5);p.side=0;}},
+  click(g,mx,my){const i=(mx<240?0:1)+(my>180?2:0);this.act(g,i);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.act(g,n-1);},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Готовите са '+g.score+' точки');for(const p of g.p){p.t+=dt*.28;if(p.t>1.1){p.t=-A.rnd(.5,1.5);p.side=0;A.beep(100,.2,'sawtooth');}}},
+  draw(g){A.bg('#3a2a1c');g.p.forEach((p,i)=>{const x=(i%2)*240+120,y=Math.floor(i/2)*170+95;c.fillStyle='#222';c.beginPath();c.arc(x,y,62,0,7);c.fill();c.fillStyle='#444';c.fillRect(x+55,y-6,60,12);
+      if(p.t>=0){const q=Math.min(1,p.t);const r=Math.round(245-q*130),gg=Math.round(225-q*170),b=Math.round(160-q*140);c.fillStyle='rgb('+r+','+gg+','+b+')';c.beginPath();c.arc(x,y,48,0,7);c.fill();if(p.side)A.txt('↺',x,y,18,'#5a3a1a','center');}
+      A.txt(i+1,x-60,y-60,14,'#fff');});A.txt('⏱ '+Math.ceil(g.time),220,14,14);}
+});
+</script>
+</body>
+</html>

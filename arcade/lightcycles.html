@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Светлинни мотори</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏍️ Светлинни мотори</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 159. Светлинни мотори
+A.add({id:'lightcycles',cat:'action',icon:'🏍️',name:'Светлинни мотори',desc:'За двама: не се блъсвай в следите',noScore:true,help:'Игра за ДВАМА! Синият: W A S D. Оранжевият: стрелките. Моторите оставят стена след себе си. Който се блъсне, губи рунда. До 3 победи.',
+  start(g){g.w=[0,0];this.round(g);},
+  round(g){g.grid=new Uint8Array(96*72);g.p=[{x:20,y:36,d:[1,0]},{x:75,y:36,d:[-1,0]}];g.st=0;g.pause=1;},
+  key(g,k){const m=[{KeyW:[0,-1],KeyS:[0,1],KeyA:[-1,0],KeyD:[1,0]},{ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}];
+    for(let i=0;i<2;i++){const d=m[i][k];if(d&&!(d[0]===-g.p[i].d[0]&&d[1]===-g.p[i].d[1]))g.p[i].nd=d;}},
+  update(g,dt){if(g.pause>0){g.pause-=dt;return;}g.st+=dt;while(g.st>.03){g.st-=.03;const dead=[false,false];
+      for(let i=0;i<2;i++){const p=g.p[i];if(p.nd){p.d=p.nd;p.nd=null;}g.grid[p.y*96+p.x]=i+1;p.x+=p.d[0];p.y+=p.d[1];if(p.x<0||p.y<0||p.x>=96||p.y>=72||g.grid[p.y*96+p.x])dead[i]=true;}
+      if(g.p[0].x===g.p[1].x&&g.p[0].y===g.p[1].y)dead[0]=dead[1]=true;
+      if(dead[0]||dead[1]){A.beep(100,.3,'sawtooth');if(!(dead[0]&&dead[1]))g.w[dead[0]?1:0]++;if(Math.max(...g.w)>=3)return A.over(g,(g.w[0]>=3?'🟦 Синият':'🟧 Оранжевият')+' печели!');this.round(g);return;}}},
+  draw(g){A.bg('#05060f');c.strokeStyle='rgba(80,120,255,.1)';for(let x=0;x<480;x+=40){c.beginPath();c.moveTo(x,0);c.lineTo(x,360);c.stroke();}
+    for(let i=0;i<g.grid.length;i++)if(g.grid[i]){c.fillStyle=g.grid[i]===1?'#4de8f5':'#ff9100';c.fillRect((i%96)*5,Math.floor(i/96)*5,5,5);}
+    g.p.forEach((p,i)=>{c.fillStyle='#fff';c.fillRect(p.x*5-1,p.y*5-1,7,7);});A.txt('🟦 '+g.w[0]+' : '+g.w[1]+' 🟧',240,14,15,'#fff','center');if(g.pause>0)A.txt('Готови...',240,180,24,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

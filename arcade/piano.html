@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пиано</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎹 Пиано</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 215. Пиано
+A.add({id:'piano',cat:'board',icon:'🎹',name:'Пиано',desc:'Свири с клавиатурата',noScore:true,help:'Свири с мишката или клавишите A S D F G H J K (бели) и W E T Y U (черни). Натисни R, за да записваш, и P, за да чуеш записа. Опитай „Тече вода“ или своя мелодия!',
+  W:[['A','До',261.6],['S','Ре',293.7],['D','Ми',329.6],['F','Фа',349.2],['G','Сол',392],['H','Ла',440],['J','Си',493.9],['K','До',523.3]],
+  B:[['W',277.2,0],['E',311.1,1],['T',370,3],['Y',415.3,4],['U',466.2,5]],
+  start(g){g.on={};g.rec=false;g.song=[];g.play=null;},
+  note(g,f,id){A.beep(f,.45,'triangle',.08);g.on[id]=.2;if(g.rec)g.song.push([g.t-g.rt,f,id]);},
+  key(g,k){const ch=k.slice(3);const w=this.W.find(q=>q[0]===ch);if(w&&k.startsWith('Key'))return this.note(g,w[2],'w'+w[0]);const b=this.B.find(q=>q[0]===ch);if(b&&k.startsWith('Key'))return this.note(g,b[1],'b'+b[0]);
+    if(k==='KeyR'){g.rec=!g.rec;if(g.rec){g.song=[];g.rt=g.t;}}if(k==='KeyP'&&g.song.length){g.rec=false;g.play={t0:g.t,i:0};}},
+  click(g,mx,my){for(const b of this.B){const x=40+(b[2]+1)*50-15;if(mx>x&&mx<x+30&&my>120&&my<230)return this.note(g,b[1],'b'+b[0]);}const i=Math.floor((mx-40)/50);if(i>=0&&i<8&&my>120&&my<320)this.note(g,this.W[i][2],'w'+this.W[i][0]);},
+  update(g,dt){for(const k in g.on)g.on[k]-=dt;if(g.play){const t=g.t-g.play.t0;while(g.play.i<g.song.length&&g.song[g.play.i][0]<=t){const[,f,id]=g.song[g.play.i++];A.beep(f,.45,'triangle',.08);g.on[id]=.2;}if(g.play.i>=g.song.length)g.play=null;}},
+  draw(g){A.bg('#3a2a1c');this.W.forEach((w,i)=>{const x=40+i*50;c.fillStyle=g.on['w'+w[0]]>0?'#ffe082':'#fafafa';c.fillRect(x+1,120,48,200);A.txt(w[1],x+25,290,13,'#555','center');A.txt(w[0],x+25,305,11,'#999','center');});
+    this.B.forEach(b=>{const x=40+(b[2]+1)*50-15;c.fillStyle=g.on['b'+b[0]]>0?'#ffb300':'#222';c.fillRect(x,120,30,110);A.txt(b[0],x+15,215,10,'#aaa','center');});
+    A.txt(g.rec?'🔴 Запис... (R спира)':g.play?'▶ Свири записа':'R = запис   P = пусни ('+g.song.length+' ноти)',240,60,15,g.rec?'#ff8a80':'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

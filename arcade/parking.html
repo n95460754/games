@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Паркиране</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🅿️ Паркиране</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 199. Паркиране
+A.add({id:'parking',cat:'skill',icon:'🅿️',name:'Паркиране',desc:'Паркирай без драскотина',help:'↑ ↓ — газ и задна, ← → — волан. Вкарай колата в зеленото място и спри (почти изправена). Не удряй другите коли!',
+  start(g){g.lv=0;this.level(g);},
+  level(g){g.lv++;g.x=60;g.y=300;g.a=-Math.PI/2;g.v=0;g.spot={x:A.ri(150,420),y:A.ri(50,140)};g.cars=[];for(let i=0;i<2+g.lv;i++){const x=A.ri(100,440),y=A.ri(40,260);if(Math.abs(x-g.spot.x)<60&&Math.abs(y-g.spot.y)<60)continue;if(Math.hypot(x-60,y-300)<70)continue;g.cars.push({x,y,a:A.pick([0,Math.PI/2])});}g.still=0;},
+  update(g,dt){const th=(A.keys.ArrowUp||A.keys.KeyW?1:0)-(A.keys.ArrowDown||A.keys.KeyS?1:0),st=(A.keys.ArrowRight||A.keys.KeyD?1:0)-(A.keys.ArrowLeft||A.keys.KeyA?1:0);
+    g.v+=th*160*dt;g.v*=.97;g.v=A.clamp(g.v,-80,140);g.a+=st*g.v*.022*dt;g.x+=Math.cos(g.a)*g.v*dt;g.y+=Math.sin(g.a)*g.v*dt;
+    if(g.x<14||g.x>466||g.y<14||g.y>346)return A.over(g,'Излезе от паркинга!');
+    for(const o of g.cars){const dx=g.x-o.x,dy=g.y-o.y;if(Math.abs(dx)<(o.a?18:30)+10&&Math.abs(dy)<(o.a?30:18)+10)return A.over(g,'Удари кола!');}
+    const s=g.spot,inside=Math.abs(g.x-s.x)<12&&Math.abs(g.y-s.y)<16,straight=Math.abs(Math.sin(g.a))>.93;if(inside&&straight&&Math.abs(g.v)<15){g.still+=dt;if(g.still>.6){g.score+=10;A.tune([523,659,784]);this.level(g);}}else g.still=0;},
+  car(x,y,a,col){c.save();c.translate(x,y);c.rotate(a);c.fillStyle=col;c.fillRect(-28,-15,56,30);c.fillStyle='#223';c.fillRect(4,-12,12,24);c.fillStyle='#ffeb3b';c.fillRect(24,-12,4,6);c.fillRect(24,6,4,6);c.restore();},
+  draw(g){A.bg('#555');c.fillStyle='#fff';for(let x=0;x<480;x+=40)c.fillRect(x,180,20,3);c.strokeStyle='#4caf50';c.lineWidth=3;c.strokeRect(g.spot.x-20,g.spot.y-32,40,64);
+    for(const o of g.cars)this.car(o.x,o.y,o.a,'#9e9e9e');this.car(g.x,g.y,g.a,C.red);A.txt('Ниво '+g.lv,10,14,13);}
+});
+</script>
+</body>
+</html>

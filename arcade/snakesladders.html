@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Змии и стълби</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎲 Змии и стълби</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 208. Змии и стълби
+A.add({id:'snakesladders',cat:'board',icon:'🎲',name:'Змии и стълби',desc:'Зарове, стълби и змии',help:'Space / клик — хвърли зара. Стълбите те качват, змиите те смъкват. Първият точно на 100 печели!',
+  J:{3:22,8:30,17:4,21:42,28:84,36:44,48:26,51:67,62:19,64:60,71:91,80:99,87:24,93:73,95:75,98:78},
+  start(g){g.p=[1,1];g.turn=0;g.die=0;g.wait=0;g.msg='Твой ход';},
+  xy(n){const i=n-1,row=Math.floor(i/10),col=row%2?9-i%10:i%10;return[95+col*29,325-row*29];},
+  roll(g){if(g.wait>0)return;const d=A.ri(1,6);g.die=d;let n=g.p[g.turn]+d;if(n>100)n=g.p[g.turn];g.msg=(g.turn?'Роботът':'Ти')+' хвърли '+d;
+    if(this.J[n]){g.msg+=this.J[n]>n?' — стълба! 🪜':' — змия! 🐍';n=this.J[n];}g.p[g.turn]=n;A.beep(400+d*50,.05);
+    if(n===100){g.score=g.turn?0:1;return A.over(g,g.turn?'Роботът стигна 100':'🏆 Стигна 100!');}g.turn^=1;g.wait=.7;},
+  click(g){if(g.turn===0)this.roll(g);},key(g,k){if(k==='Space'&&g.turn===0)this.roll(g);},
+  update(g,dt){if(g.wait>0){g.wait-=dt;return;}if(g.turn===1)this.roll(g);},
+  draw(g){A.bg('#2a2018');for(let n=1;n<=100;n++){const[x,y]=this.xy(n);c.fillStyle=n%2?'#ffe082':'#ffcc80';c.fillRect(x-14,y-14,29,29);A.txt(n,x-12,y-8,8,'#8d6e3f');}
+    for(const a in this.J){const b=this.J[a],[x1,y1]=this.xy(+a),[x2,y2]=this.xy(b);c.strokeStyle=b>a?'#6d4c41':'#43a047';c.lineWidth=b>a?5:6;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();}
+    g.p.forEach((n,i)=>{const[x,y]=this.xy(n);A.block(x-10+i*8,y-6,12,i?C.red:'#3b7bd6');});A.block(410,40,50,'#fff');A.txt(g.die||'?',435,65,26,'#222','center');A.txt(g.msg,240,12,13,'#fff','center');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Светофар</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚦 Светофар</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 202. Светофар
+A.add({id:'traffic',cat:'skill',icon:'🚦',name:'Светофар',desc:'Пускай колите без катастрофи',help:'Кликни светофар (или ← и ↑), за да го смениш. Хоризонталните и вертикалните коли не бива да се срещнат на кръстовището! Всяка преминала кола = точка.',
+  start(g){g.h=true;g.cars=[];g.sp=0;},
+  click(g,mx,my){g.h=!g.h;A.beep(500,.03);},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')g.h=true;if(k==='ArrowUp'||k==='KeyW')g.h=false;},
+  update(g,dt){g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.5,1.4-g.t*.012);const hor=Math.random()<.5;g.cars.push(hor?{hor,x:-30,y:192,v:A.rnd(90,140)}:{hor,x:248,y:-30,v:A.rnd(90,140)});}
+    for(const c2 of g.cars){const pos=c2.hor?c2.x:c2.y,stop=c2.hor?180:152;const green=c2.hor===g.h;const ahead=g.cars.filter(o=>o!==c2&&o.hor===c2.hor&&(c2.hor?o.x>c2.x:o.y>c2.y)).sort((a,b)=>(c2.hor?a.x-b.x:a.y-b.y))[0];
+      let mv=c2.v*dt;if(!green&&pos<stop&&pos+mv>=stop-28)mv=Math.max(0,stop-28-pos);if(ahead&&(c2.hor?ahead.x-c2.x:ahead.y-c2.y)<40)mv=0;if(c2.hor)c2.x+=mv;else c2.y+=mv;
+      if(!c2.done&&(c2.hor?c2.x>500:c2.y>380)){c2.done=1;g.score++;}}
+    const inX=g.cars.filter(c2=>!c2.done&&(c2.hor?c2.x>200&&c2.x<290:c2.y>160&&c2.y<230));if(inX.some(a=>a.hor)&&inX.some(a=>!a.hor)){const a=inX.find(a=>a.hor),b=inX.find(a=>!a.hor);if(Math.abs(a.x-b.x)<34&&Math.abs(a.y-b.y)<34)return A.over(g,'Катастрофа!');}
+    g.cars=g.cars.filter(c2=>!c2.done);if(g.cars.length>16)A.over(g,'Задръстване!');},
+  draw(g){A.bg('#4caf50');c.fillStyle='#555';c.fillRect(0,170,480,50);c.fillRect(230,0,50,360);c.fillStyle='#fff';for(let x=0;x<480;x+=30)if(x<220||x>290)c.fillRect(x,194,15,2);
+    for(const c2 of g.cars){if(c2.hor)A.block(c2.x-22,c2.y-10,44,C.water,20);else A.block(c2.x-10,c2.y-22,20,C.gold,44);}
+    A.block(196,130,18,'#222',36);c.fillStyle=g.h?'#2ecc40':'#f33';c.fillRect(200,g.h?150:134,10,10);A.block(290,226,18,'#222',36);c.fillStyle=!g.h?'#2ecc40':'#f33';c.fillRect(294,!g.h?246:230,10,10);}
+});
+</script>
+</body>
+</html>

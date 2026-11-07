@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оцвети по номера</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🖌️ Оцвети по номера</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 210. Оцвети по номера
+A.add({id:'paintbynum',cat:'board',icon:'🖌️',name:'Оцвети по номера',desc:'Пиксел арт по цифри',low:true,unit:' с',help:'Избери цвят (1–6 или клик отдолу) и оцвети всички клетки с неговия номер. Влачи с мишката! Когато всичко е оцветено, ще видиш картинката.',
+  P:[['..1111..','.122221.','12222221','12322321','12222221','12422421','.122221.','..1111..'],
+     ['...33...','..3333..','.333333.','33333333','...44...','...44...','...44...','.555555.'],
+     ['.6....6.','.66..66.','.666666.','66266266','66666666','.661166.','..6666..','...66...'],
+     ['..1111..','.111111.','11211211','11111111','11333311','.113311.','..1111..','........']],
+  pal:['#fff','#ffd23f','#ff8c1a','#222','#d84a3a','#5aa13a','#8e24aa'],
+  start(g){g.pic=A.pick(this.P);g.cur=g.pic.join('').split('').map(ch=>ch==='.'?0:-1);g.sel=1;},
+  paint(g,mx,my){if(my>300){const i=Math.floor((mx-60)/60)+1;if(i>=1&&i<=6)g.sel=i;return;}const x=Math.floor((mx-112)/32),y=Math.floor((my-20)/32);if(x<0||y<0||x>7||y>7)return;const i=y*8+x,want=g.pic.join('')[i];
+    if(want!=='.'&&+want===g.sel&&g.cur[i]<0){g.cur[i]=g.sel;A.beep(400+g.sel*60,.02);if(g.cur.every(v=>v>=0)){g.score=g.t;A.tune([523,659,784,1046]);A.over(g,'🎨 Картинката е готова!');}}},
+  click(g,mx,my){this.paint(g,mx,my);},move(g,mx,my){if(A.mouse.down)this.paint(g,mx,my);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=6)g.sel=n;},
+  draw(g){A.bg('#ddd');const s=g.pic.join('');for(let i=0;i<64;i++){const x=112+(i%8)*32,y=20+Math.floor(i/8)*32;if(g.cur[i]>0)c.fillStyle=this.pal[g.cur[i]];else c.fillStyle=s[i]==='.'?'#f5f5f5':'#fff';c.fillRect(x,y,32,32);c.strokeStyle='#ccc';c.strokeRect(x,y,32,32);
+      if(g.cur[i]<0)A.txt(s[i],x+16,y+17,13,+s[i]===g.sel?'#d84a3a':'#999','center');}
+    for(let k=1;k<=6;k++){c.fillStyle=this.pal[k];c.fillRect(60+(k-1)*60,305,50,40);if(k===g.sel){c.strokeStyle='#000';c.lineWidth=3;c.strokeRect(60+(k-1)*60,305,50,40);}A.txt(k,85+(k-1)*60,325,14,k===3?'#fff':'#000','center');}}
+});
+</script>
+</body>
+</html>

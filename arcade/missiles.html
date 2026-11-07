@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ракетна защита</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎆 Ракетна защита</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 149. Ракетна защита
+A.add({id:'missiles',cat:'action',icon:'🎆',name:'Ракетна защита',desc:'Пази градовете от ракетите',help:'Кликни в небето — оттам изригва защитен взрив. Падащите ракети, които минат през него, се унищожават. Пази 6-те града!',
+  start(g){g.cities=[40,110,180,300,370,440].map(x=>({x,ok:true}));g.ms=[];g.ex=[];g.sp=0;g.ammo=30;g.wave=1;g.left=8;},
+  click(g,mx,my){if(g.ammo<=0||my>300)return;g.ammo--;g.ex.push({x:mx,y:my,r:0,t:0});A.beep(200,.08);},
+  update(g,dt){g.sp-=dt;if(g.sp<=0&&g.left>0){g.sp=A.rnd(.5,1.5)/Math.sqrt(g.wave);g.left--;const tg=A.pick(g.cities.filter(c2=>c2.ok)||g.cities);g.ms.push({x:A.rnd(0,480),y:0,tx:tg?tg.x:240,v:30+g.wave*8,sx:0});g.ms[g.ms.length-1].sx=g.ms[g.ms.length-1].x;}
+    for(const e of g.ex){e.t+=dt;e.r=e.t<.6?e.t*60:Math.max(0,36-(e.t-.6)*60);}g.ex=g.ex.filter(e=>e.t<1.2);
+    for(const m of g.ms){const dx=m.tx-m.x,dy=320-m.y,d=Math.hypot(dx,dy);m.x+=dx/d*m.v*dt;m.y+=dy/d*m.v*dt;
+      for(const e of g.ex)if(Math.hypot(e.x-m.x,e.y-m.y)<e.r){m.dead=1;g.score+=5;g.ex.push({x:m.x,y:m.y,r:0,t:.2});A.beep(400,.05);break;}
+      if(!m.dead&&m.y>=318){m.dead=1;const ct=g.cities.find(c2=>Math.abs(c2.x-m.x)<25);if(ct){ct.ok=false;A.beep(80,.4,'sawtooth');}}}
+    g.ms=g.ms.filter(m=>!m.dead);if(!g.cities.some(c2=>c2.ok))return A.over(g,'Всички градове паднаха');
+    if(!g.left&&!g.ms.length){g.score+=g.cities.filter(c2=>c2.ok).length*10+g.ammo;g.wave++;g.left=6+g.wave*2;g.ammo=20+g.wave*3;A.tune([523,659,784]);}},
+  draw(g){A.bg('#0b0f24');for(let x=0;x<480;x+=20)A.block(x,330,20,'#5a4a32',30);for(const c2 of g.cities)if(c2.ok){A.block(c2.x-14,306,10,'#9ecbff',24);A.block(c2.x-2,296,12,'#9ecbff',34);A.block(c2.x+10,312,8,'#9ecbff',18);}else{c.fillStyle='#333';c.fillRect(c2.x-14,320,32,10);}
+    A.block(230,300,20,'#888',30);c.strokeStyle='rgba(255,80,80,.7)';c.lineWidth=2;for(const m of g.ms){c.beginPath();c.moveTo(m.sx,0);c.lineTo(m.x,m.y);c.stroke();c.fillStyle='#fff';c.fillRect(m.x-2,m.y-2,4,4);}
+    for(const e of g.ex){c.fillStyle='rgba(255,'+(150+Math.random()*100|0)+',60,.8)';c.beginPath();c.arc(e.x,e.y,e.r,0,7);c.fill();}A.txt('Вълна '+g.wave+'   Ракети: '+g.ammo,10,14,13);}
+});
+</script>
+</body>
+</html>

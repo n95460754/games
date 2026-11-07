@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Градче</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏘️ Градче</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 221. Градче
+A.add({id:'isocity',cat:'board',icon:'🏘️',name:'Градче',desc:'Строй изометричен град',noScore:true,help:'Избери сграда отдолу (1–6) и кликни на полето. Десен клик — разруши. Строй си град! C — изчисти.',
+  T:[['Трева',C.grass,0],['Къща','#d84a3a',1],['Кула','#90a4ae',3],['Дърво','#2e7d32',1.4],['Път','#555',0],['Вода',C.water,0]],
+  start(g){g.m=Array(100).fill(0);g.sel=1;},
+  hit(mx,my){for(let s=18;s>=0;s--)for(let x=0;x<10;x++){const y=s-x;if(y<0||y>9)continue;const px=240+(x-y)*22,py=60+(x+y)*11;if(Math.abs(mx-px)/22+Math.abs(my-py-11)/11<=1)return y*10+x;}return-1;},
+  click(g,mx,my,b){if(my>320){const i=Math.floor((mx-30)/72);if(i>=0&&i<6)g.sel=i;return;}const i=this.hit(mx,my);if(i<0)return;g.m[i]=b===2?0:g.sel;A.beep(300+g.sel*80,.03);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=6)g.sel=n-1;if(k==='KeyC')g.m.fill(0);},
+  tile(px,py,col){c.fillStyle=col;c.beginPath();c.moveTo(px,py);c.lineTo(px+22,py+11);c.lineTo(px,py+22);c.lineTo(px-22,py+11);c.fill();},
+  box(px,py,h,col){const H=h*22;c.fillStyle=col;c.beginPath();c.moveTo(px,py-H);c.lineTo(px+22,py+11-H);c.lineTo(px,py+22-H);c.lineTo(px-22,py+11-H);c.fill();
+    c.fillStyle='rgba(0,0,0,.25)';c.beginPath();c.moveTo(px-22,py+11-H);c.lineTo(px,py+22-H);c.lineTo(px,py+22);c.lineTo(px-22,py+11);c.fill();c.fillStyle='rgba(0,0,0,.45)';c.beginPath();c.moveTo(px+22,py+11-H);c.lineTo(px,py+22-H);c.lineTo(px,py+22);c.lineTo(px+22,py+11);c.fill();},
+  draw(g){A.bg('#87ceeb');const hv=this.hit(A.mouse.x,A.mouse.y);for(let s=0;s<19;s++)for(let x=0;x<10;x++){const y=s-x;if(y<0||y>9)continue;const i=y*10+x,px=240+(x-y)*22,py=60+(x+y)*11,t=this.T[g.m[i]];
+      this.tile(px,py,t[2]?C.grass:t[1]);if(t[2])this.box(px,py,t[2],t[1]);if(i===hv){c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.moveTo(px,py);c.lineTo(px+22,py+11);c.lineTo(px,py+22);c.lineTo(px-22,py+11);c.closePath();c.stroke();}}
+    this.T.forEach((t,i)=>{A.block(30+i*72,326,64,i===g.sel?'#ffd54f':'#333',30);c.fillStyle=t[1];c.fillRect(34+i*72,330,12,22);A.txt((i+1)+' '+t[0],78+i*72,341,10,i===g.sel?'#000':'#fff','center');});}
+});
+</script>
+</body>
+</html>

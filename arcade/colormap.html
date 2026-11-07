@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Оцвети картата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🗾 Оцвети картата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 168. Оцвети картата
+A.add({id:'colormap',cat:'puzzle',icon:'🗾',name:'Оцвети картата',desc:'Съседните — с различен цвят',help:'Кликни област, за да смениш цвета ѝ. Съседните области (с обща граница) трябва да са с РАЗЛИЧНИ цветове. Стигат 4 цвята за всяка карта! 3 минути.',
+  cols:['#3a3a44',C.red,C.gold,C.grass,C.water],
+  start(g){g.time=180;this.make(g);},
+  make(g){const W=24,H=16,n=Math.min(16,6+g.score*2);g.W=W;g.H=H;const seeds=[];for(let i=0;i<n;i++)seeds.push([A.ri(0,W-1),A.ri(0,H-1)]);
+    g.m=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){let b=0,bd=1e9;seeds.forEach(([sx,sy],i)=>{const d=(sx-x)**2+(sy-y)**2;if(d<bd){bd=d;b=i;}});g.m.push(b);}
+    g.n=n;g.col=Array(n).fill(0);g.adj=Array.from({length:n},()=>new Set());for(let y=0;y<H;y++)for(let x=0;x<W;x++){const a=g.m[y*W+x];if(x<W-1&&g.m[y*W+x+1]!==a){g.adj[a].add(g.m[y*W+x+1]);g.adj[g.m[y*W+x+1]].add(a);}if(y<H-1&&g.m[(y+1)*W+x]!==a){g.adj[a].add(g.m[(y+1)*W+x]);g.adj[g.m[(y+1)*W+x]].add(a);}}},
+  bad(g,i){return g.col[i]&&[...g.adj[i]].some(j=>g.col[j]===g.col[i]);},
+  click(g,mx,my){const x=Math.floor(mx/20),y=Math.floor((my-20)/20);if(x<0||y<0||x>=g.W||y>=g.H)return;const r=g.m[y*g.W+x];g.col[r]=g.col[r]%4+1;A.beep(300+g.col[r]*80,.03);
+    if(g.col.every(v=>v)&&!g.col.some((v,i)=>this.bad(g,i))){g.score++;A.tune([523,659,784]);this.make(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#111');for(let y=0;y<g.H;y++)for(let x=0;x<g.W;x++){const r=g.m[y*g.W+x];c.fillStyle=this.cols[g.col[r]];c.fillRect(x*20,20+y*20,20,20);if(this.bad(g,r)&&Math.sin(g.t*10)>0){c.fillStyle='rgba(255,255,255,.3)';c.fillRect(x*20,20+y*20,20,20);}
+      c.fillStyle='#000';if(x<g.W-1&&g.m[y*g.W+x+1]!==r)c.fillRect(x*20+19,20+y*20,2,20);if(y<g.H-1&&g.m[(y+1)*g.W+x]!==r)c.fillRect(x*20,20+y*20+19,20,2);}
+    A.txt('Области: '+g.n+'   ⏱ '+Math.ceil(g.time),8,10,12);}
+});
+</script>
+</body>
+</html>

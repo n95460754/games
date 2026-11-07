@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кликомания</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👆 Кликомания</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 190. Кликомания
+A.add({id:'fastclick',cat:'skill',icon:'👆',name:'Кликомания',desc:'Колко клика за 10 секунди?',help:'Кликай по блока (или натискай Space) колкото можеш по-бързо за 10 секунди! Първият клик пуска часовника.',
+  start(g){g.n=0;g.go=false;g.left=10;},
+  hit(g){if(!g.go){g.go=true;g.t0=g.t;}if(g.left>0){g.n++;g.score=g.n;A.beep(300+g.n%10*40,.015);}},
+  click(g){this.hit(g);},key(g,k){if(k==='Space')this.hit(g);},
+  update(g){if(g.go){g.left=10-(g.t-g.t0);if(g.left<=0)A.over(g,g.n+' клика = '+(g.n/10).toFixed(1)+' в секунда');}},
+  draw(g){A.bg('#14202c');const s=A.mouse.down?150:160;A.block(240-s/2,170-s/2,s,C.gold);A.txt(g.n,240,170,48,'#000','center');A.txt(g.go?'⏱ '+Math.max(0,g.left).toFixed(1):'Кликни, за да започнеш!',240,300,18,'#fff','center');}
+});
+</script>
+</body>
+</html>

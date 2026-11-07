@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бинго</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎱 Бинго</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 209. Бинго
+A.add({id:'bingo',cat:'board',icon:'🎱',name:'Бинго',desc:'Отбележи числата бързо',help:'Изтегля се число на всеки 2.5 секунди. Ако го имаш на картата си — кликни го! Направи ред, колона или диагонал преди робота.',
+  start(g){const mk=()=>{const a=[];for(let col=0;col<5;col++){const s=A.shuffle([...Array(15).keys()].map(i=>col*15+i+1)).slice(0,5);for(let r=0;r<5;r++)a[r*5+col]=s[r];}a[12]=0;return a;};
+    g.me=mk();g.ai=mk();g.mm=new Set([12]);g.am=new Set([12]);g.pool=A.shuffle([...Array(75).keys()].map(i=>i+1));g.called=[];g.tick=1;},
+  line(m){const L=[];for(let i=0;i<5;i++){L.push([0,1,2,3,4].map(k=>i*5+k));L.push([0,1,2,3,4].map(k=>k*5+i));}L.push([0,6,12,18,24],[4,8,12,16,20]);return L.some(l=>l.every(i=>m.has(i)));},
+  click(g,mx,my){const x=Math.floor((mx-40)/40),y=Math.floor((my-80)/40);if(x<0||y<0||x>4||y>4)return;const i=y*5+x;if(g.called.includes(g.me[i])&&!g.mm.has(i)){g.mm.add(i);A.beep(800,.04);if(this.line(g.mm)){g.score=1;A.tune([523,659,784]);A.over(g,'🎉 БИНГО!');}}else A.beep(150,.04);},
+  update(g,dt){g.tick-=dt;if(g.tick>0)return;g.tick=2.5;const n=g.pool.pop();if(!n)return A.over(g,'Числата свършиха');g.called.push(n);A.beep(500,.08);
+    const ai=g.ai.indexOf(n);if(ai>=0)setTimeout(()=>{g.am.add(ai);if(A.state==='play'&&this.line(g.am))A.over(g,'Роботът извика БИНГО!');},800);},
+  draw(g){A.bg('#3a1f4a');'БИНГО'.split('').forEach((ch,i)=>A.txt(ch,60+i*40,64,20,C.gold,'center'));
+    g.me.forEach((v,i)=>{const x=40+(i%5)*40,y=80+Math.floor(i/5)*40;A.block(x+2,y+2,36,g.mm.has(i)?C.grass:'#eee');A.txt(v||'★',x+20,y+21,15,'#222','center');});
+    g.ai.forEach((v,i)=>{const x=300+(i%5)*28,y=110+Math.floor(i/5)*28;c.fillStyle=g.am.has(i)?C.red:'#777';c.fillRect(x+1,y+1,26,26);});A.txt('Робот',370,96,13,'#fff','center');
+    const n=g.called[g.called.length-1];A.block(300,270,140,C.gold,50);A.txt(n||'...',370,295,26,'#222','center');A.txt('Изтеглени: '+g.called.length,300,340,12,'#ccc');}
+});
+</script>
+</body>
+</html>

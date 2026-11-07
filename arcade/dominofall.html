@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Домино ефект</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🀱 Домино ефект</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 217. Домино ефект
+A.add({id:'dominofall',cat:'board',icon:'🀱',name:'Домино ефект',desc:'Нареди и бутни',noScore:true,help:'Кликай по пода, за да слагаш домино плочки. Space — бутни първата! Ако са достатъчно близо, падат една след друга. C — изчисти.',
+  start(g){g.d=[];g.push=false;},
+  click(g,mx,my){if(my>200&&my<300&&!g.push){g.d.push({x:mx,a:0,v:0,fall:false});g.d.sort((a,b)=>a.x-b.x);A.beep(400,.02);}},
+  key(g,k){if(k==='Space'&&g.d.length){g.push=true;g.d[0].fall=true;g.d[0].v=1;}if(k==='KeyC'){g.d=[];g.push=false;}if(k==='KeyR'){g.d.forEach(d=>{d.a=0;d.v=0;d.fall=false;});g.push=false;}},
+  update(g,dt){for(let i=0;i<g.d.length;i++){const d=g.d[i];if(!d.fall)continue;if(d.a<1.45){d.v+=6*Math.sin(d.a+.15)*dt+.5*dt;d.a=Math.min(1.45,d.a+d.v*dt);}
+      const tipX=d.x+Math.sin(d.a)*60,n=g.d[i+1];if(n&&!n.fall&&tipX>=n.x-4){n.fall=true;n.v=d.v*.8+.5;A.beep(300+i*15,.03);}
+      if(n&&n.fall===false&&d.a>=1.45){}}},
+  draw(g){A.bg('#f0e6d2');c.fillStyle='#8d6e3f';c.fillRect(0,300,480,60);for(const d of g.d){c.save();c.translate(d.x,300);c.rotate(d.a);A.block(-5,-60,10,'#222',60);c.fillStyle='#fff';c.fillRect(-2,-50,4,4);c.fillRect(-2,-20,4,4);c.restore();}
+    A.txt('Плочки: '+g.d.length+'   Space = бутни   R = изправи   C = изчисти',240,20,13,'#333','center');}
+});
+</script>
+</body>
+</html>

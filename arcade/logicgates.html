@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Логически схеми</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💡 Логически схеми</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 184. Логически схеми
+A.add({id:'logicgates',cat:'puzzle',icon:'💡',name:'Логически схеми',desc:'И, ИЛИ, НЕ — светни лампата',help:'Кликни ключовете (0/1) отляво, за да светне лампата. И = двата входа 1. ИЛИ = поне единият 1. НЕ = обръща. 3 минути.',
+  start(g){g.time=180;this.make(g);},
+  make(g){const nIn=g.score<3?2:3;g.inp=Array(nIn).fill(0);const ops=['AND','OR','XOR'];const t=A.ri(0,2);
+    for(;;){g.g1={op:A.pick(ops),a:0,b:1,notA:Math.random()<.3};g.g2={op:A.pick(ops),b:nIn-1,notOut:Math.random()<.3};
+      let any=false,start=true;for(let m=0;m<(1<<nIn);m++){const v=[...Array(nIn)].map((_,i)=>(m>>i)&1);if(this.eval(g,v)){any=true;if(m===0)start=false;}}if(any&&start)break;}},
+  op(o,a,b){return o==='AND'?a&b:o==='OR'?a|b:a^b;},
+  eval(g,v){let a=v[g.g1.a];if(g.g1.notA)a^=1;const o1=this.op(g.g1.op,a,v[g.g1.b]);let o2=this.op(g.g2.op,o1,v[g.g2.b]);if(g.g2.notOut)o2^=1;return o2;},
+  click(g,mx,my){g.inp.forEach((v,i)=>{if(mx<90&&Math.abs(my-(80+i*90))<25){g.inp[i]^=1;A.beep(400,.03);}});if(this.eval(g,g.inp)){g.score++;A.tune([523,659,784]);this.make(g);}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=g.inp.length){g.inp[n-1]^=1;if(this.eval(g,g.inp)){g.score++;A.tune([523,659,784]);this.make(g);}}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1b1b24');const N={AND:'И',OR:'ИЛИ',XOR:'ИЛИ-ИЛИ'};const wire=(x1,y1,x2,y2,on)=>{c.strokeStyle=on?'#ffd54f':'#555';c.lineWidth=4;c.beginPath();c.moveTo(x1,y1);c.lineTo((x1+x2)/2,y1);c.lineTo((x1+x2)/2,y2);c.lineTo(x2,y2);c.stroke();};
+    const v=g.inp;let a=v[g.g1.a];if(g.g1.notA)a^=1;const o1=this.op(g.g1.op,a,v[g.g1.b]);const out=this.eval(g,v);
+    wire(80,80,180,120,a);wire(80,80+90*g.g1.b,180,150,v[g.g1.b]);wire(260,135,320,160,o1);wire(80,80+90*g.g2.b,320,200,v[g.g2.b]);wire(400,180,430,180,out);
+    v.forEach((x,i)=>{A.block(30,60+i*90,50,x?'#2ecc40':'#555',40);A.txt(x,55,80+i*90,18,'#fff','center');});
+    A.block(180,105,80,'#5a6b8c',60);A.txt((g.g1.notA?'НЕ→':'')+N[g.g1.op],220,135,13,'#fff','center');A.block(320,150,80,'#5a6b8c',60);A.txt(N[g.g2.op]+(g.g2.notOut?'→НЕ':''),360,180,13,'#fff','center');
+    c.fillStyle=out?'#fff59d':'#444';c.beginPath();c.arc(445,180,18,0,7);c.fill();A.txt('⏱ '+Math.ceil(g.time),10,14,13);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отмери на око</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📏 Отмери на око</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 198. Отмери на око
+A.add({id:'measure',cat:'skill',icon:'📏',name:'Отмери на око',desc:'Колко е дълго — без линийка',help:'Горе е показана линия. Задръж Space / мишката, за да порасне долната линия, и пусни, когато стане СЪЩАТА дължина. 8 опита.',
+  start(g){g.n=8;this.next(g);},
+  next(g){g.target=A.ri(60,380);g.len=0;g.st='wait';g.show=1;},
+  update(g,dt){const h=A.keys.Space||A.mouse.down;if(g.st==='wait'&&h)g.st='grow';if(g.st==='grow'){if(h)g.len+=160*dt;else{g.st='done';const e=Math.abs(g.len-g.target)/g.target;const p=Math.max(0,10-Math.round(e*50));g.score+=p;g.msg='+'+p+'  (грешка '+Math.round(e*100)+'%)';A.beep(300+p*60,.1);g.w=1.3;}}
+    if(g.st==='done'){g.w-=dt;if(g.w<=0){g.n--;if(!g.n)return A.over(g,'Край! '+g.score+' точки');this.next(g);}}},
+  draw(g){A.bg('#f5f0e6');c.fillStyle='#3b7bd6';c.fillRect(240-g.target/2,100,g.target,10);c.fillStyle=C.red;c.fillRect(50,230,g.len,10);if(g.st==='done'){c.fillStyle='rgba(59,123,214,.4)';c.fillRect(50,226,g.target,18);A.txt(g.msg,240,300,16,'#333','center');}
+    A.txt('Опити: '+g.n,10,14,13,'#333');}
+});
+</script>
+</body>
+</html>

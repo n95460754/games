@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Знамена</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏳️ Знамена</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 140. Знамена
+A.add(quizGame({id:'flags',cat:'brain',icon:'🏳️',name:'Знамена',desc:'Чие е това знаме?',help:'Познай държавата по знамето (клик или 1–4). 90 секунди.',
+  F:{'България':['h','#fff','#00966e','#d62612'],'Германия':['h','#000','#dd0000','#ffce00'],'Русия':['h','#fff','#0039a6','#d52b1e'],'Нидерландия':['h','#ae1c28','#fff','#21468b'],'Унгария':['h','#ce2939','#fff','#477050'],
+    'Франция':['v','#0055a4','#fff','#ef4135'],'Италия':['v','#009246','#fff','#ce2b37'],'Ирландия':['v','#169b62','#fff','#ff883e'],'Белгия':['v','#000','#fdda24','#ef3340'],'Румъния':['v','#002b7f','#fcd116','#ce1126'],
+    'Литва':['h','#fdb913','#006a44','#c1272d'],'Естония':['h','#0072ce','#000','#fff'],'Австрия':['h','#ed2939','#fff','#ed2939'],'Мали':['v','#14b53a','#fcd116','#ce1126'],'Нигерия':['v','#008751','#fff','#008751'],'Армения':['h','#d90012','#0033a0','#f2a800']},
+  get Q(){const n=Object.keys(this.F);return n.map(k=>['',k,...A.shuffle(n.filter(x=>x!==k)).slice(0,3)]);},
+  pic(g){const f=this.F[g.ans];for(let i=0;i<3;i++){c.fillStyle=f[i+1];if(f[0]==='h')c.fillRect(150,30+i*40,180,40);else c.fillRect(150+i*60,30,60,120);}c.strokeStyle='#000';c.lineWidth=2;c.strokeRect(150,30,180,120);}}));
+</script>
+</body>
+</html>

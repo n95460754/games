@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Над лавата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔥 Над лавата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 152. Над лавата
+A.add({id:'lavahop',cat:'action',icon:'🔥',name:'Над лавата',desc:'Прескачай по движещите се блокове',help:'Space — скок напред към следващия блок. Блоковете се движат нагоре-надолу. Цели се в момента!',
+  start(g){g.pl=[{x:60,y:240,a:0,amp:0}];for(let i=1;i<6;i++)this.add2(g);g.cur=0;g.jump=null;g.cam=0;},
+  add2(g){const L=g.pl[g.pl.length-1];g.pl.push({x:L.x+A.ri(90,130),y:A.ri(180,260),a:A.rnd(0,6),amp:A.ri(20,60),sp:A.rnd(1.5,3)});},
+  py(p,t){return p.y+Math.sin(t*(p.sp||0)+p.a)*p.amp;},
+  key(g,k){if(k==='Space'&&!g.jump){const a=g.pl[g.cur];g.jump={x:a.x,y:this.py(a,g.t)-20,vx:(g.pl[g.cur+1].x-a.x)/.8,vy:-380};A.beep(400,.05);}},
+  update(g,dt){if(g.jump){const j=g.jump;j.vy+=900*dt;j.x+=j.vx*dt;const py=j.y;j.y+=j.vy*dt;const nx=g.pl[g.cur+1],top=this.py(nx,g.t)-20;
+      if(j.vy>0&&py<=top&&j.y>=top&&Math.abs(j.x-nx.x)<26){g.cur++;g.score++;g.jump=null;A.beep(700,.05);this.add2(g);}else if(j.vy>0&&Math.abs(j.x-nx.x)<6&&j.y>top+10&&j.y<top+30){g.jump.vx=0;}
+      if(j.y>340)return A.over(g,'Падна в лавата!');}
+    g.cam+=((g.pl[g.cur].x-80)-g.cam)*Math.min(1,dt*4);},
+  draw(g){A.bg('#3a1208');c.fillStyle=C.lava;c.fillRect(0,330,480,30);for(let x=0;x<480;x+=24){c.fillStyle='#ffb300';c.fillRect(x+(g.t*30%24),336,8,4);}
+    for(const p of g.pl)A.block(p.x-24-g.cam,this.py(p,g.t),48,C.stone,16);const pp=g.jump||{x:g.pl[g.cur].x,y:this.py(g.pl[g.cur],g.t)-20};A.block(pp.x-10-g.cam,pp.y,20,'#3b7bd6',20);}
+});
+</script>
+</body>
+</html>

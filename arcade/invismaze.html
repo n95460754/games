@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Невидим лабиринт</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🫥 Невидим лабиринт</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 204. Невидим лабиринт
+A.add({id:'invismaze',cat:'skill',icon:'🫥',name:'Невидим лабиринт',desc:'Запомни пътя и мини наслуки',help:'Пътеката се показва за 3 секунди и изчезва. Мини по нея със стрелките до звездата. Стъпиш ли извън пътеката — губиш живот и се връщаш в началото. 3 живота.',
+  start(g){g.lives=3;this.make(g);},
+  make(g){const N=8;g.N=N;let x=0,y=A.ri(0,N-1);g.path=[[x,y]];const s=new Set([x+','+y]);while(x<N-1){const o=[[1,0],[0,1],[0,-1]].map(([dx,dy])=>[x+dx,y+dy]).filter(([X,Y])=>X<N&&Y>=0&&Y<N&&!s.has(X+','+Y)&&[[1,0],[-1,0],[0,1],[0,-1]].filter(([a,b])=>s.has((X+a)+','+(Y+b))).length===1);
+      if(!o.length)return this.make(g);[x,y]=Math.random()<.4?o[0]:A.pick(o);s.add(x+','+y);g.path.push([x,y]);}g.set=s;g.px=g.path[0][0];g.py=g.path[0][1];g.show=3;g.steps=new Set([g.px+','+g.py]);},
+  key(g,k){if(g.show>0)return;const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(!m)return;
+    const X=g.px+m[0],Y=g.py+m[1];if(X<0||Y<0||X>=g.N||Y>=g.N)return;if(!g.set.has(X+','+Y)){g.lives--;A.beep(120,.2,'sawtooth');g.flashBad=.4;if(!g.lives)return A.over(g,'Изгуби се!');g.px=g.path[0][0];g.py=g.path[0][1];g.steps=new Set([g.px+','+g.py]);return;}
+    g.px=X;g.py=Y;g.steps.add(X+','+Y);A.beep(500,.02);const e=g.path[g.path.length-1];if(X===e[0]&&Y===e[1]){g.score++;A.tune([523,659,784]);this.make(g);}},
+  update(g,dt){if(g.show>0)g.show-=dt;if(g.flashBad>0)g.flashBad-=dt;},
+  draw(g){A.bg(g.flashBad>0?'#5a1a1a':'#1b1b24');const T=38,ox=88,oy=26;for(let y=0;y<g.N;y++)for(let x=0;x<g.N;x++){const K=x+','+y;A.block(ox+x*T,oy+y*T,T,(g.show>0&&g.set.has(K))||g.steps.has(K)?'#5a6b8c':'#2b2b38');}
+    const e=g.path[g.path.length-1];A.txt('⭐',ox+e[0]*T+T/2,oy+e[1]*T+T/2,22,'#fff','center');A.block(ox+g.px*T+9,oy+g.py*T+9,20,C.gold);A.txt('❤'.repeat(g.lives)+(g.show>0?'   Запомни!':''),10,14,13,'#f55');}
+});
+</script>
+</body>
+</html>

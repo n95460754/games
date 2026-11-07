@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Небостъргачи</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏢 Небостъргачи</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 175. Небостъргачи
+A.add({id:'skyscrapers',cat:'puzzle',icon:'🏢',name:'Небостъргачи',desc:'Колко сгради се виждат?',help:'Попълни 4×4 с височини 1–4 (всяка веднъж на ред и колона). Числото отстрани казва колко сгради се ВИЖДАТ оттам (високите скриват ниските зад тях). Кликни клетка и напиши цифра. 5 минути.',
+  start(g){g.time=300;this.make(g);},
+  vis(a){let m=0,n=0;for(const v of a)if(v>m){m=v;n++;}return n;},
+  make(g){const p=A.shuffle([1,2,3,4]),r=A.shuffle([0,1,2,3]),cc=A.shuffle([0,1,2,3]);g.sol=[];for(let y=0;y<4;y++)for(let x=0;x<4;x++)g.sol.push(p[(r[y]+cc[x])%4]);
+    const row=y=>g.sol.slice(y*4,y*4+4),col=x=>[0,1,2,3].map(y=>g.sol[y*4+x]);g.cl={t:[0,1,2,3].map(x=>this.vis(col(x))),b:[0,1,2,3].map(x=>this.vis(col(x).reverse())),l:[0,1,2,3].map(y=>this.vis(row(y))),r:[0,1,2,3].map(y=>this.vis(row(y).reverse()))};
+    g.cur=Array(16).fill(0);g.sel=0;},
+  click(g,mx,my){const x=Math.floor((mx-140)/50),y=Math.floor((my-80)/50);if(x>=0&&y>=0&&x<4&&y<4)g.sel=y*4+x;},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4){g.cur[g.sel]=n;A.beep(300+n*80,.03);}if(k==='Backspace')g.cur[g.sel]=0;const m={ArrowLeft:-1,ArrowRight:1,ArrowUp:-4,ArrowDown:4}[k];if(m&&g.sel+m>=0&&g.sel+m<16)g.sel+=m;
+    if(g.cur.every(v=>v)){const row=y=>g.cur.slice(y*4,y*4+4),col=x=>[0,1,2,3].map(y=>g.cur[y*4+x]);let ok=true;for(let i=0;i<4;i++){if(new Set(row(i)).size<4||new Set(col(i)).size<4)ok=false;
+        if(this.vis(col(i))!==g.cl.t[i]||this.vis(col(i).reverse())!==g.cl.b[i]||this.vis(row(i))!==g.cl.l[i]||this.vis(row(i).reverse())!==g.cl.r[i])ok=false;}if(ok){g.score++;A.tune([523,659,784]);this.make(g);}}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#87ceeb');for(let i=0;i<16;i++){const x=140+(i%4)*50,y=80+Math.floor(i/4)*50,v=g.cur[i];c.fillStyle=i===g.sel?'#ffe082':'#e3f2fd';c.fillRect(x+1,y+1,48,48);if(v){A.block(x+10,y+48-v*10,30,['#90a4ae','#78909c','#546e7a','#37474f'][v-1],v*10);A.txt(v,x+25,y+14,13,'#123','center');}}
+    for(let i=0;i<4;i++){A.txt(g.cl.t[i],165+i*50,66,16,'#b71c1c','center');A.txt(g.cl.b[i],165+i*50,294,16,'#b71c1c','center');A.txt(g.cl.l[i],124,105+i*50,16,'#b71c1c','center');A.txt(g.cl.r[i],356,105+i*50,16,'#b71c1c','center');}
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,'#123');}
+});
+</script>
+</body>
+</html>

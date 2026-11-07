@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Без да вдигаш молива</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏠 Без да вдигаш молива</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 179. Без да вдигаш молива
+A.add({id:'euler',cat:'puzzle',icon:'🏠',name:'Без да вдигаш молива',desc:'Начертай фигурата с една линия',help:'Кликвай точките една след друга, за да минеш по ВСИЧКИ линии точно веднъж, без да вдигаш молива. Подсказка: започни от точка с нечетен брой линии! Backspace — назад.',
+  F:[{n:'Къщичка',p:[[160,300],[320,300],[320,180],[160,180],[240,90]],e:[[0,1],[1,2],[2,3],[3,0],[0,2],[1,3],[3,4],[4,2]]},
+     {n:'Звезда',p:[[240,60],[330,300],[100,150],[380,150],[150,300]],e:[[0,1],[1,2],[2,3],[3,4],[4,0]]},
+     {n:'Плик',p:[[120,120],[360,120],[360,300],[120,300],[240,210]],e:[[0,1],[1,2],[2,3],[3,0],[0,4],[4,1]]},
+     {n:'Пеперуда',p:[[240,180],[120,90],[120,270],[360,90],[360,270]],e:[[0,1],[1,2],[2,0],[0,3],[3,4],[4,0]]},
+     {n:'Диамант',p:[[240,60],[140,170],[340,170],[240,310],[240,170]],e:[[0,1],[0,2],[1,3],[2,3],[1,4],[4,2]]},
+     {n:'Риба',p:[[100,180],[200,110],[320,180],[200,250],[400,110],[400,250]],e:[[0,1],[1,2],[2,3],[3,0],[2,4],[4,5],[5,2]]}],
+  start(g){g.order=A.shuffle([...this.F.keys()]);g.i=0;this.load(g);},
+  load(g){if(g.i>=g.order.length){g.score+=5;return A.over(g,'🏆 Всички фигури!');}g.f=this.F[g.order[g.i]];g.path=[];g.used=new Set();},
+  click(g,mx,my){const k=g.f.p.findIndex(([x,y])=>Math.hypot(mx-x,my-y)<18);if(k<0)return;if(!g.path.length){g.path.push(k);A.beep(400,.03);return;}const last=g.path[g.path.length-1];
+    const ei=g.f.e.findIndex(([a,b],i)=>!g.used.has(i)&&((a===last&&b===k)||(b===last&&a===k)));if(ei<0){A.beep(150,.04);return;}g.used.add(ei);g.path.push(k);A.beep(500+g.used.size*40,.03);
+    if(g.used.size===g.f.e.length){g.score++;A.tune([523,659,784]);g.i++;this.load(g);}},
+  key(g,k){if(k==='Backspace'&&g.path.length){g.path.pop();g.used=new Set();for(let i=1;i<g.path.length;i++){const a=g.path[i-1],b=g.path[i];g.used.add(g.f.e.findIndex(([x,y],j)=>!g.used.has(j)&&((x===a&&y===b)||(x===b&&y===a))));}}},
+  draw(g){A.bg('#f0e6d2');g.f.e.forEach(([a,b],i)=>{c.strokeStyle=g.used.has(i)?'#d84a3a':'#bbb';c.lineWidth=g.used.has(i)?6:3;c.beginPath();c.moveTo(...g.f.p[a]);c.lineTo(...g.f.p[b]);c.stroke();});
+    g.f.p.forEach(([x,y],i)=>{const deg=g.f.e.filter(e=>e.includes(i)).length;A.block(x-9,y-9,18,g.path[g.path.length-1]===i?C.red:'#333');A.txt(deg,x+16,y-12,11,'#888');});A.txt(g.f.n+' ('+(g.i+1)+'/'+this.F.length+')',10,14,14,'#333');}
+});
+</script>
+</body>
+</html>

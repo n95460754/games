@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гравитация на планети</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌍 Гравитация на планети</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 214. Планети
+A.add({id:'planets',cat:'board',icon:'🌍',name:'Гравитация на планети',desc:'Сложи планети около звезда',noScore:true,help:'Натисни и дръпни мишката — пускаш планета с такава скорост. Гравитацията на звездата (и между планетите) ги върти по орбити. C изчиства.',
+  start(g){g.p=[{x:240,y:180,vx:0,vy:0,m:2000,star:true}];g.tr=[];},
+  key(g,k){if(k==='KeyC'){g.p=g.p.slice(0,1);g.tr=[];}},
+  click(g,mx,my){g.aim={x:mx,y:my};},
+  release(g,mx,my){if(!g.aim)return;g.p.push({x:g.aim.x,y:g.aim.y,vx:(mx-g.aim.x)*1.2,vy:(my-g.aim.y)*1.2,m:A.rnd(3,12),col:'hsl('+A.ri(0,360)+',80%,60%)',trail:[]});g.aim=null;A.beep(500,.05);},
+  update(g,dt){for(let s=0;s<4;s++){const h=dt/4;for(const a of g.p){if(a.star)continue;for(const b of g.p){if(a===b)continue;const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy+50,f=b.m*50/d2,d=Math.sqrt(d2);a.vx+=f*dx/d*h;a.vy+=f*dy/d*h;}}
+      for(const a of g.p)if(!a.star){a.x+=a.vx*h;a.y+=a.vy*h;}}
+    for(const a of g.p)if(!a.star){a.trail.push([a.x,a.y]);if(a.trail.length>200)a.trail.shift();if(Math.hypot(a.x-240,a.y-180)<16||Math.abs(a.x)>3000)a.dead=1;}g.p=g.p.filter(a=>!a.dead);},
+  draw(g){A.bg('#05060f');for(const a of g.p){if(a.star){c.fillStyle='#ffd23f';c.beginPath();c.arc(240,180,16,0,7);c.fill();continue;}c.strokeStyle=a.col;c.globalAlpha=.4;c.beginPath();a.trail.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();c.globalAlpha=1;
+      c.fillStyle=a.col;c.beginPath();c.arc(a.x,a.y,2+a.m/3,0,7);c.fill();}if(g.aim){c.strokeStyle='#fff';c.beginPath();c.moveTo(g.aim.x,g.aim.y);c.lineTo(A.mouse.x,A.mouse.y);c.stroke();}A.txt('Планети: '+(g.p.length-1),8,12,12);}
+});
+</script>
+</body>
+</html>

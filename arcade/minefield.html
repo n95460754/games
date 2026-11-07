@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Минно поле</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💣 Минно поле</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 165. Минно поле
+A.add({id:'minefield',cat:'action',icon:'💣',name:'Минно поле',desc:'Мини по памет',help:'Мините се показват за 2 секунди, после изчезват. Стигни до зеленото поле горе със стрелките, без да стъпиш на мина! Всяко ниво — повече мини.',
+  start(g){g.lv=0;this.level(g);},
+  level(g){g.lv++;g.mines=new Set();g.px=A.ri(0,11);g.py=8;g.gx=A.ri(0,11);for(let i=0;i<8+g.lv*3;i++){const x=A.ri(0,11),y=A.ri(1,7);g.mines.add(x+','+y);}g.show=2;g.trail=[];
+    const seen=new Set([g.px+','+g.py]),q=[[g.px,g.py]];let ok=false;while(q.length){const[x,y]=q.shift();if(y===0){ok=true;break;}for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy,K=X+','+Y;if(X>=0&&Y>=0&&X<12&&Y<9&&!seen.has(K)&&!g.mines.has(K)){seen.add(K);q.push([X,Y]);}}}if(!ok){g.lv--;this.level(g);}},
+  key(g,k){if(g.show>0)return;const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(!m)return;
+    const X=A.clamp(g.px+m[0],0,11),Y=A.clamp(g.py+m[1],0,8);g.trail.push([g.px,g.py]);g.px=X;g.py=Y;A.beep(300,.02);if(g.mines.has(X+','+Y)){g.show=99;A.beep(80,.4,'sawtooth');return A.over(g,'БУМ! Стъпи на мина');}
+    if(Y===0){g.score+=g.lv;A.tune([523,659,784]);this.level(g);}},
+  update(g,dt){if(g.show>0)g.show-=dt;},
+  draw(g){A.bg('#3a5a2a');const T=36,ox=24,oy=20;for(let y=0;y<9;y++)for(let x=0;x<12;x++){A.block(ox+x*T,oy+y*T,T,y===0?C.grass:y===8?C.sand:(x+y)%2?'#5a8a3a':'#527f35');if(g.show>0&&g.mines.has(x+','+y)){c.fillStyle='#222';c.fillRect(ox+x*T+10,oy+y*T+10,16,16);c.fillStyle='#f33';c.fillRect(ox+x*T+16,oy+y*T+6,4,6);}}
+    for(const[x,y]of g.trail){c.fillStyle='rgba(255,255,255,.25)';c.fillRect(ox+x*T+14,oy+y*T+14,8,8);}A.block(ox+g.px*T+8,oy+g.py*T+8,20,'#3b7bd6');A.txt(g.show>0?'Запомни мините!':'Ниво '+g.lv,240,10,13,'#fff','center');}
+});
+</script>
+</body>
+</html>

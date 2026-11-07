@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кука с въже</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🕸️ Кука с въже</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 162. Кука с въже
+A.add({id:'swing',cat:'action',icon:'🕸️',name:'Кука с въже',desc:'Люлей се напред',help:'Задръж Space / мишката — куката се закача за най-близката точка горе и се люлееш. Пусни — летиш. Не падай!',
+  start(g){g.x=60;g.y=150;g.vx=120;g.vy=0;g.hooks=[];for(let i=0;i<8;i++)g.hooks.push({x:120+i*110+A.ri(-20,20),y:A.ri(40,90)});g.rope=null;g.cam=0;},
+  update(g,dt){const hold=A.keys.Space||A.mouse.down;if(hold&&!g.rope){const h=g.hooks.filter(h=>h.x>g.x-40).sort((a,b)=>Math.abs(a.x-g.x-60)-Math.abs(b.x-g.x-60))[0];if(h){g.rope={h,len:Math.hypot(g.x-h.x,g.y-h.y)};A.beep(500,.03);}}if(!hold)g.rope=null;
+    g.vy+=600*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;if(g.rope){const h=g.rope.h,dx=g.x-h.x,dy=g.y-h.y,d=Math.hypot(dx,dy);if(d>g.rope.len){const nx=dx/d,ny=dy/d;g.x=h.x+nx*g.rope.len;g.y=h.y+ny*g.rope.len;const rel=g.vx*nx+g.vy*ny;g.vx-=rel*nx;g.vy-=rel*ny;}}
+    while(g.hooks[g.hooks.length-1].x<g.x+600){const L=g.hooks[g.hooks.length-1];g.hooks.push({x:L.x+A.ri(90,140),y:A.ri(40,100)});}g.hooks=g.hooks.filter(h=>h.x>g.cam-50);
+    g.cam=Math.max(g.cam,g.x-160);g.score=Math.max(g.score,Math.floor(g.x/50));if(g.y>380)A.over(g,'Падна!');if(g.y<-200)g.vy=Math.abs(g.vy);},
+  draw(g){A.bg('#1d1a30');c.fillStyle='#3a2a5a';for(let x=-(g.cam*.3%60);x<480;x+=60)c.fillRect(x,300,40,60);const o=-g.cam;
+    for(const h of g.hooks)A.block(h.x+o-6,h.y-6,12,C.gold);if(g.rope){c.strokeStyle='#ddd';c.lineWidth=2;c.beginPath();c.moveTo(g.rope.h.x+o,g.rope.h.y);c.lineTo(g.x+o,g.y);c.stroke();}A.block(g.x+o-8,g.y-8,16,C.red);A.txt(g.score+' м',10,14,14);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>С една линия</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">✏️ С една линия</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 169. С една линия
+A.add({id:'onestroke',cat:'puzzle',icon:'✏️',name:'С една линия',desc:'Мини през всяко поле веднъж',help:'Стрелки — движиш се от зеленото поле. Мини през ВСЯКО празно поле точно веднъж. Backspace — връщане назад. 3 минути.',
+  start(g){g.time=180;this.make(g);},
+  make(g){const N=Math.min(7,4+Math.floor(g.score/2));g.N=N;let path;for(let t=0;t<200;t++){let x=A.ri(0,N-1),y=A.ri(0,N-1);path=[[x,y]];const seen=new Set([x+','+y]);
+      for(;;){const o=[[1,0],[-1,0],[0,1],[0,-1]].map(([dx,dy])=>[x+dx,y+dy]).filter(([X,Y])=>X>=0&&Y>=0&&X<N&&Y<N&&!seen.has(X+','+Y));if(!o.length)break;
+        o.sort((a,b)=>{const f=([X,Y])=>[[1,0],[-1,0],[0,1],[0,-1]].filter(([dx,dy])=>{const q=X+dx,w=Y+dy;return q>=0&&w>=0&&q<N&&w<N&&!seen.has(q+','+w);}).length;return f(a)-f(b)+A.rnd(-.8,.8);});[x,y]=o[0];seen.add(x+','+y);path.push([x,y]);}
+      if(path.length>=N*N*.75)break;}
+    g.free=new Set(path.map(p=>p.join(',')));g.trail=[path[0]];},
+  key(g,k){if(k==='Backspace'&&g.trail.length>1){g.trail.pop();return;}const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(!m)return;
+    const[x,y]=g.trail[g.trail.length-1],K=(x+m[0])+','+(y+m[1]);if(!g.free.has(K)||g.trail.some(p=>p.join(',')===K))return;g.trail.push([x+m[0],y+m[1]]);A.beep(400+g.trail.length*10,.02);
+    if(g.trail.length===g.free.size){g.score++;A.tune([523,659,784]);this.make(g);}},
+  repeat:true,
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1d2433');const T=Math.floor(300/g.N),ox=240-g.N*T/2,oy=40;for(let y=0;y<g.N;y++)for(let x=0;x<g.N;x++){const K=x+','+y;if(!g.free.has(K))A.block(ox+x*T,oy+y*T,T,C.stone);else{c.fillStyle='#2b3646';c.fillRect(ox+x*T+1,oy+y*T+1,T-2,T-2);}}
+    c.strokeStyle=C.gold;c.lineWidth=T*.35;c.lineCap='round';c.lineJoin='round';c.beginPath();g.trail.forEach(([x,y],i)=>{const X=ox+x*T+T/2,Y=oy+y*T+T/2;i?c.lineTo(X,Y):c.moveTo(X,Y);});c.stroke();c.lineCap='butt';
+    const[sx,sy]=g.trail[0];A.block(ox+sx*T+T*.25,oy+sy*T+T*.25,T*.5,C.grass);A.txt(g.trail.length+'/'+g.free.size+'   ⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

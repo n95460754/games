@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тенис за двама</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏓 Тенис за двама</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 158. Тенис за двама
+A.add({id:'pong2p',cat:'action',icon:'🏓',name:'Тенис за двама',desc:'За двама: W/S срещу ↑/↓',noScore:true,help:'Игра за ДВАМА! Левият играч: W / S. Десният играч: ↑ / ↓. Първият до 7 точки печели.',
+  start(g){g.a=145;g.b=145;g.s=[0,0];this.serve(g,A.pick([-1,1]));},
+  serve(g,d){g.x=240;g.y=180;const a=A.rnd(-.5,.5);g.vx=Math.cos(a)*260*d;g.vy=Math.sin(a)*260;},
+  update(g,dt){if(A.keys.KeyW)g.a-=330*dt;if(A.keys.KeyS)g.a+=330*dt;if(A.keys.ArrowUp)g.b-=330*dt;if(A.keys.ArrowDown)g.b+=330*dt;g.a=A.clamp(g.a,0,290);g.b=A.clamp(g.b,0,290);
+    g.x+=g.vx*dt;g.y+=g.vy*dt;if(g.y<6||g.y>354){g.vy*=-1;g.y=A.clamp(g.y,6,354);}
+    const hit=(p,dir)=>{const o=(g.y-p-35)/35,s=Math.min(600,Math.hypot(g.vx,g.vy)*1.06);g.vx=Math.cos(o*.9)*s*dir;g.vy=Math.sin(o*.9)*s;A.beep(400,.03);};
+    if(g.vx<0&&g.x<30&&g.x>14&&g.y>g.a-6&&g.y<g.a+76)hit(g.a,1);if(g.vx>0&&g.x>450&&g.x<466&&g.y>g.b-6&&g.y<g.b+76)hit(g.b,-1);
+    if(g.x<-10){g.s[1]++;this.serve(g,1);}if(g.x>490){g.s[0]++;this.serve(g,-1);}if(g.s[0]>=7||g.s[1]>=7)A.over(g,(g.s[0]>=7?'🟦 Левият':'🟥 Десният')+' печели '+Math.max(...g.s)+':'+Math.min(...g.s));},
+  draw(g){A.bg('#14301e');for(let y=0;y<360;y+=24){c.fillStyle='rgba(255,255,255,.2)';c.fillRect(238,y,4,12);}A.block(14,g.a,14,'#3b7bd6',70);A.block(452,g.b,14,C.red,70);c.fillStyle='#fff';c.fillRect(g.x-6,g.y-6,12,12);
+    A.txt(g.s[0],200,30,30,'#9ecbff','center');A.txt(g.s[1],280,30,30,'#ff8a80','center');}
+});
+</script>
+</body>
+</html>

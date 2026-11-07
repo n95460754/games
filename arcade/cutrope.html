@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отрежи въжето</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🍬 Отрежи въжето</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 195. Отрежи въжето
+A.add({id:'cutrope',cat:'skill',icon:'🍬',name:'Отрежи въжето',desc:'Пусни бонбона в кошницата',help:'Бонбонът се люлее на въже. Кликни / Space, за да отрежеш въжето — бонбонът полита. Целта е кошницата! 10 опита.',
+  start(g){g.tries=10;this.set(g);},
+  set(g){g.ax=A.ri(150,330);g.ay=30;g.L=A.ri(90,140);g.a=A.rnd(-1,1);g.w=0;g.free=null;g.bx=A.ri(40,440);g.bw=Math.max(40,90-g.score*5);g.res=0;},
+  cut(g){if(g.free||g.res)return;const x=g.ax+Math.sin(g.a)*g.L,y=g.ay+Math.cos(g.a)*g.L;g.free={x,y,vx:Math.cos(g.a)*g.w*g.L,vy:-Math.sin(g.a)*g.w*g.L};A.beep(500,.04);},
+  click(g){this.cut(g);},key(g,k){if(k==='Space')this.cut(g);},
+  update(g,dt){if(g.res>0){g.res-=dt;if(g.res<=0){if(!g.tries)return A.over(g,'Край! '+g.score+' в кошницата');this.set(g);}return;}
+    if(!g.free){g.w+=-9.8/g.L*60*Math.sin(g.a)*dt;g.a+=g.w*dt;}else{const f=g.free;f.vy+=500*dt;f.x+=f.vx*dt;f.y+=f.vy*dt;
+      if(f.y>=320){g.tries--;const ok=f.x>g.bx-g.bw/2&&f.x<g.bx+g.bw/2;if(ok){g.score++;A.tune([660,880]);}else A.beep(150,.15);g.free=null;g.res=1;g.ok=ok;g.fx=f.x;}}},
+  draw(g){A.bg('#ffe0f0');A.block(g.ax-10,g.ay-10,20,'#888');let x,y;if(g.free){x=g.free.x;y=g.free.y;}else{x=g.ax+Math.sin(g.a)*g.L;y=g.ay+Math.cos(g.a)*g.L;c.strokeStyle='#8d6e3f';c.lineWidth=2;c.beginPath();c.moveTo(g.ax,g.ay);c.lineTo(x,y);c.stroke();}
+    if(!g.res){c.fillStyle='#e91e63';c.beginPath();c.arc(x,y,12,0,7);c.fill();c.fillStyle='#fff';c.fillRect(x-4,y-4,4,4);}A.block(g.bx-g.bw/2,320,g.bw,C.wood,30);
+    A.txt('Опити: '+g.tries,10,14,14,'#633');if(g.res>0)A.txt(g.ok?'В кошницата! 🍬':'Пропуск',240,180,22,'#633','center');}
+});
+</script>
+</body>
+</html>

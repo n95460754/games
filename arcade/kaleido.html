@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калейдоскоп</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔮 Калейдоскоп</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 211. Калейдоскоп
+A.add({id:'kaleido',cat:'board',icon:'🔮',name:'Калейдоскоп',desc:'Рисувай с 8-кратна симетрия',noScore:true,help:'Рисувай с мишката (задръж) — всичко се отразява 8 пъти около центъра. Space сменя цвета, C изчиства.',
+  start(g){g.cv=document.createElement('canvas');g.cv.width=480;g.cv.height=360;g.x=g.cv.getContext('2d');g.x.fillStyle='#0b0b14';g.x.fillRect(0,0,480,360);g.hue=0;g.last=null;},
+  key(g,k){if(k==='KeyC'){g.x.fillStyle='#0b0b14';g.x.fillRect(0,0,480,360);}if(k==='Space')g.hue=(g.hue+60)%360;},
+  update(g,dt){if(!A.mouse.down){g.last=null;return;}g.hue=(g.hue+dt*40)%360;const p=[A.mouse.x-240,A.mouse.y-180];if(g.last){const x=g.x;x.strokeStyle='hsl('+g.hue+',90%,60%)';x.lineWidth=3;x.lineCap='round';
+      for(let k=0;k<8;k++){const a=k*Math.PI/4,m=k%2?-1:1;const tr=([px,py])=>{const qy=py*m;return[240+px*Math.cos(a)-qy*Math.sin(a),180+px*Math.sin(a)+qy*Math.cos(a)];};const A1=tr(g.last),B1=tr(p);x.beginPath();x.moveTo(...A1);x.lineTo(...B1);x.stroke();}}g.last=p;},
+  draw(g){c.drawImage(g.cv,0,0);}
+});
+</script>
+</body>
+</html>

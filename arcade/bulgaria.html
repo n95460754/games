@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Знаеш ли България?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🇧🇬 Знаеш ли България?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 143. България
+A.add(quizGame({id:'bulgaria',cat:'brain',icon:'🇧🇬',name:'Знаеш ли България?',desc:'География и история',help:'Избери верния отговор (клик или 1–4). 90 секунди.',
+  Q:[['Най-високият връх в България?','Мусала','Вихрен','Ботев','Черни връх'],['Най-дългата река изцяло в България?','Искър','Марица','Дунав','Тунджа'],['Морето на България е…','Черно','Средиземно','Бяло','Червено'],
+    ['Кой град е на брега на морето?','Бургас','Пловдив','Враца','Плевен'],['В коя планина е Мусала?','Рила','Пирин','Родопи','Стара планина'],['Пещерата Леденика е до град…','Враца','Шумен','Русе','Сливен'],
+    ['Реката по северната граница е…','Дунав','Искър','Струма','Марица'],['Кирилицата е създадена в…','България','Гърция','Рим','Египет'],['Седемте рилски езера са в…','Рила','Пирин','Витоша','Родопи'],
+    ['Най-големият град в България?','София','Пловдив','Варна','Бургас'],['Пловдив е разположен на река…','Марица','Искър','Янтра','Осъм'],['Велико Търново е на река…','Янтра','Дунав','Марица','Вит'],
+    ['Белоградчишките скали са в област…','Видин','Варна','Хасково','Бургас'],['Цветовете на знамето отгоре надолу?','бяло, зелено, червено','зелено, бяло, червено','червено, бяло, зелено','бяло, червено, зелено']]}));
+</script>
+</body>
+</html>
