@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калах</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🥣 Калах</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 122. Калах
+A.add({id:'kalah',cat:'board',icon:'🥣',name:'Калах',desc:'Древна игра с камъчета',help:'Кликни своя кладенец (долу). Камъчетата се раздават едно по едно обратно на часовника. Последното в твоя склад (вдясно) = още един ход. Последното в празен твой кладенец = взимаш и отсрещните. Събери повече!',
+  start(g){g.p=[4,4,4,4,4,4,0,4,4,4,4,4,4,0];g.turn=1;g.ai=0;g.msg='Твой ход';},
+  sow(g,i,me){let n=g.p[i];g.p[i]=0;let j=i;while(n){j=(j+1)%14;if(j===(me?13:6))continue;g.p[j]++;n--;}
+    const own=me?(j>=0&&j<6):(j>=7&&j<13);if(own&&g.p[j]===1&&g.p[12-j]){g.p[me?6:13]+=g.p[12-j]+1;g.p[12-j]=0;g.p[j]=0;}A.beep(me?600:300,.05);return j===(me?6:13);},
+  over2(g){const a=g.p.slice(0,6).reduce((s,v)=>s+v,0),b=g.p.slice(7,13).reduce((s,v)=>s+v,0);if(a&&b)return false;g.p[6]+=a;g.p[13]+=b;for(let i=0;i<13;i++)if(i!==6)g.p[i]=0;
+    g.score=g.p[6];A.over(g,g.p[6]>g.p[13]?'🏆 Победа '+g.p[6]+':'+g.p[13]:g.p[6]<g.p[13]?'Загуба '+g.p[6]+':'+g.p[13]:'Равенство');return true;},
+  click(g,mx,my){if(g.turn!==1||my<210||my>290)return;const i=Math.floor((mx-90)/50);if(i<0||i>5||!g.p[i])return;const again=this.sow(g,i,true);if(this.over2(g))return;if(!again){g.turn=2;g.ai=.8;g.msg='Роботът...';}else g.msg='Още един ход!';},
+  update(g,dt){if(g.turn!==2)return;g.ai-=dt;if(g.ai>0)return;const opts=[7,8,9,10,11,12].filter(i=>g.p[i]);
+    let best=opts[0],bs=-99;for(const i of opts){const save=g.p.slice();const again=this.sow(g,i,false);const s=g.p[13]-save[13]+(again?3:0)+Math.random();g.p=save;if(s>bs){bs=s;best=i;}}
+    const again=this.sow(g,best,false);if(this.over2(g))return;if(again){g.ai=.7;}else{g.turn=1;g.msg='Твой ход';}},
+  draw(g){A.bg('#3a2a1c');A.block(30,110,420,C.wood,190);const pit=(x,y,n,hl)=>{c.fillStyle=hl?'#5e4428':'#4a3420';c.fillRect(x,y,44,64);for(let k=0;k<Math.min(n,12);k++){c.fillStyle=['#ddd','#4de8f5','#ffd23f','#ff6b8a'][k%4];c.fillRect(x+6+(k%3)*12,y+6+Math.floor(k/3)*12,8,8);}A.txt(n,x+22,y+74,13,'#fff','center');};
+    for(let i=0;i<6;i++){pit(93+i*50,220,g.p[i],g.turn===1&&g.p[i]);pit(93+(5-i)*50,130,g.p[7+i],false);}
+    c.fillStyle='#2a1c10';c.fillRect(395,130,44,154);A.txt(g.p[6],417,207,22,'#9ecbff','center');c.fillStyle='#2a1c10';c.fillRect(40,130,44,154);A.txt(g.p[13],62,207,22,'#ff8a80','center');
+    A.txt(g.msg,240,60,16,'#ffd54f','center');A.txt('Робот',240,95,12,'#ff8a80','center');A.txt('Ти',240,325,12,'#9ecbff','center');}
+});
+</script>
+</body>
+</html>

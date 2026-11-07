@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Степени</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔋 Степени</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 114. Степени
+A.add(numGame({id:'powers',cat:'brain',icon:'🔋',name:'Степени',desc:'2ⁿ, 3ⁿ, 10ⁿ наизуст',help:'Сметни степента. 60 секунди.',
+  next(g){const b=A.pick([2,2,2,3,4,5,10]),e=b===2?A.ri(0,Math.min(12,4+g.score)):b===10?A.ri(0,6):A.ri(0,4);const sup='⁰¹²³⁴⁵⁶⁷⁸⁹';g.ans=b**e;g.q=b+[...String(e)].map(d=>sup[+d]).join('')+' = ?';}}));
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Змии за двама</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐍 Змии за двама</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 104. Змии за двама
+A.add({id:'snake2p',cat:'action',icon:'🐍',name:'Змии за двама',desc:'Двама играчи на една клавиатура',noScore:true,help:'Игра за ДВАМА! Синята змия: W A S D. Червената змия: стрелките. Който се блъсне пръв, губи рунда. Първият до 5 печели.',
+  start(g){g.w=[0,0];this.round(g);},
+  round(g){g.s=[[[5,9],[4,9],[3,9]],[[18,8],[19,8],[20,8]]];g.d=[[1,0],[-1,0]];g.nd=[[1,0],[-1,0]];g.step=0;g.food=[];for(let i=0;i<3;i++)g.food.push(this.free(g));g.pause=1.2;},
+  free(g){let p;do{p=[A.ri(0,23),A.ri(0,17)];}while(g.s.some(s=>s.some(q=>q[0]===p[0]&&q[1]===p[1])));return p;},
+  key(g,k){const m=[{KeyW:[0,-1],KeyS:[0,1],KeyA:[-1,0],KeyD:[1,0]},{ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}];
+    for(let i=0;i<2;i++){const d=m[i][k];if(d&&!(d[0]===-g.d[i][0]&&d[1]===-g.d[i][1]))g.nd[i]=d;}},
+  update(g,dt){if(g.pause>0){g.pause-=dt;return;}g.step+=dt;if(g.step<.12)return;g.step=0;
+    const heads=[0,1].map(i=>{g.d[i]=g.nd[i];return[g.s[i][0][0]+g.d[i][0],g.s[i][0][1]+g.d[i][1]];});
+    const dead=[0,1].map(i=>{const h=heads[i];return h[0]<0||h[1]<0||h[0]>23||h[1]>17||g.s.some(s=>s.some(q=>q[0]===h[0]&&q[1]===h[1]))||(heads[0][0]===heads[1][0]&&heads[0][1]===heads[1][1]);});
+    if(dead[0]||dead[1]){if(!(dead[0]&&dead[1]))g.w[dead[0]?1:0]++;A.beep(150,.3,'sawtooth');
+      if(g.w[0]>=5||g.w[1]>=5)return A.over(g,(g.w[0]>=5?'🟦 Синият':'🟥 Червеният')+' печели '+Math.max(...g.w)+':'+Math.min(...g.w)+'!');this.round(g);return;}
+    for(let i=0;i<2;i++){g.s[i].unshift(heads[i]);const fi=g.food.findIndex(f=>f[0]===heads[i][0]&&f[1]===heads[i][1]);if(fi>=0){g.food[fi]=this.free(g);A.beep(600+i*200,.04);}else g.s[i].pop();}},
+  draw(g){A.bg('#1e2a1e');g.food.forEach(f=>A.block(f[0]*20+3,f[1]*20+3,14,C.gold));
+    [['#3b7bd6','#1f5fa8'],[C.red,'#a8322a']].forEach((col,i)=>g.s[i].forEach((p,k)=>A.block(p[0]*20,p[1]*20,20,k?col[0]:col[1])));
+    A.txt('🟦 '+g.w[0]+'  :  '+g.w[1]+' 🟥',240,14,16,'#fff','center');if(g.pause>0)A.txt('Готови...',240,180,24,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

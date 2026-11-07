@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Флипери</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎱 Флипери</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 103. Флипери
+A.add({id:'flippers',cat:'action',icon:'🎱',name:'Флипери',desc:'Пинбол с блокове',help:'← (или A) — левият флипер, → (или D) — десният. Удряй блоковете за точки. Не изпускай топчето долу! 3 топчета.',
+  start(g){g.balls=3;this.reset(g);g.bump=[{x:160,y:110,r:20,p:10},{x:320,y:110,r:20,p:10},{x:240,y:180,r:24,p:25},{x:120,y:220,r:14,p:5},{x:360,y:220,r:14,p:5}];},
+  reset(g){g.x=455;g.y=320;g.vx=0;g.vy=-A.rnd(560,640);},
+  update(g,dt){const L=A.keys.ArrowLeft||A.keys.KeyA,R=A.keys.ArrowRight||A.keys.KeyD;g.la=L?-.5:.45;g.ra=R?.5:-.45;
+    for(let s=0;s<4;s++){const d=dt/4;g.vy+=420*d;g.x+=g.vx*d;g.y+=g.vy*d;
+      if(g.x<30){g.x=30;g.vx=Math.abs(g.vx)*.9;}if(g.x>470){g.x=470;g.vx=-Math.abs(g.vx)*.9;}if(g.y<20){g.y=20;g.vy=Math.abs(g.vy)*.9;}
+      if(g.x>440&&g.y<60){g.vx=-Math.abs(g.vx)-120;}
+      for(const b of g.bump){const dx=g.x-b.x,dy=g.y-b.y,dd=Math.hypot(dx,dy);if(dd<b.r+7){const nx=dx/dd,ny=dy/dd;g.x=b.x+nx*(b.r+7);const dot=g.vx*nx+g.vy*ny;g.vx=(g.vx-2*dot*nx)*1.05;g.vy=(g.vy-2*dot*ny)*1.05;g.score+=b.p;b.hit=.15;A.beep(400+b.p*20,.04);}}
+      for(const[px,ang,act]of[[140,g.la,L],[340,g.ra,R]]){const dir=px<240?1:-1,len=80;const ex=px+Math.cos(ang)*len*dir,ey=310+Math.sin(ang)*len;
+        const t=A.clamp(((g.x-px)*(ex-px)+(g.y-310)*(ey-310))/(len*len),0,1),cx=px+(ex-px)*t,cy=310+(ey-310)*t;if(Math.hypot(g.x-cx,g.y-cy)<9&&g.vy>-50){g.y=cy-9;g.vy=act?-A.rnd(560,680):-Math.abs(g.vy)*.5;g.vx+=act?(t-.5)*-300*dir+dir*80:0;if(act)A.beep(250,.03);}}
+      const sp=Math.hypot(g.vx,g.vy);if(sp>800){g.vx*=800/sp;g.vy*=800/sp;}}
+    for(const b of g.bump)b.hit=Math.max(0,(b.hit||0)-dt);
+    if(g.y>380){g.balls--;A.beep(120,.3,'sawtooth');if(!g.balls)return A.over(g,'Изпусна последното топче');this.reset(g);}},
+  draw(g){A.bg('#1a1030');for(let y=0;y<360;y+=20){A.block(0,y,20,C.purple);A.block(476,y,4,C.purple);}
+    for(const b of g.bump){A.block(b.x-b.r,b.y-b.r,b.r*2,b.hit?'#fff':b.p>=25?C.gold:b.p>=10?C.red:C.gem);A.txt(b.p,b.x,b.y,11,'#000','center');}
+    for(const[px,ang]of[[140,g.la],[340,g.ra]]){const dir=px<240?1:-1;c.strokeStyle=C.wood;c.lineWidth=12;c.lineCap='round';c.beginPath();c.moveTo(px,310);c.lineTo(px+Math.cos(ang)*80*dir,310+Math.sin(ang)*80);c.stroke();c.lineCap='butt';}
+    c.fillStyle='#ddd';c.beginPath();c.arc(g.x,g.y,7,0,7);c.fill();A.txt('Топчета: '+g.balls,30,14,13);}
+});
+</script>
+</body>
+</html>

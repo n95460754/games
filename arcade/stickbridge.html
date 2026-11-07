@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мост с пръчка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌉 Мост с пръчка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 120. Мост с пръчка
+A.add({id:'stickbridge',cat:'skill',icon:'🌉',name:'Мост с пръчка',desc:'Порасни пръчката точно колкото трябва',help:'Задръж Space / мишката — пръчката расте. Пусни — тя пада напред. Трябва да стигне до следващия стълб, но не по-далеч!',
+  start(g){g.cols=[{x:20,w:60}];this.addCol(g);g.px=60;g.st='idle';g.len=0;g.ang=0;g.cam=0;},
+  addCol(g){const L=g.cols[g.cols.length-1];g.cols.push({x:L.x+L.w+A.ri(50,190),w:A.ri(Math.max(18,50-g.score*2),70)});},
+  update(g,dt){const hold=A.keys.Space||A.mouse.down;const cur=g.cols[g.cols.length-2],nx=g.cols[g.cols.length-1];
+    if(g.st==='idle'&&hold){g.st='grow';g.len=0;}if(g.st==='grow'){g.len+=220*dt;if(!hold){g.st='fall';g.ang=0;}}
+    if(g.st==='fall'){g.ang+=4*dt;if(g.ang>=Math.PI/2){g.ang=Math.PI/2;g.st='walk';const end=cur.x+cur.w+g.len;g.ok=end>=nx.x&&end<=nx.x+nx.w;g.target=g.ok?nx.x+nx.w-20:end+10;}}
+    if(g.st==='walk'){g.px+=200*dt;if(g.px>=g.target){g.px=g.target;if(g.ok){g.score++;A.beep(800,.06);g.st='shift';}else{g.st='drop';}}}
+    if(g.st==='drop'){g.py=(g.py||0)+400*dt;if(g.py>200)return A.over(g,'Падна в пропастта!');}
+    if(g.st==='shift'){g.cam+=(nx.x-40-g.cam)*Math.min(1,dt*6);if(Math.abs(nx.x-40-g.cam)<2){g.cam=nx.x-40;this.addCol(g);g.len=0;g.st='idle';}}},
+  draw(g){A.bg('#ffcc80');c.fillStyle='#ffb74d';c.fillRect(0,200,480,160);const o=-g.cam;
+    for(const col of g.cols){A.block(col.x+o,250,col.w,'#3a2a1c',110);c.fillStyle=C.red;c.fillRect(col.x+o+col.w/2-3,250,6,4);}
+    const cur=g.cols[g.cols.length-2];c.save();c.translate(cur.x+cur.w+o,250);c.rotate(g.st==='grow'||g.st==='idle'?0:g.ang);c.fillStyle='#3a2a1c';c.fillRect(-2,-g.len,4,g.len);c.restore();
+    A.block(g.px+o-8,230+(g.py||0),16,'#3b7bd6',20);}
+});
+</script>
+</body>
+</html>

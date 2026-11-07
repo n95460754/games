@@ -41,7 +41,7 @@ A.over=(g,msg)=>{
   A.state='over';A.overMsg=msg||'Край на играта!';A.overAt=performance.now();
   const d=A.def,b=A.best(d),s=g.score;
   A.newBest=false;
-  if(!d.noScore&&s!==undefined&&(d.low?s>0&&(b===null||s<b):(b===null||s>b))){save('arc_'+d.id,s);A.newBest=true;}
+  if(!d.noScore&&s!==undefined&&s>0&&(d.low?(b===null||s<b):(b===null||s>b))){save('arc_'+d.id,s);A.newBest=true;}
   A.beep(A.newBest?880:220,.25,'triangle',.06);
   updTop();
 };

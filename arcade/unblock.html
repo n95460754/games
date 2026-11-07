@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Освободи вагонетката</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚃 Освободи вагонетката</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 108. Освободи вагонетката
+A.add({id:'unblock',cat:'puzzle',icon:'🚃',name:'Освободи вагонетката',desc:'Разчисти пътя до изхода',help:'Влачи блоковете с мишката (хоризонталните — наляво/надясно, вертикалните — нагоре/надолу). Изкарай червената вагонетка през изхода вдясно.',
+  start(g){g.lv=0;this.make(g);},
+  make(g){g.lv++;const N=6;g.cars=[{x:4,y:2,len:2,h:true,main:true}];const occ=()=>{const s=new Set();for(const c2 of g.cars)for(let k=0;k<c2.len;k++)s.add(c2.h?(c2.x+k)+','+c2.y:c2.x+','+(c2.y+k));return s;};
+    for(let tries=0;g.cars.length<Math.min(11,5+g.lv)&&tries<300;tries++){const h=Math.random()<.5,len=Math.random()<.75?2:3,x=A.ri(0,h?N-len:N-1),y=A.ri(0,h?N-1:N-len);if(h&&y===2)continue;
+      const cells=[];for(let k=0;k<len;k++)cells.push(h?(x+k)+','+y:x+','+(y+k));const o=occ();if(cells.every(q=>!o.has(q)))g.cars.push({x,y,len,h});}
+    for(let s=0;s<300+g.lv*80;s++){const c2=A.pick(g.cars),d=A.pick([-1,1]);this.slide(g,c2,d);}if(g.cars[0].x>=3)for(let s=0;s<3;s++)this.slide(g,g.cars[0],-1);g.moves=0;g.drag=null;},
+  free(g,x,y,self){if(x<0||y<0||x>5||y>5)return false;return!g.cars.some(c2=>c2!==self&&(c2.h?(y===c2.y&&x>=c2.x&&x<c2.x+c2.len):(x===c2.x&&y>=c2.y&&y<c2.y+c2.len)));},
+  slide(g,c2,d){const nx=c2.x+(c2.h?d:0),ny=c2.y+(c2.h?0:d);const tx=c2.h?(d>0?nx+c2.len-1:nx):nx,ty=c2.h?ny:(d>0?ny+c2.len-1:ny);if(this.free(g,tx,ty,c2)){c2.x=nx;c2.y=ny;return true;}return false;},
+  click(g,mx,my){const x=Math.floor((mx-120)/40),y=Math.floor((my-60)/40);const c2=g.cars.find(q=>q.h?(y===q.y&&x>=q.x&&x<q.x+q.len):(x===q.x&&y>=q.y&&y<q.y+q.len));if(c2)g.drag={c:c2,mx,my};},
+  move(g,mx,my){if(!g.drag||!A.mouse.down)return;const c2=g.drag.c,d=c2.h?mx-g.drag.mx:my-g.drag.my;if(Math.abs(d)>=40){if(this.slide(g,c2,Math.sign(d))){g.moves++;A.beep(300,.03);}if(c2.h)g.drag.mx+=Math.sign(d)*40;else g.drag.my+=Math.sign(d)*40;
+      if(c2.main&&c2.x===4){g.score++;A.tune([523,659,784]);this.make(g);}}},
+  release(g){g.drag=null;},
+  draw(g){A.bg('#2a2420');c.fillStyle='#3a322b';c.fillRect(120,60,240,240);c.fillStyle='#9ccc65';c.fillRect(360,140,14,40);
+    for(const c2 of g.cars){const w=c2.h?c2.len*40:40,h=c2.h?40:c2.len*40;A.block(120+c2.x*40+3,60+c2.y*40+3,w-6,c2.main?C.red:c2.h?C.wood:'#7d7d85',h-6);if(c2.main){c.fillStyle='#222';c.fillRect(120+c2.x*40+12,60+c2.y*40+30,10,8);c.fillRect(120+c2.x*40+58,60+c2.y*40+30,10,8);}}
+    A.txt('Ниво '+g.lv+'   Ходове '+g.moves,240,30,15,'#fff','center');A.txt('ИЗХОД →',420,160,13,'#9ccc65','center');}
+});
+</script>
+</body>
+</html>

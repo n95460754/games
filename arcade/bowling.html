@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Боулинг</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎳 Боулинг</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 117. Боулинг
+A.add({id:'bowling',cat:'skill',icon:'🎳',name:'Боулинг',desc:'Събори всички кегли',help:'Space — спри стрелката за посока, после Space — спри силата. Топката тръгва! 5 хвърляния по 2 опита.',
+  start(g){g.frame=0;this.frame2(g);},
+  frame2(g){g.frame++;if(g.frame>5)return A.over(g,'Край! '+g.score+' кегли');g.pins=[];for(let r=0;r<4;r++)for(let i=0;i<=r;i++)g.pins.push({x:240+(i-r/2)*28,y:115-r*22,vx:0,vy:0,down:false});g.roll=0;this.ready(g);},
+  ready(g){g.st='aim';g.aim=0;g.pow=0;g.b=null;},
+  key(g,k){if(k!=='Space')return;if(g.st==='aim'){g.st='pow';}else if(g.st==='pow'){g.st='roll';const a=Math.sin(g.t*2.2)*.35,p=.5+.5*Math.abs(Math.sin(g.t*3));g.b={x:240,y:330,vx:Math.sin(a)*420*p,vy:-Math.cos(a)*420*p};A.beep(200,.1);}},
+  update(g,dt){if(g.st==='aim')g.aim=Math.sin(g.t*2.2)*.35;if(g.st==='pow')g.pow=.5+.5*Math.abs(Math.sin(g.t*3));
+    if(g.st==='roll'){const b=g.b;b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<150||b.x>330)b.vx=0,b.x=A.clamp(b.x,150,330);
+      for(const p of g.pins){if(!p.down&&Math.hypot(p.x-b.x,p.y-b.y)<20){p.down=true;p.vx=(p.x-b.x)*6+A.rnd(-30,30);p.vy=b.vy*.5;A.beep(300+Math.random()*200,.05);}}
+      for(const p of g.pins)if(p.down){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.96;p.vy*=.96;for(const q of g.pins)if(!q.down&&Math.hypot(p.x-q.x,p.y-q.y)<18&&Math.hypot(p.vx,p.vy)>40){q.down=true;q.vx=p.vx*.7+A.rnd(-40,40);q.vy=p.vy*.7;}}
+      if(b.y<-20){const n=g.pins.filter(p=>p.down&&!p.counted).length;g.pins.forEach(p=>{if(p.down)p.counted=true;});g.score+=n;g.roll++;g.msg=n===10&&g.roll===1?'STRIKE! 🎉':'+'+n;
+        if(g.roll>=2||g.pins.every(p=>p.down))this.frame2(g);else{g.pins=g.pins.filter(p=>!p.down);this.ready(g);}}}},
+  draw(g){A.bg('#3a2a1c');c.fillStyle='#d9b77a';c.fillRect(150,0,180,360);c.fillStyle='#222';c.fillRect(140,0,10,360);c.fillRect(330,0,10,360);
+    for(const p of g.pins){if(p.down&&p.counted)continue;c.fillStyle=p.down?'#bbb':'#fff';c.fillRect(p.x-7,p.y-12,14,24);c.fillStyle=C.red;c.fillRect(p.x-7,p.y-5,14,3);}
+    if(g.b){c.fillStyle='#1f5fa8';c.beginPath();c.arc(g.b.x,g.b.y,11,0,7);c.fill();}
+    if(g.st==='aim'||g.st==='pow'){c.strokeStyle='#ffd54f';c.lineWidth=4;c.beginPath();c.moveTo(240,330);c.lineTo(240+Math.sin(g.aim)*80,330-Math.cos(g.aim)*80);c.stroke();c.fillStyle='#1f5fa8';c.beginPath();c.arc(240,330,11,0,7);c.fill();}
+    c.fillStyle='#000';c.fillRect(360,100,20,200);c.fillStyle=g.st==='pow'?'#ff7043':'#555';c.fillRect(362,300-196*g.pow,16,196*g.pow);
+    A.txt('Рамка '+Math.min(5,g.frame)+'/5  Опит '+(g.roll+1),10,16,13);if(g.msg)A.txt(g.msg,10,40,15,'#ffd54f');A.txt(g.st==='aim'?'Space: посока':g.st==='pow'?'Space: сила':'',400,330,12,'#fff');}
+});
+</script>
+</body>
+</html>

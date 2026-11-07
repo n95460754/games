@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Солитер</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📍 Солитер</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 106. Солитер с колчета
+A.add({id:'pegs',cat:'puzzle',icon:'📍',name:'Солитер',desc:'Остави само едно колче',help:'Кликни колче, после празна дупка две полета нататък (през съседно колче). Прескоченото изчезва. Остави колкото може по-малко колчета — идеално е 1 в центъра!',
+  start(g){g.b={};for(let y=0;y<7;y++)for(let x=0;x<7;x++)if((x>=2&&x<=4)||(y>=2&&y<=4))g.b[x+','+y]=!(x===3&&y===3);g.sel=null;g.score=0;},
+  moves(g){const r=[];for(const k in g.b){if(!g.b[k])continue;const[x,y]=k.split(',').map(Number);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const m=(x+dx)+','+(y+dy),t=(x+2*dx)+','+(y+2*dy);if(g.b[m]&&g.b[t]===false)r.push([k,m,t]);}}return r;},
+  click(g,mx,my){const x=Math.floor((mx-100)/40),y=Math.floor((my-40)/40),k=x+','+y;if(!(k in g.b))return;
+    if(g.b[k]){g.sel=k;A.beep(400,.03);return;}if(!g.sel)return;const mv=this.moves(g).find(m=>m[0]===g.sel&&m[2]===k);if(!mv)return;
+    g.b[mv[0]]=false;g.b[mv[1]]=false;g.b[mv[2]]=true;g.sel=null;g.score++;A.beep(600,.04);
+    if(!this.moves(g).length){const left=Object.values(g.b).filter(Boolean).length;if(left===1&&g.b['3,3'])g.score+=10;A.over(g,left===1?'🏆 Остана само 1 колче!':'Няма ходове. Останаха '+left);}},
+  draw(g){A.bg('#3a2a1c');const hint=g.sel?this.moves(g).filter(m=>m[0]===g.sel).map(m=>m[2]):[];
+    for(const k in g.b){const[x,y]=k.split(',').map(Number),X=100+x*40,Y=40+y*40;c.fillStyle='#2a1c10';c.fillRect(X+8,Y+8,24,24);
+      if(g.b[k])A.block(X+6,Y+6,28,k===g.sel?C.gold:C.red);else if(hint.includes(k)){c.strokeStyle='#9ccc65';c.lineWidth=3;c.strokeRect(X+6,Y+6,28,28);}}
+    A.txt('Колчета: '+Object.values(g.b).filter(Boolean).length,400,40,14,'#fff');}
+});
+</script>
+</body>
+</html>
