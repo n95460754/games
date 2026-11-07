@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пет в ред</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚪ Пет в ред</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 91. Пет в ред
+A.add({id:'gomoku',cat:'board',icon:'⚪',name:'Пет в ред',desc:'Нареди 5 преди робота',help:'Кликни пресечка, за да сложиш своя бял блок. Наредѝ 5 в ред (хоризонтално, вертикално или по диагонал). Победа = точка, загуба = край.',
+  N:13,
+  start(g){g.b=Array(169).fill(0);g.wait=0;g.msg='Твой ход';},
+  five(g,i,p){const N=13,x=i%N,y=Math.floor(i/N);for(const[dx,dy]of[[1,0],[0,1],[1,1],[1,-1]]){let n=1;for(const s of[1,-1]){let X=x+dx*s,Y=y+dy*s;while(X>=0&&Y>=0&&X<N&&Y<N&&g.b[Y*N+X]===p){n++;X+=dx*s;Y+=dy*s;}}if(n>=5)return true;}return false;},
+  score2(g,i,p){const N=13,x=i%N,y=Math.floor(i/N);let tot=0;for(const[dx,dy]of[[1,0],[0,1],[1,1],[1,-1]]){let n=0,open=0;for(const s of[1,-1]){let X=x+dx*s,Y=y+dy*s;while(X>=0&&Y>=0&&X<N&&Y<N&&g.b[Y*N+X]===p){n++;X+=dx*s;Y+=dy*s;}if(X>=0&&Y>=0&&X<N&&Y<N&&!g.b[Y*N+X])open++;}tot+=[0,10,100,1000,100000][Math.min(4,n)]*(open+1);}return tot;},
+  ai(g){let best=-1,bi=-1;for(let i=0;i<169;i++){if(g.b[i])continue;const s=this.score2(g,i,2)*1.1+this.score2(g,i,1)+Math.random();if(s>best){best=s;bi=i;}}
+    g.b[bi]=2;A.beep(300,.05);if(this.five(g,bi,2))A.over(g,'Роботът нареди 5!');else g.msg='Твой ход';},
+  click(g,mx,my){if(g.wait>0)return;const x=Math.round((mx-84)/26),y=Math.round((my-24)/26);if(x<0||y<0||x>12||y>12)return;const i=y*13+x;if(g.b[i])return;
+    g.b[i]=1;A.beep(600,.05);if(this.five(g,i,1)){g.score++;g.msg='Победа! 🎉';A.tune([660,880]);g.wait=1.5;return;}this.ai(g);},
+  update(g,dt){if(g.wait>0){g.wait-=dt;if(g.wait<=0){g.b.fill(0);g.msg='Твой ход';}}},
+  draw(g){A.bg('#c9a063');c.strokeStyle='#5e4428';c.lineWidth=1;for(let i=0;i<13;i++){c.beginPath();c.moveTo(84,24+i*26);c.lineTo(84+12*26,24+i*26);c.stroke();c.beginPath();c.moveTo(84+i*26,24);c.lineTo(84+i*26,24+12*26);c.stroke();}
+    g.b.forEach((v,i)=>{if(v)A.block(84+(i%13)*26-10,24+Math.floor(i/13)*26-10,20,v===1?'#f5f5f5':'#222');});A.txt(g.msg,410,20,13,'#3a2410');}
+});
+</script>
+</body>
+</html>

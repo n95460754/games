@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Морски бой</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚢 Морски бой</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 94. Морски бой
+A.add({id:'battleship',cat:'board',icon:'🚢',name:'Морски бой',desc:'Потопи флота на робота',help:'Стреляй по дясното поле (на робота). Роботът стреля по твоето вляво. Който потопи всички кораби (4,3,3,2,2) пръв, печели. Точките са неизползваните изстрели.',
+  start(g){g.me=this.fleet();g.ai=this.fleet();g.shotAI=new Set();g.shotMe=new Set();g.turn=1;g.t2=0;g.targets=[];g.shots=0;},
+  fleet(){const cells=new Map();for(const[n,len]of[[0,4],[1,3],[2,3],[3,2],[4,2]]){for(;;){const h=Math.random()<.5,x=A.ri(0,h?8-len:7),y=A.ri(0,h?7:8-len);const cs=[];for(let k=0;k<len;k++)cs.push(h?(y*8+x+k):((y+k)*8+x));if(cs.every(c2=>!cells.has(c2))){cs.forEach(c2=>cells.set(c2,n));break;}}}return cells;},
+  sunk(fl,shots,n){return[...fl].filter(([c2,s])=>s===n).every(([c2])=>shots.has(c2));},
+  all(fl,shots){return[...fl.keys()].every(c2=>shots.has(c2));},
+  click(g,mx,my){if(g.turn!==1)return;const x=Math.floor((mx-250)/26),y=Math.floor((my-60)/26);if(x<0||y<0||x>7||y>7)return;const i=y*8+x;if(g.shotMe.has(i))return;
+    g.shotMe.add(i);g.shots++;const hit=g.ai.has(i);A.beep(hit?900:200,.06);if(hit&&this.sunk(g.ai,g.shotMe,g.ai.get(i)))A.tune([660,880]);
+    if(this.all(g.ai,g.shotMe)){g.score=Math.max(1,64-g.shots);return A.over(g,'🏆 Потопи целия флот!');}if(!hit){g.turn=2;g.t2=.6;}},
+  update(g,dt){if(g.turn!==2)return;g.t2-=dt;if(g.t2>0)return;
+    let i;g.targets=g.targets.filter(t=>!g.shotAI.has(t));if(g.targets.length)i=g.targets.pop();else{do{i=A.ri(0,63);}while(g.shotAI.has(i)||((i%8+Math.floor(i/8))%2&&Math.random()<.7));}
+    g.shotAI.add(i);const hit=g.me.has(i);A.beep(hit?300:150,.06);
+    if(hit){const x=i%8,y=Math.floor(i/8);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<8&&Y<8&&!g.shotAI.has(Y*8+X))g.targets.push(Y*8+X);}
+      if(this.all(g.me,g.shotAI)){g.score=0;return A.over(g,'Роботът потопи флота ти');}g.t2=.5;}else g.turn=1;},
+  board(g,ox,fl,shots,show){for(let i=0;i<64;i++){const x=ox+(i%8)*26,y=60+Math.floor(i/8)*26;c.fillStyle='#1e5aa8';c.fillRect(x+1,y+1,24,24);
+      if(show&&fl.has(i))A.block(x+2,y+2,22,'#9e9e9e');if(shots.has(i)){if(fl.has(i)){c.fillStyle=this.sunk(fl,shots,fl.get(i))?'#222':'#ff5722';c.fillRect(x+5,y+5,16,16);}else{c.fillStyle='#bbdefb';c.fillRect(x+10,y+10,6,6);}}}},
+  draw(g){A.bg('#0e2a4a');this.board(g,20,g.me,g.shotAI,true);this.board(g,250,g.ai,g.shotMe,false);A.txt('Твоят флот',124,40,14,'#fff','center');A.txt('Флотът на робота',354,40,14,'#fff','center');
+    A.txt(g.turn===1?'👉 Стреляй вдясно':'Роботът стреля...',240,300,16,'#ffd54f','center');A.txt('Изстрели: '+g.shots,240,325,13,'#bbb','center');}
+});
+</script>
+</body>
+</html>

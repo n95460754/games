@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков кликер</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💎 Блоков кликер</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 100. Блоков кликер
+A.add({id:'clicker',cat:'board',icon:'💎',name:'Блоков кликер',desc:'Копай до 100 000 блока',low:true,unit:' с',help:'Кликай големия блок, за да копаеш. Купувай подобрения (клик или 1–4). Колко бързо ще стигнеш 100 000 блока?',
+  U:[['⛏️ Кирка','+1 на клик',15],['👷 Миньор','+1 в секунда',50],['🚜 Сонда','+8 в секунда',400],['🏭 Фабрика','+60 в секунда',3000]],
+  start(g){g.b=0;g.tot=0;g.lv=[0,0,0,0];g.fx=[];},
+  cost(g,i){return Math.floor(this.U[i][2]*Math.pow(1.35,g.lv[i]));},
+  buy(g,i){const c2=this.cost(g,i);if(g.b>=c2){g.b-=c2;g.lv[i]++;A.beep(700,.06);}else A.beep(150,.05);},
+  click(g,mx,my){if(mx<240&&my>80&&my<280){const n=1+g.lv[0];g.b+=n;g.tot+=n;g.fx.push({x:mx,y:my,t:.6,s:'+'+n});A.beep(300+Math.random()*100,.02);}
+    if(mx>260&&my>60&&my<300){const i=Math.floor((my-60)/60);if(i>=0&&i<4)this.buy(g,i);}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.buy(g,n-1);},
+  update(g,dt){const ps=g.lv[1]+g.lv[2]*8+g.lv[3]*60;g.b+=ps*dt;g.tot+=ps*dt;g.ps=ps;g.score=g.t;g.fx.forEach(f=>{f.t-=dt;f.y-=40*dt;});g.fx=g.fx.filter(f=>f.t>0);
+    if(g.tot>=100000){g.score=g.t;A.over(g,'🏆 100 000 блока за '+Math.round(g.t)+' с!');}},
+  draw(g){A.bg('#1d1a24');const pulse=A.mouse.down&&A.mouse.x<240?6:0;A.block(40+pulse,90+pulse,160-pulse*2,C.stone);c.fillStyle=C.gem;c.fillRect(80,130,24,24);c.fillRect(130,170,30,24);c.fillRect(90,200,20,20);
+    A.txt(Math.floor(g.b)+' блока',120,40,20,'#ffd54f','center');A.txt((g.ps||0)+' / сек',120,300,14,'#bbb','center');
+    this.U.forEach((u,i)=>{const y=60+i*60,ok=g.b>=this.cost(g,i);A.block(260,y,210,ok?'#3d6b2a':'#3a3a44',54);A.txt((i+1)+'. '+u[0]+' ('+g.lv[i]+')',270,y+16,13,'#fff');A.txt(u[1]+' · '+this.cost(g,i),270,y+38,11,'#ddd');});
+    c.fillStyle='#333';c.fillRect(20,330,440,12);c.fillStyle=C.gold;c.fillRect(20,330,440*Math.min(1,g.tot/100000),12);for(const f of g.fx)A.txt(f.s,f.x,f.y,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

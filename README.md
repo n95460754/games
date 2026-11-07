@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**60 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 50 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**110 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 100 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-60-5aa13a)
+![Games](https://img.shields.io/badge/games-110-5aa13a)
 
 ## 🚀 Play
 
@@ -60,9 +60,9 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 50 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 100 mini-games (`arcade/*.html`)
 
-**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 50, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
+**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 100, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
 ### ⚡ Action
 | # | Game | File | |
@@ -134,7 +134,78 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 49 | 🚰 Plumbing (Водопровод) | [`pipes.html`](arcade/pipes.html) | Rotate pipes to connect the water |
 | 50 | 🗡️ Cave Explorer (Пещерен изследовател) | [`dungeon.html`](arcade/dungeon.html) | Turn-based dungeon: gems, monsters, stairs |
 
-All 50 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+
+### ⚡ Action 2
+| # | Game | File | |
+|---|---|---|---|
+| 51 | 🚀 Jetpack (Реактивна раница) | [`jetpack.html`](arcade/jetpack.html) | Hold to fly, dodge lasers |
+| 52 | 🕳️ Tunnel (Тунел) | [`tunnel.html`](arcade/tunnel.html) | Steer down a narrowing tunnel |
+| 53 | 🏹 Archery (Стрелец с лък) | [`archery.html`](arcade/archery.html) | Arc shots at moving targets |
+| 54 | 🔃 Gravity Flip (Гравитация) | [`gravity.html`](arcade/gravity.html) | Flip between floor and ceiling |
+| 55 | 💥 Bomber (Бомбаджия) | [`bomber.html`](arcade/bomber.html) | Bomb crates and slimes in a maze |
+| 56 | 🏰 Castle Defense (Защита на замъка) | [`castle.html`](arcade/castle.html) | Click attackers before they reach the wall |
+| 57 | ⬆️ Bouncy Block (Подскачащ блок) | [`jumper.html`](arcade/jumper.html) | Bounce up endless platforms |
+| 58 | 🌙 Moon Lander (Лунно кацане) | [`lander.html`](arcade/lander.html) | Land softly, save fuel |
+| 59 | ⬇️ Fall Down (Надолу) | [`falldown.html`](arcade/falldown.html) | Drop through gaps, avoid the spikes |
+| 60 | 🛡️ Tank Battle (Танкова битка) | [`tanks.html`](arcade/tanks.html) | Top-down tanks, bouncing shells |
+
+### 🧩 Puzzles 2
+| # | Game | File | |
+|---|---|---|---|
+| 61 | 🧊 Ice Slide (Ледена пързалка) | [`iceslide.html`](arcade/iceslide.html) | Slide until you hit a rock |
+| 62 | 🔦 Mirrors (Огледала) | [`mirrors.html`](arcade/mirrors.html) | Rotate mirrors to guide the laser |
+| 63 | 🧪 Color Tubes (Епруветки) | [`tubes.html`](arcade/tubes.html) | Sort the colors into tubes |
+| 64 | 🗼 Tower of Hanoi (Ханойски кули) | [`hanoi.html`](arcade/hanoi.html) | Move the tower, small on big |
+| 65 | ⛵ River Crossing (Пренеси през реката) | [`river.html`](arcade/river.html) | Wolf, goat and cabbage logic puzzle |
+| 66 | 🔲 Remember the Pattern (Запомни шарката) | [`pattern.html`](arcade/pattern.html) | Repeat the lit blocks |
+| 67 | ⚖️ The Heavy Block (Тежкият блок) | [`weigh.html`](arcade/weigh.html) | Find it in 2 weighings |
+| 68 | 🧊 Cube Pile (Купчина кубчета) | [`cubes3d.html`](arcade/cubes3d.html) | Count the cubes in an isometric pile |
+| 69 | 🤖 Program the Robot (Програмирай робота) | [`robot.html`](arcade/robot.html) | Write a ↑ ↺ ↻ program |
+| 70 | 🔐 Cipher (Шифър) | [`caesar.html`](arcade/caesar.html) | Decode Caesar-shifted words |
+
+### 🧠 Brain & Math 2
+| # | Game | File | |
+|---|---|---|---|
+| 71 | 🟰 Equations (Уравнения) | [`equation.html`](arcade/equation.html) | Solve for x |
+| 72 | 💯 Percent (Проценти) | [`percent.html`](arcade/percent.html) | X% of Y |
+| 73 | 🏛️ Roman Numerals (Римски цифри) | [`roman.html`](arcade/roman.html) | Roman → Arabic |
+| 74 | ² Squares & Roots (Квадрати и корени) | [`squares.html`](arcade/squares.html) | n² and √n |
+| 75 | ➗ GCD & LCM (НОД и НОК) | [`gcd.html`](arcade/gcd.html) | Greatest divisor, least multiple |
+| 76 | 📐 Angles (Ъгли) | [`angles.html`](arcade/angles.html) | Guess the degrees |
+| 77 | ⬛ Area & Perimeter (Лице и периметър) | [`area.html`](arcade/area.html) | Of block shapes |
+| 78 | 🪙 Coins (Монети) | [`coins.html`](arcade/coins.html) | Add up euro coins |
+| 79 | 🔍 Divisibility (Делимост) | [`divisible.html`](arcade/divisible.html) | Divisible or not? |
+| 80 | 🕒 Clock (Часовник) | [`clock.html`](arcade/clock.html) | Read the analog clock |
+
+### 🎯 Skills 2
+| # | Game | File | |
+|---|---|---|---|
+| 81 | 🤹 Juggler (Жонгльор) | [`juggle.html`](arcade/juggle.html) | Click blocks so they don't fall |
+| 82 | 🎋 Balancing Act (Еквилибрист) | [`balance.html`](arcade/balance.html) | Keep a tall pole upright |
+| 83 | 🐑 Sheepdog (Пастирско куче) | [`sheep.html`](arcade/sheep.html) | Herd sheep into the pen |
+| 84 | 〰️ Don't Touch the Wire (Не пипай жицата) | [`wire.html`](arcade/wire.html) | Trace the path with the mouse |
+| 85 | 🔪 Block Slicer (Блокосечене) | [`slicer.html`](arcade/slicer.html) | Swipe through flying blocks |
+| 86 | 🪢 Jump Rope (Скачане на въже) | [`rope.html`](arcade/rope.html) | Jump at the right moment |
+| 87 | 🔢 Counting Sheep (Броене на овце) | [`sheepcount.html`](arcade/sheepcount.html) | Count only the sheep |
+| 88 | ⌨️ Fast Fingers (Бързи пръсти) | [`typing.html`](arcade/typing.html) | Hit the falling letters |
+| 89 | 🏗️ Crane Claw (Кран) | [`claw.html`](arcade/claw.html) | Grab ore from the belt |
+| 90 | 🚒 Firefighter (Пожарникар) | [`firefighter.html`](arcade/firefighter.html) | Spray water on the fires |
+
+### ♟️ Board & Sandbox 2
+| # | Game | File | |
+|---|---|---|---|
+| 91 | ⚪ Five in a Row (Пет в ред) | [`gomoku.html`](arcade/gomoku.html) | vs the robot, 13×13 |
+| 92 | ▫️ Dots & Boxes (Квадратчета) | [`dotsboxes.html`](arcade/dotsboxes.html) | Close more boxes than the robot |
+| 93 | ♞ Knight's Tour (Ходът на коня) | [`knight.html`](arcade/knight.html) | Visit every square once |
+| 94 | 🚢 Sea Battle (Морски бой) | [`battleship.html`](arcade/battleship.html) | Sink the robot's fleet first |
+| 95 | 🧬 Game of Life (Играта на живота) | [`life.html`](arcade/life.html) | Conway's cellular automaton |
+| 96 | ⛏️ Builder 2D (Строител 2D) | [`builder2d.html`](arcade/builder2d.html) | Side-view block sandbox with sand and water |
+| 97 | 🐜 Langton's Ant (Мравката на Лангтън) | [`langton.html`](arcade/langton.html) | Simple rules, chaotic patterns |
+| 98 | 🎲 Dice (Зарове) | [`pig.html`](arcade/pig.html) | Roll or hold, first to 50 |
+| 99 | 🃏 Higher or Lower (По-голямо/по-малко) | [`higherlower.html`](arcade/higherlower.html) | Guess the next card |
+| 100 | 💎 Block Clicker (Блоков кликер) | [`clicker.html`](arcade/clicker.html) | Reach 100,000 blocks fast |
+
+All 100 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -161,7 +232,9 @@ minecraft/
 │   ├── snake.html          # 1. Block Snake
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
-│   └── dungeon.html        # 50. Cave Explorer
+│   ├── dungeon.html        # 50. Cave Explorer
+│   ├── ...                 # games 51–100
+│   └── clicker.html        # 100. Block Clicker
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
@@ -177,6 +250,8 @@ minecraft/
 - **Push the Crates:** every level was checked with a breadth-first-search solver to make sure it can be solved.
 - **Nim:** the robot plays the winning strategy, making the XOR of the piles equal 0 (with a little randomness so you can win).
 - **Sandbox:** a 160×110 cellular automaton. Sand falls and slides, water flows sideways, lava + water = stone, and lava sets wood on fire.
+- **Robot programming, Tower of Hanoi, Game of Life, Langton's Ant:** little lessons in coding and math, hidden inside games.
+- **Ice Slide, Program the Robot:** levels are generated randomly and checked with breadth-first search (BFS), so every level can be solved.
 - **Sounds:** all made live with the Web Audio API (`OscillatorNode`), with no sound files.
 
 ## 🛠️ Ideas for the future

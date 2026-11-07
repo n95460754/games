@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Зарове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎲 Зарове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 98. Зарове „Прасе“
+A.add({id:'pig',cat:'board',icon:'🎲',name:'Зарове',desc:'Хвърляй или спри навреме',help:'Space — хвърли зара (точките се трупат), H — спри и запиши. Ако хвърлиш 1, губиш натрупаното в хода! Първият до 50 печели.',
+  start(g){g.me=0;g.ai=0;g.pot=0;g.turn=1;g.die=1;g.t2=0;g.msg='Твой ход';},
+  roll(g){g.die=A.ri(1,6);A.beep(300+g.die*60,.05);if(g.die===1){g.pot=0;g.msg=(g.turn===1?'Хвърли 1! Губиш хода':'Роботът хвърли 1');this.swap(g);}else g.pot+=g.die;},
+  hold(g){if(g.turn===1)g.me+=g.pot;else g.ai+=g.pot;g.pot=0;A.beep(600,.06);
+    if(g.me>=50){g.score++;A.tune([523,659,784]);g.me=0;g.ai=0;g.msg='Победа! Нова игра';g.turn=1;return;}if(g.ai>=50)return A.over(g,'Роботът стигна 50');this.swap(g);},
+  swap(g){g.turn=3-g.turn;g.t2=.8;if(g.turn===1&&!g.msg.includes('1'))g.msg='Твой ход';if(g.turn===2)g.msg='Роботът играе...';},
+  key(g,k){if(g.turn!==1)return;if(k==='Space'){this.roll(g);}if(k==='KeyH'&&g.pot)this.hold(g);},
+  update(g,dt){if(g.turn!==2)return;g.t2-=dt;if(g.t2>0)return;g.t2=.6;if(g.pot>=Math.min(20,50-g.ai)||(g.pot>0&&g.ai+g.pot>=50))this.hold(g);else this.roll(g);if(g.turn===1&&g.msg==='Роботът играе...')g.msg='Твой ход';},
+  draw(g){A.bg('#14301e');A.block(190,90,100,'#f5f5f5');const P={1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],4:[[0,0],[2,0],[0,2],[2,2]],5:[[0,0],[2,0],[1,1],[0,2],[2,2]],6:[[0,0],[2,0],[0,1],[2,1],[0,2],[2,2]]}[g.die];
+    c.fillStyle='#222';for(const[x,y]of P)c.fillRect(205+x*28,105+y*28,14,14);
+    A.txt('Ти: '+g.me,90,60,20,'#9ecbff','center');A.txt('Робот: '+g.ai,390,60,20,'#ff8a80','center');A.txt('В хода: '+g.pot,240,220,20,'#ffd54f','center');A.txt(g.msg,240,260,15,'#fff','center');
+    A.txt('Space = хвърли    H = спри',240,310,14,'#bbb','center');}
+});
+</script>
+</body>
+</html>

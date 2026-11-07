@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кран</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏗️ Кран</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 89. Кран с щипка
+A.add({id:'claw',cat:'skill',icon:'🏗️',name:'Кран',desc:'Хвани рудите от лентата',help:'Кранът се движи сам. Space / клик — пусни щипката. Хвани ценните руди от движещата се лента. Камъкът не носи нищо. 10 опита.',
+  start(g){g.x=40;g.d=1;g.state='move';g.cy=40;g.belt=[];g.tries=10;for(let i=0;i<8;i++)this.add2(g,i*60);},
+  add2(g,x){const k=A.pick(['stone','stone','coal','iron','gold','gem']);g.belt.push({x,k});},
+  key(g,k){if(k==='Space'&&g.state==='move'){g.state='down';g.tries--;A.beep(300,.05);}},
+  update(g,dt){for(const b of g.belt)b.x-=60*dt;g.belt=g.belt.filter(b=>b.x>-50);while(g.belt[g.belt.length-1].x<440)this.add2(g,g.belt[g.belt.length-1].x+60);
+    if(g.state==='move'){g.x+=g.d*(120+g.score*2)*dt;if(g.x<30||g.x>450)g.d*=-1;}
+    if(g.state==='down'){g.cy+=260*dt;if(g.cy>=270){g.state='up';g.got=g.belt.find(b=>Math.abs(b.x+20-g.x)<20);if(g.got)g.belt=g.belt.filter(b=>b!==g.got);}}
+    if(g.state==='up'){g.cy-=260*dt;if(g.cy<=40){g.cy=40;g.state='move';if(g.got){const v={stone:0,coal:1,iron:3,gold:6,gem:10}[g.got.k];g.score+=v;A.beep(v?900:200,.08);g.got=null;}if(!g.tries)A.over(g,'Свършиха опитите');}}},
+  draw(g){A.bg('#2a2420');c.fillStyle='#555';c.fillRect(0,30,480,8);c.fillStyle='#333';c.fillRect(0,300,480,20);
+    const col={stone:C.stone,coal:C.coal,iron:C.iron,gold:C.gold,gem:C.gem};for(const b of g.belt){A.block(b.x,260,40,C.stone);if(b.k!=='stone'){c.fillStyle=col[b.k];c.fillRect(b.x+8,268,9,9);c.fillRect(b.x+22,282,9,9);}}
+    c.fillStyle='#999';c.fillRect(g.x-2,38,4,g.cy-38);c.fillStyle='#ccc';c.fillRect(g.x-16,g.cy,32,6);c.fillRect(g.x-16,g.cy,5,18);c.fillRect(g.x+11,g.cy,5,18);
+    if(g.got){A.block(g.x-20,g.cy+10,40,C.stone);}A.txt('Опити: '+g.tries,10,14,14);}
+});
+</script>
+</body>
+</html>

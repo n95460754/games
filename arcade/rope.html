@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скачане на въже</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪢 Скачане на въже</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 86. Въже
+A.add({id:'rope',cat:'skill',icon:'🪢',name:'Скачане на въже',desc:'Скачай в точния момент',help:'Space / клик — скок. Скачай, когато въжето минава под краката ти. То се върти все по-бързо!',
+  start(g){g.a=0;g.sp=2.5;g.y=0;g.v=0;g.passed=false;},
+  key(g,k){if((k==='Space'||k==='ArrowUp')&&g.y===0){g.v=330;A.beep(500,.04);}},
+  update(g,dt){g.a+=g.sp*dt;g.v-=1100*dt;g.y+=g.v*dt;if(g.y<0){g.y=0;g.v=0;}
+    const ph=g.a%(Math.PI*2),low=Math.abs(ph-Math.PI/2)<.25;
+    if(low&&!g.passed){if(g.y<18)return A.over(g,'Спъна се във въжето!');g.passed=true;g.score++;g.sp+=.08;A.beep(800,.04);}if(!low)g.passed=false;},
+  draw(g){A.bg('#87ceeb');for(let x=0;x<480;x+=20)A.block(x,300,20,C.grass,60);const ph=g.a%(Math.PI*2),ry=210-Math.sin(ph)*-90;
+    const front=Math.cos(ph)<0;const drawRope=()=>{c.strokeStyle='#d84a3a';c.lineWidth=4;c.beginPath();c.moveTo(80,210);c.quadraticCurveTo(240,ry+(ry-210)*.9,400,210);c.stroke();};
+    if(!front)drawRope();A.block(60,190,20,'#8e24aa',110);A.block(400,190,20,'#3b7bd6',110);
+    const py=300-g.y;A.block(228,py-50,24,'#e67e22',50);A.block(230,py-66,20,'#f1c27d',16);if(front)drawRope();}
+});
+</script>
+</body>
+</html>

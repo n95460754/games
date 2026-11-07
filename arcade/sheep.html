@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пастирско куче</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐑 Пастирско куче</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 83. Пастирско куче
+A.add({id:'sheep',cat:'skill',icon:'🐑',name:'Пастирско куче',desc:'Вкарай овцете в кошарата',help:'Кучето следва мишката (или стрелките). Овцете бягат от него. Вкарай всички в кошарата горе вдясно! Колкото по-бързо, толкова повече точки.',
+  start(g){g.lv=0;this.level(g);},
+  level(g){g.lv++;g.dx=60;g.dy=300;g.sh=[];for(let i=0;i<3+g.lv;i++)g.sh.push({x:A.rnd(60,300),y:A.rnd(140,320),vx:0,vy:0,in:false});g.lt=0;},
+  move(g,x,y){g.tx=x;g.ty=y;},
+  update(g,dt){g.lt+=dt;let kx=0,ky=0;if(A.keys.ArrowLeft||A.keys.KeyA)kx--;if(A.keys.ArrowRight||A.keys.KeyD)kx++;if(A.keys.ArrowUp||A.keys.KeyW)ky--;if(A.keys.ArrowDown||A.keys.KeyS)ky++;
+    if(kx||ky){g.tx=undefined;g.dx+=kx*220*dt;g.dy+=ky*220*dt;}else if(g.tx!==undefined){const d=Math.hypot(g.tx-g.dx,g.ty-g.dy);if(d>2){g.dx+=(g.tx-g.dx)/d*Math.min(d,220*dt);g.dy+=(g.ty-g.dy)/d*Math.min(d,220*dt);}}
+    for(const s of g.sh){if(s.in)continue;const d=Math.hypot(s.x-g.dx,s.y-g.dy);if(d<110){s.vx+=(s.x-g.dx)/d*500*dt;s.vy+=(s.y-g.dy)/d*500*dt;}
+      s.vx+=A.rnd(-30,30)*dt;s.vy+=A.rnd(-30,30)*dt;s.vx*=.94;s.vy*=.94;const px=s.x,py=s.y;s.x+=s.vx*dt;s.y+=s.vy*dt;
+      if(px<366&&s.x>=366&&s.y<80){s.x=365;s.vx=-Math.abs(s.vx);}if(py>=114&&s.y<114&&s.x>366){s.y=114;s.vy=Math.abs(s.vy);}
+      if(s.x<10){s.x=10;s.vx*=-1;}if(s.x>470){s.x=470;s.vx*=-1;}if(s.y<10){s.y=10;s.vy*=-1;}if(s.y>350){s.y=350;s.vy*=-1;}
+      if(s.x>378&&s.y<102){s.in=true;A.beep(800,.06);}}
+    if(g.sh.every(s=>s.in)){g.score+=Math.max(5,60-Math.floor(g.lt));A.tune([523,659,784]);this.level(g);}},
+  draw(g){A.bg('#6cbf47');c.fillStyle='#4f9a35';c.fillRect(370,0,110,110);c.fillStyle=C.wood;c.fillRect(366,0,6,80);c.fillRect(366,108,114,6);
+    for(const s of g.sh){c.fillStyle='#fff';c.fillRect(s.x-10,s.y-7,20,14);c.fillStyle='#333';c.fillRect(s.x+(s.vx>0?8:-14),s.y-5,6,7);}
+    A.block(g.dx-10,g.dy-8,20,'#8d6e3f',14);c.fillStyle='#5e4428';c.fillRect(g.dx+6,g.dy-12,6,8);A.txt('Ниво '+g.lv+'  В кошарата: '+g.sh.filter(s=>s.in).length+'/'+g.sh.length,10,346,13,'#123');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Запомни шарката</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔲 Запомни шарката</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 66. Запомни шарката
+A.add({id:'pattern',cat:'puzzle',icon:'🔲',name:'Запомни шарката',desc:'Повтори светналите блокове',help:'Блоковете светват за миг. После кликни същите. 3 грешки и край. Полето расте!',
+  start(g){g.lives=3;this.make(g);},
+  make(g){g.n=Math.min(7,3+Math.floor(g.score/3));const k=Math.min(g.n*g.n-2,3+g.score);g.on=new Set(A.shuffle([...Array(g.n*g.n).keys()]).slice(0,k));g.got=new Set();g.show=1.6;},
+  click(g,mx,my){if(g.show>0)return;const T=Math.floor(300/g.n),ox=(480-g.n*T)/2,x=Math.floor((mx-ox)/T),y=Math.floor((my-40)/T);if(x<0||y<0||x>=g.n||y>=g.n)return;const i=y*g.n+x;if(g.got.has(i))return;
+    if(g.on.has(i)){g.got.add(i);A.beep(700,.04);if(g.got.size===g.on.size){g.score++;A.tune([660,880]);g.next=.6;}}else{g.lives--;A.beep(120,.2,'sawtooth');g.show=1;if(!g.lives)A.over(g,'Изчерпа опитите');}},
+  update(g,dt){if(g.show>0)g.show-=dt;if(g.next>0){g.next-=dt;if(g.next<=0)this.make(g);}},
+  draw(g){A.bg('#14202c');const T=Math.floor(300/g.n),ox=(480-g.n*T)/2;for(let i=0;i<g.n*g.n;i++){const x=ox+(i%g.n)*T,y=40+Math.floor(i/g.n)*T,lit=(g.show>0&&g.on.has(i))||g.got.has(i);A.block(x+2,y+2,T-4,lit?C.gem:'#2b3646');}
+    A.txt(g.show>0?'Запомни!':'Кликни ги',240,20,16,'#ffd54f','center');A.txt('❤'.repeat(g.lives),10,20,14,'#f55');}
+});
+</script>
+</body>
+</html>

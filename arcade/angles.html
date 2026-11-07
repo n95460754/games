@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ъгли</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📐 Ъгли</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 76. Ъгли
+A.add(choiceGame({id:'angles',cat:'brain',icon:'📐',name:'Ъгли',desc:'Колко градуса е ъгълът?',help:'Познай колко градуса е ъгълът (клик или 1–4). 60 секунди.',
+  next(g){const a=A.pick([15,30,45,60,75,90,105,120,135,150,165,180]);g.ans=a+'°';g.a=a;g.rot=A.rnd(0,6.28);g.opts=opts4(g.ans,()=>A.pick([15,30,45,60,75,90,105,120,135,150,165,180])+'°');},
+  pic(g){const cx=240,cy=150,r=100;c.strokeStyle='#fff';c.lineWidth=5;c.beginPath();c.moveTo(cx+Math.cos(g.rot)*r,cy+Math.sin(g.rot)*r);c.lineTo(cx,cy);c.lineTo(cx+Math.cos(g.rot-g.a*Math.PI/180)*r,cy+Math.sin(g.rot-g.a*Math.PI/180)*r);c.stroke();
+    c.strokeStyle='#ffd54f';c.lineWidth=3;c.beginPath();c.arc(cx,cy,30,g.rot-g.a*Math.PI/180,g.rot);c.stroke();if(g.a===90){c.fillStyle='#ffd54f';}A.block(cx-4,cy-4,8,'#ffd54f');}}));
+</script>
+</body>
+</html>

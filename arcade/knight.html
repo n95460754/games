@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ходът на коня</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">♞ Ходът на коня</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 93. Ходът на коня
+A.add({id:'knight',cat:'board',icon:'♞',name:'Ходът на коня',desc:'Обиколи дъската с коня',help:'Кликни поле за старт, после скачай с коня (Г-образно). Всяко поле само веднъж! Колко полета ще обиколиш? H — подсказка.',
+  start(g){g.N=6;g.v=Array(36).fill(0);g.pos=-1;g.n=0;g.hint=-1;},
+  moves(g,i){const N=g.N,x=i%N,y=Math.floor(i/N),r=[];for(const[dx,dy]of[[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]){const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<N&&Y<N&&!g.v[Y*N+X])r.push(Y*N+X);}return r;},
+  go(g,i){g.n++;g.v[i]=g.n;g.pos=i;g.score=g.n;g.hint=-1;A.beep(400+g.n*10,.04);
+    if(g.n===36){g.score=50;A.tune([523,659,784,1046]);return A.over(g,'🏆 Обиколка на цялата дъска!');}if(!this.moves(g,i).length)A.over(g,'Няма ходове. Обходи '+g.n+' полета');},
+  key(g,k){if(k==='KeyH'&&g.pos>=0){const m=this.moves(g,g.pos);m.sort((a,b)=>this.moves(g,a).length-this.moves(g,b).length);g.hint=m[0];}},
+  click(g,mx,my){const T=50,x=Math.floor((mx-90)/T),y=Math.floor((my-30)/T);if(x<0||y<0||x>=6||y>=6)return;const i=y*6+x;if(g.pos<0||this.moves(g,g.pos).includes(i))this.go(g,i);},
+  draw(g){A.bg('#2a2018');const T=50,ms=g.pos>=0?this.moves(g,g.pos):[];for(let i=0;i<36;i++){const x=90+(i%6)*T,y=30+Math.floor(i/6)*T;c.fillStyle=(i%6+Math.floor(i/6))%2?'#7a5233':'#e0c068';c.fillRect(x,y,T,T);
+      if(g.v[i]){c.fillStyle='rgba(59,123,214,.6)';c.fillRect(x,y,T,T);A.txt(g.v[i],x+25,y+25,14,'#fff','center');}if(ms.includes(i)){c.strokeStyle=i===g.hint?'#ff1744':'#9ccc65';c.lineWidth=4;c.strokeRect(x+3,y+3,T-6,T-6);}}
+    if(g.pos>=0)A.txt('♞',90+(g.pos%6)*T+25,30+Math.floor(g.pos/6)*T+25,34,'#fff','center');A.txt(g.pos<0?'Избери начално поле':'Обходени: '+g.n+'/36',400,20,13,'#fff');}
+});
+</script>
+</body>
+</html>

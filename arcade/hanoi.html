@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ханойски кули</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🗼 Ханойски кули</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 64. Ханойски кули
+A.add({id:'hanoi',cat:'puzzle',icon:'🗼',name:'Ханойски кули',desc:'Премести кулата',help:'Кликни стълб, за да вдигнеш горния блок, после друг стълб, за да го пуснеш. Не слагай голям върху малък! Премести всичко на десния стълб.',
+  start(g){g.n=3;this.make(g);},
+  make(g){g.p=[[],[],[]];for(let i=g.n;i>=1;i--)g.p[0].push(i);g.hold=null;g.moves=0;},
+  click(g,mx){const i=Math.floor(mx/160);if(g.hold===null){if(g.p[i].length){g.hold=g.p[i].pop();g.from=i;A.beep(400,.03);}return;}
+    const top=g.p[i][g.p[i].length-1];if(top!==undefined&&top<g.hold){A.beep(120,.1);return;}g.p[i].push(g.hold);g.hold=null;if(i!==g.from)g.moves++;A.beep(600,.03);
+    if(g.p[2].length===g.n){const min=2**g.n-1;g.score+=g.moves===min?3:g.moves<min*1.5?2:1;A.tune([523,659,784]);if(g.n>=7)return A.over(g,'🏆 Всички кули!');g.n++;this.make(g);}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=3)this.click(g,(n-1)*160+80);},
+  draw(g){A.bg('#2a2018');const cols=[C.red,'#ff8c1a',C.gold,C.grass,C.water,C.purple,C.gem];for(let i=0;i<3;i++){c.fillStyle=C.wood;c.fillRect(i*160+76,120,8,200);c.fillRect(i*160+10,318,140,10);
+      g.p[i].forEach((d,k)=>{const w=20+d*16;A.block(i*160+80-w/2,300-k*20,w,cols[d-1],18);});A.txt(i+1,i*160+80,345,14,'#bbb','center');}
+    if(g.hold!==null){const w=20+g.hold*16;A.block(g.from*160+80-w/2,70,w,cols[g.hold-1],18);}
+    A.txt('Блокове: '+g.n+'   Ходове: '+g.moves+' (най-малко '+(2**g.n-1)+')',240,20,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

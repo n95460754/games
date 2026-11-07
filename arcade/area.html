@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лице и периметър</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⬛ Лице и периметър</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 77. Лице и периметър
+A.add(numGame({id:'area',cat:'brain',icon:'⬛',name:'Лице и периметър',desc:'Сметни фигурата от блокове',help:'Всеки блок е 1×1. Сметни лицето (брой квадратчета) или периметъра (обиколката). 60 секунди.',
+  next(g){g.w=A.ri(2,Math.min(12,4+g.score));g.h=A.ri(2,Math.min(8,3+Math.floor(g.score/2)));g.cut=g.score>5&&Math.random()<.5?[A.ri(1,g.w-1),A.ri(1,g.h-1)]:null;
+    const area=g.w*g.h-(g.cut?g.cut[0]*g.cut[1]:0),per=2*(g.w+g.h);if(Math.random()<.5){g.ans=area;g.q='Лице = ?';}else{g.ans=per;g.q='Периметър = ?';}},
+  pic(g){const T=Math.min(30,Math.floor(Math.min(400/g.w,190/g.h))),ox=240-g.w*T/2,oy=90;for(let y=0;y<g.h;y++)for(let x=0;x<g.w;x++){if(g.cut&&x>=g.w-g.cut[0]&&y<g.cut[1])continue;A.block(ox+x*T,oy+y*T,T,C.grass);}
+    A.txt(g.w,240,oy-14+(g.cut?0:0),14,'#ffd54f','center');A.txt(g.h,ox-14,oy+g.h*T/2,14,'#ffd54f','center');}}));
+</script>
+</body>
+</html>

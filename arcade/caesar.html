@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шифър</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔐 Шифър</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 70. Шифър
+A.add({id:'caesar',cat:'puzzle',icon:'🔐',name:'Шифър',desc:'Разгадай тайната дума',help:'Всяка буква е преместена напред в азбуката с толкова, колкото пише. Избери правилната дума (клик или 1–4). 90 секунди.',
+  AB:'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯ',
+  W:['КАМЪК','ДЪРВО','ЗЛАТО','ДИАМАНТ','ЖЕЛЯЗО','ВОДА','ЛАВА','ПЕЩЕРА','КИРКА','СЕКИРА','ЗАМЪК','МОСТ','РУДА','ВЪГЛЕН','ПЯСЪК','СТЪКЛО','ФЕРМА','ПШЕНИЦА','КРАВА','ОВЦА','ДРАКОН','КРИСТАЛ','ФАКЛА','СТЪЛБА','ВРАТА','ЛЕГЛО','САНДЪК','КЛЮЧ','КАРТА','КУЛА','ЛОДКА','МЕЧ','ЩИТ','ГРАДИНА','ТИКВА','ГОРА','СНЯГ','ОГЪН'],
+  start(g){g.time=90;this.make(g);},
+  make(g){g.k=A.ri(1,Math.min(6,2+g.score));g.word=A.pick(this.W);g.enc=[...g.word].map(ch=>this.AB[(this.AB.indexOf(ch)+g.k)%30]).join('');
+    const opts=new Set([g.word]);while(opts.size<4)opts.add(A.pick(this.W.filter(w=>w.length===g.word.length).concat(this.W)));g.opts=A.shuffle([...opts]);},
+  pick2(g,i){const ok=g.opts[i]===g.word;flash(g,ok);if(ok)g.score++;else g.score=Math.max(0,g.score-1);this.make(g);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.pick2(g,n-1);},
+  click(g,mx,my){if(my>200&&my<320){const i=(mx<240?0:1)+(my>260?2:0);this.pick2(g,i);}},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#1f1a12');A.txt('Шифър (+'+g.k+'):',240,40,16,'#ffd54f','center');A.txt(g.enc,240,100,40,'#9ccc65','center');
+    A.txt('А→'+this.AB[g.k%30]+'  Б→'+this.AB[(1+g.k)%30]+'  В→'+this.AB[(2+g.k)%30],240,150,13,'#998','center');
+    g.opts.forEach((o,i)=>{const x=(i%2)*240+20,y=200+(i>1?60:0);A.block(x,y,200,'#5a6b8c',50);A.txt((i+1)+'. '+o,x+100,y+25,18,'#fff','center');});
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);drawFlash(g);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Квадратчета</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">▫️ Квадратчета</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 92. Точки и квадратчета
+A.add({id:'dotsboxes',cat:'board',icon:'▫️',name:'Квадратчета',desc:'Затвори повече квадратчета',help:'Кликни между две точки, за да начертаеш линия. Който затвори квадратче, го взима и играе пак. Вземи повече от робота!',
+  start(g){g.h=Array(20).fill(0);g.v=Array(20).fill(0);g.box=Array(16).fill(0);g.turn=1;g.ai=0;},
+  sides(g,b){const x=b%4,y=Math.floor(b/4);return [g.h[y*4+x],g.h[(y+1)*4+x],g.v[y*5+x],g.v[y*5+x+1]];},
+  boxesOf(t,i){if(t==='h'){const x=i%4,y=Math.floor(i/4),r=[];if(y>0)r.push((y-1)*4+x);if(y<4)r.push(y*4+x);return r;}const x=i%5,y=Math.floor(i/5),r=[];if(x>0)r.push(y*4+x-1);if(x<4)r.push(y*4+x);return r;},
+  play(g,t,i,p){(t==='h'?g.h:g.v)[i]=p;let got=0;for(const b of this.boxesOf(t,i))if(!g.box[b]&&this.sides(g,b).every(Boolean)){g.box[b]=p;got++;}A.beep(p===1?600:300,.04);
+    if(g.box.every(Boolean)){const me=g.box.filter(v=>v===1).length;g.score=me;return A.over(g,me>8?'🏆 Победа '+me+':'+(16-me):me<8?'Загуба '+me+':'+(16-me):'Равенство 8:8');}
+    if(!got){g.turn=3-g.turn;if(g.turn===2)g.ai=.5;}else if(p===2)g.ai=.4;},
+  moves(g){const m=[];g.h.forEach((v,i)=>{if(!v)m.push(['h',i]);});g.v.forEach((v,i)=>{if(!v)m.push(['v',i]);});return m;},
+  update(g,dt){if(g.turn!==2)return;g.ai-=dt;if(g.ai>0)return;const ms=this.moves(g);
+    const cnt=(t,i)=>{(t==='h'?g.h:g.v)[i]=9;const r=this.boxesOf(t,i).map(b=>this.sides(g,b).filter(Boolean).length);(t==='h'?g.h:g.v)[i]=0;return r;};
+    let mv=ms.find(([t,i])=>cnt(t,i).some(n=>n===4));if(!mv){const safe=ms.filter(([t,i])=>cnt(t,i).every(n=>n<3));mv=A.pick(safe.length?safe:ms);}this.play(g,mv[0],mv[1],2);},
+  click(g,mx,my){if(g.turn!==1)return;const ox=140,oy=60,T=50;let best=null,bd=14;
+    for(let i=0;i<20;i++){const x=i%4,y=Math.floor(i/4),d=Math.hypot(mx-(ox+x*T+T/2),my-(oy+y*T));if(d<bd&&!g.h[i]){bd=d;best=['h',i];}}
+    for(let i=0;i<20;i++){const x=i%5,y=Math.floor(i/5),d=Math.hypot(mx-(ox+x*T),my-(oy+y*T+T/2));if(d<bd&&!g.v[i]){bd=d;best=['v',i];}}
+    if(best)this.play(g,best[0],best[1],1);},
+  draw(g){A.bg('#f0e6d2');const ox=140,oy=60,T=50;g.box.forEach((v,b)=>{if(v)A.block(ox+(b%4)*T+4,oy+Math.floor(b/4)*T+4,T-8,v===1?'#3b7bd6':C.red);});
+    c.lineWidth=6;g.h.forEach((v,i)=>{if(v){c.strokeStyle=v===1?'#1f5fa8':'#a8322a';c.beginPath();c.moveTo(ox+(i%4)*T,oy+Math.floor(i/4)*T);c.lineTo(ox+(i%4)*T+T,oy+Math.floor(i/4)*T);c.stroke();}});
+    g.v.forEach((v,i)=>{if(v){c.strokeStyle=v===1?'#1f5fa8':'#a8322a';c.beginPath();c.moveTo(ox+(i%5)*T,oy+Math.floor(i/5)*T);c.lineTo(ox+(i%5)*T,oy+Math.floor(i/5)*T+T);c.stroke();}});
+    c.fillStyle='#333';for(let y=0;y<5;y++)for(let x=0;x<5;x++)c.fillRect(ox+x*T-4,oy+y*T-4,8,8);
+    A.txt('🟦 '+g.box.filter(v=>v===1).length+'   🟥 '+g.box.filter(v=>v===2).length+'   '+(g.turn===1?'Твой ход':'Роботът...'),240,25,15,'#333','center');}
+});
+</script>
+</body>
+</html>

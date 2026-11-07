@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подскачащ блок</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⬆️ Подскачащ блок</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 57. Подскачащ блок
+A.add({id:'jumper',cat:'action',icon:'⬆️',name:'Подскачащ блок',desc:'Скачай нагоре по платформите',help:'← → — движи се. Блокът подскача сам. Качвай се колкото можеш по-високо! Минаваш през едната страна и излизаш от другата.',
+  start(g){g.x=230;g.y=300;g.v=-500;g.cam=0;g.pl=[{x:200,y:330,w:80}];for(let i=1;i<12;i++)g.pl.push({x:A.ri(0,400),y:330-i*55,w:70,mv:Math.random()<.2?A.rnd(40,80):0});g.top=330-11*55;},
+  update(g,dt){if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=260*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=260*dt;if(g.x<-20)g.x=480;if(g.x>480)g.x=-20;
+    const py=g.y;g.v+=900*dt;g.y+=g.v*dt;
+    for(const p of g.pl){if(p.mv){p.x+=p.mv*dt;if(p.x<0||p.x>410)p.mv*=-1;}if(g.v>0&&py+20<=p.y&&g.y+20>=p.y&&g.x+20>p.x&&g.x<p.x+p.w){g.y=p.y-20;g.v=-560;A.beep(400,.04);}}
+    const target=g.y-180;if(target<g.cam)g.cam=target;g.score=Math.max(g.score,Math.floor((300-g.y)/10));
+    while(g.top>g.cam-60){g.top-=A.ri(45,75);g.pl.push({x:A.ri(0,400),y:g.top,w:Math.max(45,70-g.score/20),mv:Math.random()<Math.min(.5,.1+g.score/600)?A.rnd(40,100):0});}
+    g.pl=g.pl.filter(p=>p.y<g.cam+400);if(g.y>g.cam+380)A.over(g,'Падна!');},
+  draw(g){A.bg('#a8d8f0');for(const p of g.pl)A.block(p.x,p.y-g.cam,p.w,p.mv?C.gold:C.grass,10);A.block(g.x,g.y-g.cam,20,C.red);c.fillStyle='#fff';c.fillRect(g.x+5,g.y-g.cam+5,4,4);c.fillRect(g.x+12,g.y-g.cam+5,4,4);}
+});
+</script>
+</body>
+</html>

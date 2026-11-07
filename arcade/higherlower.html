@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>По-голямо/по-малко</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🃏 По-голямо/по-малко</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 99. По-голямо или по-малко
+A.add({id:'higherlower',cat:'board',icon:'🃏',name:'По-голямо/по-малко',desc:'Познай следващата карта',help:'↑ — следващата карта ще е ПО-ГОЛЯМА, ↓ — ПО-МАЛКА. Равна се брои за вярна. Колко поред ще познаеш?',
+  start(g){g.deck=A.shuffle([...Array(52).keys()].map(i=>i%13+1));g.cur=g.deck.pop();g.prev=null;},
+  key(g,k){const up={ArrowUp:true,KeyW:true,ArrowDown:false,KeyS:false}[k];if(up===undefined)return;if(!g.deck.length){g.deck=A.shuffle([...Array(52).keys()].map(i=>i%13+1));}
+    const n=g.deck.pop();const ok=n===g.cur||(up?n>g.cur:n<g.cur);g.prev=g.cur;g.cur=n;if(ok){g.score++;A.beep(800,.05);}else A.over(g,'Беше '+this.name2(n));},
+  click(g,mx,my){this.key(g,my<180?'ArrowUp':'ArrowDown');},
+  name2(n){return({1:'А',11:'Вале',12:'Дама',13:'Поп'})[n]||n;},
+  card(x,y,n,small){const w=small?70:110,h=small?100:150;c.fillStyle='#fff';c.fillRect(x,y,w,h);c.strokeStyle='#333';c.lineWidth=3;c.strokeRect(x,y,w,h);A.txt(this.name2(n),x+w/2,y+h/2,small?24:40,'#c62828','center');},
+  draw(g){A.bg('#14301e');if(g.prev!==null)this.card(80,110,g.prev,true);this.card(190,90,g.cur);A.txt('↑ по-голяма',400,130,16,'#9ccc65','center');A.txt('↓ по-малка',400,230,16,'#ff8a65','center');A.txt('Карти в тестето: '+g.deck.length,240,330,12,'#bbb','center');}
+});
+</script>
+</body>
+</html>

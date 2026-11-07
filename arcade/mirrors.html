@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Огледала</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔦 Огледала</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 62. Огледала
+A.add({id:'mirrors',cat:'puzzle',icon:'🔦',name:'Огледала',desc:'Насочи лъча към кристала',help:'Кликни огледало, за да го обърнеш (/ или \\). Насочи лазера от лявата страна до кристала. 3 минути.',
+  start(g){g.time=180;this.make(g);},
+  make(g){const W=9,H=7;for(let tries=0;tries<300;tries++){g.mir={};const seen=new Set();let x=0,y=A.ri(1,H-2),d=[1,0];g.sy=y;let len=0,ok=false;
+      while(len<40){seen.add(x+','+y);len++;
+        if(len>=10+Math.min(8,g.score)&&Math.random()<.25&&!g.mir[x+','+y]){g.tx=x;g.ty=y;ok=true;break;}
+        if(len>1&&Math.random()<.35){const n=A.pick([[d[1],d[0]],[-d[1],-d[0]]]);const X=x+n[0],Y=y+n[1];if(X>=0&&Y>=0&&X<W&&Y<H&&!seen.has(X+','+Y)){g.mir[x+','+y]=(n[0]===-d[1]&&n[1]===-d[0])?'/':'\\';d=n;x=X;y=Y;continue;}}
+        const X=x+d[0],Y=y+d[1];if(X<0||Y<0||X>=W||Y>=H||seen.has(X+','+Y))break;x=X;y=Y;}
+      if(!ok||Object.keys(g.mir).length<2)continue;
+      for(let i=0;i<5;i++){const X=A.ri(0,W-1),Y=A.ri(0,H-1),K=X+','+Y;if(!seen.has(K))g.mir[K]=A.pick(['/','\\']);}
+      for(const K in g.mir)if(Math.random()<.6)g.mir[K]=g.mir[K]==='/'?'\\':'/';
+      g.W=W;g.H=H;if(!this.trace(g))return;}
+    },
+  trace(g){let x=0,y=g.sy,d=[1,0];g.path=[[x,y]];for(let s=0;s<200;s++){const m=g.mir[x+','+y];if(m==='/')d=[-d[1],-d[0]];else if(m==='\\')d=[d[1],d[0]];
+      if(x===g.tx&&y===g.ty)return true;x+=d[0];y+=d[1];if(x<0||y<0||x>=g.W||y>=g.H)return false;g.path.push([x,y]);}return false;},
+  click(g,mx,my){const T=48,x=Math.floor((mx-24)/T),y=Math.floor((my-12)/T),K=x+','+y;if(!g.mir[K])return;g.mir[K]=g.mir[K]==='/'?'\\':'/';A.beep(500,.03);
+    if(this.trace(g)){g.score++;A.tune([660,880,1100]);g.win=.8;}},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');if(g.win>0){g.win-=dt;if(g.win<=0)this.make(g);}},
+  draw(g){A.bg('#1b1b24');const T=48,ox=24,oy=12;this.trace(g);
+    for(let y=0;y<g.H;y++)for(let x=0;x<g.W;x++){c.fillStyle=(x+y)%2?'#26263a':'#2c2c44';c.fillRect(ox+x*T,oy+y*T,T,T);}
+    c.strokeStyle='#ff1744';c.lineWidth=4;c.beginPath();c.moveTo(ox-10,oy+g.sy*T+T/2);for(const[x,y]of g.path)c.lineTo(ox+x*T+T/2,oy+y*T+T/2);c.stroke();
+    for(const K in g.mir){const[x,y]=K.split(',').map(Number);c.strokeStyle='#cfe8ff';c.lineWidth=6;c.beginPath();if(g.mir[K]==='/'){c.moveTo(ox+x*T+6,oy+y*T+T-6);c.lineTo(ox+x*T+T-6,oy+y*T+6);}else{c.moveTo(ox+x*T+6,oy+y*T+6);c.lineTo(ox+x*T+T-6,oy+y*T+T-6);}c.stroke();}
+    c.fillStyle='#e040fb';c.beginPath();const tx=ox+g.tx*T+T/2,ty=oy+g.ty*T+T/2;c.moveTo(tx,ty-16);c.lineTo(tx+12,ty);c.lineTo(tx,ty+16);c.lineTo(tx-12,ty);c.fill();
+    A.block(2,oy+g.sy*T+12,20,'#555',24);A.txt('⏱ '+Math.ceil(g.time),470,350,13,'#fff','right');}
+});
+</script>
+</body>
+</html>

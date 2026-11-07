@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Строител 2D</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛏️ Строител 2D</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 96. Строител 2D
+A.add({id:'builder2d',cat:'board',icon:'⛏️',name:'Строител 2D',desc:'Строй в блоков свят отстрани',noScore:true,help:'Ляв клик — сложи блок, десен — счупи. 1–8 избира блок. Пясъкът пада, водата тече! N — нов свят.',
+  T:['','Трева','Пръст','Камък','Дърво','Листа','Пясък','Вода','Стъкло'],
+  col:[null,C.grass,C.dirt,C.stone,'#6b4a2a',C.leaf,C.sand,C.water,'rgba(200,240,255,.5)'],
+  start(g){this.gen(g);g.sel=1;g.acc=0;},
+  gen(g){const W=24,H=16;g.m=Array(W*H).fill(0);let h=8;for(let x=0;x<W;x++){h=A.clamp(h+A.ri(-1,1),5,11);for(let y=h;y<H;y++)g.m[y*W+x]=y===h?1:y<h+3?2:3;
+      if(x>1&&x<W-2&&Math.random()<.15&&h>6){for(let k=1;k<=3;k++)g.m[(h-k)*W+x]=4;for(let dx=-1;dx<=1;dx++)for(let dy=4;dy<=5;dy++)g.m[(h-dy)*W+x+dx]=5;}}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=8)g.sel=n;if(k==='KeyN')this.gen(g);},
+  click(g,mx,my,b){if(my>320){const i=Math.floor((mx-4)/59);if(i>=0&&i<8)g.sel=i+1;return;}const x=Math.floor(mx/20),y=Math.floor(my/20),i=y*24+x;if(b===2){if(g.m[i]){g.m[i]=0;A.beep(200,.03);}}else if(!g.m[i]){g.m[i]=g.sel;A.beep(400,.03);}},
+  update(g,dt){g.acc+=dt;if(g.acc<.1)return;g.acc=0;const W=24,H=16;
+    for(let y=H-2;y>=0;y--)for(let x=0;x<W;x++){const i=y*W+x,v=g.m[i];if(v===6){if(!g.m[i+W]||g.m[i+W]===7){g.m[i]=g.m[i+W];g.m[i+W]=6;}}
+      else if(v===7){if(!g.m[i+W])g.m[i+W]=7;else if(g.m[i+W]!==7){if(x>0&&!g.m[i-1])g.m[i-1]=7;if(x<W-1&&!g.m[i+1])g.m[i+1]=7;}}}},
+  draw(g){A.bg('#87ceeb');c.fillStyle='#fff8b0';c.fillRect(400,20,40,40);for(let i=0;i<g.m.length;i++)if(g.m[i])A.block((i%24)*20,Math.floor(i/24)*20,20,this.col[g.m[i]]);
+    c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,320,480,40);for(let k=1;k<=8;k++){A.block(4+(k-1)*59,324,20,this.col[k]);A.txt(k+' '+this.T[k],27+(k-1)*59,334,9,g.sel===k?'#ffd54f':'#fff');if(g.sel===k){c.strokeStyle='#ffd54f';c.strokeRect(2+(k-1)*59,322,57,26);}}
+    const x=Math.floor(A.mouse.x/20),y=Math.floor(A.mouse.y/20);if(A.mouse.y<320){c.strokeStyle='#fff';c.lineWidth=2;c.strokeRect(x*20,y*20,20,20);}}
+});
+</script>
+</body>
+</html>

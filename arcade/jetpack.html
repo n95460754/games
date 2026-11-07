@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Реактивна раница</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚀 Реактивна раница</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 51. Реактивна раница
+A.add({id:'jetpack',cat:'action',icon:'🚀',name:'Реактивна раница',desc:'Лети през пещерата',help:'Дръж Space / мишката — раницата те вдига. Пусни — падаш. Събирай монети, пази се от лазерите.',
+  start(g){g.y=180;g.v=0;g.obs=[];g.coins=[];g.sp=0;g.dist=0;},
+  update(g,dt){const up=A.keys.Space||A.mouse.down||A.keys.ArrowUp;g.v+=(up?-900:700)*dt;g.v=A.clamp(g.v,-300,350);g.y+=g.v*dt;
+    if(g.y<20){g.y=20;g.v=0;}if(g.y>330){g.y=330;g.v=0;}
+    const speed=180+g.t*5;g.dist+=speed*dt;g.score=Math.floor(g.dist/20)+(g.bonus||0);g.sp-=speed*dt;
+    if(g.sp<=0){g.sp=A.rnd(160,260);const vert=Math.random()<.5;const len=A.ri(80,160);g.obs.push({x:500,y:vert?A.ri(20,330-len):A.ri(40,320),w:vert?16:len,h:vert?len:16});
+      for(let i=0;i<5;i++)g.coins.push({x:560+i*24,y:A.ri(40,320)});}
+    for(const o of g.obs){o.x-=speed*dt;if(A.hit({x:84,y:g.y-14,w:20,h:28},o))return A.over(g,'Лазерът те удари!');}
+    for(const c2 of g.coins){c2.x-=speed*dt;if(!c2.got&&Math.abs(c2.x-94)<16&&Math.abs(c2.y-g.y)<20){c2.got=1;g.bonus=(g.bonus||0)+5;A.beep(1100,.04);}}
+    g.obs=g.obs.filter(o=>o.x>-200);g.coins=g.coins.filter(c2=>c2.x>-20&&!c2.got);},
+  draw(g){A.bg('#1a1424');for(let x=-(g.dist%40);x<480;x+=40){A.block(x,0,40,C.stone,16);A.block(x,344,40,C.stone,16);}
+    for(const o of g.obs){c.fillStyle='#ff1744';c.fillRect(o.x,o.y,o.w,o.h);c.fillStyle='#ffcdd2';c.fillRect(o.x+(o.w>o.h?0:6),o.y+(o.w>o.h?6:0),o.w>o.h?o.w:4,o.w>o.h?4:o.h);}
+    for(const c2 of g.coins)A.block(c2.x-7,c2.y-7,14,C.gold);
+    A.block(84,g.y-14,20,'#e67e22',28);c.fillStyle='#f1c27d';c.fillRect(88,g.y-14,12,10);c.fillStyle='#777';c.fillRect(76,g.y-8,8,18);
+    if(A.keys.Space||A.mouse.down||A.keys.ArrowUp){c.fillStyle='#ffb300';c.fillRect(77,g.y+10,6,6+Math.random()*10);}}
+});
+</script>
+</body>
+</html>
