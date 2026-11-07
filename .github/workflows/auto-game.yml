@@ -1,8 +1,8 @@
-name: Auto Game (every 10 min)
+name: Auto Game (every 5 min)
 
 on:
   schedule:
-    - cron: '*/10 * * * *'   # every 10 minutes (UTC); GitHub may delay runs a few minutes
+    - cron: '*/5 * * * *'   # every 5 minutes (UTC); GitHub may delay runs a few minutes
   workflow_dispatch:          # "Run workflow" button for a manual run
 
 permissions:
