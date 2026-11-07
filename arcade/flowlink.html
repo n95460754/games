@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Свържи двойките</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔗 Свържи двойките</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 230. Свържи двойките
+A.add({id:'flowlink',cat:'puzzle',icon:'🔗',name:'Свържи двойките',desc:'Свържи еднаквите руди и запълни мрежата',help:'Мишка/пръст: влачи от руда до същата руда. Клавиатура: стрелки — курсор, Space — хвани/пусни, после стрелки чертаят. Всички клетки трябва да са запълнени! R — изчисти нивото.',
+  COLS:['#e53935','#1e88e5','#43a047','#fdd835','#8e24aa','#fb8c00','#00bcd4','#ec407a','#eeeeee'],
+  start(g){g.time=120;g.lvl=0;this.level(g);},
+  level(g){g.lvl++;const N=g.lvl<3?5:g.lvl<6?6:7;g.N=N;g.cs=Math.floor(300/N);g.ox=Math.floor(240-N*g.cs/2);g.oy=Math.floor(195-N*g.cs/2);
+    // случаен път през всички клетки (backbite), после го режем на парчета
+    let p=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++)p.push(y%2?[N-1-x,y]:[x,y]);
+    const at=(q,c)=>q.findIndex(e=>e[0]===c[0]&&e[1]===c[1]);
+    for(let it=0;it<N*N*30;it++){if(Math.random()<.5)p.reverse();const e=p[p.length-1],d=A.pick([[1,0],[-1,0],[0,1],[0,-1]]),n=[e[0]+d[0],e[1]+d[1]];
+      if(n[0]<0||n[1]<0||n[0]>=N||n[1]>=N)continue;const i=at(p,n);if(i<0||i===p.length-2)continue;p=p.slice(0,i+1).concat(p.slice(i+1).reverse());}
+    const segs=[];let i=0;const maxL=N+2;
+    while(i<p.length){let L=A.ri(3,maxL);if(p.length-i-L<3)L=p.length-i;segs.push(p.slice(i,i+L));i+=L;}
+    while(segs.length>this.COLS.length){const a=segs.pop();segs[segs.length-1]=segs[segs.length-1].concat(a);}
+    g.ends=segs.map(s=>[s[0],s[s.length-1]]);g.paths=segs.map(()=>[]);g.hold=-1;g.cur=[0,0];g.done=0;g.msg='';},
+  same:(a,b)=>a[0]===b[0]&&a[1]===b[1],
+  endAt(g,c){for(let k=0;k<g.ends.length;k++)if(this.same(g.ends[k][0],c)||this.same(g.ends[k][1],c))return k;return -1;},
+  pathAt(g,c){for(let k=0;k<g.paths.length;k++){const i=g.paths[k].findIndex(e=>this.same(e,c));if(i>=0)return [k,i];}return null;},
+  complete(g,k){const p=g.paths[k];if(p.length<2)return false;const a=p[0],b=p[p.length-1],E=g.ends[k];return (this.same(a,E[0])&&this.same(b,E[1]))||(this.same(a,E[1])&&this.same(b,E[0]));},
+  grab(g,c){const k=this.endAt(g,c);if(k>=0){g.paths[k]=[c];g.hold=k;A.beep(500,.04);return;}
+    const q=this.pathAt(g,c);if(q){g.paths[q[0]]=g.paths[q[0]].slice(0,q[1]+1);g.hold=q[0];A.beep(500,.04);}else g.hold=-1;},
+  extend(g,n){const k=g.hold;if(k<0)return;const p=g.paths[k],h=p[p.length-1];
+    if(Math.abs(n[0]-h[0])+Math.abs(n[1]-h[1])!==1)return;
+    const own=p.findIndex(e=>this.same(e,n));if(own>=0){g.paths[k]=p.slice(0,own+1);return;}
+    if(this.complete(g,k))return;
+    const e=this.endAt(g,n);if(e>=0&&e!==k)return;
+    const q=this.pathAt(g,n);if(q)g.paths[q[0]]=g.paths[q[0]].slice(0,q[1]);
+    p.push(n);A.beep(300+p.length*20,.02);
+    if(this.complete(g,k)){g.hold=-1;A.beep(880,.08,'triangle');this.check(g);}},
+  check(g){let filled=0;g.paths.forEach(p=>filled+=p.length);const all=g.paths.every((p,k)=>this.complete(g,k));
+    if(all&&filled===g.N*g.N){g.score++;g.time+=25;g.done=1.2;A.tune([523,659,784,1047]);}
+    else g.msg=all?'Запълни всички клетки!':'';},
+  cell(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);return x>=0&&y>=0&&x<g.N&&y<g.N?[x,y]:null;},
+  click(g,mx,my){if(g.done>0)return;const c=this.cell(g,mx,my);if(c){g.cur=c;this.grab(g,c);}},
+  move(g,mx,my){if(!A.mouse.down||g.hold<0||g.done>0)return;const c=this.cell(g,mx,my);if(!c)return;
+    let guard=0;while(guard++<20&&g.hold>=0){const p=g.paths[g.hold],h=p[p.length-1];if(this.same(h,c))break;
+      const dx=c[0]-h[0],dy=c[1]-h[1],n=Math.abs(dx)>=Math.abs(dy)?[h[0]+Math.sign(dx),h[1]]:[h[0],h[1]+Math.sign(dy)];
+      const before=p.length,bk=g.hold;this.extend(g,n);if(g.hold===bk&&g.paths[bk].length===before)break;}
+    g.cur=c;},
+  release(g){if(g.hold>=0){g.hold=-1;this.check(g);}},
+  key(g,k){if(g.done>0)return;if(k==='KeyR'){g.paths=g.paths.map(()=>[]);g.hold=-1;g.msg='';return;}
+    if(k==='Space'||k==='Enter'){if(g.hold>=0)this.release(g);else this.grab(g,g.cur);return;}
+    const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];if(!d)return;
+    const n=[A.clamp(g.cur[0]+d[0],0,g.N-1),A.clamp(g.cur[1]+d[1],0,g.N-1)];
+    if(g.hold>=0){const hk=g.hold;this.extend(g,n);const p=g.paths[hk];g.cur=g.hold>=0?p[p.length-1]:n;}else g.cur=n;},
+  update(g,dt){if(g.done>0){g.done-=dt;if(g.done<=0)this.level(g);return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени: '+g.score);},
+  draw(g){A.bg('#1d2b3a');const s=g.cs,N=g.N;
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){A.block(g.ox+x*s,g.oy+y*s,s,(x+y)%2?'#4a4a4a':'#555',s);}
+    g.paths.forEach((p,k)=>{const col=this.COLS[k];const done=this.complete(g,k);
+      p.forEach(e=>{c.fillStyle=col;c.globalAlpha=done?.35:.18;c.fillRect(g.ox+e[0]*s,g.oy+e[1]*s,s,s);c.globalAlpha=1;});
+      c.strokeStyle=col;c.lineWidth=s*.34;c.lineCap='square';c.lineJoin='miter';c.beginPath();
+      p.forEach((e,i)=>{const X=g.ox+e[0]*s+s/2,Y=g.oy+e[1]*s+s/2;i?c.lineTo(X,Y):c.moveTo(X,Y);});if(p.length>1)c.stroke();});
+    g.ends.forEach((E,k)=>E.forEach(e=>{const m=s*.16;A.block(g.ox+e[0]*s+m,g.oy+e[1]*s+m,s-2*m,this.COLS[k],s-2*m);c.fillStyle='rgba(0,0,0,.35)';const q=(s-2*m)/5;c.fillRect(g.ox+e[0]*s+m+q,g.oy+e[1]*s+m+q,q,q);c.fillRect(g.ox+e[0]*s+m+3*q,g.oy+e[1]*s+m+2.5*q,q,q);}));
+    c.strokeStyle=g.hold>=0?'#fff':'#ffd54f';c.lineWidth=3;c.strokeRect(g.ox+g.cur[0]*s+2,g.oy+g.cur[1]*s+2,s-4,s-4);
+    let filled=0;g.paths.forEach(p=>filled+=p.length);
+    A.txt('⏱ '+Math.ceil(g.time),10,16,16,g.time<15?'#ff5252':'#fff');A.txt('Ниво '+g.lvl+' · '+N+'×'+N,240,16,16,'#ffd54f','center');A.txt(Math.floor(filled/(N*N)*100)+'%',470,16,16,'#b9c6d6','right');
+    if(g.msg&&g.done<=0)A.txt(g.msg,240,352,14,'#ff8a65','center');
+    if(g.done>0)A.txt('✔ Браво! +25 сек',240,190,30,'#69f0ae','center');}
+});
+</script>
+</body>
+</html>

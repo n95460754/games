@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Завземи земя</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚜 Завземи земя</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 229. Завземи земя
+A.add({id:'territory',cat:'action',icon:'🚜',name:'Завземи земя',desc:'Огради поле и пази следата си от слузите',help:'Стрелки / WASD или клик/докосване в посоката — движение. Излез от тревата, начертай следа и се върни, за да заградиш земя. Слузите не бива да докоснат следата! 75% = ново ниво.',
+  start(g){g.lives=3;g.lvl=0;this.level(g);},
+  level(g){g.lvl++;g.m=[];for(let y=0;y<17;y++){g.m.push([]);for(let x=0;x<24;x++)g.m[y].push(x===0||y===0||x===23||y===16?1:0);}
+    g.p={x:0,y:0};g.d=[0,0];g.nd=[0,0];g.step=0;g.trail=[];g.inv=1;
+    g.en=[];for(let i=0;i<1+g.lvl;i++){const a=A.rnd(0,6.28),s=3+g.lvl*.4;g.en.push({x:A.rnd(6,18),y:A.rnd(5,12),vx:Math.cos(a)>0?s:-s,vy:Math.sin(a)>0?s*.8:-s*.8});}
+    g.msg='Ниво '+g.lvl;g.msgT=1.5;this.pct(g);},
+  pct(g){let n=0;for(let y=1;y<16;y++)for(let x=1;x<23;x++)if(g.m[y][x]===1)n++;g.pc=Math.floor(n/(22*15)*100);},
+  dir(g,m){if(!m)return;if(g.trail.length&&m[0]===-g.d[0]&&m[1]===-g.d[1])return;g.nd=m;},
+  key(g,k){this.dir(g,{ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k]);},
+  click(g,mx,my){const dx=mx-(g.p.x*20+10),dy=my-(g.p.y*20+30);if(Math.abs(dx)<6&&Math.abs(dy)<6)return;
+    this.dir(g,Math.abs(dx)>Math.abs(dy)?[Math.sign(dx),0]:[0,Math.sign(dy)]);},
+  die(g){g.lives--;A.beep(120,.3,'sawtooth',.06);g.trail.forEach(t=>g.m[t[1]][t[0]]=0);
+    if(g.trail.length){g.p={x:g.trail[0][2],y:g.trail[0][3]};}g.trail=[];g.d=[0,0];g.nd=[0,0];g.inv=1.2;
+    if(g.lives<=0)A.over(g,'Слузите те хванаха! Ниво '+g.lvl);},
+  fill(g){// всичко празно, до което не стига слуз, става трева
+    const seen=g.m.map(r=>r.map(()=>0)),st=[];g.en.forEach(e=>{const x=Math.floor(e.x),y=Math.floor(e.y);if(g.m[y][x]===0&&!seen[y][x]){seen[y][x]=1;st.push([x,y]);}});
+    while(st.length){const [x,y]=st.pop();[[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b])=>{const nx=x+a,ny=y+b;if(g.m[ny]&&g.m[ny][nx]===0&&!seen[ny][nx]){seen[ny][nx]=1;st.push([nx,ny]);}});}
+    let got=0;for(let y=0;y<17;y++)for(let x=0;x<24;x++){const v=g.m[y][x];if(v===2||(v===0&&!seen[y][x])){g.m[y][x]=1;got++;}}
+    g.score+=got;g.trail=[];A.tune([523,659,784]);this.pct(g);
+    if(g.pc>=75){g.score+=100*g.lvl;A.tune([784,988,1175,1568]);this.level(g);}},
+  update(g,dt){if(g.msgT>0)g.msgT-=dt;if(g.inv>0)g.inv-=dt;
+    g.en.forEach(e=>{const nx=e.x+e.vx*dt;if(g.m[Math.floor(e.y)][Math.floor(nx)]===1)e.vx=-e.vx;else e.x=nx;
+      const ny=e.y+e.vy*dt;if(g.m[Math.floor(ny)][Math.floor(e.x)]===1)e.vy=-e.vy;else e.y=ny;
+      if(g.inv<=0&&g.m[Math.floor(e.y)][Math.floor(e.x)]===2)this.die(g);
+      if(A.state==='play'&&g.inv<=0&&g.trail.length&&Math.hypot(e.x-g.p.x-.5,e.y-g.p.y-.5)<.9)this.die(g);});
+    if(A.state!=='play')return;
+    g.step+=dt;if(g.step<.085)return;g.step=0;
+    if(g.m[g.p.y][g.p.x]===1||g.trail.length)g.d=g.nd;
+    if(!g.d[0]&&!g.d[1])return;
+    const nx=g.p.x+g.d[0],ny=g.p.y+g.d[1];
+    if(nx<0||ny<0||nx>23||ny>16){g.d=[0,0];g.nd=[0,0];return;}
+    const v=g.m[ny][nx];
+    if(v===2)return this.die(g);
+    if(v===0){if(!g.trail.length)g.trail.push([nx,ny,g.p.x,g.p.y]);else g.trail.push([nx,ny]);g.m[ny][nx]=2;A.beep(300+g.trail.length*4,.02);}
+    g.p.x=nx;g.p.y=ny;
+    if(v===1&&g.trail.length){this.fill(g);g.d=[0,0];g.nd=[0,0];}
+  },
+  draw(g){A.bg('#2a1d12');
+    for(let y=0;y<17;y++)for(let x=0;x<24;x++){const v=g.m[y][x],px=x*20,py=y*20+20;
+      if(v===1){A.block(px,py,20,(x+y)%2?C.grass:'#62ad40');c.fillStyle='#7a5233';c.fillRect(px,py+15,20,5);}
+      else if(v===2){A.block(px,py,20,C.gold);}
+      else{c.fillStyle=(x+y)%2?'#3a2a1c':'#33251a';c.fillRect(px,py,20,20);}}
+    g.en.forEach(e=>{const px=e.x*20-9,py=e.y*20+20-9,b=Math.sin(g.t*10+e.x)*1.5;A.block(px,py+b,18,'#5cd65c',18-b);c.fillStyle='#000';c.fillRect(px+4,py+5+b,3,3);c.fillRect(px+11,py+5+b,3,3);c.fillRect(px+6,py+12,6,2);});
+    if(!(g.inv>0&&Math.floor(g.t*10)%2)){const px=g.p.x*20,py=g.p.y*20+20;A.block(px+1,py+1,18,'#c62828');A.block(px+4,py-3,12,'#1565c0',8);c.fillStyle='#111';c.fillRect(px+2,py+15,5,5);c.fillRect(px+13,py+15,5,5);}
+    c.fillStyle='#000';c.fillRect(0,0,480,20);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),6,10,14,'#ff5252');A.txt('Ниво '+g.lvl,150,10,14,'#fff');A.txt('Земя: '+g.pc+'% / 75%',470,10,14,g.pc>=60?'#69f0ae':'#ffd54f','right');
+    c.fillStyle='#69f0ae';c.fillRect(250,7,Math.min(1,g.pc/75)*80,6);c.strokeStyle='#fff';c.lineWidth=1;c.strokeRect(250,7,80,6);
+    if(g.msgT>0)A.txt(g.msg,240,190,32,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

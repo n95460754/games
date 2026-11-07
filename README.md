@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**238 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 228 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**241 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 231 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-238-5aa13a)
+![Games](https://img.shields.io/badge/games-241-5aa13a)
 
 ## 🚀 Play
 
@@ -60,9 +60,9 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 228 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 231 mini-games (`arcade/*.html`)
 
-**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 228, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
+**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 231, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
 ### ⚡ Action
 | # | Game | File | |
@@ -373,8 +373,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 226 | 🪓 Timber! (Дървосекач) | [`timber.html`](arcade/timber.html) | Chop the tree, dodge the branches |
 | 227 | 🔢 2048 Ore Merge (Сливане 2048) | [`merge2048.html`](arcade/merge2048.html) | Merge matching ores up to 2048 |
 | 228 | 🧮 Remember the Number (Запомни числото) | [`digitspan.html`](arcade/digitspan.html) | Memorize ever longer numbers |
+| 229 | 🚜 Land Grab (Завземи земя) | [`territory.html`](arcade/territory.html) | Fence off land, keep slimes off your trail |
+| 230 | 🔗 Link the Pairs (Свържи двойките) | [`flowlink.html`](arcade/flowlink.html) | Connect matching ores and fill the grid |
+| 231 | 📍 Coordinates (Координати) | [`coords.html`](arcade/coords.html) | Find points on the (x, y) grid |
 
-All 228 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 231 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -402,8 +405,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–227
-│   └── digitspan.html      # 228. Remember the Number
+│   ├── ...                 # games 51–230
+│   └── coords.html         # 231. Coordinates
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

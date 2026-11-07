@@ -211,7 +211,10 @@ const GAMES=[
   {"id": "blockpet", "cat": "board", "icon": "🐾", "name": "Блоков любимец", "desc": "Гледай своето блоково животинче", "unit": " с", "dec": 0, "low": false, "noScore": false},
   {"id": "timber", "cat": "action", "icon": "🪓", "name": "Дървосекач", "desc": "Сечи дървото, пази се от клоните", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "merge2048", "cat": "puzzle", "icon": "🔢", "name": "Сливане 2048", "desc": "Сливай еднаквите руди до 2048", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "digitspan", "cat": "brain", "icon": "🧮", "name": "Запомни числото", "desc": "Запомни все по-дълги числа", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "digitspan", "cat": "brain", "icon": "🧮", "name": "Запомни числото", "desc": "Запомни все по-дълги числа", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "territory", "cat": "action", "icon": "🚜", "name": "Завземи земя", "desc": "Огради поле и пази следата си от слузите", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "flowlink", "cat": "puzzle", "icon": "🔗", "name": "Свържи двойките", "desc": "Свържи еднаквите руди и запълни мрежата", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "coords", "cat": "brain", "icon": "📍", "name": "Координати", "desc": "Намери точката по нейните координати (x, y)", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Координати</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📍 Координати</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 231. Координати
+A.add({id:'coords',cat:'brain',icon:'📍',name:'Координати',desc:'Намери точката по нейните координати (x, y)',help:'Намери точката (x, y): x е надясно/наляво, y е нагоре/надолу. Клик върху пресечката или стрелки + Space. Когато е показан диамант — избери верните координати с 1-4 или клик. 60 секунди.',
+  repeat:true,
+  start(g){g.time=60;g.cur=[0,0];this.next(g);},
+  P(x,y){return [240+x*30,165-y*30];},
+  next(g){g.tx=A.ri(-6,6);g.ty=A.ri(-4,4);g.mode=g.score>=3&&Math.random()<.45?'pick':'find';
+    if(g.mode==='pick'){const a='('+g.tx+', '+g.ty+')';g.ans=a;const o=new Set([a]);if(g.tx!==g.ty)o.add('('+g.ty+', '+g.tx+')');
+      let n=0;while(o.size<4&&n++<100){const x=A.clamp(g.tx+A.pick([-1,1,0,-g.tx*2]),-6,6),y=A.clamp(g.ty+A.pick([-1,1,0,-g.ty*2]),-4,4);o.add('('+x+', '+y+')');}
+      g.opts=A.shuffle([...o]);}
+    g.show=null;},
+  answer(g,ok,why){flash(g,ok);if(ok)g.score++;else g.why=why;g.show={x:g.tx,y:g.ty,t:.9};this.next(g);},
+  pick2(g,i){if(g.opts[i]===undefined)return;this.answer(g,g.opts[i]===g.ans,'Беше '+g.ans);},
+  tryAt(g,x,y){g.cur=[x,y];this.answer(g,x===g.tx&&y===g.ty,'Беше ('+g.tx+', '+g.ty+'), ти: ('+x+', '+y+')');},
+  key(g,k,ch){if(g.mode==='pick'){const n=+ch;if(n>=1&&n<=4)this.pick2(g,n-1);return;}
+    const d={ArrowUp:[0,1],KeyW:[0,1],ArrowDown:[0,-1],KeyS:[0,-1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(d){g.cur=[A.clamp(g.cur[0]+d[0],-6,6),A.clamp(g.cur[1]+d[1],-4,4)];A.beep(500,.02);}
+    else if(k==='Space'||k==='Enter'||k==='NumpadEnter')this.tryAt(g,g.cur[0],g.cur[1]);},
+  click(g,mx,my){if(g.mode==='pick'){if(my>298){const i=Math.floor(mx/120);if(i>=0&&i<4)this.pick2(g,i);}return;}
+    const x=Math.round((mx-240)/30),y=Math.round((165-my)/30);if(x>=-6&&x<=6&&y>=-4&&y<=4)this.tryAt(g,x,y);},
+  update(g,dt){tick(g,dt);if(g.show){g.show.t-=dt;if(g.show.t<=0)g.show=null;}},
+  draw(g){A.bg('#1d2b3a');
+    for(let x=-6;x<=6;x++)for(let y=-4;y<=4;y++){const [px,py]=this.P(x,y);A.block(px-14,py-14,28,(x+y)%2?'#3f8a24':'#4a9a2c');}
+    c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;for(let x=-6;x<=6;x++){const [px]=this.P(x,0);c.beginPath();c.moveTo(px,40);c.lineTo(px,290);c.stroke();}
+    for(let y=-4;y<=4;y++){const [,py]=this.P(0,y);c.beginPath();c.moveTo(48,py);c.lineTo(432,py);c.stroke();}
+    c.fillStyle='#fff';c.fillRect(46,163,388,4);c.fillRect(238,40,4,252);
+    for(let x=-6;x<=6;x++)if(x)A.txt(''+x,240+x*30,176,10,'#ffd54f','center');
+    for(let y=-4;y<=4;y++)if(y)A.txt(''+y,232,165-y*30,10,'#ffd54f','right');
+    A.txt('x',444,165,14,'#fff','center');A.txt('y',254,42,14,'#fff','center');A.txt('0',232,176,10,'#fff','right');
+    if(g.show){const [px,py]=this.P(g.show.x,g.show.y);c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(px-13,py-13,26,26);}
+    if(g.mode==='find'){const [px,py]=this.P(g.cur[0],g.cur[1]);A.block(px-8,py-8,16,C.ruby);c.strokeStyle='#fff';c.lineWidth=2;c.strokeRect(px-12,py-12,24,24);
+      A.txt('Намери: ('+g.tx+', '+g.ty+')',240,20,20,'#fff','center');A.txt('курсор ('+g.cur[0]+', '+g.cur[1]+')',240,318,14,'#b9c6d6','center');}
+    else{const [px,py]=this.P(g.tx,g.ty);c.save();c.translate(px,py);c.rotate(Math.PI/4);A.block(-8,-8,16,C.gem);c.restore();
+      A.txt('Какви са координатите на 💎?',240,20,18,'#fff','center');
+      g.opts.forEach((v,i)=>{A.block(i*120+8,300,104,'#5a6b8c',52);A.txt((i+1)+') '+v,i*120+60,326,15,'#fff','center');});}
+    A.txt('⏱ '+Math.ceil(g.time),10,20,14);if(g.why&&g.mode==='find')A.txt(g.why,470,345,11,'#bbb','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>
