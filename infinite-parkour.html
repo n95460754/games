@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<title>Блоков Паркур ∞</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#fff;user-select:none}
+  canvas{display:block}
+  #hud{position:fixed;top:12px;left:14px;font-size:18px;text-shadow:2px 2px 0 #000;line-height:1.55;pointer-events:none}
+  #hud b{color:#ffe14d;font-size:22px}
+  #zone{position:fixed;top:12px;right:14px;font-size:16px;text-shadow:2px 2px 0 #000;pointer-events:none;text-align:right}
+  #cross{position:fixed;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;pointer-events:none}
+  #cross:before,#cross:after{content:'';position:absolute;background:#fff;box-shadow:0 0 2px #000}
+  #cross:before{left:8px;top:0;width:2px;height:18px}
+  #cross:after{top:8px;left:0;height:2px;width:18px}
+  #toast{position:fixed;top:22%;width:100%;text-align:center;font-size:40px;font-weight:bold;text-shadow:3px 3px 0 #000;opacity:0;transition:opacity .4s;pointer-events:none}
+  #flash{position:fixed;inset:0;background:#c00;opacity:0;pointer-events:none;transition:opacity .35s}
+  #menu{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.55);cursor:pointer;text-align:center}
+  #menu h1{font-size:58px;margin:0 0 6px;color:#7CFC00;text-shadow:4px 4px 0 #1a4d00;letter-spacing:2px}
+  #menu .sub{font-size:18px;color:#ffe14d}
+  .btn{margin-top:26px;padding:14px 46px;background:#6b6b6b;border:3px solid #000;box-shadow:inset -3px -3px 0 #3c3c3c,inset 3px 3px 0 #a8a8a8;font-size:24px}
+  .btn:hover{background:#7f8fd0}
+  .keys{margin-top:22px;font-size:16px;line-height:2;color:#ddd}
+  kbd{background:#333;border:2px solid #888;padding:1px 7px;border-radius:3px;color:#fff}
+</style>
+</head>
+<body>
+<div id="hud"></div>
+<div id="zone"></div>
+<div id="cross"></div>
+<div id="toast"></div>
+<div id="flash"></div>
+<div id="menu">
+  <h1>БЛОКОВ ПАРКУР ∞</h1>
+  <div class="sub" id="menuSub">Безкрайна пътека. Колко далеч ще стигнеш?</div>
+  <div class="btn" id="menuBtn">▶ ИГРАЙ</div>
+  <div class="keys">
+    <kbd>W A S D</kbd> движение &nbsp; <kbd>Мишка</kbd> оглеждане &nbsp; <kbd>Space</kbd> скок<br>
+    <kbd>Shift</kbd> спринт &nbsp; <kbd>F</kbd> авто-спринт вкл/изкл<br>
+    <kbd>C</kbd> към чекпойнта &nbsp; <kbd>R</kbd> нова игра &nbsp; <kbd>Esc</kbd> пауза<br>
+    🟨 злато = чекпойнт &nbsp; 🟩 слуз = супер скок &nbsp; 🧊 лед = хлъзга!
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ================== ЗАРЕЖДАНЕ НА СЦЕНАТА ================== */
+const renderer = new THREE.WebGLRenderer({ antialias: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87ceeb);
+scene.fog = new THREE.Fog(0x87ceeb, 25, 95);
+const targetSky = new THREE.Color(0x87ceeb);
+
+const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.05, 300);
+camera.rotation.order = 'YXZ';
+scene.add(camera);
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x556644, 1.0);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -35, right: 35, top: 35, bottom: -35, near: 1, far: 150 });
+sun.shadow.bias = -0.0005;
+scene.add(sun, sun.target);
+
+/* ================== ПИКСЕЛНИ ТЕКСТУРИ (генерирани) ================== */
+const rnd = (a, b) => a + Math.random() * (b - a);
+const pick = a => a[Math.random() * a.length | 0];
+function makeTex(draw) {
+  const c = document.createElement('canvas'); c.width = c.height = 16;
+  const g = c.getContext('2d'); draw(g);
+  const t = new THREE.CanvasTexture(c);
+  t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function px(g, x, y, [r, gg, b], v = 0) {
+  const k = 1 + (Math.random() - .5) * v;
+  g.fillStyle = `rgb(${r * k | 0},${gg * k | 0},${b * k | 0})`; g.fillRect(x, y, 1, 1);
+}
+function noise(g, col, v, y0 = 0, y1 = 16) { for (let y = y0; y < y1; y++) for (let x = 0; x < 16; x++) px(g, x, y, col, v); }
+function dots(g, col, n, v = .1) { for (let i = 0; i < n; i++) px(g, rnd(0, 16) | 0, rnd(0, 16) | 0, col, v); }
+function border(g, col, v = .1) { for (let i = 0; i < 16; i++) { px(g, i, 0, col, v); px(g, i, 15, col, v); px(g, 0, i, col, v); px(g, 15, i, col, v); } }
+
+const GREEN = [95, 159, 53], DIRT = [134, 96, 67];
+const T = {
+  grassTop: makeTex(g => { noise(g, GREEN, .35); dots(g, [70, 125, 40], 14); }),
+  dirt: makeTex(g => { noise(g, DIRT, .35); dots(g, [100, 70, 50], 10); }),
+  grassSide: makeTex(g => { noise(g, DIRT, .35); for (let x = 0; x < 16; x++) { const h = 3 + (Math.random() * 2.5 | 0); for (let y = 0; y < h; y++) px(g, x, y, GREEN, .3); } }),
+  stone: makeTex(g => { noise(g, [125, 125, 125], .22); dots(g, [92, 92, 92], 18); }),
+  planks: makeTex(g => {
+    noise(g, [162, 130, 78], .15);
+    for (let y = 3; y < 16; y += 4) for (let x = 0; x < 16; x++) px(g, x, y, [105, 80, 48], .1);
+    for (let r = 0; r < 4; r++) { const sx = r % 2 ? 4 : 11; for (let y = r * 4; y < r * 4 + 3; y++) px(g, sx, y, [105, 80, 48], .1); }
+  }),
+  sand: makeTex(g => { noise(g, [219, 207, 163], .12); dots(g, [190, 178, 135], 12); }),
+  sandstone: makeTex(g => { noise(g, [216, 202, 150], .08); for (const y of [0, 5, 6, 11, 15]) for (let x = 0; x < 16; x++) px(g, x, y, [185, 170, 120], .08); }),
+  snowTop: makeTex(g => { noise(g, [240, 250, 255], .06); }),
+  snowSide: makeTex(g => { noise(g, DIRT, .35); for (let x = 0; x < 16; x++) { const h = 3 + (Math.random() * 3 | 0); for (let y = 0; y < h; y++) px(g, x, y, [240, 250, 255], .05); } }),
+  ice: makeTex(g => { noise(g, [150, 190, 250], .12); for (let i = 0; i < 3; i++) { const o = rnd(-8, 12) | 0; for (let k = 0; k < 6; k++) px(g, o + k, 10 - k + i * 2, [235, 245, 255], .05); } }),
+  netherrack: makeTex(g => { noise(g, [111, 54, 52], .5); dots(g, [70, 25, 25], 20); }),
+  glowstone: makeTex(g => { noise(g, [190, 135, 60], .5); dots(g, [255, 235, 160], 30, .05); }),
+  endstone: makeTex(g => { noise(g, [219, 222, 158], .12); dots(g, [185, 188, 125], 16); }),
+  purpur: makeTex(g => { noise(g, [169, 125, 169], .12); for (let i = 0; i < 16; i++) { px(g, i, 0, [125, 88, 125]); px(g, i, 8, [125, 88, 125]); px(g, 0, i, [125, 88, 125]); px(g, 8, i, [125, 88, 125]); } }),
+  obsidian: makeTex(g => { noise(g, [22, 18, 34], .5); dots(g, [70, 45, 105], 14); }),
+  gold: makeTex(g => { noise(g, [250, 210, 60], .12); border(g, [200, 150, 25]); for (let i = 2; i < 7; i++) px(g, i, 2, [255, 250, 200]); for (let i = 2; i < 5; i++) px(g, 2, i, [255, 250, 200]); }),
+  slime: makeTex(g => { noise(g, [115, 195, 90], .12); border(g, [70, 140, 55]); for (let i = 4; i < 12; i++) { px(g, i, 4, [85, 160, 65]); px(g, i, 11, [85, 160, 65]); px(g, 4, i, [85, 160, 65]); px(g, 11, i, [85, 160, 65]); } }),
+  quartz: makeTex(g => { noise(g, [236, 230, 222], .05); border(g, [200, 194, 186]); }),
+};
+
+const lam = (map, o = {}) => new THREE.MeshLambertMaterial({ map, ...o });
+const sides = (side, top, bottom) => [lam(side), lam(side), lam(top), lam(bottom), lam(side), lam(side)];
+const M = {
+  grass: sides(T.grassSide, T.grassTop, T.dirt),
+  snow: sides(T.snowSide, T.snowTop, T.dirt),
+  stone: lam(T.stone), planks: lam(T.planks), sand: lam(T.sand), sandstone: lam(T.sandstone),
+  ice: lam(T.ice, { transparent: true, opacity: .82 }),
+  netherrack: lam(T.netherrack),
+  glowstone: lam(T.glowstone, { emissive: 0xffcc66, emissiveMap: T.glowstone, emissiveIntensity: .7 }),
+  endstone: lam(T.endstone), purpur: lam(T.purpur), obsidian: lam(T.obsidian),
+  gold: lam(T.gold, { emissive: 0x664400, emissiveIntensity: .45 }),
+  slime: lam(T.slime, { transparent: true, opacity: .9 }),
+  quartz: lam(T.quartz),
+};
+
+/* ================== СВЯТ ОТ БЛОКОВЕ ================== */
+const geo = new THREE.BoxGeometry(1, 1, 1);
+const world = new Map();   // "x|y|z" -> блок
+const byIdx = new Map();   // индекс на скока -> ключове
+const K = (x, y, z) => x + '|' + y + '|' + z;
+
+function place(x, y, z, type, idx) {
+  const k = K(x, y, z); if (world.has(k)) return;
+  const m = new THREE.Mesh(geo, M[type]);
+  m.position.set(x + .5, y + .5, z + .5);
+  m.castShadow = m.receiveShadow = true;
+  scene.add(m);
+  world.set(k, { type, idx, mesh: m, x, y, z });
+  if (!byIdx.has(idx)) byIdx.set(idx, []);
+  byIdx.get(idx).push(k);
+}
+function removeIdx(idx) {
+  for (const k of byIdx.get(idx) || []) { const b = world.get(k); if (b) { scene.remove(b.mesh); world.delete(k); } }
+  byIdx.delete(idx);
+}
+
+const ZONES = [
+  { name: '🌳 Зелените равнини', sky: 0x87ceeb, sun: 1.6, types: ['grass', 'grass', 'planks', 'stone'] },
+  { name: '🏜️ Златната пустиня', sky: 0xf0c890, sun: 1.8, types: ['sand', 'sand', 'sandstone'] },
+  { name: '❄️ Ледените върхове', sky: 0xd8ecff, sun: 1.5, types: ['snow', 'snow', 'ice'] },
+  { name: '🔥 Огнената бездна', sky: 0x4a1010, sun: 0.9, types: ['netherrack', 'netherrack', 'glowstone'] },
+  { name: '🌌 Краят на света', sky: 0x140d26, sun: 0.8, types: ['endstone', 'purpur', 'obsidian'] },
+];
+const ZONE_LEN = 60, CP_EVERY = 25;
+const zoneOf = i => Math.floor(i / ZONE_LEN) % ZONES.length;
+
+let path = [];
+function genNext() {
+  const p = path[path.length - 1], i = p.idx + 1;
+  const d = Math.min(1, i / 250);          // трудност 0 → 1
+  const zone = ZONES[zoneOf(i)];
+  let dy, dz, dx = 0, type = pick(zone.types);
+
+  if (p.type === 'slime') {               // след слуз: високо горе
+    dy = 2; dz = 2 + (Math.random() < .5 ? 1 : 0); dx = pick([-1, 0, 1]);
+  } else {
+    const r = Math.random();
+    dy = r < .28 ? -1 : r < .68 ? 0 : 1;
+    if (p.y > 25 && dy === 1) dy = 0;
+    if (p.y < -15 && dy === -1) dy = 0;
+    const R = () => Math.random() < d ? 1 : 0;
+    const maxD = dy === 1 ? 3 + R() : dy === 0 ? 3 + R() + (Math.random() < d * .6 ? 1 : 0) : 4 + R();
+    dz = 2 + (Math.random() * (maxD - 1) | 0);
+    if (dz < 4) dx = pick([-1, 0, 0, 1]);
+    if (Math.abs(p.x + dx) > 10) dx = -Math.sign(p.x);
+    if (i > 15 && i % CP_EVERY !== 0 && Math.random() < .07) type = 'slime';
+  }
+  const nx = p.x + dx, ny = p.y + dy, nz = p.z + dz;
+
+  if (i % CP_EVERY === 0) {               // чекпойнт платформа 3x3
+    const base = zone.types[0];
+    for (let ox = -1; ox <= 1; ox++) for (let oz = 0; oz <= 2; oz++)
+      place(nx + ox, ny, nz + oz, ox === 0 && oz === 1 ? 'gold' : base, i);
+    path.push({ x: nx, y: ny, z: nz + 1, type: 'gold', idx: i });
+  } else {
+    place(nx, ny, nz, type, i);
+    path.push({ x: nx, y: ny, z: nz, type, idx: i });
+  }
+}
+
+/* ================== ИГРАЧ ================== */
+const HW = 0.3, H = 1.8, EYE = 1.62, GRAV = 32, JUMP = 9, SLIME_JUMP = 14;
+const pos = new THREE.Vector3(), vel = new THREE.Vector3();
+let yaw = Math.PI, pitch = -0.2, onGround = false, wasGround = false;
+let lastGroundT = -1, jumpBufT = -1, now = 0, walkPhase = 0;
+let best = 0, deaths = 0, runTime = 0, lastLandY = 1, curZone = 0, autoSprint = false;
+let cp = { x: 0, y: 0, z: 0, idx: 0 };
+let record = 0;
+try { record = +localStorage.getItem('blokParkourBest') || 0; } catch (e) {}
+
+function collides(x, y, z) {
+  const x0 = Math.floor(x - HW), x1 = Math.floor(x + HW - 1e-6);
+  const y0 = Math.floor(y), y1 = Math.floor(y + H - 1e-6);
+  const z0 = Math.floor(z - HW), z1 = Math.floor(z + HW - 1e-6);
+  for (let a = x0; a <= x1; a++) for (let b = y0; b <= y1; b++) for (let c = z0; c <= z1; c++)
+    if (world.has(K(a, b, c))) return true;
+  return false;
+}
+function moveAxis(ax, dist) {
+  if (!dist) return;
+  pos[ax] += dist;
+  if (!collides(pos.x, pos.y, pos.z)) return;
+  if (ax === 'y') {
+    if (dist < 0) { pos.y = Math.floor(pos.y) + 1; onGround = true; }
+    else pos.y = Math.floor(pos.y + H) - H - 1e-5;
+  } else {
+    if (dist > 0) pos[ax] = Math.floor(pos[ax] + HW) - HW - 1e-5;
+    else pos[ax] = Math.floor(pos[ax] - HW) + 1 + HW + 1e-5;
+  }
+  vel[ax] = 0;
+}
+function blockUnder() {
+  const y = Math.floor(pos.y - 0.05); let res = null;
+  for (const [ox, oz] of [[0, 0], [-HW, -HW], [HW, -HW], [-HW, HW], [HW, HW]]) {
+    const b = world.get(K(Math.floor(pos.x + ox * .99), y, Math.floor(pos.z + oz * .99)));
+    if (b && (!res || b.idx > res.idx)) res = b;
+  }
+  return res;
+}
+
+/* ================== ЗВУК ================== */
+let AC = null;
+function beep(f, dur = .1, type = 'square', vol = .06, f2 = null, delay = 0) {
+  if (!AC) return;
+  const t = AC.currentTime + delay, o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t);
+  if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g).connect(AC.destination); o.start(t); o.stop(t + dur);
+}
+const sfx = {
+  jump: () => beep(300, .12, 'square', .04, 520),
+  land: () => beep(120, .08, 'triangle', .1, 60),
+  boing: () => beep(200, .35, 'sine', .12, 900),
+  point: () => beep(880, .06, 'square', .03),
+  cp: () => { beep(523, .12, 'square', .05); beep(659, .12, 'square', .05, null, .1); beep(784, .25, 'square', .05, null, .2); },
+  die: () => beep(400, .5, 'sawtooth', .07, 60),
+};
+
+/* ================== ИНТЕРФЕЙС ================== */
+const $ = id => document.getElementById(id);
+let toastTimer;
+function toast(msg, ms = 1600) {
+  const t = $('toast'); t.textContent = msg; t.style.opacity = 1;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.opacity = 0, ms);
+}
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+/* ================== ДОПЪЛНИТЕЛНИ ЕФЕКТИ ================== */
+// Сянка под играча – виждаш точно къде ще кацнеш
+const blob = new THREE.Mesh(new THREE.CircleGeometry(.32, 20), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: .45, depthWrite: false }));
+blob.rotation.x = -Math.PI / 2; scene.add(blob);
+// Рамка около следващия блок
+const outline = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.03, 1.03, 1.03)), new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true }));
+scene.add(outline);
+// Облаци
+const clouds = new THREE.Group(); scene.add(clouds);
+const cloudMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .85, fog: false });
+for (let i = 0; i < 28; i++) {
+  const c = new THREE.Mesh(new THREE.BoxGeometry(rnd(6, 16), 1.6, rnd(4, 10)), cloudMat);
+  c.position.set(rnd(-120, 120), rnd(0, 6), rnd(-120, 120)); clouds.add(c);
+}
+
+/* ================== ИГРОВА ЛОГИКА ================== */
+function newGame() {
+  for (const idx of [...byIdx.keys()]) removeIdx(idx);
+  path = [];
+  for (let x = -2; x <= 2; x++) for (let z = -2; z <= 2; z++) place(x, 0, z, 'quartz', 0);
+  path.push({ x: 0, y: 0, z: 2, type: 'quartz', idx: 0 });
+  for (let i = 0; i < 40; i++) genNext();
+  best = 0; deaths = 0; runTime = 0; curZone = 0;
+  cp = { x: 0, y: 0, z: 0, idx: 0 };
+  targetSky.set(ZONES[0].sky);
+  respawn();
+}
+function respawn() {
+  pos.set(cp.x + .5, cp.y + 1, cp.z + .5); vel.set(0, 0, 0);
+  yaw = Math.PI; pitch = -0.2; lastLandY = cp.y + 1;
+}
+function die() {
+  deaths++; sfx.die();
+  $('flash').style.opacity = .5; setTimeout(() => $('flash').style.opacity = 0, 120);
+  respawn();
+}
+function progress(b) {
+  if (b.idx > best) {
+    best = b.idx; sfx.point();
+    if (best > record) { record = best; try { localStorage.setItem('blokParkourBest', record); } catch (e) {} }
+    while (path.length - 1 < best + 40) genNext();
+    const keep = Math.min(cp.idx, best - 20);
+    for (const idx of [...byIdx.keys()]) if (idx < keep) removeIdx(idx);
+    const z = zoneOf(best);
+    if (z !== curZone) { curZone = z; targetSky.set(ZONES[z].sky); toast(ZONES[z].name, 2500); }
+  }
+  if (b.type === 'gold' && b.idx > cp.idx) {
+    cp = { x: b.x, y: b.y, z: b.z, idx: b.idx };
+    sfx.cp(); toast('✔ Чекпойнт!');
+  }
+}
+
+/* ================== УПРАВЛЕНИЕ ================== */
+const keys = new Set();
+let locked = false, started = false;
+addEventListener('keydown', e => {
+  keys.add(e.code);
+  if (e.code === 'Space') { e.preventDefault(); jumpBufT = now; }
+  if (!locked) return;
+  if (e.code === 'KeyR') { newGame(); toast('Нова игра!'); }
+  if (e.code === 'KeyC') { respawn(); }
+  if (e.code === 'KeyF') { autoSprint = !autoSprint; toast(autoSprint ? '⚡ Авто-спринт: ВКЛ' : 'Авто-спринт: ИЗКЛ', 1000); }
+});
+addEventListener('keyup', e => keys.delete(e.code));
+addEventListener('blur', () => keys.clear());
+addEventListener('mousemove', e => {
+  if (!locked) return;
+  yaw -= e.movementX * 0.0022;
+  pitch = Math.max(-1.55, Math.min(1.55, pitch - e.movementY * 0.0022));
+});
+$('menu').addEventListener('click', () => {
+  if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  renderer.domElement.requestPointerLock();
+});
+document.addEventListener('pointerlockchange', () => {
+  locked = document.pointerLockElement === renderer.domElement;
+  $('menu').style.display = locked ? 'none' : 'flex';
+  if (locked) started = true;
+  else if (started) { $('menuSub').textContent = '⏸ Пауза'; $('menuBtn').textContent = '▶ ПРОДЪЛЖИ'; keys.clear(); }
+});
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ================== ФИЗИКА ================== */
+const fwd = new THREE.Vector3(), right = new THREE.Vector3(), wish = new THREE.Vector3();
+let sprinting = false;
+function update(dt) {
+  runTime += dt;
+  fwd.set(-Math.sin(yaw), 0, -Math.cos(yaw));
+  right.set(Math.cos(yaw), 0, -Math.sin(yaw));
+  const f = (keys.has('KeyW') || keys.has('ArrowUp') ? 1 : 0) - (keys.has('KeyS') || keys.has('ArrowDown') ? 1 : 0);
+  const s = (keys.has('KeyD') || keys.has('ArrowRight') ? 1 : 0) - (keys.has('KeyA') || keys.has('ArrowLeft') ? 1 : 0);
+  wish.set(0, 0, 0).addScaledVector(fwd, f).addScaledVector(right, s);
+  if (wish.lengthSq() > 0) wish.normalize();
+  sprinting = f > 0 && (autoSprint || keys.has('ShiftLeft') || keys.has('ShiftRight'));
+  const speed = sprinting ? 7 : 4.5;
+
+  const under = onGround ? blockUnder() : null;
+  const k = onGround ? (under && under.type === 'ice' ? 1.4 : 14) : 2.5;
+  const a = Math.min(1, k * dt);
+  vel.x += (wish.x * speed - vel.x) * a;
+  vel.z += (wish.z * speed - vel.z) * a;
+
+  // скок (с буфер и "coyote time")
+  const wantJump = keys.has('Space') || now - jumpBufT < 0.12;
+  if (wantJump && (onGround || now - lastGroundT < 0.1) && vel.y <= 0.01) {
+    vel.y = JUMP; onGround = false; lastGroundT = -1; jumpBufT = -1; sfx.jump();
+  }
+
+  vel.y = Math.max(vel.y - GRAV * dt, -60);
+  const preVy = vel.y;
+  const steps = Math.max(1, Math.ceil(Math.max(Math.abs(vel.x), Math.abs(vel.y), Math.abs(vel.z)) * dt / 0.3));
+  const h = dt / steps;
+  onGround = false;
+  for (let i = 0; i < steps; i++) { moveAxis('x', vel.x * h); moveAxis('z', vel.z * h); moveAxis('y', vel.y * h); }
+
+  if (onGround) {
+    lastGroundT = now;
+    const b = blockUnder();
+    if (b) {
+      if (!wasGround) {
+        lastLandY = b.y + 1;
+        if (b.type === 'slime') { vel.y = SLIME_JUMP; onGround = false; sfx.boing(); }
+        else if (preVy < -6) sfx.land();
+      }
+      progress(b);
+    }
+    if (onGround && Math.hypot(vel.x, vel.z) > .5) walkPhase += dt * (sprinting ? 13 : 10);
+  }
+  wasGround = onGround;
+  if (pos.y < lastLandY - 14) die();
+}
+
+/* ================== ЦИКЪЛ ================== */
+let last = performance.now();
+newGame();
+function loop(t) {
+  requestAnimationFrame(loop);
+  const dt = Math.min(.05, (t - last) / 1000); last = t; now = t / 1000;
+  if (locked) update(dt);
+
+  // камера
+  const bob = onGround ? Math.sin(walkPhase) * .045 * Math.min(1, Math.hypot(vel.x, vel.z) / 4) : 0;
+  camera.position.set(pos.x, pos.y + EYE + bob, pos.z);
+  camera.rotation.set(pitch, yaw, 0);
+  const targetFov = sprinting && Math.hypot(vel.x, vel.z) > 5 ? 86 : 75;
+  camera.fov += (targetFov - camera.fov) * Math.min(1, dt * 8); camera.updateProjectionMatrix();
+
+  // небе и светлина според зоната
+  scene.background.lerp(targetSky, Math.min(1, dt * .8));
+  scene.fog.color.copy(scene.background);
+  sun.intensity += (ZONES[curZone].sun - sun.intensity) * Math.min(1, dt);
+  sun.position.set(pos.x + 20, pos.y + 40, pos.z + 10); sun.target.position.copy(pos);
+
+  // сянка на играча
+  blob.visible = false;
+  const bx = Math.floor(pos.x), bz = Math.floor(pos.z);
+  for (let y = Math.floor(pos.y - .01); y > pos.y - 30; y--) {
+    if (world.has(K(bx, y, bz))) {
+      const dist = pos.y - (y + 1);
+      blob.position.set(pos.x, y + 1.01, pos.z);
+      blob.scale.setScalar(Math.max(.4, 1 - dist * .05));
+      blob.material.opacity = Math.max(.15, .45 - dist * .02);
+      blob.visible = true; break;
+    }
+  }
+
+  // рамка около следващия блок
+  const nxt = path[best + 1];
+  if (nxt) { outline.position.set(nxt.x + .5, nxt.y + .5, nxt.z + .5); outline.material.opacity = .45 + Math.sin(now * 5) * .35; }
+
+  // облаци
+  clouds.visible = curZone <= 2;
+  clouds.position.y = pos.y + 32;
+  for (const c of clouds.children) {
+    c.position.x += dt * 1.5;
+    if (c.position.x - pos.x > 120) c.position.x -= 240;
+    if (c.position.x - pos.x < -120) c.position.x += 240;
+    if (c.position.z - pos.z > 120) c.position.z -= 240;
+    if (c.position.z - pos.z < -120) c.position.z += 240;
+  }
+
+  $('hud').innerHTML =
+    `🧱 Блокове: <b>${best}</b><br>🏆 Рекорд: ${record}<br>💀 Падания: ${deaths}<br>⏱ ${fmt(runTime)}` +
+    (autoSprint ? '<br>⚡ Авто-спринт' : '');
+  $('zone').innerHTML = `${ZONES[curZone].name}<br>Следващ чекпойнт: ${Math.ceil((best + 1) / CP_EVERY) * CP_EVERY}`;
+
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
