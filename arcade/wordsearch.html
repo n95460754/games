@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Търсачка на думи</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔎 Търсачка на думи</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 110. Търсачка на думи
+A.add({id:'wordsearch',cat:'puzzle',icon:'🔎',name:'Търсачка на думи',desc:'Намери скритите думи',help:'Натисни буквата в началото на дума и влачи до края (хоризонтално, вертикално или по диагонал). Намери всички думи от списъка! 4 минути.',
+  W:['КАМЪК','ДЪРВО','ЗЛАТО','РУДА','ЛАВА','ВОДА','КИРКА','ЗАМЪК','ФАКЛА','ПЕЩЕРА','МОСТ','КЛЮЧ','ДРАКОН','ПЯСЪК','ЛОДКА','СНЯГ','ОГЪН','КУЛА','ФЕРМА','МЕЧ'],
+  start(g){g.time=240;this.make(g);},
+  make(g){const N=10;g.N=N;g.grid=Array(N*N).fill('');g.words=[];g.found=[];const dirs=[[1,0],[0,1],[1,1],[1,-1]];
+    for(const w of A.shuffle(this.W.slice())){if(g.words.length>=6)break;for(let t=0;t<60;t++){const[dx,dy]=A.pick(dirs),x=A.ri(0,N-1),y=A.ri(0,N-1),ex=x+dx*(w.length-1),ey=y+dy*(w.length-1);if(ex<0||ey<0||ex>=N||ey>=N)continue;
+        let ok=true;for(let k=0;k<w.length;k++){const ch=g.grid[(y+dy*k)*N+x+dx*k];if(ch&&ch!==w[k]){ok=false;break;}}if(!ok)continue;
+        for(let k=0;k<w.length;k++)g.grid[(y+dy*k)*N+x+dx*k]=w[k];g.words.push({w,x,y,dx,dy});break;}}
+    const AB='АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЮЯ';for(let i=0;i<N*N;i++)if(!g.grid[i])g.grid[i]=A.pick([...AB]);g.drag=null;},
+  cell(g,mx,my){return[Math.floor((mx-20)/30),Math.floor((my-30)/30)];},
+  click(g,mx,my){g.drag={a:this.cell(g,mx,my),b:this.cell(g,mx,my)};},
+  move(g,mx,my){if(g.drag)g.drag.b=this.cell(g,mx,my);},
+  release(g){if(!g.drag)return;const[a,b]=[g.drag.a,g.drag.b];g.drag=null;
+    for(const w of g.words){if(g.found.includes(w))continue;const ex=w.x+w.dx*(w.w.length-1),ey=w.y+w.dy*(w.w.length-1);
+      if((a[0]===w.x&&a[1]===w.y&&b[0]===ex&&b[1]===ey)||(b[0]===w.x&&b[1]===w.y&&a[0]===ex&&a[1]===ey)){g.found.push(w);g.score++;A.beep(900,.08);
+        if(g.found.length===g.words.length){g.score+=3;A.tune([523,659,784]);this.make(g);}return;}}A.beep(150,.04);},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#f0e6d2');for(const w of g.found){c.strokeStyle='rgba(90,161,58,.5)';c.lineWidth=22;c.lineCap='round';c.beginPath();c.moveTo(35+w.x*30,45+w.y*30);c.lineTo(35+(w.x+w.dx*(w.w.length-1))*30,45+(w.y+w.dy*(w.w.length-1))*30);c.stroke();}
+    if(g.drag){c.strokeStyle='rgba(59,123,214,.45)';c.lineWidth=22;c.beginPath();c.moveTo(35+g.drag.a[0]*30,45+g.drag.a[1]*30);c.lineTo(35+g.drag.b[0]*30,45+g.drag.b[1]*30);c.stroke();}c.lineCap='butt';
+    g.grid.forEach((ch,i)=>{c.font='bold 18px Consolas,monospace';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#333';c.fillText(ch,35+(i%g.N)*30,45+Math.floor(i/g.N)*30);});
+    g.words.forEach((w,i)=>{const f=g.found.includes(w);A.txt((f?'✔ ':'')+w.w,340,50+i*28,16,f?'#5aa13a':'#333');});A.txt('⏱ '+Math.ceil(g.time),340,330,14,'#333');}
+});
+</script>
+</body>
+</html>

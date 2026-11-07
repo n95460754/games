@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Парашутист</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪂 Парашутист</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 116. Парашутист
+A.add({id:'parachute',cat:'skill',icon:'🪂',name:'Парашутист',desc:'Кацни точно в целта',help:'← → — управлявай парашута. Вятърът те бута! Кацни колкото може по-близо до центъра на целта. 8 скока.',
+  start(g){g.jumps=8;this.jump(g);},
+  jump(g){g.x=A.rnd(60,420);g.y=20;g.vx=0;g.wind=A.rnd(-50,50);g.tx=A.ri(60,420);g.landed=0;},
+  update(g,dt){if(g.landed>0){g.landed-=dt;if(g.landed<=0){if(!g.jumps)return A.over(g,'Край на скоковете');this.jump(g);}return;}
+    let f=0;if(A.keys.ArrowLeft||A.keys.KeyA)f=-1;if(A.keys.ArrowRight||A.keys.KeyD)f=1;g.vx+=(f*160+g.wind-g.vx*.8)*dt;g.x+=g.vx*dt;g.x=A.clamp(g.x,10,470);g.y+=55*dt;g.wind+=A.rnd(-20,20)*dt;
+    if(g.y>=320){const d=Math.abs(g.x-g.tx),pts=d<6?10:d<15?6:d<30?3:d<50?1:0;g.score+=pts;g.jumps--;g.last=pts?'+'+pts:'Пропусна!';A.beep(pts?600+pts*50:150,.1);g.landed=1;}},
+  draw(g){A.bg('#87ceeb');for(let x=0;x<480;x+=20)A.block(x,330,20,C.grass,30);[[50,'#fff'],[30,C.red],[15,'#fff'],[6,C.red]].forEach(([r,col])=>{c.fillStyle=col;c.fillRect(g.tx-r,326,r*2,6);});
+    c.fillStyle='#e53935';c.beginPath();c.arc(g.x,g.y-30,22,Math.PI,0);c.fill();c.strokeStyle='#555';c.lineWidth=1;c.beginPath();c.moveTo(g.x-22,g.y-30);c.lineTo(g.x,g.y);c.lineTo(g.x+22,g.y-30);c.stroke();A.block(g.x-5,g.y-4,10,'#3b7bd6',14);
+    A.txt('Вятър '+(g.wind>0?'→':'←')+' '+Math.abs(Math.round(g.wind)),470,16,13,'#123','right');A.txt('Скокове: '+g.jumps,10,16,13,'#123');if(g.landed>0)A.txt(g.last,240,180,30,'#123','center');}
+});
+</script>
+</body>
+</html>

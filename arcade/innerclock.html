@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вътрешен часовник</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⏱️ Вътрешен часовник</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 119. Вътрешен часовник
+A.add({id:'innerclock',cat:'skill',icon:'⏱️',name:'Вътрешен часовник',desc:'Спри точно на 10 секунди',low:true,unit:' мс',help:'Space / клик пуска хронометъра. След 3 секунди цифрите се скриват! Натисни пак точно на 10.00 секунди. Резултатът е средната грешка от 3 опита.',
+  start(g){g.tries=[];g.st='ready';},
+  key(g,k){if(k==='Space')this.tap(g);},click(g){this.tap(g);},
+  tap(g){if(g.st==='ready'){g.st='run';g.t0=performance.now();A.beep(600,.05);}else if(g.st==='run'){const e=performance.now()-g.t0;g.last=e;g.tries.push(Math.abs(e-10000));g.st='show';g.sh=1.8;A.beep(900,.08);
+      if(g.tries.length>=3){g.score=g.tries.reduce((a,b)=>a+b)/3;return A.over(g,'Средна грешка: '+Math.round(g.score)+' мс');}}},
+  update(g,dt){if(g.st==='show'){g.sh-=dt;if(g.sh<=0)g.st='ready';}},
+  draw(g){A.bg('#14101c');const e=g.st==='run'?(performance.now()-g.t0)/1000:g.st==='show'?g.last/1000:0;
+    A.block(140,100,200,'#2b3646',100);A.txt(g.st==='run'&&e>3?'?.??':e.toFixed(2),240,150,48,g.st==='show'?(Math.abs(g.last-10000)<200?'#9ccc65':'#ffb74d'):'#fff','center');
+    A.txt(g.st==='ready'?'Space — старт':g.st==='run'?'Натисни на 10.00!':'Грешка: '+Math.round(Math.abs(g.last-10000))+' мс',240,250,16,'#ffd54f','center');A.txt('Опит '+Math.min(3,g.tries.length+1)+'/3',240,300,14,'#bbb','center');}
+});
+</script>
+</body>
+</html>

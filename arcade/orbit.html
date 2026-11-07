@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Орбитална защита</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪐 Орбитална защита</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 102. Орбитална защита
+A.add({id:'orbit',cat:'action',icon:'🪐',name:'Орбитална защита',desc:'Пази планетата от метеорите',help:'← → — върти оръдието около планетата. Space — стреляй. Метеорите идват от всички страни! Планетата има 5 щита.',
+  start(g){g.a=0;g.sh=[];g.m=[];g.sp=0;g.hp=5;g.cd=0;},
+  key(g,k){if(k==='Space'&&g.cd<=0){g.sh.push({x:240+Math.cos(g.a)*40,y:180+Math.sin(g.a)*40,vx:Math.cos(g.a)*380,vy:Math.sin(g.a)*380});g.cd=.18;A.beep(800,.03);}},
+  repeat:true,
+  update(g,dt){g.cd-=dt;if(A.keys.ArrowLeft||A.keys.KeyA)g.a-=3.5*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.a+=3.5*dt;
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.4,1.4-g.t*.02);const a=A.rnd(0,6.28);g.m.push({x:240+Math.cos(a)*300,y:180+Math.sin(a)*300,a,v:40+g.t*1.2,s:A.ri(10,18)});}
+    for(const s of g.sh){s.x+=s.vx*dt;s.y+=s.vy*dt;}
+    for(const m of g.m){m.x-=Math.cos(m.a)*m.v*dt;m.y-=Math.sin(m.a)*m.v*dt;for(const s of g.sh)if(!m.dead&&Math.abs(s.x-m.x)<m.s&&Math.abs(s.y-m.y)<m.s){m.dead=1;s.x=-999;g.score++;A.beep(200,.06);}
+      if(!m.dead&&Math.hypot(m.x-240,m.y-180)<34){m.dead=1;g.hp--;A.beep(90,.3,'sawtooth');if(!g.hp)return A.over(g,'Планетата е разрушена!');}}
+    g.m=g.m.filter(m=>!m.dead);g.sh=g.sh.filter(s=>s.x>-20&&s.x<500&&s.y>-20&&s.y<380);},
+  draw(g){A.bg('#05060f');c.fillStyle='#fff';for(let i=0;i<40;i++)c.fillRect((i*97)%480,(i*53)%360,1,1);
+    c.fillStyle='#2e7d32';c.beginPath();c.arc(240,180,30,0,7);c.fill();c.fillStyle=C.water;c.fillRect(222,170,14,10);c.fillRect(244,186,12,8);
+    c.strokeStyle='rgba(100,200,255,'+(.15*g.hp)+')';c.lineWidth=3;c.beginPath();c.arc(240,180,36,0,7);c.stroke();
+    c.save();c.translate(240,180);c.rotate(g.a);c.fillStyle='#ccc';c.fillRect(30,-5,18,10);c.restore();
+    for(const m of g.m)A.block(m.x-m.s/2,m.y-m.s/2,m.s,C.stone);c.fillStyle='#ff0';for(const s of g.sh)c.fillRect(s.x-2,s.y-2,4,4);A.txt('Щитове: '+'🛡'.repeat(g.hp),10,14,13);}
+});
+</script>
+</body>
+</html>

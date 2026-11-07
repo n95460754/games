@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Баскетбол</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏀 Баскетбол</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 118. Баскетбол
+A.add({id:'basket',cat:'skill',icon:'🏀',name:'Баскетбол',desc:'Вкарай топката в коша',help:'Натисни и дръпни мишката назад от топката, после пусни — хвърляш по дъга. Кошът се мести с всяко попадение! 60 секунди.',
+  start(g){g.time=60;g.hx=360;g.hy=130;this.reset(g);},
+  reset(g){g.bx=90;g.by=280;g.vx=0;g.vy=0;g.fly=false;g.passed=false;},
+  click(g,mx,my){if(!g.fly&&Math.hypot(mx-g.bx,my-g.by)<60)g.aim={x:mx,y:my};},
+  release(g,mx,my){if(!g.aim)return;const dx=g.aim.x-mx,dy=g.aim.y-my;g.aim=null;if(Math.hypot(dx,dy)<10)return;g.vx=dx*4;g.vy=dy*4;g.fly=true;A.beep(300,.05);},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');if(!g.fly)return;g.vy+=600*dt;const py=g.by;g.bx+=g.vx*dt;g.by+=g.vy*dt;
+    if(Math.abs(g.bx-(g.hx-26))<6&&Math.abs(g.by-g.hy)<8){g.vx*=-.6;}if(Math.abs(g.bx-(g.hx+26))<6&&Math.abs(g.by-g.hy)<8){g.vx*=-.6;}
+    if(g.vy>0&&py<g.hy&&g.by>=g.hy&&g.bx>g.hx-22&&g.bx<g.hx+22&&!g.passed){g.passed=true;g.score+=g.hx>380||g.hy<100?3:2;A.tune([660,880]);}
+    if(g.by>360||g.bx>500||g.bx<-20){if(g.passed){g.hx=A.ri(260,430);g.hy=A.ri(90,200);}this.reset(g);}},
+  draw(g){A.bg('#2b3a55');for(let x=0;x<480;x+=20)A.block(x,320,20,C.wood,40);c.fillStyle='#eee';c.fillRect(g.hx+26,g.hy-60,8,70);c.fillRect(g.hx+10,g.hy-50,26,40);
+    c.strokeStyle='#ff5722';c.lineWidth=4;c.beginPath();c.moveTo(g.hx-26,g.hy);c.lineTo(g.hx+26,g.hy);c.stroke();c.strokeStyle='#ddd';c.lineWidth=1;for(let i=-20;i<=20;i+=10){c.beginPath();c.moveTo(g.hx+i,g.hy);c.lineTo(g.hx+i*.6,g.hy+24);c.stroke();}
+    c.fillStyle='#ff7043';c.beginPath();c.arc(g.bx,g.by,11,0,7);c.fill();c.strokeStyle='#5a2a10';c.lineWidth=1.5;c.beginPath();c.moveTo(g.bx-11,g.by);c.lineTo(g.bx+11,g.by);c.stroke();
+    if(g.aim){const dx=g.aim.x-A.mouse.x,dy=g.aim.y-A.mouse.y;c.fillStyle='rgba(255,255,255,.7)';let x=g.bx,y=g.by,vx=dx*4,vy=dy*4;for(let i=0;i<12;i++){x+=vx*.06;y+=vy*.06;vy+=600*.06;c.fillRect(x-2,y-2,4,4);}}
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

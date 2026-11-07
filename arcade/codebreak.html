@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Разбий кода</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔐 Разбий кода</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 123. Разбий кода
+A.add({id:'codebreak',cat:'board',icon:'🔐',name:'Разбий кода',desc:'Познай тайната комбинация',help:'Роботът е скрил код от 4 цвята (може да се повтарят). Клик на цветовете отдолу (или 1–6) пълни реда, Backspace трие, Enter проверява. ● = правилен цвят на правилно място, ○ = правилен цвят на друго място. 10 опита.',
+  cols:[C.red,C.gold,C.grass,C.water,C.purple,'#ff8c1a'],
+  start(g){g.code=[0,1,2,3].map(()=>A.ri(0,5));g.rows=[];g.cur=[];},
+  add(g,i){if(g.cur.length<4){g.cur.push(i);A.beep(400+i*60,.03);}},
+  submit(g){if(g.cur.length<4)return;let b=0,w=0;const c1=[],c2=[];for(let i=0;i<4;i++){if(g.cur[i]===g.code[i])b++;else{c1.push(g.cur[i]);c2.push(g.code[i]);}}
+    for(const v of c1){const k=c2.indexOf(v);if(k>=0){w++;c2.splice(k,1);}}g.rows.push({g:g.cur,b,w});g.cur=[];A.beep(b===4?900:300,.08);
+    if(b===4){g.score=11-g.rows.length;return A.over(g,'🏆 Разби кода с '+g.rows.length+' опита!');}if(g.rows.length>=10){g.reveal=true;A.over(g,'Кодът остана тайна');}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=6)this.add(g,n-1);if(k==='Backspace')g.cur.pop();if(k==='Enter'||k==='Space')this.submit(g);},
+  click(g,mx,my){if(my>320){const i=Math.floor((mx-60)/45);if(i>=0&&i<6)this.add(g,i);if(mx>340&&mx<410)this.submit(g);if(mx>420)g.cur.pop();}},
+  draw(g){A.bg('#1d2433');const rows=g.rows.concat(A.state==='play'?[{g:g.cur,cur:true}]:[]);
+    rows.forEach((r,ri)=>{const y=8+ri*29;for(let i=0;i<4;i++){if(r.g[i]!==undefined)A.block(150+i*30,y,24,this.cols[r.g[i]]);else{c.strokeStyle='#556';c.strokeRect(150+i*30,y,24,24);}}
+      if(!r.cur){for(let k=0;k<4;k++){c.fillStyle=k<r.b?'#fff':k<r.b+r.w?'#999':'#333';c.beginPath();c.arc(290+k*14,y+12,5,0,7);c.fill();}}});
+    if(g.reveal)for(let i=0;i<4;i++)A.block(30+i*26,150,22,this.cols[g.code[i]]);
+    this.cols.forEach((col,i)=>A.block(60+i*45,326,34,col,28));A.block(345,326,60,'#5d9c3a',28);A.txt('OK',375,340,13,'#fff','center');A.block(420,326,50,'#8c3b3b',28);A.txt('⌫',445,340,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

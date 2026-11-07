@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гладна риба</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐟 Гладна риба</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 105. Гладна риба
+A.add({id:'fishgrow',cat:'action',icon:'🐟',name:'Гладна риба',desc:'Яж по-малките, бягай от по-големите',help:'Мишката води рибата. Яж рибите, които са ПО-МАЛКИ от теб, и растеш. По-големите те изяждат!',
+  start(g){g.x=240;g.y=180;g.s=12;g.f=[];for(let i=0;i<10;i++)this.add2(g);},
+  add2(g){const left=Math.random()<.5;g.f.push({x:left?-30:510,y:A.rnd(20,340),v:A.rnd(40,110)*(left?1:-1),s:A.clamp(g.s*A.rnd(.4,1.8),5,80),col:A.pick(['#ff8a65','#ba68c8','#4fc3f7','#aed581','#fff176'])});},
+  move(g,x,y){g.tx=x;g.ty=y;},
+  update(g,dt){if(g.tx!==undefined){const dx=g.tx-g.x,dy=g.ty-g.y,d=Math.hypot(dx,dy),sp=Math.min(d,(200-g.s)*dt*1.2);if(d>1){g.x+=dx/d*sp;g.y+=dy/d*sp;g.face=dx>0?1:-1;}}
+    for(const f of g.f){f.x+=f.v*dt;if(Math.abs(f.x-g.x)<(f.s+g.s)*.6&&Math.abs(f.y-g.y)<(f.s+g.s)*.4){if(f.s<g.s){f.dead=1;g.s=Math.min(70,g.s+f.s*.08);g.score+=Math.ceil(f.s);A.beep(700,.04);}else return A.over(g,'Изядоха те!');}}
+    g.f=g.f.filter(f=>!f.dead&&f.x>-60&&f.x<540);while(g.f.length<10)this.add2(g);},
+  fish(x,y,s,col,dir){c.fillStyle=col;c.fillRect(x-s/2,y-s/3,s,s*.66);c.fillRect(x-dir*s/2-dir*s*.3,y-s/4,s*.3,s/2);c.fillStyle='#000';c.fillRect(x+dir*s*.25-2,y-s/8,3,3);},
+  draw(g){A.bg('#0d47a1');c.fillStyle='rgba(255,255,255,.08)';for(let i=0;i<8;i++)c.fillRect(0,i*48+(g.t*10%48),480,2);for(const f of g.f)this.fish(f.x,f.y,f.s,f.col,Math.sign(f.v));this.fish(g.x,g.y,g.s,'#ffb300',g.face||1);}
+});
+</script>
+</body>
+</html>

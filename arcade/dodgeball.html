@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Избягвай топките</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚽ Избягвай топките</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 101. Избягвай топките
+A.add({id:'dodgeball',cat:'action',icon:'⚽',name:'Избягвай топките',desc:'Оцелей сред отскачащите топки',unit:' с',dec:1,help:'Мишка или стрелки — движи синия блок. Не се докосвай до топките. На всеки 5 секунди идва нова!',
+  start(g){g.x=240;g.y=180;g.b=[];g.add=0;},
+  move(g,x,y){g.tx=x;g.ty=y;},
+  update(g,dt){g.score=g.t;let dx=0,dy=0;if(A.keys.ArrowLeft||A.keys.KeyA)dx--;if(A.keys.ArrowRight||A.keys.KeyD)dx++;if(A.keys.ArrowUp||A.keys.KeyW)dy--;if(A.keys.ArrowDown||A.keys.KeyS)dy++;
+    if(dx||dy){g.tx=undefined;g.x+=dx*230*dt;g.y+=dy*230*dt;}else if(g.tx!==undefined){g.x+=(g.tx-g.x)*Math.min(1,dt*8);g.y+=(g.ty-g.y)*Math.min(1,dt*8);}
+    g.x=A.clamp(g.x,10,470);g.y=A.clamp(g.y,10,350);
+    g.add-=dt;if(g.add<=0){g.add=5;const a=A.rnd(0,6.28),s=A.rnd(120,180)+g.t*2;g.b.push({x:A.pick([20,460]),y:A.pick([20,340]),vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:A.ri(8,16),born:1});}
+    for(const b of g.b){b.born=Math.max(0,b.born-dt);b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<b.r||b.x>480-b.r){b.vx*=-1;b.x=A.clamp(b.x,b.r,480-b.r);}if(b.y<b.r||b.y>360-b.r){b.vy*=-1;b.y=A.clamp(b.y,b.r,360-b.r);}
+      if(!b.born&&Math.abs(b.x-g.x)<b.r+8&&Math.abs(b.y-g.y)<b.r+8)return A.over(g,'Удари те топка!');}},
+  draw(g){A.bg('#1d2a1d');for(const b of g.b){c.globalAlpha=b.born?.4:1;c.fillStyle='#ff7043';c.beginPath();c.arc(b.x,b.y,b.r,0,7);c.fill();c.globalAlpha=1;}A.block(g.x-9,g.y-9,18,'#3b7bd6');A.txt('Топки: '+g.b.length,10,14,13);}
+});
+</script>
+</body>
+</html>

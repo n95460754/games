@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Двоично судоку</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">0️⃣ Двоично судоку</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 107. Двоично судоку
+A.add({id:'binsudoku',cat:'puzzle',icon:'0️⃣',name:'Двоично судоку',desc:'Нули и единици без три поред',help:'Попълни с 0 и 1 (клик сменя: празно → 0 → 1). Правила: в ред и колона по равно нули и единици, и никога три еднакви поред. 4 минути.',
+  start(g){g.time=240;this.make(g);},
+  ok3(a){for(let i=2;i<a.length;i++)if(a[i]!==undefined&&a[i]===a[i-1]&&a[i]===a[i-2])return false;return true;},
+  make(g){const N=6;let s;const solve=()=>{s=Array(N*N);const rec=i=>{if(i===N*N)return true;for(const v of A.shuffle([0,1])){s[i]=v;const x=i%N,y=Math.floor(i/N);const row=s.slice(y*N,y*N+x+1),col=[];for(let k=0;k<=y;k++)col.push(s[k*N+x]);
+        if(this.ok3(row)&&this.ok3(col)&&row.filter(q=>q===v).length<=N/2&&col.filter(q=>q===v).length<=N/2){if(x===N-1&&new Set(Array.from({length:y},(_,r)=>s.slice(r*N,r*N+N).join())).has(row.join()))continue;if(rec(i+1))return true;}}s[i]=undefined;return false;};return rec(0);};
+    solve();g.sol=s;g.fix=s.map(()=>Math.random()<.4);g.cur=s.map((v,i)=>g.fix[i]?v:-1);g.N=N;},
+  check(g){const N=g.N;if(g.cur.some(v=>v<0))return false;for(let i=0;i<N;i++){const row=g.cur.slice(i*N,i*N+N),col=g.cur.filter((_,k)=>k%N===i);for(const a of[row,col])if(!this.ok3(a)||a.filter(v=>v===1).length!==N/2)return false;}return true;},
+  click(g,mx,my){const x=Math.floor((mx-120)/40),y=Math.floor((my-50)/40);if(x<0||y<0||x>5||y>5)return;const i=y*6+x;if(g.fix[i])return;g.cur[i]=g.cur[i]===-1?0:g.cur[i]===0?1:-1;A.beep(400,.03);
+    if(this.check(g)){g.score++;A.tune([523,659,784]);this.make(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1d2433');for(let i=0;i<36;i++){const x=120+(i%6)*40,y=50+Math.floor(i/6)*40,v=g.cur[i];c.fillStyle=g.fix[i]?'#3a4a60':'#2b3646';c.fillRect(x+1,y+1,38,38);
+      if(v>=0)A.block(x+5,y+5,30,v?C.gold:'#5a6b8c');if(v>=0)A.txt(v,x+20,y+21,16,g.fix[i]?'#fff':'#000','center');}A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

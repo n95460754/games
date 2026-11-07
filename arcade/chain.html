@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Верига сметки</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛓️ Верига сметки</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 111. Верига сметки
+A.add({id:'chain',cat:'brain',icon:'⛓️',name:'Верига сметки',desc:'Смятай наум стъпка по стъпка',lives:true,help:'Числата и действията се появяват едно по едно. Смятай наум и накрая напиши резултата. 3 грешки и край.',
+  start(g){g.lives=3;g.inp='';this.next(g);},
+  next(g){let v=A.ri(2,9);g.steps=[String(v)];const n=3+Math.min(5,Math.floor(g.score/2));for(let i=0;i<n;i++){const op=A.pick(['+','−','×']);let k;if(op==='×'){k=A.ri(2,3);if(Math.abs(v*k)>200){i--;continue;}v*=k;}else if(op==='+'){k=A.ri(1,15);v+=k;}else{k=A.ri(1,12);v-=k;}g.steps.push(op+' '+k);}
+    g.ans=v;g.shown=0;g.st=.9;g.ask=false;},
+  key(g,k,ch){if(!g.ask)return;if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.ans;flash(g,ok);if(ok)g.score++;else{g.lives--;g.why='Беше '+g.ans;if(!g.lives)return A.over(g,'Беше '+g.ans);}g.inp='';this.next(g);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.ask)return;g.st-=dt;if(g.st<=0){g.shown++;g.st=Math.max(.6,1.1-g.score*.04);if(g.shown>g.steps.length)g.ask=true;}},
+  draw(g){A.bg('#1d2b3a');if(!g.ask){const s=g.steps[Math.min(g.shown,g.steps.length)-1];if(s)A.txt(s,240,150,54,'#fff','center');A.txt('Стъпка '+Math.min(g.shown,g.steps.length)+'/'+g.steps.length,240,250,14,'#bbb','center');}
+    else{A.txt('Резултат = ?',240,110,30,'#fff','center');inputBox(g,190);}A.txt('❤'.repeat(g.lives),10,14,14,'#f55');if(g.why)A.txt(g.why,470,14,13,'#bbb','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

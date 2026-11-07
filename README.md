@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**110 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 100 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**135 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 125 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-110-5aa13a)
+![Games](https://img.shields.io/badge/games-135-5aa13a)
 
 ## 🚀 Play
 
@@ -60,9 +60,9 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 100 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 125 mini-games (`arcade/*.html`)
 
-**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 100, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
+**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 125, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
 ### ⚡ Action
 | # | Game | File | |
@@ -205,7 +205,53 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 99 | 🃏 Higher or Lower (По-голямо/по-малко) | [`higherlower.html`](arcade/higherlower.html) | Guess the next card |
 | 100 | 💎 Block Clicker (Блоков кликер) | [`clicker.html`](arcade/clicker.html) | Reach 100,000 blocks fast |
 
-All 100 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+
+### ⚡ Action 3
+| # | Game | File | |
+|---|---|---|---|
+| 101 | ⚽ Dodgeball (Избягвай топките) | [`dodgeball.html`](arcade/dodgeball.html) | Survive the bouncing balls |
+| 102 | 🪐 Orbit Defense (Орбитална защита) | [`orbit.html`](arcade/orbit.html) | Turret around a planet vs meteors |
+| 103 | 🎱 Flippers (Флипери) | [`flippers.html`](arcade/flippers.html) | Block pinball with bumpers |
+| 104 | 🐍 Snakes for Two (Змии за двама) | [`snake2p.html`](arcade/snake2p.html) | 2 players on one keyboard: WASD vs arrows |
+| 105 | 🐟 Hungry Fish (Гладна риба) | [`fishgrow.html`](arcade/fishgrow.html) | Eat smaller fish, grow, avoid bigger ones |
+
+### 🧩 Puzzles 3
+| # | Game | File | |
+|---|---|---|---|
+| 106 | 📍 Peg Solitaire (Солитер) | [`pegs.html`](arcade/pegs.html) | Jump pegs, leave just one |
+| 107 | 0️⃣ Binary Sudoku (Двоично судоку) | [`binsudoku.html`](arcade/binsudoku.html) | 0s and 1s, never three in a row |
+| 108 | 🚃 Free the Minecart (Освободи вагонетката) | [`unblock.html`](arcade/unblock.html) | Slide blocks to clear the exit |
+| 109 | ✨ Magic Square (Магически квадрат) | [`magicsquare.html`](arcade/magicsquare.html) | Every row, column and diagonal = 15 |
+| 110 | 🔎 Word Search (Търсачка на думи) | [`wordsearch.html`](arcade/wordsearch.html) | Find the hidden Bulgarian words |
+
+### 🧠 Brain & Math 3
+| # | Game | File | |
+|---|---|---|---|
+| 111 | ⛓️ Math Chain (Верига сметки) | [`chain.html`](arcade/chain.html) | Mental math, one step at a time |
+| 112 | 📏 Units (Мерни единици) | [`units.html`](arcade/units.html) | m, cm, kg, g, h, min… |
+| 113 | ➖ Negative Numbers (Отрицателни числа) | [`negatives.html`](arcade/negatives.html) | Math below zero |
+| 114 | 🔋 Powers (Степени) | [`powers.html`](arcade/powers.html) | 2ⁿ, 3ⁿ, 10ⁿ |
+| 115 | 👁️ By Eye (На око) | [`estimate.html`](arcade/estimate.html) | Estimate how many blocks |
+
+### 🎯 Skills 3
+| # | Game | File | |
+|---|---|---|---|
+| 116 | 🪂 Parachute (Парашутист) | [`parachute.html`](arcade/parachute.html) | Land on the target despite the wind |
+| 117 | 🎳 Bowling (Боулинг) | [`bowling.html`](arcade/bowling.html) | Aim, power, knock down pins |
+| 118 | 🏀 Basketball (Баскетбол) | [`basket.html`](arcade/basket.html) | Slingshot the ball into a moving hoop |
+| 119 | ⏱️ Inner Clock (Вътрешен часовник) | [`innerclock.html`](arcade/innerclock.html) | Stop at exactly 10.00 s blind |
+| 120 | 🌉 Stick Bridge (Мост с пръчка) | [`stickbridge.html`](arcade/stickbridge.html) | Grow a stick just long enough |
+
+### ♟️ Board & Sandbox 3
+| # | Game | File | |
+|---|---|---|---|
+| 121 | ⛀ Checkers (Дама) | [`checkers.html`](arcade/checkers.html) | vs the robot, mandatory captures, kings |
+| 122 | 🥣 Kalah (Калах) | [`kalah.html`](arcade/kalah.html) | Ancient pebble-sowing game vs the robot |
+| 123 | 🔐 Code Breaker (Разбий кода) | [`codebreak.html`](arcade/codebreak.html) | Guess the 4-color code in 10 tries |
+| 124 | 🌳 Fractal Tree (Фрактално дърво) | [`fractal.html`](arcade/fractal.html) | Math art: angle, shrink, depth |
+| 125 | 🗺️ World Generator (Генератор на светове) | [`worldgen.html`](arcade/worldgen.html) | Infinite noise map with biomes |
+
+All 125 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -233,8 +279,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–100
-│   └── clicker.html        # 100. Block Clicker
+│   ├── ...                 # games 51–124
+│   └── worldgen.html       # 125. World Generator
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
@@ -252,6 +298,9 @@ minecraft/
 - **Sandbox:** a 160×110 cellular automaton. Sand falls and slides, water flows sideways, lava + water = stone, and lava sets wood on fire.
 - **Robot programming, Tower of Hanoi, Game of Life, Langton's Ant:** little lessons in coding and math, hidden inside games.
 - **Ice Slide, Program the Robot:** levels are generated randomly and checked with breadth-first search (BFS), so every level can be solved.
+- **Snakes for Two:** the first 2-player game: two people on one keyboard.
+- **Free the Minecart:** each puzzle starts solved and is scrambled with random legal moves, so it can always be solved.
+- **Kalah, Checkers, Code Breaker:** the robot plays real strategies (greedy simulation, mandatory captures, bulls & cows feedback).
 - **Sounds:** all made live with the Web Audio API (`OscillatorNode`), with no sound files.
 
 ## 🛠️ Ideas for the future
