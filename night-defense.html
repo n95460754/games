@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Нощна защита</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#0e1420;font-family:Consolas,"Courier New",monospace;user-select:none;color:#fff}
+#wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+#top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:8px 12px;background:#1a2233;border-bottom:3px solid #000;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+canvas{image-rendering:pixelated;border:3px solid #000;max-width:100%;max-height:100%}
+#bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px 12px;background:#1a2233;border-top:3px solid #000}
+.tw{display:flex;align-items:center;gap:6px;padding:5px 9px;background:#2b3646;border:3px solid #000;cursor:pointer;font-size:13px}
+.tw.sel{outline:3px solid #ffd54f}
+.tw.off{opacity:.45}
+.tw i{display:inline-block;width:18px;height:18px;border:2px solid #000}
+button{font:inherit;font-size:14px;padding:7px 14px;background:#5d9c3a;color:#fff;border:3px solid #000;box-shadow:inset -3px -3px 0 #3c6d22,inset 3px 3px 0 #8fd16a;cursor:pointer}
+button.alt{background:#5a6b8c;box-shadow:inset -3px -3px 0 #3c4a66,inset 3px 3px 0 #8ea2c8}
+button:disabled{filter:grayscale(1) brightness(.7);cursor:default}
+#info{font-size:13px;color:#b9c6d6;margin-left:auto}
+.panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.65);z-index:5}
+.box{background:#1f2a3d;border:4px solid #000;box-shadow:0 0 0 4px #4a5f86;padding:22px 28px;max-width:540px;width:calc(100% - 64px);text-align:center}
+.box h1{margin:0 0 8px;color:#ffd54f;text-shadow:3px 3px 0 #000;font-size:30px}
+.box p{line-height:1.5;color:#dbe6f5;margin:8px 0}
+#tpanel{position:fixed;display:none;background:#1f2a3d;border:3px solid #000;box-shadow:0 0 0 3px #4a5f86;padding:10px;font-size:13px;z-index:4;min-width:170px}
+#tpanel button{font-size:12px;padding:5px 8px;margin:3px 2px 0}
+a{color:#9ecbff}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top">
+    <span>🌙 Вълна <b id="wave">0</b>/20</span><span>💎 Кристал <b id="hp">20</b></span><span>💰 <b id="gold">0</b></span><span id="msg"></span>
+  </div>
+  <div id="stage"><canvas id="c"></canvas></div>
+  <div id="bar">
+    <div id="towers" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    <button id="go">▶ Пусни вълната</button>
+    <button class="alt" id="speed">⏩ x1</button>
+    <span id="info">Избери кула и кликни на тревата</span>
+  </div>
+</div>
+<div id="tpanel"></div>
+<div class="panel" id="menu"><div class="box">
+  <h1>🌙 Нощна защита</h1>
+  <p>Всяка нощ <b>мракоблоките</b> тръгват по пътеката към твоя <b>кристал</b>. Строй кули край пътя, за да ги спреш!</p>
+  <p>🏹 <b>Стрелец</b> — бърз, по една цел · 💣 <b>Оръдие</b> — удря група · ❄️ <b>Лед</b> — забавя · ⚡ <b>Мълния</b> — скача между враговете</p>
+  <p>Кликни върху кула, за да я подобриш или продадеш. Оцелей 20 вълни!</p>
+  <p id="best"></p>
+  <button id="play">▶ Играй</button>
+  <p><a href="games.html">← към всички игри</a></p>
+</div></div>
+<script>
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+// ---------- карта ----------
+const COLS=18,ROWS=11,T=40;
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+cv.width=COLS*T;cv.height=ROWS*T;
+function fit(){const st=document.getElementById('stage');const s=Math.min((st.clientWidth-10)/cv.width,(st.clientHeight-10)/cv.height);cv.style.width=cv.width*s+'px';cv.style.height=cv.height*s+'px';}
+addEventListener('resize',fit);
+// пътека: точки (колона, ред), враговете минават през центровете
+const WAY=[[-1,2],[4,2],[4,7],[9,7],[9,2],[14,2],[14,8],[17,8]];
+const path=new Set();
+for(let i=0;i<WAY.length-1;i++){
+  let [x,y]=WAY[i];const [x2,y2]=WAY[i+1];
+  while(x!==x2||y!==y2){if(x>=0)path.add(x+','+y);x+=Math.sign(x2-x);y+=Math.sign(y2-y);}
+  path.add(x2+','+y2);
+}
+const CRYSTAL=[17,8];
+// декорации
+const deco=[];for(let i=0;i<22;i++){const x=Math.random()*COLS|0,y=Math.random()*ROWS|0;if(!path.has(x+','+y))deco.push({x,y,k:Math.random()<.5?'flower':'rock'});}
+
+// ---------- кули ----------
+const TT={
+  arrow:{n:'🏹 Стрелец',col:'#c8a165',cost:50,range:2.6,rate:.55,dmg:9},
+  cannon:{n:'💣 Оръдие',col:'#555b66',cost:90,range:2.3,rate:1.4,dmg:22,splash:1.1},
+  ice:{n:'❄️ Лед',col:'#7ec8e3',cost:70,range:2.2,rate:.9,dmg:3,slow:.5},
+  bolt:{n:'⚡ Мълния',col:'#ffd23f',cost:140,range:2.8,rate:1.2,dmg:16,chain:3}
+};
+let towers=[],sel='arrow',picked=null;
+const upCost=t=>Math.round(TT[t.type].cost*(.7+t.lv*.5));
+const stat=(t,k)=>{const b=TT[t.type][k];if(k==='range')return b*(1+.12*(t.lv-1));if(k==='rate')return b*(1-.12*(t.lv-1));if(k==='dmg')return b*(1+.6*(t.lv-1));return b;};
+
+// ---------- врагове ----------
+const ET={
+  norm:{hp:24,spd:1.4,gold:5,col:'#3b2b5a',size:.55},
+  fast:{hp:16,spd:2.5,gold:6,col:'#5a2b4a',size:.42},
+  tank:{hp:90,spd:.85,gold:14,col:'#2b2b3a',size:.75},
+  boss:{hp:600,spd:.65,gold:120,col:'#5a0f2a',size:.95}
+};
+let enemies=[],shots=[],fx=[],spawnQ=[],spawnT=0;
+function waveList(w){
+  const L=[];const n=6+w*2;
+  for(let i=0;i<n;i++){let k='norm';if(w>=3&&i%3===1)k='fast';if(w>=5&&i%5===4)k='tank';L.push(k);}
+  if(w%5===0)L.push('boss');
+  return L;
+}
+function spawn(k){
+  const e=ET[k],mult=1+(wave-1)*.18+Math.max(0,wave-10)*.12;
+  enemies.push({k,x:WAY[0][0]+.5,y:WAY[0][1]+.5,seg:0,hp:e.hp*mult,max:e.hp*mult,spd:e.spd,slowT:0,wob:Math.random()*6});
+}
+
+// ---------- състояние ----------
+let wave=0,hp=20,gold=150,state='menu',inWave=false,spd=1,best=load('defBest',0),night=0;
+const $=id=>document.getElementById(id);
+$('best').textContent=best?('🏆 Рекорд: вълна '+best):'';
+function newGame(){towers=[];enemies=[];shots=[];fx=[];spawnQ=[];wave=0;hp=20;gold=150;inWave=false;picked=null;hidePanel();state='play';$('menu').style.display='none';buildBar();}
+$('play').onclick=newGame;
+$('go').onclick=()=>{if(state!=='play'||inWave)return;wave++;spawnQ=waveList(wave);spawnT=0;inWave=true;beep(220,.3,'sawtooth',.05);};
+$('speed').onclick=()=>{spd=spd===1?2:spd===2?3:1;$('speed').textContent='⏩ x'+spd;};
+
+function buildBar(){
+  const b=$('towers');b.innerHTML='';
+  for(const k in TT){const d=document.createElement('div');d.className='tw'+(k===sel?' sel':'')+(gold<TT[k].cost?' off':'');
+    d.innerHTML='<i style="background:'+TT[k].col+'"></i>'+TT[k].n+' $'+TT[k].cost;d.onclick=()=>{sel=k;buildBar();};b.appendChild(d);}
+}
+
+// ---------- клик по картата ----------
+function cell(ev){const r=cv.getBoundingClientRect();return [Math.floor((ev.clientX-r.left)/r.width*COLS),Math.floor((ev.clientY-r.top)/r.height*ROWS)];}
+let hoverCell=null;
+cv.addEventListener('mousemove',e=>{hoverCell=cell(e);});
+cv.addEventListener('mouseleave',()=>{hoverCell=null;});
+cv.addEventListener('click',e=>{
+  if(state!=='play')return;
+  const [x,y]=cell(e);
+  const t=towers.find(t=>t.x===x&&t.y===y);
+  if(t){picked=t;showPanel(t,e);return;}
+  hidePanel();picked=null;
+  if(path.has(x+','+y)){say('Не може на пътеката!');return;}
+  const c=TT[sel].cost;
+  if(gold<c){say('Няма достатъчно злато');return;}
+  gold-=c;towers.push({type:sel,x,y,lv:1,cd:0,ang:0});beep(500,.08);buildBar();
+});
+function showPanel(t,e){
+  const p=$('tpanel');const max=t.lv>=3;
+  p.innerHTML='<b>'+TT[t.type].n+'</b> — ниво '+t.lv+'<br>Щета '+stat(t,'dmg').toFixed(0)+' · Обхват '+stat(t,'range').toFixed(1)+'<br>'+
+    (max?'<button disabled>МАКС</button>':'<button id="up">⬆ Подобри $'+upCost(t)+'</button>')+'<button class="alt" id="sell">Продай $'+Math.floor(spentOf(t)*.6)+'</button>';
+  p.style.display='block';p.style.left=Math.min(innerWidth-190,e.clientX+10)+'px';p.style.top=Math.min(innerHeight-110,e.clientY+10)+'px';
+  if(!max)$('up').onclick=()=>{const c=upCost(t);if(gold>=c){gold-=c;t.lv++;beep(700,.1);beep(900,.1);showPanel(t,e);buildBar();}else say('Няма достатъчно злато');};
+  $('sell').onclick=()=>{gold+=Math.floor(spentOf(t)*.6);towers=towers.filter(q=>q!==t);hidePanel();buildBar();};
+}
+// колко е похарчено за кулата
+function spentOf(t){let s=TT[t.type].cost;for(let l=1;l<t.lv;l++)s+=Math.round(TT[t.type].cost*(.7+l*.5));return s;}
+function hidePanel(){$('tpanel').style.display='none';}
+let msgT=0;function say(s){$('msg').textContent=s;msgT=2;}
+
+// ---------- звук ----------
+let ac=null;
+function beep(f,d,type,vol){try{if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;
+  g.gain.setValueAtTime(vol||0.04,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
+  o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
+
+// ---------- ъпдейт ----------
+function dmg(e,n){e.hp-=n;}
+function update(dt){
+  if(inWave){
+    spawnT-=dt;
+    if(spawnQ.length&&spawnT<=0){spawn(spawnQ.shift());spawnT=Math.max(.35,.9-wave*.025);}
+    if(!spawnQ.length&&!enemies.length){
+      inWave=false;const bonus=20+wave*5;gold+=bonus;say('Вълна '+wave+' отблъсната! +$'+bonus);
+      if(wave>best){best=wave;save('defBest',best);}
+      [523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,.12,'triangle'),i*100));
+      if(wave>=20)endGame(true);
+      buildBar();
+    }
+  }
+  night+=((inWave?1:0)-night)*Math.min(1,dt*1.5);
+  // движение на враговете
+  for(let i=enemies.length-1;i>=0;i--){
+    const e=enemies[i];
+    if(e.hp<=0){gold+=ET[e.k].gold;fx.push({x:e.x,y:e.y,t:.4,k:'pop',c:ET[e.k].col});enemies.splice(i,1);beep(160,.05);buildBar();continue;}
+    e.slowT=Math.max(0,e.slowT-dt);
+    let move=e.spd*(e.slowT>0?.5:1)*dt;
+    while(move>0&&e.seg<WAY.length-1){
+      const [tx,ty]=WAY[e.seg+1],gx=tx+.5,gy=ty+.5;const dx=gx-e.x,dy=gy-e.y,d=Math.hypot(dx,dy);
+      if(d<=move){e.x=gx;e.y=gy;e.seg++;move-=d;}else{e.x+=dx/d*move;e.y+=dy/d*move;move=0;}
+    }
+    if(e.seg>=WAY.length-1){
+      hp-=e.k==='boss'?5:e.k==='tank'?2:1;enemies.splice(i,1);beep(90,.25,'sawtooth',.08);
+      fx.push({x:CRYSTAL[0]+.5,y:CRYSTAL[1]+.5,t:.5,k:'hit'});
+      if(hp<=0){hp=0;endGame(false);return;}
+    }
+  }
+  // кули
+  for(const t of towers){
+    t.cd-=dt;
+    const cx=t.x+.5,cy=t.y+.5,R=stat(t,'range');
+    let target=null,bestSeg=-1;
+    for(const e of enemies){const d=Math.hypot(e.x-cx,e.y-cy);if(d<=R){const prog=e.seg;if(prog>bestSeg||(prog===bestSeg&&target&&e.x>target.x)){bestSeg=prog;target=e;}}}
+    if(!target)continue;
+    t.ang=Math.atan2(target.y-cy,target.x-cx);
+    if(t.cd>0)continue;
+    t.cd=stat(t,'rate');
+    const D=stat(t,'dmg');
+    if(t.type==='bolt'){
+      let cur=target,hit=[target],px=cx,py=cy;
+      for(let k=0;k<TT.bolt.chain+t.lv-1&&cur;k++){
+        dmg(cur,D*(1-k*.15));fx.push({k:'bolt',x1:px,y1:py,x2:cur.x,y2:cur.y,t:.15});px=cur.x;py=cur.y;
+        let nxt=null,nd=1.8;for(const e of enemies){if(hit.includes(e))continue;const d=Math.hypot(e.x-cur.x,e.y-cur.y);if(d<nd){nd=d;nxt=e;}}
+        cur=nxt;if(nxt)hit.push(nxt);
+      }
+      beep(1400,.05,'sawtooth',.03);
+    }else{
+      shots.push({x:cx,y:cy,tg:target,type:t.type,dmg:D,sp:t.type==='cannon'?6:11,lv:t.lv});
+      beep(t.type==='cannon'?120:t.type==='ice'?900:600,.04,'square',.025);
+    }
+  }
+  // снаряди
+  for(let i=shots.length-1;i>=0;i--){
+    const s=shots[i],e=s.tg;
+    const tx=e.x,ty=e.y,dx=tx-s.x,dy=ty-s.y,d=Math.hypot(dx,dy),mv=s.sp*dt;
+    if(d<=mv||e.hp<=0&&d<.2){
+      if(s.type==='cannon'){for(const q of enemies)if(Math.hypot(q.x-tx,q.y-ty)<TT.cannon.splash)dmg(q,s.dmg);fx.push({x:tx,y:ty,t:.3,k:'boom'});}
+      else{dmg(e,s.dmg);if(s.type==='ice'){e.slowT=1.2+s.lv*.4;fx.push({x:tx,y:ty,t:.25,k:'ice'});}}
+      shots.splice(i,1);
+    }else{s.x+=dx/d*mv;s.y+=dy/d*mv;}
+  }
+  for(let i=fx.length-1;i>=0;i--){fx[i].t-=dt;if(fx[i].t<=0)fx.splice(i,1);}
+}
+function endGame(won){
+  state='over';
+  setTimeout(()=>{$('menu').querySelector('h1').textContent=won?'🏆 Кристалът е спасен!':'💔 Кристалът падна';
+    $('best').textContent=(won?'Отби всички 20 вълни! ':'Стигна до вълна '+wave+'. ')+'Рекорд: вълна '+best;
+    $('play').textContent='↻ Нова игра';$('menu').style.display='flex';},700);
+}
+
+// ---------- рисуване ----------
+const grassPat=(()=>{const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');g.fillStyle='#4f9a35';g.fillRect(0,0,16,16);
+  for(let i=0;i<40;i++){g.fillStyle=Math.random()<.5?'#5fae42':'#437f2c';g.fillRect(Math.random()*16|0,Math.random()*16|0,1,1);}return c;})();
+const pathPat=(()=>{const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');g.fillStyle='#9c7a4f';g.fillRect(0,0,16,16);
+  for(let i=0;i<40;i++){g.fillStyle=Math.random()<.5?'#8a6a42':'#b08d5f';g.fillRect(Math.random()*16|0,Math.random()*16|0,1,1);}return c;})();
+ctx.imageSmoothingEnabled=false;
+function draw(now){
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)ctx.drawImage(path.has(x+','+y)?pathPat:grassPat,x*T,y*T,T,T);
+  for(const d of deco){
+    if(d.k==='flower'){ctx.fillStyle='#2e6b1e';ctx.fillRect(d.x*T+18,d.y*T+20,4,10);ctx.fillStyle='#ff6b8a';ctx.fillRect(d.x*T+14,d.y*T+14,12,8);}
+    else{ctx.fillStyle='#7d7d7d';ctx.fillRect(d.x*T+10,d.y*T+18,20,12);ctx.fillStyle='#999';ctx.fillRect(d.x*T+12,d.y*T+18,8,4);}
+  }
+  // кристал
+  const [kx,ky]=CRYSTAL,pulse=Math.sin(now*.005)*3;
+  ctx.fillStyle='#e040fb';ctx.beginPath();ctx.moveTo(kx*T+20,ky*T+2-pulse);ctx.lineTo(kx*T+34,ky*T+20);ctx.lineTo(kx*T+20,ky*T+38);ctx.lineTo(kx*T+6,ky*T+20);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillRect(kx*T+16,ky*T+12,4,8);
+  // кули
+  for(const t of towers){
+    const x=t.x*T,y=t.y*T,c=TT[t.type].col;
+    ctx.fillStyle='#3a3a3a';ctx.fillRect(x+4,y+4,T-8,T-8);
+    ctx.fillStyle=c;ctx.fillRect(x+8,y+8,T-16,T-16);
+    ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(x+8,y+T-12,T-16,4);
+    ctx.save();ctx.translate(x+T/2,y+T/2);ctx.rotate(t.ang);ctx.fillStyle='#222';ctx.fillRect(0,-3,15,6);ctx.restore();
+    ctx.fillStyle='#ffd54f';for(let l=0;l<t.lv;l++)ctx.fillRect(x+6+l*7,y+2,5,5);
+  }
+  // врагове
+  for(const e of enemies){
+    const s=ET[e.k].size*T,bob=Math.abs(Math.sin(now*.01+e.wob))*4,x=e.x*T-s/2,y=e.y*T-s/2-bob;
+    ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(e.x*T-s/2,e.y*T+s/2-3,s,4);
+    ctx.fillStyle=e.slowT>0?'#6fa8c8':ET[e.k].col;ctx.fillRect(x,y,s,s);
+    ctx.fillStyle='rgba(255,255,255,.15)';ctx.fillRect(x,y,s,s*.2);
+    ctx.fillStyle='#ff3d3d';ctx.fillRect(x+s*.2,y+s*.3,s*.18,s*.18);ctx.fillRect(x+s*.62,y+s*.3,s*.18,s*.18);
+    ctx.fillStyle='#000';ctx.fillRect(x,y-7,s,4);ctx.fillStyle='#5f5';ctx.fillRect(x,y-7,s*Math.max(0,e.hp/e.max),4);
+  }
+  // снаряди
+  for(const s of shots){ctx.fillStyle=s.type==='cannon'?'#222':s.type==='ice'?'#bff':'#f5deb3';const r=s.type==='cannon'?7:4;ctx.fillRect(s.x*T-r/2,s.y*T-r/2,r,r);}
+  for(const f of fx){
+    if(f.k==='bolt'){ctx.strokeStyle='#fff59d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(f.x1*T,f.y1*T);
+      const mx=(f.x1+f.x2)/2*T+(Math.random()-.5)*12,my=(f.y1+f.y2)/2*T+(Math.random()-.5)*12;ctx.lineTo(mx,my);ctx.lineTo(f.x2*T,f.y2*T);ctx.stroke();}
+    else{const r=(f.k==='boom'?1.1:f.k==='hit'?1:.5)*T*(1-f.t);ctx.strokeStyle=f.k==='boom'?'#ffab40':f.k==='ice'?'#b3e5fc':f.k==='hit'?'#ff5252':f.c;ctx.lineWidth=4;ctx.strokeRect(f.x*T-r/2,f.y*T-r/2,r,r);}
+  }
+  // нощ
+  if(night>.01){ctx.fillStyle='rgba(10,15,45,'+(night*.45)+')';ctx.fillRect(0,0,cv.width,cv.height);}
+  // подсказка за поставяне
+  if(hoverCell&&state==='play'){
+    const [x,y]=hoverCell;const t=towers.find(t=>t.x===x&&t.y===y);
+    const R=t?stat(t,'range'):TT[sel].range;
+    const bad=!t&&(path.has(x+','+y)||gold<TT[sel].cost);
+    ctx.strokeStyle=bad?'rgba(255,80,80,.9)':'rgba(255,255,255,.9)';ctx.lineWidth=2;ctx.strokeRect(x*T+1,y*T+1,T-2,T-2);
+    if(!bad){ctx.fillStyle='rgba(255,255,255,.12)';ctx.beginPath();ctx.arc(x*T+T/2,y*T+T/2,R*T,0,Math.PI*2);ctx.fill();}
+  }
+}
+
+let last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play')for(let i=0;i<spd;i++)update(dt);
+  draw(now);
+  $('wave').textContent=wave;$('hp').textContent=hp;$('gold').textContent=gold;
+  $('go').disabled=inWave||state!=='play';
+  $('info').textContent=inWave?'Враговете идват! Остават: '+(spawnQ.length+enemies.length):'Избери кула и кликни на тревата';
+  if(msgT>0){msgT-=dt;if(msgT<=0)$('msg').textContent='';}
+}
+fit();buildBar();requestAnimationFrame(loop);
+setTimeout(fit,50);
+</script>
+</body>
+</html>
