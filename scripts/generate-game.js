@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Generates one new mini-game in games/game-N.html and adds it to README.md.
-// Runs every 10 minutes from .github/workflows/auto-game.yml (no Claude needed).
+// Runs every 5 minutes from .github/workflows/auto-game.yml (no Claude needed).
 // Each game = random game type x random theme x random tuning, seeded by N.
 const fs = require('fs');
 const path = require('path');
@@ -279,7 +279,7 @@ const date = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
 const line = `- ${type.emoji} [${title}](games/${file}) — ${type.name} · ${theme.name} theme · added ${date}`;
 let md = fs.readFileSync(README, 'utf8');
 if (!md.includes(START)) {
-  md = md.trimEnd() + `\n\n## 🤖 Auto Games\n\nA new mini-game is generated and added here automatically **every 10 minutes** by a GitHub Action ([\`scripts/generate-game.js\`](scripts/generate-game.js)).\n\n${START}\n${END}\n`;
+  md = md.trimEnd() + `\n\n## 🤖 Auto Games\n\nA new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([\`scripts/generate-game.js\`](scripts/generate-game.js)).\n\n${START}\n${END}\n`;
 }
 const [head, rest] = md.split(START);
 const [list, tail] = rest.split(END);
