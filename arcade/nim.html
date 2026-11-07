@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ним</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪨 Ним</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 43. Ним
+A.add({id:'nim',cat:'board',icon:'🪨',name:'Ним',desc:'Вземи последния блок',help:'Кликни блок — взимаш го заедно с всички над него в същата купчина. Който вземе ПОСЛЕДНИЯ блок, печели. Тайната е в двоичното XOR!',
+  start(g){this.deal(g);},
+  deal(g){g.p=[A.ri(1,4),A.ri(2,6),A.ri(3,7)];g.msg='Твой ход';g.wait=0;g.turn=1;},
+  take(g,i,n){g.p[i]-=n;A.beep(g.turn===1?600:300,.05);
+    if(g.p.every(v=>!v)){if(g.turn===1){g.score++;g.msg='Победа! 🎉';A.tune([660,880]);g.wait=1.5;g.turn=0;}else A.over(g,'Роботът взе последния');return;}
+    g.turn=3-g.turn;if(g.turn===2){g.ai=.8;g.msg='Роботът мисли...';}else g.msg='Твой ход';},
+  click(g,mx,my){if(g.turn!==1)return;const i=Math.floor((mx-90)/110);if(i<0||i>2)return;const h=Math.floor((330-my)/34);if(h<0||h>=g.p[i])return;this.take(g,i,g.p[i]-h);},
+  update(g,dt){if(g.wait>0){g.wait-=dt;if(g.wait<=0)this.deal(g);return;}
+    if(g.turn===2){g.ai-=dt;if(g.ai>0)return;const x=g.p[0]^g.p[1]^g.p[2];let mv=null;
+      if(x&&Math.random()>.15)for(let i=0;i<3;i++){const t=g.p[i]^x;if(t<g.p[i]){mv=[i,g.p[i]-t];break;}}
+      if(!mv){const nz=[0,1,2].filter(i=>g.p[i]);const i=A.pick(nz);mv=[i,A.ri(1,g.p[i])];}this.take(g,mv[0],mv[1]);}},
+  draw(g){A.bg('#2a2018');g.p.forEach((n,i)=>{for(let h=0;h<n;h++){const hov=g.turn===1&&Math.floor((A.mouse.x-90)/110)===i&&Math.floor((330-A.mouse.y)/34)<=h;A.block(90+i*110+15,300-h*34,70,hov?'#ffb74d':C.stone,32);}A.txt(n,90+i*110+50,345,16,'#bbb','center');});
+    A.txt(g.msg,240,24,18,'#ffd54f','center');A.txt('XOR = '+(g.p[0]^g.p[1]^g.p[2]),470,24,12,'#776','right');}
+});
+</script>
+</body>
+</html>

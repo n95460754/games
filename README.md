@@ -60,81 +60,83 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 50 mini-games (`arcade.html`)
+## 🕹️ Block Arcade: 50 mini-games (`arcade/*.html`)
 
-One page, 50 different mini-games, each with its own high score. Use the category buttons or the search box. Press **Esc** to go back to the menu. Space or a click restarts. Direct links work too, for example `arcade.html#snake`.
+**Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 50, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
 ### ⚡ Action
-| # | Game | |
-|---|---|---|
-| 1 | 🐍 Block Snake (Блокова змия) | Eat apples and grow |
-| 2 | 🧱 Ore Breaker (Рудотрошач) | Break ore blocks with a ball |
-| 3 | 🛒 Ore Catcher (Ловец на руди) | Catch ore, avoid bombs |
-| 4 | 🦇 Bat (Прилепче) | Fly through the cave |
-| 5 | 🌋 Lava Rain (Лавов дъжд) | Survive falling lava |
-| 6 | 👾 Invasion (Нашествие) | Shoot the slime waves |
-| 7 | 🐔 Cross the Rails (Пресечи релсите) | Dodge carts, ride logs |
-| 8 | 🏓 Block Tennis (Блоков тенис) | Beat the robot to 7 |
-| 9 | ☄️ Meteor Miner (Метеоритен миньор) | Blast splitting rocks |
-| 10 | 🏃 Block Runner (Блоков бегач) | Jump cacti, duck bats |
+| # | Game | File | |
+|---|---|---|---|
+| 1 | 🐍 Block Snake (Блокова змия) | [`snake.html`](arcade/snake.html) | Eat apples and grow |
+| 2 | 🧱 Ore Breaker (Рудотрошач) | [`breaker.html`](arcade/breaker.html) | Break ore blocks with a ball |
+| 3 | 🛒 Ore Catcher (Ловец на руди) | [`catcher.html`](arcade/catcher.html) | Catch ore, avoid bombs |
+| 4 | 🦇 Bat (Прилепче) | [`bat.html`](arcade/bat.html) | Fly through the cave |
+| 5 | 🌋 Lava Rain (Лавов дъжд) | [`lavarain.html`](arcade/lavarain.html) | Survive falling lava |
+| 6 | 👾 Invasion (Нашествие) | [`invaders.html`](arcade/invaders.html) | Shoot the slime waves |
+| 7 | 🐔 Cross the Rails (Пресечи релсите) | [`crossing.html`](arcade/crossing.html) | Dodge carts, ride logs |
+| 8 | 🏓 Block Tennis (Блоков тенис) | [`pong.html`](arcade/pong.html) | Beat the robot to 7 |
+| 9 | ☄️ Meteor Miner (Метеоритен миньор) | [`meteors.html`](arcade/meteors.html) | Blast splitting rocks |
+| 10 | 🏃 Block Runner (Блоков бегач) | [`runner.html`](arcade/runner.html) | Jump cacti, duck bats |
 
 ### 🧩 Puzzles
-| # | Game | |
-|---|---|---|
-| 11 | 🟫 Trimino (Тримино) | Falling 3-block pieces |
-| 12 | 💎 Match Three (Три в ред) | Swap gems |
-| 13 | 💣 Sapper (Сапьор) | Find the safe blocks |
-| 14 | 🃏 Memory (Памет) | Find the pairs |
-| 15 | 🔢 Sliding Puzzle (Плъзгащ пъзел) | Order 1–15 |
-| 16 | 🔦 Torches Out (Изгаси факлите) | Turn every torch off |
-| 17 | 📦 Push the Crates (Бутай сандъците) | 6 crate-pushing levels |
-| 18 | 🌀 Maze (Лабиринт) | Growing random mazes |
-| 19 | 🌊 Flood (Наводнение) | Fill the board with one color |
-| 20 | 🧊 Block Groups (Сборни блокове) | Clear groups of the same color |
+| # | Game | File | |
+|---|---|---|---|
+| 11 | 🟫 Trimino (Тримино) | [`trimino.html`](arcade/trimino.html) | Falling 3-block pieces |
+| 12 | 💎 Match Three (Три в ред) | [`match3.html`](arcade/match3.html) | Swap gems |
+| 13 | 💣 Sapper (Сапьор) | [`sapper.html`](arcade/sapper.html) | Find the safe blocks |
+| 14 | 🃏 Memory (Памет) | [`memory.html`](arcade/memory.html) | Find the pairs |
+| 15 | 🔢 Sliding Puzzle (Плъзгащ пъзел) | [`slide15.html`](arcade/slide15.html) | Order 1–15 |
+| 16 | 🔦 Torches Out (Изгаси факлите) | [`lightsout.html`](arcade/lightsout.html) | Turn every torch off |
+| 17 | 📦 Push the Crates (Бутай сандъците) | [`pushbox.html`](arcade/pushbox.html) | 6 crate-pushing levels |
+| 18 | 🌀 Maze (Лабиринт) | [`maze.html`](arcade/maze.html) | Growing random mazes |
+| 19 | 🌊 Flood (Наводнение) | [`flood.html`](arcade/flood.html) | Fill the board with one color |
+| 20 | 🧊 Block Groups (Сборни блокове) | [`collapse.html`](arcade/collapse.html) | Clear groups of the same color |
 
 ### 🧠 Brain & Math
-| # | Game | |
-|---|---|---|
-| 21 | ➕ Quick Math (Бърза сметка) | + − × ÷ against the clock |
-| 22 | ⚖️ Scales (Везни) | Which side is bigger? |
-| 23 | 👀 Quick Look (Бърз поглед) | Count the blocks in a flash |
-| 24 | 🎵 Repeat (Повтори) | Remember the light sequence |
-| 25 | ⚡ Reaction (Реакция) | Reaction time in ms |
-| 26 | 🎯 Crosshair (Мерник) | Mouse aim trainer |
-| 27 | 💾 Binary Code (Двоичен код) | Build numbers from bits |
-| 28 | 🔢 Is It Prime? (Просто ли е?) | Prime or composite |
-| 29 | 🍕 Fractions (Дроби) | Compare fractions |
-| 30 | 🔮 Sequences (Редици) | Find the next number |
+| # | Game | File | |
+|---|---|---|---|
+| 21 | ➕ Quick Math (Бърза сметка) | [`quickmath.html`](arcade/quickmath.html) | + − × ÷ against the clock |
+| 22 | ⚖️ Scales (Везни) | [`compare.html`](arcade/compare.html) | Which side is bigger? |
+| 23 | 👀 Quick Look (Бърз поглед) | [`countblocks.html`](arcade/countblocks.html) | Count the blocks in a flash |
+| 24 | 🎵 Repeat (Повтори) | [`simon.html`](arcade/simon.html) | Remember the light sequence |
+| 25 | ⚡ Reaction (Реакция) | [`reaction.html`](arcade/reaction.html) | Reaction time in ms |
+| 26 | 🎯 Crosshair (Мерник) | [`aim.html`](arcade/aim.html) | Mouse aim trainer |
+| 27 | 💾 Binary Code (Двоичен код) | [`binary.html`](arcade/binary.html) | Build numbers from bits |
+| 28 | 🔢 Is It Prime? (Просто ли е?) | [`primes.html`](arcade/primes.html) | Prime or composite |
+| 29 | 🍕 Fractions (Дроби) | [`fractions.html`](arcade/fractions.html) | Compare fractions |
+| 30 | 🔮 Sequences (Редици) | [`sequence.html`](arcade/sequence.html) | Find the next number |
 
 ### 🎯 Skills
-| # | Game | |
-|---|---|---|
-| 31 | 🔨 Whack the Slimes (Удари слузите) | Whack-a-mole |
-| 32 | 🏗️ Tower Builder (Кулостроител) | Stack as high as you can |
-| 33 | 🎶 Rhythm (Ритъм) | Hit notes with D F J K |
-| 34 | 🛡️ Shield (Щит) | Block arrows around the crystal |
-| 35 | ⛳ Mini Golf (Мини голф) | 9 holes, slingshot shots |
-| 36 | 🎯 Catapult (Катапулт) | Angle + power + wind |
-| 37 | ⛷️ Ski Run (Ски спускане) | Pass the gates, miss the trees |
-| 38 | 🎣 Fishing (Риболов) | Hook and reel in fish |
-| 39 | 🐝 Little Bee (Пчеличка) | Collect pollen, dodge wasps |
-| 40 | ⛄ Snowball Fight (Снежна битка) | Hit the snowmen, not the dog |
+| # | Game | File | |
+|---|---|---|---|
+| 31 | 🔨 Whack the Slimes (Удари слузите) | [`whack.html`](arcade/whack.html) | Whack-a-mole |
+| 32 | 🏗️ Tower Builder (Кулостроител) | [`stacker.html`](arcade/stacker.html) | Stack as high as you can |
+| 33 | 🎶 Rhythm (Ритъм) | [`rhythm.html`](arcade/rhythm.html) | Hit notes with D F J K |
+| 34 | 🛡️ Shield (Щит) | [`shield.html`](arcade/shield.html) | Block arrows around the crystal |
+| 35 | ⛳ Mini Golf (Мини голф) | [`golf.html`](arcade/golf.html) | 9 holes, slingshot shots |
+| 36 | 🎯 Catapult (Катапулт) | [`catapult.html`](arcade/catapult.html) | Angle + power + wind |
+| 37 | ⛷️ Ski Run (Ски спускане) | [`ski.html`](arcade/ski.html) | Pass the gates, miss the trees |
+| 38 | 🎣 Fishing (Риболов) | [`fishing.html`](arcade/fishing.html) | Hook and reel in fish |
+| 39 | 🐝 Little Bee (Пчеличка) | [`bee.html`](arcade/bee.html) | Collect pollen, dodge wasps |
+| 40 | ⛄ Snowball Fight (Снежна битка) | [`snowball.html`](arcade/snowball.html) | Hit the snowmen, not the dog |
 
 ### ♟️ Board & Sandbox
-| # | Game | |
-|---|---|---|
-| 41 | ❌ Tic-Tac-Toe (Морски шах) | vs a minimax robot |
-| 42 | 🔴 Four in a Row (Четири в ред) | vs the robot |
-| 43 | 🪨 Nim (Ним) | Take the last block. The secret is XOR! |
-| 44 | ⚫ Flip the Blocks (Обърни блоковете) | Surround and flip, 8×8 |
-| 45 | 🎨 Pixel Canvas (Пикселно платно) | Draw with blocks |
-| 46 | 🖼️ Nonogram (Нонограм) | Reveal the hidden picture |
-| 47 | 🔢 Mini Sudoku (Мини судоку) | 4×4 sudoku |
-| 48 | ⏳ Sandbox (Пясъчник) | Sand, water, lava, stone, wood, fire |
-| 49 | 🚰 Plumbing (Водопровод) | Rotate pipes to connect the water |
-| 50 | 🗡️ Cave Explorer (Пещерен изследовател) | Turn-based dungeon: gems, monsters, stairs |
+| # | Game | File | |
+|---|---|---|---|
+| 41 | ❌ Tic-Tac-Toe (Морски шах) | [`tictactoe.html`](arcade/tictactoe.html) | vs a minimax robot |
+| 42 | 🔴 Four in a Row (Четири в ред) | [`connect4.html`](arcade/connect4.html) | vs the robot |
+| 43 | 🪨 Nim (Ним) | [`nim.html`](arcade/nim.html) | Take the last block. The secret is XOR! |
+| 44 | ⚫ Flip the Blocks (Обърни блоковете) | [`flipper.html`](arcade/flipper.html) | Surround and flip, 8×8 |
+| 45 | 🎨 Pixel Canvas (Пикселно платно) | [`paint.html`](arcade/paint.html) | Draw with blocks |
+| 46 | 🖼️ Nonogram (Нонограм) | [`nonogram.html`](arcade/nonogram.html) | Reveal the hidden picture |
+| 47 | 🔢 Mini Sudoku (Мини судоку) | [`sudoku.html`](arcade/sudoku.html) | 4×4 sudoku |
+| 48 | ⏳ Sandbox (Пясъчник) | [`sandbox.html`](arcade/sandbox.html) | Sand, water, lava, stone, wood, fire |
+| 49 | 🚰 Plumbing (Водопровод) | [`pipes.html`](arcade/pipes.html) | Rotate pipes to connect the water |
+| 50 | 🗡️ Cave Explorer (Пещерен изследовател) | [`dungeon.html`](arcade/dungeon.html) | Turn-based dungeon: gems, monsters, stairs |
 
-All the arcade games share one small engine (`arcade.html`). It handles the menu, keyboard, mouse, touch swipes, sounds and high scores (saved in `localStorage`). Each game is one `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 50 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+
+**Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
 ---
 
@@ -153,13 +155,13 @@ minecraft/
 ├── minecart-rush.html      # Minecart Rush
 ├── night-defense.html      # Night Defense
 ├── block-farm.html         # Block Farm
-├── arcade.html             # Block Arcade engine + menu
+├── arcade.html             # Block Arcade menu (links to the 50 games)
 ├── arcade/
-│   ├── games-action.js     # Arcade games 1–10
-│   ├── games-puzzle.js     # Arcade games 11–20
-│   ├── games-brain.js      # Arcade games 21–30
-│   ├── games-skill.js      # Arcade games 31–40
-│   └── games-board.js      # Arcade games 41–50
+│   ├── engine.js           # Shared engine for all mini-games
+│   ├── snake.html          # 1. Block Snake
+│   ├── breaker.html        # 2. Ore Breaker
+│   ├── ...                 # one .html file per game
+│   └── dungeon.html        # 50. Cave Explorer
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
@@ -182,7 +184,7 @@ minecraft/
 - [ ] Collision in My Minecraft (reuse `collides()` from Block Parkour)
 - [ ] Touch controls for the 3D games
 - [ ] Local copy of Three.js r160 so Block Parkour works offline
-- [ ] More arcade games: just add another `A.add({...})`!
+- [ ] More arcade games: copy a file in `arcade/` and change it!
 
 ## 📜 License
 

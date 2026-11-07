@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пещерен изследовател</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🗡️ Пещерен изследовател</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 50. Пещерен изследовател
+A.add({id:'dungeon',cat:'board',icon:'🗡️',name:'Пещерен изследовател',desc:'Кристали, чудовища и стълби',help:'Стрелки — ход (всеки твой ход = ход на чудовищата). Влез в чудовище, за да го удариш. Събирай 💎, пий 🧪, слизай по стълбите ⬇.',
+  start(g){g.hp=6;g.depth=0;this.level(g);},
+  level(g){g.depth++;const W=15,H=11;g.W=W;g.H=H;g.m=[];for(let i=0;i<W*H;i++)g.m.push(1);
+    let x=1,y=1;const cells=[];for(let s=0;s<220+g.depth*10;s++){g.m[y*W+x]=0;cells.push([x,y]);const[dx,dy]=A.pick([[1,0],[-1,0],[0,1],[0,-1]]);x=A.clamp(x+dx,1,W-2);y=A.clamp(y+dy,1,H-2);}
+    g.px=1;g.py=1;const free=()=>{let p;do{p=A.pick(cells);}while((p[0]===g.px&&p[1]===g.py)||g.items.some(q=>q.x===p[0]&&q.y===p[1])||g.mon.some(q=>q.x===p[0]&&q.y===p[1])||Math.abs(p[0]-1)+Math.abs(p[1]-1)<3);return p;};
+    g.items=[];g.mon=[];let p=free();g.items.push({x:p[0],y:p[1],k:'stairs'});
+    for(let i=0;i<4+g.depth;i++){p=free();g.items.push({x:p[0],y:p[1],k:'gem'});}
+    if(Math.random()<.7){p=free();g.items.push({x:p[0],y:p[1],k:'potion'});}
+    for(let i=0;i<1+g.depth;i++){p=free();g.mon.push({x:p[0],y:p[1],hp:1+Math.floor(g.depth/3)});}g.log='Ниво '+g.depth;},
+  key(g,k){const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(!m)return;
+    const nx=g.px+m[0],ny=g.py+m[1];if(g.m[ny*g.W+nx])return;
+    const mo=g.mon.find(q=>q.x===nx&&q.y===ny);
+    if(mo){mo.hp--;A.beep(250,.06);if(mo.hp<=0){g.mon=g.mon.filter(q=>q!==mo);g.score+=5;g.log='Победи чудовище! +5';}}
+    else{g.px=nx;g.py=ny;const it=g.items.find(q=>q.x===nx&&q.y===ny);
+      if(it){if(it.k==='gem'){g.score++;A.beep(1000,.05);g.items=g.items.filter(q=>q!==it);g.log='💎 +1';}
+        if(it.k==='potion'){g.hp=Math.min(6,g.hp+3);A.beep(700,.1,'sine');g.items=g.items.filter(q=>q!==it);g.log='🧪 +3 живот';}
+        if(it.k==='stairs'){g.score+=10;A.tune([440,550,660]);return this.level(g);}}}
+    for(const q of g.mon){const dx=Math.sign(g.px-q.x),dy=Math.sign(g.py-q.y);
+      if(Math.abs(g.px-q.x)+Math.abs(g.py-q.y)===1){if(Math.random()<.7){g.hp--;g.log='Удариха те!';A.beep(100,.15,'sawtooth');if(g.hp<=0)return A.over(g,'Падна на ниво '+g.depth);}continue;}
+      if(Math.abs(g.px-q.x)+Math.abs(g.py-q.y)>8&&Math.random()<.5)continue;
+      const tries=Math.abs(g.px-q.x)>Math.abs(g.py-q.y)?[[dx,0],[0,dy]]:[[0,dy],[dx,0]];
+      for(const[a,b]of tries){if(!a&&!b)continue;const X=q.x+a,Y=q.y+b;if(!g.m[Y*g.W+X]&&!g.mon.some(o=>o.x===X&&o.y===Y)&&!(X===g.px&&Y===g.py)){q.x=X;q.y=Y;break;}}}},
+  draw(g){A.bg('#0b0b10');const T=30,ox=15,oy=15;for(let y=0;y<g.H;y++)for(let x=0;x<g.W;x++){const d=Math.hypot(x-g.px,y-g.py);if(d>5.5)continue;
+      if(g.m[y*g.W+x])A.block(ox+x*T,oy+y*T,T,C.stone);else{c.fillStyle='#2a2420';c.fillRect(ox+x*T,oy+y*T,T,T);}
+      if(d>3.5){c.fillStyle='rgba(0,0,0,.5)';c.fillRect(ox+x*T,oy+y*T,T,T);}}
+    const vis=(q)=>Math.hypot(q.x-g.px,q.y-g.py)<=5.5;
+    for(const it of g.items)if(vis(it))A.txt({gem:'💎',potion:'🧪',stairs:'⬇'}[it.k],ox+it.x*T+15,oy+it.y*T+16,18,'#fff','center');
+    for(const q of g.mon)if(vis(q)){A.block(ox+q.x*T+4,oy+q.y*T+4,22,'#5a2b4a');c.fillStyle='#f33';c.fillRect(ox+q.x*T+8,oy+q.y*T+10,4,4);c.fillRect(ox+q.x*T+18,oy+q.y*T+10,4,4);}
+    A.block(ox+g.px*T+5,oy+g.py*T+3,20,'#3b7bd6',24);c.fillStyle='#f1c27d';c.fillRect(ox+g.px*T+8,oy+g.py*T+3,14,9);
+    A.txt('❤'.repeat(g.hp),470,345,14,'#f55','right');A.txt(g.log,15,345,13,'#ffd54f');}
+});
+</script>
+</body>
+</html>

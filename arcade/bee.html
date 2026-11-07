@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пчеличка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐝 Пчеличка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 39. Пчеличка
+A.add({id:'bee',cat:'skill',icon:'🐝',name:'Пчеличка',desc:'Събирай цветен прашец',help:'Мишка или стрелки — лети. Събирай цветята, пази се от осите!',
+  start(g){g.x=240;g.y=180;g.fl=[];g.w=[{x:40,y:40,vx:120,vy:90}];for(let i=0;i<4;i++)this.flower(g);},
+  flower(g){g.fl.push({x:A.ri(20,450),y:A.ri(30,330),k:A.pick(['#ff6b8a','#ffd23f','#b388ff','#fff'])});},
+  move(g,x,y){g.tx=x;g.ty=y;},
+  update(g,dt){let dx=0,dy=0;if(A.keys.ArrowLeft||A.keys.KeyA)dx--;if(A.keys.ArrowRight||A.keys.KeyD)dx++;if(A.keys.ArrowUp||A.keys.KeyW)dy--;if(A.keys.ArrowDown||A.keys.KeyS)dy++;
+    if(dx||dy){g.tx=undefined;g.x+=dx*240*dt;g.y+=dy*240*dt;}else if(g.tx!==undefined){g.x+=(g.tx-g.x)*Math.min(1,dt*6);g.y+=(g.ty-g.y)*Math.min(1,dt*6);}
+    g.x=A.clamp(g.x,8,472);g.y=A.clamp(g.y,8,352);
+    for(let i=g.fl.length-1;i>=0;i--){const f=g.fl[i];if(Math.abs(f.x+10-g.x)<18&&Math.abs(f.y+10-g.y)<18){g.fl.splice(i,1);g.score++;A.beep(800,.05);this.flower(g);if(g.score%5===0)g.w.push({x:A.pick([10,460]),y:A.pick([10,340]),vx:A.rnd(80,160)*A.pick([-1,1]),vy:A.rnd(80,160)*A.pick([-1,1])});}}
+    for(const w of g.w){w.x+=w.vx*dt;w.y+=w.vy*dt;if(w.x<0||w.x>464)w.vx*=-1;if(w.y<0||w.y>344)w.vy*=-1;if(Math.abs(w.x+8-g.x)<14&&Math.abs(w.y+8-g.y)<14)return A.over(g,'Ужили те!');}},
+  draw(g){A.bg('#6cbf47');for(const f of g.fl){c.fillStyle='#2e6b1e';c.fillRect(f.x+8,f.y+12,4,10);c.fillStyle=f.k;c.fillRect(f.x,f.y,20,14);c.fillStyle='#ffb300';c.fillRect(f.x+7,f.y+4,6,6);}
+    for(const w of g.w){c.fillStyle='#ffb300';c.fillRect(w.x,w.y,16,12);c.fillStyle='#000';c.fillRect(w.x+4,w.y,3,12);c.fillRect(w.x+10,w.y,3,12);c.fillStyle='#e33';c.fillRect(w.x+16,w.y+5,4,2);}
+    const f=Math.sin(g.t*30)>0;c.fillStyle='#ffd23f';c.fillRect(g.x-9,g.y-7,18,14);c.fillStyle='#000';c.fillRect(g.x-3,g.y-7,3,14);c.fillRect(g.x+4,g.y-7,3,14);
+    c.fillStyle='rgba(255,255,255,.8)';c.fillRect(g.x-6,g.y-(f?16:12),8,8);c.fillRect(g.x+1,g.y-(f?16:12),8,8);}
+});
+</script>
+</body>
+</html>

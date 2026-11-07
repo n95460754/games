@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Памет</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🃏 Памет</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 14. Памет
+A.add({id:'memory',cat:'puzzle',icon:'🃏',name:'Памет',desc:'Намери двойките блокове',low:true,unit:' хода',help:'Обръщай по 2 карти. Ако са еднакви — остават. Намери всичките 8 двойки с възможно най-малко ходове.',
+  start(g){const t=['grass','dirt','stone','wood','gold','gem','ruby','water'];g.cards=A.shuffle(t.concat(t)).map(k=>({k,o:0,d:0}));g.open=[];g.wait=0;g.moves=0;},
+  click(g,mx,my){if(g.wait>0)return;const x=Math.floor((mx-90)/76),y=Math.floor((my-20)/82);if(x<0||y<0||x>3||y>3)return;const cd=g.cards[y*4+x];if(cd.o||cd.d)return;
+    cd.o=1;g.open.push(cd);A.beep(500,.04);if(g.open.length===2){g.moves++;g.score=g.moves;
+      if(g.open[0].k===g.open[1].k){g.open.forEach(q=>q.d=1);g.open=[];A.beep(900,.1);if(g.cards.every(q=>q.d))A.over(g,'🏆 Всички двойки!');}else g.wait=.8;}},
+  update(g,dt){if(g.wait>0){g.wait-=dt;if(g.wait<=0){g.open.forEach(q=>q.o=0);g.open=[];}}},
+  draw(g){A.bg('#1f2a3d');g.cards.forEach((q,i)=>{const x=90+(i%4)*76,y=20+Math.floor(i/4)*82;
+      if(q.o||q.d){c.fillStyle='#dbe6f5';c.fillRect(x,y,70,76);A.block(x+15,y+18,40,C[q.k]);if(q.d){c.strokeStyle='#9ccc65';c.lineWidth=3;c.strokeRect(x+2,y+2,66,72);}}
+      else{A.block(x,y,70,'#5a6b8c',76);A.txt('?',x+35,y+38,28,'#dbe6f5','center');}});
+    A.txt('Ходове: '+g.moves,420,30,14,'#fff');}
+});
+</script>
+</body>
+</html>

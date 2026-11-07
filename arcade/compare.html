@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Везни</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚖️ Везни</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 22. По-голямо или по-малко
+A.add({id:'compare',cat:'brain',icon:'⚖️',name:'Везни',desc:'Коя страна тежи повече?',help:'← ако лявата сметка е по-голяма, → ако дясната, ↓ ако са равни. 45 секунди. Грешка = -1 точка.',
+  start(g){g.time=45;this.next(g);},
+  ex(lvl){const t=A.ri(0,lvl>6?3:2);const a=A.ri(2,12),b=A.ri(2,12);
+    if(t===0)return[a+' + '+b,a+b];if(t===1)return[a+' × '+b,a*b];if(t===2){const x=Math.max(a,b),y=Math.min(a,b);return[x+' − '+y,x-y];}return[a*b+' ÷ '+b,a];},
+  next(g){g.L=this.ex(g.score);g.R=Math.random()<.2?[g.L[1]+'',g.L[1]]:this.ex(g.score);},
+  key(g,k){const want=g.L[1]>g.R[1]?'L':g.L[1]<g.R[1]?'R':'E';const got={ArrowLeft:'L',KeyA:'L',ArrowRight:'R',KeyD:'R',ArrowDown:'E',KeyS:'E'}[k];if(!got)return;
+    const ok=got===want;flash(g,ok);g.score=Math.max(0,g.score+(ok?1:-1));this.next(g);},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#2a2018');const tilt=0;c.fillStyle='#8d6a3f';c.fillRect(236,150,8,150);c.fillRect(80,140,320,10);
+    A.block(70,170,150,'#5a6b8c',70);A.block(260,170,150,'#5a6b8c',70);A.txt(g.L[0],145,205,24,'#fff','center');A.txt(g.R[0],335,205,24,'#fff','center');
+    A.txt('←  по-голямо   ↓ равно   по-голямо  →',240,320,14,'#ffd54f','center');A.txt('⏱ '+Math.ceil(g.time),20,20,18);drawFlash(g);}
+});
+</script>
+</body>
+</html>

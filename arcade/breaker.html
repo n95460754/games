@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рудотрошач</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧱 Рудотрошач</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 2. Рудотрошач
+A.add({id:'breaker',cat:'action',icon:'🧱',name:'Рудотрошач',desc:'Чупи рудите с топче',help:'Мишка или ← → — движи платформата. Space пуска топчето. Златото иска 3 удара, желязото 2.',
+  start(g){g.lives=3;g.lv=1;this.level(g);},
+  level(g){g.bricks=[];const types=[[C.stone,1],[C.iron,2],[C.gold,3]];
+    for(let r=0;r<5+Math.min(3,g.lv-1);r++)for(let i=0;i<10;i++){const t=r<g.lv-1?types[2]:r<2?types[1]:types[0];if(Math.random()<.08)continue;g.bricks.push({x:i*46+10,y:30+r*20,w:44,h:18,col:t[0],hp:t[1]});}
+    g.px=205;this.reset(g);},
+  reset(g){g.stuck=true;g.bx=240;g.by=320;const s=220+g.lv*25;g.vx=s*.6;g.vy=-s*.8;},
+  move(g,x){g.px=A.clamp(x-35,0,410);},
+  key(g,k){if(k==='Space')g.stuck=false;},
+  click(g){g.stuck=false;},
+  update(g,dt){
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.px-=420*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.px+=420*dt;g.px=A.clamp(g.px,0,410);
+    if(g.stuck){g.bx=g.px+35;g.by=322;return;}
+    g.bx+=g.vx*dt;g.by+=g.vy*dt;
+    if(g.bx<5){g.bx=5;g.vx*=-1;}if(g.bx>475){g.bx=475;g.vx*=-1;}if(g.by<5){g.by=5;g.vy*=-1;}
+    if(g.vy>0&&g.by>325&&g.by<340&&g.bx>g.px-4&&g.bx<g.px+74){const o=(g.bx-g.px-35)/35,s=Math.hypot(g.vx,g.vy)*1.01;g.vx=s*o*.85;g.vy=-Math.sqrt(s*s-g.vx*g.vx);A.beep(300);}
+    if(g.by>370){g.lives--;A.beep(120,.3,'sawtooth');if(!g.lives)return A.over(g);this.reset(g);}
+    for(const b of g.bricks){if(b.hp>0&&g.bx>b.x-4&&g.bx<b.x+b.w+4&&g.by>b.y-4&&g.by<b.y+b.h+4){
+      const ox=Math.min(g.bx-b.x+4,b.x+b.w+4-g.bx),oy=Math.min(g.by-b.y+4,b.y+b.h+4-g.by);if(ox<oy)g.vx*=-1;else g.vy*=-1;
+      b.hp--;g.score+=b.hp?1:5;A.beep(500+b.hp*200);break;}}
+    if(g.bricks.every(b=>b.hp<=0)){g.lv++;A.tune([523,659,784]);this.level(g);}
+  },
+  draw(g){A.bg('#1d1a24');for(const b of g.bricks)if(b.hp>0){A.block(b.x,b.y,b.w,b.col,b.h);if(b.hp>1)A.txt(b.hp,b.x+22,b.y+9,12,'#000','center');}
+    A.block(g.px,330,70,C.wood,10);c.fillStyle='#fff';c.fillRect(g.bx-5,g.by-5,10,10);
+    A.txt('❤'.repeat(g.lives),8,350,14,'#f55');A.txt('Ниво '+g.lv,472,350,14,'#fff','right');
+    if(g.stuck)A.txt('Space / клик за старт',240,250,16,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

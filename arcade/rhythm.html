@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ритъм</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎶 Ритъм</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 33. Ритъм
+A.add({id:'rhythm',cat:'skill',icon:'🎶',name:'Ритъм',desc:'Удряй нотите в такт',help:'Клавиши D F J K (или 1 2 3 4) за 4-те линии. Натисни, когато нотата е на бялата линия. 10 пропуска и край.',
+  start(g){g.notes=[];g.sp=0;g.miss=0;g.combo=0;g.fx=[0,0,0,0];g.beat=0;},
+  key(g,k){const L={KeyD:0,KeyF:1,KeyJ:2,KeyK:3,Digit1:0,Digit2:1,Digit3:2,Digit4:3}[k];if(L===undefined)return;g.fx[L]=.15;
+    const n=g.notes.filter(n=>n.l===L&&!n.hit).sort((a,b)=>Math.abs(a.y-300)-Math.abs(b.y-300))[0];
+    if(n&&Math.abs(n.y-300)<28){n.hit=1;g.combo++;g.score+=10+Math.min(40,g.combo);A.beep([523,587,659,784][L],.1,'triangle');}else{g.combo=0;g.miss++;A.beep(110,.08);if(g.miss>=10)A.over(g,'Изпусна ритъма');}},
+  update(g,dt){const sp=170+g.t*2;g.beat-=dt;
+    if(g.beat<=0){g.beat=Math.max(.22,.55-g.t*.004);g.notes.push({l:A.ri(0,3),y:-20});if(Math.random()<.15)g.notes.push({l:A.ri(0,3),y:-20});}
+    for(const n of g.notes){n.y+=sp*dt;if(!n.hit&&n.y>330){n.hit=2;g.miss++;g.combo=0;if(g.miss>=10)return A.over(g,'Изпусна ритъма');}}
+    g.notes=g.notes.filter(n=>n.y<380&&n.hit!==1);g.fx=g.fx.map(v=>Math.max(0,v-dt));},
+  draw(g){A.bg('#140f22');const cols=[C.red,C.gold,C.grass,C.water];for(let l=0;l<4;l++){c.fillStyle=g.fx[l]?'#3a2f5a':'#1e1733';c.fillRect(120+l*60,0,56,360);A.txt('DFJK'[l],148+l*60,340,16,'#bbb','center');}
+    c.fillStyle='#fff';c.fillRect(116,298,244,4);for(const n of g.notes)if(n.hit!==2)A.block(124+n.l*60,n.y-10,48,cols[n.l],20);
+    A.txt('Комбо '+g.combo,380,40,16,'#ffd54f');A.txt('Пропуски '+g.miss+'/10',380,70,14,'#f88');}
+});
+</script>
+</body>
+</html>

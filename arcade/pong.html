@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков тенис</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏓 Блоков тенис</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 8. Блоков тенис
+A.add({id:'pong',cat:'action',icon:'🏓',name:'Блоков тенис',desc:'Победи робота до 7',help:'W/S, ↑/↓ или мишка — движи лявата ракета. Първият до 7 точки печели.',
+  start(g){g.py=150;g.ay=150;g.me=0;g.ai=0;this.serve(g,1);},
+  serve(g,d){g.bx=240;g.by=180;const a=A.rnd(-.5,.5);g.vx=Math.cos(a)*260*d;g.vy=Math.sin(a)*260;},
+  move(g,x,y){g.py=A.clamp(y-35,0,290);},
+  update(g,dt){if(A.keys.KeyW||A.keys.ArrowUp)g.py-=330*dt;if(A.keys.KeyS||A.keys.ArrowDown)g.py+=330*dt;g.py=A.clamp(g.py,0,290);
+    const aim=g.by-35;g.ay+=A.clamp(aim-g.ay,-230*dt,230*dt);g.ay=A.clamp(g.ay,0,290);
+    g.bx+=g.vx*dt;g.by+=g.vy*dt;if(g.by<6||g.by>354){g.vy*=-1;g.by=A.clamp(g.by,6,354);}
+    const pad=(px,dir)=>{const o=(g.by-px-35)/35,s=Math.min(560,Math.hypot(g.vx,g.vy)*1.06);g.vx=Math.cos(o*.9)*s*dir;g.vy=Math.sin(o*.9)*s;A.beep(400);};
+    if(g.vx<0&&g.bx<30&&g.bx>14&&g.by>g.py-6&&g.by<g.py+76)pad(g.py,1);
+    if(g.vx>0&&g.bx>450&&g.bx<466&&g.by>g.ay-6&&g.by<g.ay+76)pad(g.ay,-1);
+    if(g.bx<-10){g.ai++;A.beep(150,.2);this.serve(g,1);}if(g.bx>490){g.me++;g.score=g.me;A.beep(900,.2);this.serve(g,-1);}
+    if(g.me>=7)A.over(g,'🏆 Победа '+g.me+':'+g.ai+'!');else if(g.ai>=7)A.over(g,'Загуба '+g.me+':'+g.ai);},
+  draw(g){A.bg('#14301e');for(let y=0;y<360;y+=24){c.fillStyle='rgba(255,255,255,.2)';c.fillRect(238,y,4,12);}
+    A.block(14,g.py,14,'#3b7bd6',70);A.block(452,g.ay,14,C.red,70);c.fillStyle='#fff';c.fillRect(g.bx-6,g.by-6,12,12);
+    A.txt(g.me,200,30,30,'#fff','center');A.txt(g.ai,280,30,30,'#fff','center');}
+});
+</script>
+</body>
+</html>

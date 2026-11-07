@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Наводнение</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌊 Наводнение</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 19. Наводнение
+A.add({id:'flood',cat:'puzzle',icon:'🌊',name:'Наводнение',desc:'Залей всичко с един цвят',help:'Избери цвят отдолу (или клавиши 1–6). Водата от горния ляв ъгъл поглъща съседите със същия цвят. Залей всичко за най-много 22 хода!',
+  cols:[C.red,C.gold,C.grass,C.water,C.purple,C.white],
+  start(g){g.b=[];for(let i=0;i<144;i++)g.b.push(A.ri(0,5));g.moves=0;},
+  pickc(g,col){if(col===g.b[0])return;const old=g.b[0],st=[0],seen=new Set([0]);
+    while(st.length){const i=st.pop();g.b[i]=col;const x=i%12,y=Math.floor(i/12);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy,j=Y*12+X;if(X>=0&&Y>=0&&X<12&&Y<12&&!seen.has(j)&&g.b[j]===old){seen.add(j);st.push(j);}}}
+    g.moves++;A.beep(300+col*80,.05);
+    if(g.b.every(v=>v===col)){g.score=(23-g.moves)*10;A.tune([523,659,784,1046]);A.over(g,'🏆 Готово за '+g.moves+' хода!');}else if(g.moves>=22){g.score=0;A.over(g,'Свършиха ходовете');}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=6)this.pickc(g,n-1);},
+  click(g,mx,my){if(my>320&&my<352){const i=Math.floor((mx-90)/50);if(i>=0&&i<6)this.pickc(g,i);}},
+  draw(g){A.bg('#14202c');g.b.forEach((v,i)=>{c.fillStyle=this.cols[v];c.fillRect(130+(i%12)*25,8+Math.floor(i/12)*25,25,25);});
+    this.cols.forEach((col,i)=>{A.block(90+i*50+5,322,40,col,28);A.txt(i+1,110+i*50,336,12,'#000','center');});A.txt('Ходове: '+g.moves+'/22',20,20,14);}
+});
+</script>
+</body>
+</html>

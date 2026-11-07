@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бърз поглед</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👀 Бърз поглед</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 23. Преброй блоковете
+A.add({id:'countblocks',cat:'brain',icon:'👀',name:'Бърз поглед',desc:'Преброй блоковете за миг',help:'Блоковете се показват за кратко. Напиши колко са и натисни Enter. 3 грешки и край.',
+  start(g){g.lives=3;g.inp='';this.next(g);},
+  next(g){const n=A.ri(3,6+g.score);g.n=n;g.bl=[];const used=new Set();while(g.bl.length<n){const x=A.ri(0,11),y=A.ri(0,6);if(used.has(x+','+y))continue;used.add(x+','+y);g.bl.push([x,y,A.pick([C.grass,C.stone,C.wood,C.gold,C.gem])]);}
+    g.show=Math.max(.6,1.8-g.score*.08);},
+  key(g,k,ch){if(g.show>0)return;if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.n;flash(g,ok);if(ok)g.score++;else{g.lives--;g.reveal=1.2;if(!g.lives)return A.over(g,'Бяха '+g.n);}g.inp='';if(ok)this.next(g);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.show>0)g.show-=dt;if(g.reveal>0){g.reveal-=dt;if(g.reveal<=0)this.next(g);}},
+  draw(g){A.bg('#1d2b3a');if(g.show>0||g.reveal>0)for(const[x,y,col]of g.bl)A.block(24+x*36,30+y*36,32,col);
+    else{A.txt('Колко бяха?',240,120,26,'#fff','center');inputBox(g,190);}
+    A.txt('❤'.repeat(g.lives),20,340,16,'#f55');drawFlash(g);}
+});
+</script>
+</body>
+</html>

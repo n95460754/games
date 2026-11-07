@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ловец на руди</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛒 Ловец на руди</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 3. Ловец на руди
+A.add({id:'catcher',cat:'action',icon:'🛒',name:'Ловец на руди',desc:'Хващай рудите, не бомбите',help:'← → или мишка — движи количката. Хващай руди, избягвай бомбите 💣 (имаш 3 живота).',
+  start(g){g.x=210;g.items=[];g.sp=0;g.lives=3;},
+  move(g,x){g.x=A.clamp(x-30,0,420);},
+  update(g,dt){
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=380*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=380*dt;g.x=A.clamp(g.x,0,420);
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.25,.8-g.t*.01);const r=Math.random();
+      g.items.push({x:A.rnd(10,450),y:-20,v:A.rnd(110,170)+g.t*2,k:r<.22?'bomb':r<.5?'coal':r<.75?'iron':r<.92?'gold':'gem'});}
+    for(let i=g.items.length-1;i>=0;i--){const it=g.items[i];it.y+=it.v*dt;
+      if(it.y>310&&it.y<340&&it.x+20>g.x&&it.x<g.x+60){g.items.splice(i,1);
+        if(it.k==='bomb'){g.lives--;A.beep(90,.3,'sawtooth');if(!g.lives)return A.over(g,'Бум!');}
+        else{g.score+={coal:1,iron:2,gold:5,gem:10}[it.k];A.beep(700);}continue;}
+      if(it.y>370)g.items.splice(i,1);}
+  },
+  draw(g){A.bg('#2a1f17');for(const it of g.items){if(it.k==='bomb'){A.block(it.x,it.y,20,'#c62828');c.fillStyle='#fff';c.fillRect(it.x+3,it.y+8,14,4);}
+      else{A.block(it.x,it.y,20,C.stone);c.fillStyle={coal:C.coal,iron:C.iron,gold:C.gold,gem:C.gem}[it.k];c.fillRect(it.x+4,it.y+4,5,5);c.fillRect(it.x+11,it.y+10,5,5);}}
+    A.block(g.x,320,60,'#7d7d85',22);c.fillStyle='#222';c.fillRect(g.x+8,340,10,8);c.fillRect(g.x+42,340,10,8);
+    A.txt('❤'.repeat(g.lives),8,14,14,'#f55');}
+});
+</script>
+</body>
+</html>

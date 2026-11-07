@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Обърни блоковете</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚫ Обърни блоковете</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 44. Обърни блоковете
+A.add({id:'flipper',cat:'board',icon:'⚫',name:'Обърни блоковете',desc:'Обграждай и обръщай',help:'Сложи своя (бял) блок така, че да обградиш черни блокове в линия — те стават бели. Накрая печели който има повече.',
+  start(g){g.b=Array(64).fill(0);g.b[27]=g.b[36]=1;g.b[28]=g.b[35]=2;g.turn=1;g.ai=0;},
+  flips(g,i,p){if(g.b[i])return[];const x=i%8,y=Math.floor(i/8),out=[];
+    for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]){const line=[];let X=x+dx,Y=y+dy;
+      while(X>=0&&Y>=0&&X<8&&Y<8&&g.b[Y*8+X]===3-p){line.push(Y*8+X);X+=dx;Y+=dy;}
+      if(line.length&&X>=0&&Y>=0&&X<8&&Y<8&&g.b[Y*8+X]===p)out.push(...line);}return out;},
+  moves(g,p){const m=[];for(let i=0;i<64;i++){const f=this.flips(g,i,p);if(f.length)m.push([i,f]);}return m;},
+  play(g,i,f,p){g.b[i]=p;for(const j of f)g.b[j]=p;A.beep(p===1?600:300,.05);g.score=g.b.filter(v=>v===1).length;},
+  next(g){const me=this.moves(g,1).length,ai=this.moves(g,2).length;if(!me&&!ai){const a=g.b.filter(v=>v===1).length,b=g.b.filter(v=>v===2).length;g.score=a;return A.over(g,a>b?'🏆 Победа '+a+':'+b:a<b?'Загуба '+a+':'+b:'Равенство '+a+':'+b);}
+    if(g.turn===1&&!me)g.turn=2;else if(g.turn===2&&!ai)g.turn=1;if(g.turn===2)g.ai=.6;},
+  click(g,mx,my){if(g.turn!==1)return;const x=Math.floor((mx-100)/35),y=Math.floor((my-40)/35);if(x<0||y<0||x>7||y>7)return;const f=this.flips(g,y*8+x,1);if(!f.length)return;this.play(g,y*8+x,f,1);g.turn=2;this.next(g);},
+  update(g,dt){if(g.turn!==2)return;g.ai-=dt;if(g.ai>0)return;const m=this.moves(g,2);if(m.length){const corner=i=>[0,7,56,63].includes(i)?10:0,edge=i=>(i%8===0||i%8===7||i<8||i>55)?2:0;
+      m.sort((a,b)=>(b[1].length+corner(b[0])+edge(b[0]))-(a[1].length+corner(a[0])+edge(a[0]))+A.rnd(-1,1));this.play(g,m[0][0],m[0][1],2);}g.turn=1;this.next(g);},
+  draw(g){A.bg('#14301e');const hint=g.turn===1?new Set(this.moves(g,1).map(m=>m[0])):new Set();
+    for(let i=0;i<64;i++){const x=100+(i%8)*35,y=40+Math.floor(i/8)*35;c.fillStyle='#2e7d32';c.fillRect(x+1,y+1,33,33);if(g.b[i])A.block(x+5,y+5,25,g.b[i]===1?'#eee':'#222');else if(hint.has(i)){c.fillStyle='rgba(255,255,255,.25)';c.fillRect(x+13,y+13,9,9);}}
+    A.txt('⬜ '+g.b.filter(v=>v===1).length+'   ⬛ '+g.b.filter(v=>v===2).length+'   '+(g.turn===1?'Твой ход':'Роботът...'),240,20,15,'#fff','center');}
+});
+</script>
+</body>
+</html>

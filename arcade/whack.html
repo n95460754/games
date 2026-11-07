@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Удари слузите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔨 Удари слузите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 31. Удари слузите
+A.add({id:'whack',cat:'skill',icon:'🔨',name:'Удари слузите',desc:'Халосай ги, преди да се скрият',help:'Кликай слузите, щом изскочат (или клавиши 1–9 като на цифровата клавиатура). Не удряй динамита! 30 секунди.',
+  start(g){g.time=30;g.h=Array(9).fill(null);g.sp=0;g.hits=[];},
+  hitAt(g,i){const m=g.h[i];if(!m||m.up<=0)return;if(m.bomb){g.score=Math.max(0,g.score-3);A.beep(90,.3,'sawtooth');}else{g.score++;A.beep(700,.05);}g.hits.push({i,t:.3});g.h[i]=null;},
+  click(g,mx,my){const x=Math.floor((mx-90)/100),y=Math.floor((my-30)/100);if(x>=0&&y>=0&&x<3&&y<3)this.hitAt(g,y*3+x);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=9){const map=[6,7,8,3,4,5,0,1,2];this.hitAt(g,map[n-1]);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');g.sp-=dt;
+    if(g.sp<=0){g.sp=Math.max(.3,.9-g.t*.02);const free=[...Array(9).keys()].filter(i=>!g.h[i]);if(free.length)g.h[A.pick(free)]={up:A.rnd(.7,1.3)-g.t*.01,bomb:Math.random()<.15};}
+    g.h.forEach((m,i)=>{if(m){m.up-=dt;if(m.up<=-.2)g.h[i]=null;}});g.hits.forEach(h=>h.t-=dt);g.hits=g.hits.filter(h=>h.t>0);},
+  draw(g){A.bg('#3d7a2a');for(let i=0;i<9;i++){const x=90+(i%3)*100,y=30+Math.floor(i/3)*100;c.fillStyle='#2a1a10';c.fillRect(x+10,y+60,80,26);
+      const m=g.h[i];if(m&&m.up>0){if(m.bomb){A.block(x+25,y+20,50,'#c62828',46);c.fillStyle='#fff';c.fillRect(x+30,y+38,40,8);}else{A.block(x+22,y+16,56,'#7cb342',50);c.fillStyle='#000';c.fillRect(x+34,y+30,8,8);c.fillRect(x+58,y+30,8,8);}}
+      c.fillStyle=C.dirt;c.fillRect(x+6,y+76,88,14);}
+    for(const h of g.hits)A.txt('💥',90+(h.i%3)*100+50,30+Math.floor(h.i/3)*100+40,30,'#fff','center');A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

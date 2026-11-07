@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Прилепче</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🦇 Прилепче</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 4. Прилепче в пещерата
+A.add({id:'bat',cat:'action',icon:'🦇',name:'Прилепче',desc:'Лети през пещерата',help:'Space / клик — размахай криле. Мини през дупките между сталактитите.',
+  start(g){g.y=180;g.v=0;g.cols=[];g.sp=0;},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW'){g.v=-260;A.beep(500,.04);}},
+  update(g,dt){g.v+=800*dt;g.y+=g.v*dt;g.sp-=dt;
+    if(g.sp<=0){g.sp=1.5;g.cols.push({x:500,gap:A.ri(70,250),pass:false});}
+    for(const p of g.cols){p.x-=150*dt;if(!p.pass&&p.x<80){p.pass=true;g.score++;A.beep(900);}
+      if(p.x<112&&p.x+40>88&&(g.y-10<p.gap-55||g.y+10>p.gap+55))return A.over(g,'Удари скалата!');}
+    g.cols=g.cols.filter(p=>p.x>-50);if(g.y>360||g.y<0)return A.over(g,'Падна!');},
+  draw(g){A.bg('#16121c');for(const p of g.cols){for(let y=0;y<p.gap-55;y+=20)A.block(p.x,y,40,C.stone,Math.min(20,p.gap-55-y));for(let y=p.gap+55;y<360;y+=20)A.block(p.x,y,40,C.stone);}
+    const f=Math.sin(g.t*25)>0;c.fillStyle='#3a2b4a';c.fillRect(90,g.y-6,20,12);c.fillRect(78,g.y+(f?-10:0),12,8);c.fillRect(110,g.y+(f?-10:0),12,8);c.fillStyle='#f33';c.fillRect(102,g.y-3,3,3);}
+});
+</script>
+</body>
+</html>

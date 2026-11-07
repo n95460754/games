@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Просто ли е?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Просто ли е?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 28. Просто или съставно
+A.add({id:'primes',cat:'brain',icon:'🔢',name:'Просто ли е?',desc:'Прости числа на скорост',help:'← ако числото е ПРОСТО, → ако е СЪСТАВНО. 3 грешки и край. Числата растат!',
+  start(g){g.lives=3;this.next(g);},
+  isP(n){if(n<2)return false;for(let i=2;i*i<=n;i++)if(n%i===0)return false;return true;},
+  next(g){const max=20+g.score*8;let n;do{n=A.ri(2,max);}while(n===g.n);if(Math.random()<.45){while(!this.isP(n))n++;}g.n=n;},
+  key(g,k){const ans={ArrowLeft:true,KeyA:true,ArrowRight:false,KeyD:false}[k];if(ans===undefined)return;
+    const ok=ans===this.isP(g.n);flash(g,ok);if(ok)g.score++;else{g.lives--;g.why=g.n+(this.isP(g.n)?' е просто':' = '+this.fac(g.n));if(!g.lives)return A.over(g,g.why);}this.next(g);},
+  fac(n){const f=[];for(let p=2;n>1;p++)while(n%p===0){f.push(p);n/=p;}return f.join('·');},
+  update(g,dt){if(g.fl)g.fl.t-=dt;},
+  draw(g){A.bg('#2a1f30');A.block(170,90,140,C.stone,120);A.txt(g.n,240,150,46,'#fff','center');
+    A.txt('← ПРОСТО',90,300,18,'#9ccc65','center');A.txt('СЪСТАВНО →',390,300,18,'#ffb74d','center');A.txt('❤'.repeat(g.lives),20,20,16,'#f55');
+    if(g.why)A.txt('Последна грешка: '+g.why,240,340,13,'#bbb','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>

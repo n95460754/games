@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Нашествие</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👾 Нашествие</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 6. Нашествие на слузите
+A.add({id:'invaders',cat:'action',icon:'👾',name:'Нашествие',desc:'Стреляй по слузите',help:'← → — движи се. Space — стреляй. Не ги оставяй да стигнат долу!',
+  start(g){g.x=230;g.shots=[];g.bombs=[];g.wave=0;g.cd=0;g.lives=3;this.wave(g);},
+  wave(g){g.wave++;g.en=[];for(let r=0;r<4;r++)for(let i=0;i<8;i++)g.en.push({x:60+i*44,y:30+r*30,a:1,col:[C.leaf,'#7cb342',C.purple,C.ruby][r]});g.dir=1;g.esp=30+g.wave*10;},
+  key(g,k){if(k==='Space'&&g.cd<=0){g.shots.push({x:g.x+9,y:320});g.cd=.35;A.beep(900,.05);}},
+  update(g,dt){g.cd-=dt;if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=260*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=260*dt;g.x=A.clamp(g.x,0,460);
+    const alive=g.en.filter(e=>e.a);let edge=false;for(const e of alive){e.x+=g.dir*g.esp*dt*(1+(32-alive.length)/12);if(e.x<5||e.x>455)edge=true;}
+    if(edge){g.dir*=-1;for(const e of alive){e.y+=14;if(e.y>300)return A.over(g,'Нахлуха!');}}
+    if(alive.length&&Math.random()<dt*(.8+g.wave*.3)){const e=A.pick(alive);g.bombs.push({x:e.x+10,y:e.y+20});}
+    for(const s of g.shots){s.y-=420*dt;for(const e of alive)if(e.a&&s.x>e.x&&s.x<e.x+24&&s.y>e.y&&s.y<e.y+20){e.a=0;s.y=-99;g.score+=10;A.beep(300);}}
+    for(const b of g.bombs){b.y+=170*dt;if(b.y>320&&b.y<340&&b.x>g.x&&b.x<g.x+20){b.y=999;g.lives--;A.beep(100,.3,'sawtooth');if(!g.lives)return A.over(g);}}
+    g.shots=g.shots.filter(s=>s.y>0);g.bombs=g.bombs.filter(b=>b.y<370);
+    if(!alive.length){g.score+=50;A.tune([523,784]);this.wave(g);}},
+  draw(g){A.bg('#0b0f1e');for(const e of g.en)if(e.a){A.block(e.x,e.y,24,e.col,20);c.fillStyle='#000';const o=Math.sin(g.t*6)>0?2:0;c.fillRect(e.x+5+o,e.y+6,4,4);c.fillRect(e.x+14+o,e.y+6,4,4);}
+    c.fillStyle='#fff';for(const s of g.shots)c.fillRect(s.x,s.y,3,10);c.fillStyle='#f66';for(const b of g.bombs)c.fillRect(b.x,b.y,5,8);
+    A.block(g.x,325,20,'#3b7bd6',15);c.fillStyle='#ccc';c.fillRect(g.x+8,318,4,8);A.txt('❤'.repeat(g.lives)+'  Вълна '+g.wave,8,350,14,'#f88');}
+});
+</script>
+</body>
+</html>

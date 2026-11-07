@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Щит</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛡️ Щит</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 34. Щит
+A.add({id:'shield',cat:'skill',icon:'🛡️',name:'Щит',desc:'Пази кристала от стрелите',help:'← → (или мишка) върти щита около кристала. Спирай стрелите. 3 удара и край.',
+  start(g){g.a=0;g.ar=[];g.sp=0;g.lives=3;},
+  move(g,x,y){g.a=Math.atan2(y-180,x-240);},
+  update(g,dt){if(A.keys.ArrowLeft||A.keys.KeyA)g.a-=4.5*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.a+=4.5*dt;
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.35,1.1-g.t*.015);const a=A.rnd(0,6.283);g.ar.push({a,r:260,v:90+g.t*2.2});}
+    for(const r of g.ar){r.r-=r.v*dt;if(!r.done&&r.r<62&&r.r>48){let d=Math.abs(((r.a-g.a)%6.283+9.425)%6.283-3.1416);if(d<.55){r.done=1;g.score++;A.beep(900,.05);}}
+      if(!r.done&&r.r<24){r.done=1;g.lives--;A.beep(100,.3,'sawtooth');if(!g.lives)return A.over(g,'Кристалът се счупи!');}}
+    g.ar=g.ar.filter(r=>!r.done);},
+  draw(g){A.bg('#101a26');c.fillStyle='#e040fb';c.fillRect(226,166,28,28);c.fillStyle='rgba(255,255,255,.6)';c.fillRect(232,172,6,10);
+    c.strokeStyle='#ffd54f';c.lineWidth=10;c.beginPath();c.arc(240,180,55,g.a-.5,g.a+.5);c.stroke();
+    for(const r of g.ar){const x=240+Math.cos(r.a)*r.r,y=180+Math.sin(r.a)*r.r;c.save();c.translate(x,y);c.rotate(r.a);c.fillStyle='#ddd';c.fillRect(-2,-1,16,3);c.fillStyle='#f55';c.fillRect(-6,-3,5,7);c.restore();}
+    A.txt('❤'.repeat(g.lives),10,14,14,'#f55');}
+});
+</script>
+</body>
+</html>

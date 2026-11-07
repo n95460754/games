@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сапьор</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💣 Сапьор</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 13. Сапьор с динамит
+A.add({id:'sapper',cat:'puzzle',icon:'💣',name:'Сапьор',desc:'Намери всички безопасни блокове',low:true,unit:' с',help:'Ляв клик — разкопай. Десен клик — флагче. Числото показва колко динамита има около блока.',
+  start(g){g.W=12;g.H=9;g.cells=[];for(let i=0;i<108;i++)g.cells.push({m:0,o:0,f:0,n:0});g.first=true;g.done=false;},
+  idx(x,y){return y*12+x;},
+  nb(x,y,f){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const X=x+dx,Y=y+dy;if((dx||dy)&&X>=0&&Y>=0&&X<12&&Y<9)f(X,Y);}},
+  click(g,mx,my,b){const x=Math.floor((mx-24)/36),y=Math.floor((my-30)/36);if(x<0||y<0||x>11||y>8)return;const cell=g.cells[this.idx(x,y)];
+    if(b===2){if(!cell.o){cell.f^=1;A.beep(300,.03);}return;}
+    if(cell.f||cell.o)return;
+    if(g.first){g.first=false;let n=0;while(n<16){const X=A.ri(0,11),Y=A.ri(0,8);if(Math.abs(X-x)<=1&&Math.abs(Y-y)<=1)continue;const q=g.cells[this.idx(X,Y)];if(!q.m){q.m=1;n++;}}
+      for(let Y=0;Y<9;Y++)for(let X=0;X<12;X++){let n=0;this.nb(X,Y,(a,b)=>{n+=g.cells[this.idx(a,b)].m;});g.cells[this.idx(X,Y)].n=n;}}
+    if(cell.m){cell.o=1;g.cells.forEach(q=>{if(q.m)q.o=1;});g.score=0;A.beep(80,.4,'sawtooth');return A.over(g,'БУМ! 💥');}
+    const open=(X,Y)=>{const q=g.cells[this.idx(X,Y)];if(q.o||q.f)return;q.o=1;if(!q.n)this.nb(X,Y,open);};open(x,y);A.beep(600,.03);
+    if(g.cells.every(q=>q.m||q.o)){g.score=g.t;A.tune([523,659,784,1046]);A.over(g,'🏆 Разчисти всичко!');}},
+  update(g){if(!g.first)g.score=g.t;},
+  draw(g){A.bg('#2a3a20');g.cells.forEach((q,i)=>{const x=24+(i%12)*36,y=30+Math.floor(i/12)*36;
+      if(!q.o){A.block(x,y,36,C.grass);if(q.f){c.fillStyle='#e33';c.fillRect(x+14,y+8,12,9);c.fillStyle='#222';c.fillRect(x+12,y+8,3,20);}}
+      else{A.block(x,y,36,q.m?'#c62828':C.dirt);if(q.m){c.fillStyle='#fff';c.fillRect(x+8,y+15,20,6);}
+        else if(q.n)A.txt(q.n,x+18,y+19,18,['','#4fc3f7','#9ccc65','#ffb74d','#e57373','#ba68c8','#ff8a65','#fff','#fff'][q.n],'center');}});
+    A.txt('💣 16   ⏱ '+(g.first?0:g.t).toFixed(0),24,15,14);}
+});
+</script>
+</body>
+</html>

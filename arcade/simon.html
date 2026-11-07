@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Повтори</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎵 Повтори</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 24. Повтори мелодията
+A.add({id:'simon',cat:'brain',icon:'🎵',name:'Повтори',desc:'Запомни реда на светлините',help:'Гледай кои блокове светват, после ги повтори с клик или клавиши 1–4. Всеки рунд добавя по още един.',
+  pads:[[60,40,C.red,330],[250,40,C.grass,440],[60,200,C.water,550],[250,200,C.gold,660]],
+  start(g){g.seq=[];g.add=true;g.light=-1;g.wait=.6;},
+  press(g,i){if(g.play||g.add)return;this.lit(g,i);if(g.seq[g.pos]!==i)return A.over(g,'Грешка! Беше '+(g.seq[g.pos]+1));g.pos++;
+    if(g.pos===g.seq.length){g.score=g.seq.length;g.add=true;g.wait=.8;}},
+  lit(g,i){g.light=i;g.lt=.3;A.beep(this.pads[i][3],.25,'triangle',.07);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.press(g,n-1);},
+  click(g,mx,my){this.pads.forEach((p,i)=>{if(mx>p[0]&&mx<p[0]+170&&my>p[1]&&my<p[1]+140)this.press(g,i);});},
+  update(g,dt){if(g.lt>0){g.lt-=dt;if(g.lt<=0)g.light=-1;}
+    if(g.add){g.wait-=dt;if(g.wait<=0){g.add=false;g.seq.push(A.ri(0,3));g.play=true;g.pi=0;g.pt=.3;}}
+    else if(g.play){g.pt-=dt;if(g.pt<=0){if(g.pi<g.seq.length){this.lit(g,g.seq[g.pi]);g.pi++;g.pt=Math.max(.3,.6-g.seq.length*.02);}else{g.play=false;g.pos=0;}}}},
+  draw(g){A.bg('#14101c');this.pads.forEach((p,i)=>{A.block(p[0],p[1],170,p[2],140);if(g.light!==i){c.fillStyle='rgba(0,0,0,.55)';c.fillRect(p[0],p[1],170,140);}A.txt(i+1,p[0]+85,p[1]+70,24,'#fff','center');});
+    A.txt(g.play||g.add?'Гледай...':'Твой ред!',240,20,16,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

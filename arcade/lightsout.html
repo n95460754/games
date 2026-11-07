@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Изгаси факлите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔦 Изгаси факлите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 16. Изгаси факлите
+A.add({id:'lightsout',cat:'puzzle',icon:'🔦',name:'Изгаси факлите',desc:'Загаси всички факли',help:'Клик върху блок превключва него и 4-те му съседа. Загаси всичко! Имаш 3 минути за колкото може повече нива.',
+  start(g){g.lv=0;g.time=180;this.level(g);},
+  level(g){g.lv++;g.L=Array(25).fill(0);for(let i=0;i<2+g.lv;i++)this.tog(g,A.ri(0,4),A.ri(0,4));if(g.L.every(v=>!v))this.tog(g,2,2);},
+  tog(g,x,y){for(const[dx,dy]of[[0,0],[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<5&&Y<5)g.L[Y*5+X]^=1;}},
+  click(g,mx,my){const x=Math.floor((mx-115)/50),y=Math.floor((my-50)/50);if(x<0||y<0||x>4||y>4)return;this.tog(g,x,y);A.beep(400,.03);
+    if(g.L.every(v=>!v)){g.score++;A.tune([660,880]);this.level(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#14101c');g.L.forEach((v,i)=>{const x=115+(i%5)*50,y=50+Math.floor(i/5)*50;A.block(x+2,y+2,46,v?'#ffb300':'#3a3344');if(v){c.fillStyle='#fff8b0';c.fillRect(x+20,y+12,8,14);}});
+    A.txt('Ниво '+g.lv+'   ⏱ '+Math.ceil(g.time),240,25,16,'#fff','center');}
+});
+</script>
+</body>
+</html>

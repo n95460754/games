@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Морски шах</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">❌ Морски шах</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 41. Морски шах
+A.add({id:'tictactoe',cat:'board',icon:'❌',name:'Морски шах',desc:'Три в ред срещу робота',help:'Кликни празно поле (или 1–9). Ти си синият блок. Всяка победа = точка, загуба = край. Равенство — играете пак.',
+  L:[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]],
+  start(g){g.b=Array(9).fill(0);g.msg='';g.wait=0;},
+  win(b){for(const[a,c2,d]of this.L)if(b[a]&&b[a]===b[c2]&&b[a]===b[d])return b[a];return b.every(v=>v)?3:0;},
+  mm(b,p){const w=this.win(b);if(w===2)return 10;if(w===1)return-10;if(w===3)return 0;let best=p===2?-99:99;
+    for(let i=0;i<9;i++)if(!b[i]){b[i]=p;const s=this.mm(b,3-p);b[i]=0;best=p===2?Math.max(best,s):Math.min(best,s);}return best;},
+  ai(g){const free=g.b.map((v,i)=>v?-1:i).filter(i=>i>=0);let mv;
+    if(Math.random()<.25)mv=A.pick(free);else{let bs=-99;for(const i of free){g.b[i]=2;const s=this.mm(g.b,1);g.b[i]=0;if(s>bs){bs=s;mv=i;}}}
+    g.b[mv]=2;A.beep(300,.05);this.check(g);},
+  check(g){const w=this.win(g.b);if(!w)return false;
+    if(w===1){g.score++;g.msg='Победа! 🎉';A.tune([660,880]);g.wait=1.2;}else if(w===2){A.over(g,'Роботът победи');}else{g.msg='Равенство';g.wait=1.2;}return true;},
+  put(g,i){if(g.wait>0||g.b[i])return;g.b[i]=1;A.beep(600,.05);if(!this.check(g))this.ai(g);},
+  click(g,mx,my){const x=Math.floor((mx-120)/80),y=Math.floor((my-60)/80);if(x>=0&&y>=0&&x<3&&y<3)this.put(g,y*3+x);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=9)this.put(g,n-1);},
+  update(g,dt){if(g.wait>0){g.wait-=dt;if(g.wait<=0){g.b.fill(0);g.msg='';if(Math.random()<.5)this.ai(g);}}},
+  draw(g){A.bg('#1f2a3d');for(let i=0;i<9;i++){const x=120+(i%3)*80,y=60+Math.floor(i/3)*80;c.fillStyle='#2b3646';c.fillRect(x+3,y+3,74,74);
+      if(g.b[i])A.block(x+14,y+14,52,g.b[i]===1?'#3b7bd6':C.red);}A.txt(g.msg||'Ти си 🟦',240,30,18,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

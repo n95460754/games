@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лавов дъжд</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌋 Лавов дъжд</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 5. Лавов дъжд
+A.add({id:'lavarain',cat:'action',icon:'🌋',name:'Лавов дъжд',desc:'Оцелей колкото можеш',unit:' с',dec:1,help:'← → или A D — бягай от падащата лава. Резултатът е времето, през което оцеляваш.',
+  start(g){g.x=230;g.drops=[];g.sp=0;},
+  update(g,dt){g.score=g.t;
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=300*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=300*dt;g.x=A.clamp(g.x,0,460);
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.08,.5-g.t*.012);g.drops.push({x:A.rnd(0,460),y:-20,v:A.rnd(150,260)+g.t*4});}
+    for(const d of g.drops){d.y+=d.v*dt;if(d.y+20>320&&d.y<340&&d.x+20>g.x+2&&d.x<g.x+18)return A.over(g,'Изгоря!');}
+    g.drops=g.drops.filter(d=>d.y<380);},
+  draw(g){A.bg('#2b0f08');for(let x=0;x<480;x+=20)A.block(x,340,20,C.stone);
+    for(const d of g.drops){A.block(d.x,d.y,20,C.lava);c.fillStyle='#ffb300';c.fillRect(d.x+5,d.y+5,6,4);}
+    A.block(g.x,320,20,'#3b7bd6');c.fillStyle='#f1c27d';c.fillRect(g.x+4,322,12,8);}
+});
+</script>
+</body>
+</html>

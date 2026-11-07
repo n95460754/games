@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Метеоритен миньор</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">☄️ Метеоритен миньор</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 9. Метеоритен миньор
+A.add({id:'meteors',cat:'action',icon:'☄️',name:'Метеоритен миньор',desc:'Разбивай каменните блокове',help:'← → — завъртане, ↑ — газ, Space — стреляй. Големите камъни се разпадат на по-малки.',
+  start(g){g.x=240;g.y=180;g.a=-Math.PI/2;g.vx=0;g.vy=0;g.sh=[];g.rocks=[];g.cd=0;g.lives=3;g.inv=2;g.lv=0;this.wave(g);},
+  wave(g){g.lv++;for(let i=0;i<2+g.lv;i++){const a=A.rnd(0,6.28);g.rocks.push({x:240+Math.cos(a)*220,y:180+Math.sin(a)*200,vx:A.rnd(-50,50),vy:A.rnd(-50,50),s:40});}},
+  key(g,k){if(k==='Space'&&g.cd<=0){g.sh.push({x:g.x,y:g.y,vx:Math.cos(g.a)*400,vy:Math.sin(g.a)*400,t:.9});g.cd=.2;A.beep(800,.04);}},
+  update(g,dt){g.cd-=dt;g.inv-=dt;const W=(o)=>{o.x=(o.x+480)%480;o.y=(o.y+360)%360;};
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.a-=4*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.a+=4*dt;
+    if(A.keys.ArrowUp||A.keys.KeyW){g.vx+=Math.cos(g.a)*260*dt;g.vy+=Math.sin(g.a)*260*dt;}
+    g.vx*=.99;g.vy*=.99;g.x+=g.vx*dt;g.y+=g.vy*dt;W(g);
+    for(const s of g.sh){s.x+=s.vx*dt;s.y+=s.vy*dt;s.t-=dt;W(s);}
+    for(const r of g.rocks){r.x+=r.vx*dt;r.y+=r.vy*dt;W(r);}
+    for(const s of g.sh)for(const r of g.rocks)if(s.t>0&&!r.dead&&Math.abs(s.x-r.x)<r.s/2&&Math.abs(s.y-r.y)<r.s/2){s.t=0;r.dead=1;g.score+=r.s===40?5:r.s===20?10:20;A.beep(200,.08);
+      if(r.s>10)for(let i=0;i<2;i++)g.rocks.push({x:r.x,y:r.y,vx:A.rnd(-90,90),vy:A.rnd(-90,90),s:r.s/2});}
+    g.sh=g.sh.filter(s=>s.t>0);g.rocks=g.rocks.filter(r=>!r.dead);
+    if(g.inv<=0)for(const r of g.rocks)if(Math.abs(g.x-r.x)<r.s/2+6&&Math.abs(g.y-r.y)<r.s/2+6){g.lives--;g.inv=2;g.x=240;g.y=180;g.vx=g.vy=0;A.beep(90,.3,'sawtooth');if(!g.lives)return A.over(g);}
+    if(!g.rocks.length)this.wave(g);},
+  draw(g){A.bg('#05060f');c.fillStyle='#fff';for(let i=0;i<40;i++)c.fillRect((i*97)%480,(i*61)%360,1,1);
+    for(const r of g.rocks){A.block(r.x-r.s/2,r.y-r.s/2,r.s,C.stone);if(r.s>10){c.fillStyle=C.gold;c.fillRect(r.x-r.s/6,r.y-r.s/6,r.s/5,r.s/5);}}
+    c.fillStyle='#ff0';for(const s of g.sh)c.fillRect(s.x-2,s.y-2,4,4);
+    if(g.inv<=0||Math.sin(g.t*20)>0){c.save();c.translate(g.x,g.y);c.rotate(g.a);c.fillStyle='#ddd';c.fillRect(-8,-7,16,14);c.fillStyle='#3b7bd6';c.fillRect(4,-3,8,6);c.restore();}
+    A.txt('❤'.repeat(g.lives)+'  Вълна '+g.lv,8,350,14,'#f88');}
+});
+</script>
+</body>
+</html>

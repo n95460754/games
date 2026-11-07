@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мини голф</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛳ Мини голф</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 35. Мини голф
+A.add({id:'golf',cat:'skill',icon:'⛳',name:'Мини голф',desc:'9 дупки, малко удари',low:true,unit:' удара',help:'Натисни и дръпни мишката назад от топката, после пусни — както с прашка. 9 дупки, колкото по-малко удари, толкова по-добре.',
+  start(g){g.hole=0;g.strokes=0;this.next(g);},
+  next(g){g.hole++;if(g.hole>9){g.score=g.strokes;return A.over(g,'🏁 '+g.strokes+' удара за 9 дупки');}
+    g.bx=60;g.by=A.ri(60,300);g.vx=g.vy=0;g.hx=A.ri(330,430);g.hy=A.ri(50,310);g.walls=[];
+    for(let i=0;i<Math.min(5,1+g.hole/2);i++){const w={x:A.ri(120,320),y:A.ri(20,300),w:A.ri(16,30),h:A.ri(50,140)};if(Math.random()<.4){[w.w,w.h]=[w.h,w.w];}g.walls.push(w);}
+    g.walls=g.walls.filter(w=>!A.hit({x:g.hx-20,y:g.hy-20,w:40,h:40},w)&&!A.hit({x:g.bx-15,y:g.by-15,w:30,h:30},w));},
+  click(g,mx,my){if(Math.hypot(g.vx,g.vy)<5)g.aim={x:mx,y:my};},
+  release(g,mx,my){if(!g.aim)return;const dx=g.aim.x-mx,dy=g.aim.y-my;const p=Math.min(1,Math.hypot(dx,dy)/120);
+    if(p>.05){const a=Math.atan2(dy,dx);g.vx=Math.cos(a)*p*520;g.vy=Math.sin(a)*p*520;g.strokes++;g.score=g.strokes;A.beep(300,.06);}g.aim=null;},
+  update(g,dt){const steps=4;for(let s=0;s<steps;s++){const d=dt/steps;g.bx+=g.vx*d;g.by+=g.vy*d;
+      if(g.bx<15||g.bx>465){g.vx*=-1;g.bx=A.clamp(g.bx,15,465);}if(g.by<15||g.by>345){g.vy*=-1;g.by=A.clamp(g.by,15,345);}
+      for(const w of g.walls)if(g.bx+6>w.x&&g.bx-6<w.x+w.w&&g.by+6>w.y&&g.by-6<w.y+w.h){const ox=Math.min(g.bx+6-w.x,w.x+w.w-g.bx+6),oy=Math.min(g.by+6-w.y,w.y+w.h-g.by+6);
+        if(ox<oy){g.vx*=-1;g.bx+=g.bx<w.x+w.w/2?-ox:ox;}else{g.vy*=-1;g.by+=g.by<w.y+w.h/2?-oy:oy;}A.beep(200,.03);}}
+    const f=Math.pow(.35,dt);g.vx*=f;g.vy*=f;if(Math.hypot(g.vx,g.vy)<6){g.vx=g.vy=0;}
+    const dh=Math.hypot(g.bx-g.hx,g.by-g.hy);if(dh<12&&Math.hypot(g.vx,g.vy)<260){A.tune([660,880,1100]);this.next(g);}},
+  draw(g){A.bg('#3d8a2a');for(let x=0;x<480;x+=20)for(let y=0;y<360;y+=20)if((x+y)%40){c.fillStyle='#449530';c.fillRect(x,y,20,20);}
+    c.fillStyle=C.wood;c.fillRect(0,0,480,10);c.fillRect(0,350,480,10);c.fillRect(0,0,10,360);c.fillRect(470,0,10,360);
+    for(const w of g.walls)A.block(w.x,w.y,w.w,C.stone,w.h);c.fillStyle='#111';c.beginPath();c.arc(g.hx,g.hy,11,0,7);c.fill();c.fillStyle='#e33';c.fillRect(g.hx,g.hy-40,3,40);c.fillRect(g.hx+3,g.hy-40,14,9);
+    c.fillStyle='#fff';c.fillRect(g.bx-6,g.by-6,12,12);
+    if(g.aim){const dx=g.aim.x-A.mouse.x,dy=g.aim.y-A.mouse.y;c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=3;c.beginPath();c.moveTo(g.bx,g.by);c.lineTo(g.bx+dx,g.by+dy);c.stroke();}
+    A.txt('Дупка '+Math.min(9,g.hole)+'/9   Удари: '+g.strokes,240,20,14,'#fff','center');}
+});
+</script>
+</body>
+</html>
