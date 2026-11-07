@@ -440,3 +440,7 @@ The game code is by **[@n95460754](https://github.com/n95460754)**.
 Three.js is © Three.js Authors, released under the [MIT License](https://github.com/mrdoob/three.js/blob/dev/LICENSE).
 
 *This is a fan project and is not affiliated with Mojang or Microsoft. "Minecraft" is a trademark of Mojang Studios.*
+
+## Games
+
+- [Dodge Run #1](games/game-1.html) — added 2026-11-07
