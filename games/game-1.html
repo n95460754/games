@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dodge Run #1</title>
+<style>
+  body { margin:0; background:#0d0d1a; color:#fff; font-family:system-ui,sans-serif;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; }
+  h1 { margin:0 0 8px; font-size:24px; }
+  canvas { background:#141428; border:2px solid #333; border-radius:8px; touch-action:none; }
+  p { opacity:.7; margin:8px 0 0; }
+</style>
+</head>
+<body>
+<h1>Dodge Run #1</h1>
+<canvas id="c" width="400" height="500"></canvas>
+<p>← → или мишка/пръст. Избягвай блоковете! Space = нова игра</p>
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d');
+const PLAYER = '#00e5ff', ENEMY = '#76ff03', BASE_SPEED = 3;
+let p, enemies, score, best = 0, over, keys = {}, frame;
+
+function reset() {
+  p = { x: 180, y: 450, w: 40, h: 20 };
+  enemies = []; score = 0; over = false; frame = 0;
+}
+addEventListener('keydown', e => { keys[e.key] = true; if (e.key === ' ' && over) reset(); });
+addEventListener('keyup', e => keys[e.key] = false);
+function moveTo(clientX) {
+  const r = c.getBoundingClientRect();
+  p.x = Math.max(0, Math.min(c.width - p.w, (clientX - r.left) * c.width / r.width - p.w / 2));
+}
+c.addEventListener('mousemove', e => moveTo(e.clientX));
+c.addEventListener('touchmove', e => { moveTo(e.touches[0].clientX); e.preventDefault(); });
+c.addEventListener('click', () => { if (over) reset(); });
+
+function loop() {
+  if (!over) {
+    frame++;
+    if (keys.ArrowLeft) p.x = Math.max(0, p.x - 6);
+    if (keys.ArrowRight) p.x = Math.min(c.width - p.w, p.x + 6);
+    const speed = BASE_SPEED + score / 300;
+    if (frame % Math.max(10, 40 - Math.floor(score / 100)) === 0) {
+      const w = 20 + Math.random() * 50;
+      enemies.push({ x: Math.random() * (c.width - w), y: -20, w, h: 20 });
+    }
+    enemies.forEach(e => e.y += speed);
+    enemies = enemies.filter(e => e.y < c.height);
+    for (const e of enemies)
+      if (e.x < p.x + p.w && e.x + e.w > p.x && e.y < p.y + p.h && e.y + e.h > p.y) {
+        over = true; best = Math.max(best, score);
+      }
+    score++;
+  }
+  x.clearRect(0, 0, c.width, c.height);
+  x.fillStyle = PLAYER; x.fillRect(p.x, p.y, p.w, p.h);
+  x.fillStyle = ENEMY; enemies.forEach(e => x.fillRect(e.x, e.y, e.w, e.h));
+  x.fillStyle = '#fff'; x.font = '18px system-ui';
+  x.fillText('Точки: ' + score, 10, 25);
+  x.fillText('Рекорд: ' + best, 280, 25);
+  if (over) {
+    x.font = 'bold 32px system-ui'; x.textAlign = 'center';
+    x.fillText('GAME OVER', c.width / 2, 240);
+    x.font = '18px system-ui';
+    x.fillText('Space или клик = пак', c.width / 2, 275);
+    x.textAlign = 'left';
+  }
+  requestAnimationFrame(loop);
+}
+reset(); loop();
+</script>
+</body>
+</html>
