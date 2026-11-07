@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Защита на замъка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏰 Защита на замъка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 56. Защита на замъка
+A.add({id:'castle',cat:'action',icon:'🏰',name:'Защита на замъка',desc:'Стреляй по нападателите',help:'Кликай врагове, за да стреляш по тях. Големите искат 3 изстрела. Не ги пускай до стената! 5 живота.',
+  start(g){g.en=[];g.sp=0;g.lives=5;g.fx=[];},
+  click(g,mx,my){A.beep(500,.03);g.fx.push({x:mx,y:my,t:.15});for(const e of g.en)if(mx>e.x&&mx<e.x+e.s&&my>e.y&&my<e.y+e.s){e.hp--;if(e.hp<=0){e.dead=1;g.score+=e.big?5:1;A.beep(900,.05);}return;}},
+  update(g,dt){g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.3,1.2-g.t*.02);const big=Math.random()<.2;g.en.push({x:490,y:A.ri(100,310),s:big?40:24,hp:big?3:1,big,v:big?35:A.rnd(50,90)+g.t});}
+    for(const e of g.en){e.x-=e.v*dt;if(e.x<70&&!e.dead){e.dead=1;g.lives--;A.beep(100,.3,'sawtooth');if(!g.lives)return A.over(g,'Замъкът падна!');}}
+    g.en=g.en.filter(e=>!e.dead);g.fx.forEach(f=>f.t-=dt);g.fx=g.fx.filter(f=>f.t>0);},
+  draw(g){A.bg('#87ceeb');for(let x=0;x<480;x+=20)A.block(x,340,20,C.grass);for(let y=60;y<340;y+=20){A.block(0,y,20,C.stone);A.block(20,y,20,C.stone);A.block(40,y,20,C.stone);}
+    for(let x=0;x<60;x+=30)A.block(x,40,20,C.stone);
+    for(const e of g.en){A.block(e.x,e.y,e.s,e.big?'#5a2b4a':'#7cb342');c.fillStyle='#f33';c.fillRect(e.x+e.s*.2,e.y+e.s*.3,e.s*.2,e.s*.2);if(e.big)for(let i=0;i<e.hp;i++){c.fillStyle='#5f5';c.fillRect(e.x+i*14,e.y-8,12,4);}}
+    for(const f of g.fx){c.strokeStyle='#ff0';c.lineWidth=2;c.beginPath();c.moveTo(50,100);c.lineTo(f.x,f.y);c.stroke();}
+    c.strokeStyle='#fff';c.strokeRect(A.mouse.x-8,A.mouse.y-8,16,16);A.txt('❤'.repeat(g.lives),80,16,14,'#d00');}
+});
+</script>
+</body>
+</html>

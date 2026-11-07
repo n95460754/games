@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тунел</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🕳️ Тунел</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 52. Тунел
+A.add({id:'tunnel',cat:'action',icon:'🕳️',name:'Тунел',desc:'Не докосвай стените',help:'← → или мишка — карай надолу по криволичещия тунел. Той става все по-тесен!',
+  start(g){g.x=240;g.rows=[];let cx=240;for(let i=0;i<40;i++)g.rows.push({cx,w:220});g.off=0;g.cx=240;},
+  move(g,x){g.mx=x;},
+  update(g,dt){const sp=150+g.t*6;g.score=Math.floor(g.t*10);
+    if(A.keys.ArrowLeft||A.keys.KeyA){g.x-=260*dt;g.mx=undefined;}if(A.keys.ArrowRight||A.keys.KeyD){g.x+=260*dt;g.mx=undefined;}if(g.mx!==undefined)g.x+=(g.mx-g.x)*Math.min(1,dt*8);
+    g.off+=sp*dt;while(g.off>=10){g.off-=10;g.rows.shift();const L=g.rows[g.rows.length-1];g.cx=A.clamp(L.cx+A.rnd(-14,14)+(240-L.cx)*.02,80,400);g.rows.push({cx:g.cx,w:Math.max(70,220-g.t*3)});}
+    const r=g.rows[8];if(g.x-8<r.cx-r.w/2||g.x+8>r.cx+r.w/2)return A.over(g,'Удари стената!');},
+  draw(g){A.bg(C.stone);g.rows.forEach((r,i)=>{const y=i*10-g.off;c.fillStyle='#1c1814';c.fillRect(r.cx-r.w/2,y,r.w,10);c.fillStyle=C.lava;c.fillRect(r.cx-r.w/2-4,y,4,10);c.fillRect(r.cx+r.w/2,y,4,10);});
+    A.block(g.x-8,80-g.off%10,16,'#3b7bd6');}
+});
+</script>
+</body>
+</html>

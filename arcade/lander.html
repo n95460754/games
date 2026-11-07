@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лунно кацане</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌙 Лунно кацане</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 58. Кацане на Луната
+A.add({id:'lander',cat:'action',icon:'🌙',name:'Лунно кацане',desc:'Кацни меко на площадката',help:'← → — завъртане, ↑ / Space — двигател. Кацни на жълтата площадка изправен и бавно. Пази горивото!',
+  start(g){g.lv=0;this.level(g);},
+  level(g){g.lv++;g.x=A.ri(60,420);g.y=40;g.vx=A.rnd(-30,30);g.vy=0;g.a=0;g.fuel=Math.max(40,100-g.lv*8);g.ground=[];let h=300;for(let x=0;x<=480;x+=24){h=A.clamp(h+A.ri(-30,30),200,340);g.ground.push(h);}
+    const i=A.ri(2,16);g.pad=i;g.ground[i]=g.ground[i+1]=g.ground[i+2]=g.ground[i];},
+  update(g,dt){if(A.keys.ArrowLeft||A.keys.KeyA)g.a-=2*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.a+=2*dt;g.a=A.clamp(g.a,-1.4,1.4);
+    g.thr=(A.keys.ArrowUp||A.keys.Space||A.keys.KeyW)&&g.fuel>0;if(g.thr){g.vx+=Math.sin(g.a)*90*dt;g.vy-=Math.cos(g.a)*90*dt;g.fuel-=12*dt;}
+    g.vy+=35*dt;g.x+=g.vx*dt;g.y+=g.vy*dt;if(g.x<0||g.x>480)return A.over(g,'Излетя в космоса');
+    const i=Math.floor(g.x/24),gy=g.ground[i]+(g.ground[i+1]-g.ground[i])*((g.x%24)/24);
+    if(g.y+10>=gy){const onPad=i>=g.pad&&i<=g.pad+1;if(onPad&&Math.abs(g.vy)<40&&Math.abs(g.vx)<20&&Math.abs(g.a)<.3){g.score+=10+Math.floor(g.fuel);A.tune([523,659,784]);this.level(g);}else A.over(g,'Катастрофа! Скорост '+Math.round(g.vy));}},
+  draw(g){A.bg('#05060f');c.fillStyle='#fff';for(let i=0;i<50;i++)c.fillRect((i*83)%480,(i*37)%200,1,1);
+    c.fillStyle='#777';c.beginPath();c.moveTo(0,360);g.ground.forEach((h,i)=>c.lineTo(i*24,h));c.lineTo(480,360);c.fill();c.fillStyle=C.gold;c.fillRect(g.pad*24,g.ground[g.pad]-3,48,5);
+    c.save();c.translate(g.x,g.y);c.rotate(g.a);c.fillStyle='#ddd';c.fillRect(-9,-10,18,16);c.fillStyle='#3b7bd6';c.fillRect(-4,-6,8,6);c.fillStyle='#aaa';c.fillRect(-11,6,4,6);c.fillRect(7,6,4,6);
+    if(g.thr){c.fillStyle='#ffb300';c.fillRect(-4,8,8,6+Math.random()*10);}c.restore();
+    A.txt('Гориво '+Math.max(0,Math.round(g.fuel))+'  Скорост '+Math.round(g.vy)+'  Ниво '+g.lv,10,14,13,Math.abs(g.vy)<40?'#9f9':'#f88');}
+});
+</script>
+</body>
+</html>

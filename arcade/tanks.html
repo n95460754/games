@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Танкова битка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛡️ Танкова битка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 60. Танкова битка
+A.add({id:'tanks',cat:'action',icon:'🛡️',name:'Танкова битка',desc:'Унищожи вражеските танкове',help:'Стрелки — движи танка (накъдето вървиш, натам стреля). Space — изстрел. Снарядите отскачат веднъж от стените.',
+  start(g){g.lv=0;g.lives=3;this.level(g);},
+  level(g){g.lv++;g.p={x:40,y:300,d:[0,-1]};g.sh=[];g.walls=[];for(let i=0;i<7;i++)g.walls.push({x:A.ri(80,400),y:A.ri(40,280),w:A.pick([20,60,100]),h:20});g.walls.forEach(w=>{if(Math.random()<.5){[w.w,w.h]=[w.h,w.w];}});
+    g.en=[];for(let i=0;i<1+g.lv;i++)g.en.push({x:A.ri(300,440),y:A.ri(20,120),d:[0,1],cd:A.rnd(1,2),t:0});},
+  blocked(g,x,y){if(x<0||y<0||x>460||y>340)return true;return g.walls.some(w=>A.hit({x,y,w:20,h:20},w));},
+  fire(g,t,mine){g.sh.push({x:t.x+10+t.d[0]*12,y:t.y+10+t.d[1]*12,vx:t.d[0]*260,vy:t.d[1]*260,b:1,mine});A.beep(mine?400:250,.04);},
+  key(g,k){if(k==='Space'&&g.sh.filter(s=>s.mine).length<3)this.fire(g,g.p,true);},
+  update(g,dt){const m=A.keys.ArrowLeft||A.keys.KeyA?[-1,0]:A.keys.ArrowRight||A.keys.KeyD?[1,0]:A.keys.ArrowUp||A.keys.KeyW?[0,-1]:A.keys.ArrowDown||A.keys.KeyS?[0,1]:null;
+    if(m){g.p.d=m;const nx=g.p.x+m[0]*120*dt,ny=g.p.y+m[1]*120*dt;if(!this.blocked(g,nx,ny)){g.p.x=nx;g.p.y=ny;}}
+    for(const e of g.en){e.t-=dt;if(e.t<=0){e.t=A.rnd(.5,1.5);e.d=Math.random()<.5?[Math.sign(g.p.x-e.x)||1,0]:[0,Math.sign(g.p.y-e.y)||1];}
+      const nx=e.x+e.d[0]*70*dt,ny=e.y+e.d[1]*70*dt;if(!this.blocked(g,nx,ny)){e.x=nx;e.y=ny;}else e.t=0;
+      e.cd-=dt;if(e.cd<=0){e.cd=A.rnd(1.2,2.5)-g.lv*.05;this.fire(g,e,false);}}
+    for(const s of g.sh){s.x+=s.vx*dt;s.y+=s.vy*dt;
+      const hitW=s.x<0||s.x>480||s.y<0||s.y>360||g.walls.some(w=>s.x>w.x&&s.x<w.x+w.w&&s.y>w.y&&s.y<w.y+w.h);
+      if(hitW){if(s.b>0){s.b--;s.vx*=-1;s.vy*=-1;s.x+=s.vx*dt*2;s.y+=s.vy*dt*2;}else s.dead=1;}
+      if(s.mine){for(const e of g.en)if(s.x>e.x&&s.x<e.x+20&&s.y>e.y&&s.y<e.y+20){e.dead=1;s.dead=1;g.score+=10;A.beep(120,.2,'sawtooth');}}
+      else if(s.x>g.p.x&&s.x<g.p.x+20&&s.y>g.p.y&&s.y<g.p.y+20){s.dead=1;g.lives--;A.beep(90,.3,'sawtooth');if(!g.lives)return A.over(g,'Танкът ти е унищожен');g.p.x=40;g.p.y=300;}}
+    g.sh=g.sh.filter(s=>!s.dead);g.en=g.en.filter(e=>!e.dead);if(!g.en.length){g.score+=25;A.tune([523,659,784]);this.level(g);}},
+  tank(t,col){A.block(t.x,t.y,20,col);c.fillStyle='#222';c.fillRect(t.x+8+t.d[0]*8,t.y+8+t.d[1]*8,4+Math.abs(t.d[0])*6,4+Math.abs(t.d[1])*6);},
+  draw(g){A.bg('#5a6b3a');for(const w of g.walls)A.block(w.x,w.y,w.w,'#9c7a4f',w.h);this.tank(g.p,'#3b7bd6');for(const e of g.en)this.tank(e,C.red);
+    for(const s of g.sh){c.fillStyle=s.mine?'#ff0':'#f80';c.fillRect(s.x-3,s.y-3,6,6);}A.txt('❤'.repeat(g.lives)+'  Ниво '+g.lv,10,350,13,'#fff');}
+});
+</script>
+</body>
+</html>

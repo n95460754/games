@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гравитация</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔃 Гравитация</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 54. Гравитационен бегач
+A.add({id:'gravity',cat:'action',icon:'🔃',name:'Гравитация',desc:'Обръщай гравитацията',help:'Space / клик — обърни гравитацията (тичаш по пода или по тавана). Избягвай шиповете.',
+  start(g){g.y=300;g.dir=1;g.v=0;g.sp=0;g.sp2=[];g.dist=0;},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='ArrowDown'){g.dir*=-1;A.beep(g.dir>0?300:500,.05);}},
+  update(g,dt){const sp=200+g.t*6;g.dist+=sp*dt;g.score=Math.floor(g.dist/30);g.v+=g.dir*1400*dt;g.y+=g.v*dt;
+    if(g.y>300){g.y=300;g.v=0;}if(g.y<40){g.y=40;g.v=0;}
+    g.sp-=sp*dt;if(g.sp<=0){g.sp=A.rnd(120,260);const top=Math.random()<.5;g.sp2.push({x:500,top,w:20*A.ri(1,3)});}
+    for(const s of g.sp2){s.x-=sp*dt;const hy=s.top?40:300;if(Math.abs(g.y-hy)<20&&60+20>s.x&&60<s.x+s.w)return A.over(g,'Шипове!');}
+    g.sp2=g.sp2.filter(s=>s.x>-80);},
+  draw(g){A.bg('#20152e');for(let x=-(g.dist%20);x<480;x+=20){A.block(x,0,20,C.purple,20);A.block(x,320,20,C.purple,40);}
+    for(const s of g.sp2){c.fillStyle='#ddd';for(let i=0;i<s.w;i+=10){c.beginPath();if(s.top){c.moveTo(s.x+i,20);c.lineTo(s.x+i+5,38);c.lineTo(s.x+i+10,20);}else{c.moveTo(s.x+i,320);c.lineTo(s.x+i+5,302);c.lineTo(s.x+i+10,320);}c.fill();}}
+    A.block(60,g.y-(g.dir>0?20:0),20,C.gem,20);c.fillStyle='#000';c.fillRect(72,g.y-(g.dir>0?14:-6),3,3);}
+});
+</script>
+</body>
+</html>

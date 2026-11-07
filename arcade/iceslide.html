@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ледена пързалка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧊 Ледена пързалка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 61. Ледена пързалка
+A.add({id:'iceslide',cat:'puzzle',icon:'🧊',name:'Ледена пързалка',desc:'Плъзгай се до изхода',help:'Стрелки — плъзгаш се, докато не удариш камък или ръба. Стигни до зеления блок. 3 минути за колкото може повече нива.',
+  start(g){g.time=180;this.make(g);},
+  slide(g,x,y,dx,dy){while(true){const X=x+dx,Y=y+dy;if(X<0||Y<0||X>=12||Y>=9||g.m[Y*12+X])return[x,y];x=X;y=Y;}},
+  make(g){for(let tries=0;tries<200;tries++){g.m=[];for(let i=0;i<108;i++)g.m.push(Math.random()<.16?1:0);g.px=0;g.py=0;g.m[0]=0;
+      const dist=new Map([['0,0',0]]),q=[[0,0]];while(q.length){const[x,y]=q.shift();for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const[X,Y]=this.slide(g,x,y,dx,dy);const K=X+','+Y;if(!dist.has(K)){dist.set(K,dist.get(x+','+y)+1);q.push([X,Y]);}}}
+      const far=[...dist].filter(([k,d])=>d>=Math.min(6,3+g.score));if(far.length){const[k,d]=A.pick(far);[g.gx,g.gy]=k.split(',').map(Number);g.min=d;g.moves=0;return;}}},
+  key(g,k){const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(!m)return;
+    [g.px,g.py]=this.slide(g,g.px,g.py,m[0],m[1]);g.moves++;A.beep(300,.04);if(g.px===g.gx&&g.py===g.gy){g.score++;A.tune([660,880]);this.make(g);}},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#9fd3ef');const T=36,ox=24,oy=22;for(let i=0;i<108;i++){const x=ox+(i%12)*T,y=oy+Math.floor(i/12)*T;if(g.m[i])A.block(x,y,T,C.stone);else{c.fillStyle=(i%2)?'#cdeefc':'#bfe6f8';c.fillRect(x,y,T,T);}}
+    A.block(ox+g.gx*T+4,oy+g.gy*T+4,T-8,C.grass);A.block(ox+g.px*T+6,oy+g.py*T+6,T-12,'#3b7bd6');A.txt('⏱ '+Math.ceil(g.time)+'   Ходове: '+g.moves+' (най-малко '+g.min+')',24,10,12,'#123');}
+});
+</script>
+</body>
+</html>

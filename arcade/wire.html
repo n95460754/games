@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Не пипай жицата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">〰️ Не пипай жицата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 84. Жица с ток
+A.add({id:'wire',cat:'skill',icon:'〰️',name:'Не пипай жицата',desc:'Води мишката по пътеката',help:'Кликни на зеления старт, после води мишката по пътеката до червения финал, без да излизаш от нея. Всяко ниво е по-тясно.',
+  start(g){g.lv=0;this.level(g);},
+  level(g){g.lv++;g.pts=[];let y=A.ri(80,280);for(let x=20;x<=460;x+=40){g.pts.push([x,y]);y=A.clamp(y+A.ri(-70,70),40,320);}g.w=Math.max(14,40-g.lv*3);g.on=false;},
+  dist(g,x,y){let best=1e9;for(let i=0;i<g.pts.length-1;i++){const[a,b]=g.pts[i],[c2,d]=g.pts[i+1];const t=A.clamp(((x-a)*(c2-a)+(y-b)*(d-b))/((c2-a)**2+(d-b)**2),0,1);best=Math.min(best,Math.hypot(x-a-t*(c2-a),y-b-t*(d-b)));}return best;},
+  click(g,mx,my){const[s0,s1]=g.pts[0];if(Math.hypot(mx-s0,my-s1)<g.w){g.on=true;A.beep(500,.05);}},
+  move(g,x,y){if(!g.on)return;if(this.dist(g,x,y)>g.w/2){g.on=false;A.beep(100,.3,'sawtooth');g.score=Math.max(0,g.score);A.over(g,'Докосна жицата! ⚡');return;}
+    const[e0,e1]=g.pts[g.pts.length-1];if(Math.hypot(x-e0,y-e1)<g.w/2){g.on=false;g.score+=g.lv*10;A.tune([660,880]);this.level(g);}},
+  draw(g){A.bg('#1b1b24');c.lineCap='round';c.lineJoin='round';c.strokeStyle='#ffb300';c.lineWidth=g.w+6;c.beginPath();g.pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();
+    c.strokeStyle='#3a3a50';c.lineWidth=g.w;c.stroke();c.lineCap='butt';const[s0,s1]=g.pts[0],[e0,e1]=g.pts[g.pts.length-1];
+    c.fillStyle='#2ecc40';c.fillRect(s0-8,s1-8,16,16);c.fillStyle='#ff1744';c.fillRect(e0-8,e1-8,16,16);
+    A.txt(g.on?'Води внимателно...':'Кликни зеления старт',240,16,14,'#fff','center');A.txt('Ниво '+g.lv,470,346,13,'#fff','right');}
+});
+</script>
+</body>
+</html>

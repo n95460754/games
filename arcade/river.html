@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пренеси през реката</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛵ Пренеси през реката</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 65. Пренеси през реката
+A.add({id:'river',cat:'puzzle',icon:'⛵',name:'Пренеси през реката',desc:'Вълк, коза и зеле',low:true,unit:' хода',help:'Лодката побира фермера и още едно нещо. Кликни нещо до лодката, за да го качиш/свалиш, кликни лодката, за да прекосиш. Вълкът изяжда козата, козата — зелето, ако фермерът не е до тях!',
+  start(g){g.side={wolf:0,goat:0,cab:0};g.boat=0;g.load=null;g.moves=0;},
+  items:{wolf:['🐺','#888'],goat:['🐐','#eee'],cab:['🥬','#6cbf47']},
+  click(g,mx,my){if(mx>(g.boat?280:140)&&mx<(g.boat?340:200)&&my>200&&my<260){
+      g.boat^=1;if(g.load)g.side[g.load]=g.boat;g.moves++;g.score=g.moves;A.beep(300,.08);
+      const alone=g.boat^1,s=g.side;if(s.wolf===alone&&s.goat===alone&&g.load!=='wolf'&&g.load!=='goat'){g.score=0;return A.over(g,'Вълкът изяде козата!');}
+      if(s.goat===alone&&s.cab===alone&&g.load!=='goat'&&g.load!=='cab'){g.score=0;return A.over(g,'Козата изяде зелето!');}
+      if(s.wolf&&s.goat&&s.cab&&g.boat===1){g.load=null;A.tune([523,659,784,1046]);return A.over(g,'🏆 Всички са отсреща!');}return;}
+    for(const k in this.items){const pos=this.pos(g,k);if(Math.abs(mx-pos[0])<24&&Math.abs(my-pos[1])<24){if(g.load===k){g.load=null;}else if(g.side[k]===g.boat&&!g.load){g.load=k;}A.beep(500,.03);}}},
+  pos(g,k){const i=['wolf','goat','cab'].indexOf(k);if(g.load===k)return[(g.boat?310:170)+0,215];return g.side[k]?[400+i*0,120+i*60]:[60,120+i*60];},
+  draw(g){A.bg('#87ceeb');c.fillStyle=C.grass;c.fillRect(0,80,120,280);c.fillRect(360,80,120,280);c.fillStyle=C.water;c.fillRect(120,80,240,280);
+    const bx=g.boat?280:140;A.block(bx,235,60,C.wood,22);A.txt('👨‍🌾',bx+(g.load?14:30),215,24,'#fff','center');
+    for(const k in this.items){const[x,y]=this.pos(g,k);A.txt(this.items[k][0],x,y,30,'#fff','center');}
+    A.txt('Ходове: '+g.moves+'  (най-добрият може за 7)',240,30,14,'#123','center');}
+});
+</script>
+</body>
+</html>

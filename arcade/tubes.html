@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Епруветки</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧪 Епруветки</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 63. Цветни епруветки
+A.add({id:'tubes',cat:'puzzle',icon:'🧪',name:'Епруветки',desc:'Сортирай цветовете',help:'Кликни епруветка, после друга — горният цвят се прелива, ако отгоре е същият цвят или е празно. Всяка епруветка трябва да е с един цвят. R — отначало.',
+  cols:[C.red,C.gold,C.grass,C.water,C.purple,'#ff8c1a','#e8e8e8'],
+  start(g){g.lv=0;this.make(g);},
+  make(g){g.lv++;const n=Math.min(7,2+g.lv),balls=[];for(let i=0;i<n;i++)for(let k=0;k<4;k++)balls.push(i);A.shuffle(balls);
+    g.t2=[];for(let i=0;i<n;i++)g.t2.push(balls.slice(i*4,i*4+4));g.t2.push([],[]);g.init=JSON.stringify(g.t2);g.sel=-1;},
+  key(g,k){if(k==='KeyR'){g.t2=JSON.parse(g.init);g.sel=-1;}},
+  click(g,mx,my){const n=g.t2.length,w=Math.min(60,440/n),ox=(480-n*w)/2,i=Math.floor((mx-ox)/w);if(i<0||i>=n||my<60||my>320)return;
+    if(g.sel<0){if(g.t2[i].length)g.sel=i;return;}
+    if(i===g.sel){g.sel=-1;return;}const s=g.t2[g.sel],d=g.t2[i];let moved=0;
+    while(s.length&&d.length<4&&(!d.length||d[d.length-1]===s[s.length-1])){d.push(s.pop());moved++;}
+    g.sel=-1;A.beep(moved?500:150,.05);
+    if(g.t2.every(t=>!t.length||(t.length===4&&t.every(v=>v===t[0])))){g.score++;A.tune([523,659,784]);this.make(g);}},
+  draw(g){A.bg('#1d2433');const n=g.t2.length,w=Math.min(60,440/n),ox=(480-n*w)/2;
+    g.t2.forEach((t,i)=>{const x=ox+i*w+w/2-18,y=g.sel===i?70:90;c.fillStyle='rgba(255,255,255,.12)';c.fillRect(x,y,36,180);c.strokeStyle='#cfe8ff';c.lineWidth=2;c.strokeRect(x,y,36,180);
+      t.forEach((v,k)=>A.block(x+3,y+180-(k+1)*44,30,this.cols[v],42));});
+    A.txt('Ниво '+g.lv+'  ·  R = отначало',240,330,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

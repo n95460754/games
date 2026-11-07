@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Броене на овце</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Броене на овце</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 87. Преброй овцете
+A.add({id:'sheepcount',cat:'skill',icon:'🔢',name:'Броене на овце',desc:'Колко овце минаха?',help:'Овцете (и понякога кози 🐐!) минават през оградата. Брой САМО овцете. После напиши числото и Enter. 3 грешки и край.',
+  start(g){g.lives=3;g.inp='';this.round(g);},
+  round(g){g.q=[];let t=.5;const n=A.ri(3,6+g.score);g.n=0;for(let i=0;i<n;i++){const goat=g.score>2&&Math.random()<.25;if(!goat)g.n++;g.q.push({t,goat,x:-30,y:A.ri(200,280),v:A.rnd(140,200)+g.score*10});t+=A.rnd(.25,.9);}g.end=t+2.5;g.rt=0;g.ask=false;},
+  key(g,k,ch){if(!g.ask)return;if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.n;flash(g,ok);if(ok)g.score++;else{g.lives--;g.why='Бяха '+g.n;if(!g.lives)return A.over(g,'Бяха '+g.n);}g.inp='';this.round(g);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.rt+=dt;for(const s of g.q)if(g.rt>s.t)s.x+=s.v*dt;if(g.rt>g.end)g.ask=true;},
+  draw(g){A.bg('#87ceeb');c.fillStyle='#6cbf47';c.fillRect(0,180,480,180);c.fillStyle=C.wood;c.fillRect(230,190,10,110);
+    if(!g.ask)for(const s of g.q){if(s.x<-20||s.x>500)continue;const hop=Math.abs(Math.sin(s.x/40))*20;c.fillStyle=s.goat?'#a1887f':'#fff';c.fillRect(s.x-14,s.y-10-hop,28,18);c.fillStyle='#333';c.fillRect(s.x+12,s.y-8-hop,8,9);if(s.goat){c.fillStyle='#eee';c.fillRect(s.x+14,s.y-14-hop,2,6);}}
+    else{A.txt('Колко ОВЦЕ минаха?',240,90,24,'#123','center');inputBox(g,150);}A.txt('❤'.repeat(g.lives),10,14,14,'#c00');if(g.why)A.txt(g.why,470,14,13,'#333','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

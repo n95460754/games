@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Купчина кубчета</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧊 Купчина кубчета</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 68. Преброй кубчетата
+A.add({id:'cubes3d',cat:'puzzle',icon:'🧊',name:'Купчина кубчета',desc:'Колко са всички кубчета?',help:'Преброй всички кубчета в купчината (и скритите отдолу — нищо не виси във въздуха). Напиши числото и Enter. 3 грешки и край.',
+  start(g){g.lives=3;g.inp='';this.make(g);},
+  make(g){g.N=g.score<4?3:4;g.h=[];for(let i=0;i<g.N*g.N;i++)g.h.push(A.ri(0,Math.min(4,2+Math.floor(g.score/3))));g.ans=g.h.reduce((a,b)=>a+b,0);if(!g.ans){g.h[0]=1;g.ans=1;}},
+  key(g,k,ch){if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.ans;flash(g,ok);if(ok)g.score++;else{g.lives--;g.why='Бяха '+g.ans;if(!g.lives)return A.over(g,'Бяха '+g.ans);}g.inp='';this.make(g);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;},
+  cube(x,y){const s=22;c.fillStyle='#6cbf47';c.beginPath();c.moveTo(x,y);c.lineTo(x+s,y-s/2);c.lineTo(x,y-s);c.lineTo(x-s,y-s/2);c.fill();
+    c.fillStyle='#7a5233';c.beginPath();c.moveTo(x-s,y-s/2);c.lineTo(x,y);c.lineTo(x,y+s);c.lineTo(x-s,y+s/2);c.fill();
+    c.fillStyle='#5e3f27';c.beginPath();c.moveTo(x+s,y-s/2);c.lineTo(x,y);c.lineTo(x,y+s);c.lineTo(x+s,y+s/2);c.fill();
+    c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;c.beginPath();c.moveTo(x-s,y-s/2);c.lineTo(x,y);c.lineTo(x+s,y-s/2);c.moveTo(x,y);c.lineTo(x,y+s);c.stroke();},
+  draw(g){A.bg('#a8d8f0');const N=g.N;for(let s=0;s<2*N-1;s++)for(let x=0;x<N;x++){const z=s-x;if(z<0||z>=N)continue;const h=g.h[z*N+x];for(let k=0;k<h;k++)this.cube(240+(x-z)*22,120+(x+z)*11-k*22+40);}
+    inputBox(g,300);A.txt('❤'.repeat(g.lives),10,16,14,'#c00');if(g.why)A.txt(g.why,470,16,13,'#333','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

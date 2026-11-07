@@ -59,6 +59,27 @@ function flash(g,ok){g.fl={ok,t:.35};A.beep(ok?880:150,ok?.08:.2,ok?'triangle':'
 function drawFlash(g){if(g.fl&&g.fl.t>0){c.fillStyle=g.fl.ok?'rgba(80,200,80,.25)':'rgba(220,60,60,.3)';c.fillRect(0,0,480,360);}}
 function tick(g,dt){if(g.fl)g.fl.t-=dt;g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');}
 
+// шаблони за игри с въпроси (числов отговор или избор от 4)
+function numGame(o){return Object.assign({
+  start(g){g.time=o.time||60;g.inp='';g.lives=3;this.next(g);},
+  key(g,k,ch){if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.ans;flash(g,ok);if(ok)g.score++;else{g.why=g.q.replace('?',g.ans);if(o.lives){g.lives--;if(!g.lives)return A.over(g,g.why);}}g.inp='';this.next(g);}},
+  update(g,dt){if(o.lives){if(g.fl)g.fl.t-=dt;}else tick(g,dt);},
+  draw(g){A.bg(o.bg||'#1d2b3a');if(this.pic)this.pic(g);A.txt(g.q,240,this.pic?60:120,this.pic?26:34,'#fff','center');inputBox(g,this.pic?310:220);
+    A.txt(o.lives?'❤'.repeat(g.lives):'⏱ '+Math.ceil(g.time),10,14,14,o.lives?'#f55':'#fff');if(g.why)A.txt(g.why,470,14,12,'#bbb','right');drawFlash(g);}
+},o);}
+// общ шаблон: избор от 4 отговора
+function choiceGame(o){return Object.assign({
+  start(g){g.time=o.time||60;this.next(g);},
+  pick2(g,i){const ok=g.opts[i]===g.ans;flash(g,ok);if(ok)g.score++;else g.why='Беше '+g.ans;this.next(g);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.pick2(g,n-1);},
+  click(g,mx,my){if(my>250&&my<350){const i=Math.floor(mx/120);if(i>=0&&i<4)this.pick2(g,i);}},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg(o.bg||'#1d2b3a');this.pic(g);g.opts.forEach((v,i)=>{A.block(i*120+8,262,104,'#5a6b8c',60);A.txt((i+1)+') '+v,i*120+60,292,17,'#fff','center');});
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);if(g.why)A.txt(g.why,470,14,12,'#bbb','right');drawFlash(g);}
+},o);}
+function opts4(ans,gen){const s=new Set([ans]);let n=0;while(s.size<4&&n++<200)s.add(gen());return A.shuffle([...s]);}
+
+
 // ================= ИГРА =================
 function updTop(){
   const d=A.def;if(!d)return;

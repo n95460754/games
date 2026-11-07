@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бомбаджия</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💥 Бомбаджия</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 55. Бомбаджия
+A.add({id:'bomber',cat:'action',icon:'💥',name:'Бомбаджия',desc:'Взривявай сандъци и слузи',help:'Стрелки — ход. Space — сложи бомба. Взриви всички слузи, без да се взривиш сам!',
+  start(g){g.lv=0;this.level(g);},
+  level(g){g.lv++;const W=15,H=11;g.m=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++){let v=0;if(x===0||y===0||x===W-1||y===H-1||(x%2===0&&y%2===0))v=1;else if(Math.random()<.4&&x+y>3)v=2;g.m.push(v);}
+    g.px=1;g.py=1;g.bombs=[];g.fire=[];g.en=[];let n=0;while(n<2+g.lv){const x=A.ri(1,13),y=A.ri(1,9);if(g.m[y*15+x]===0&&x+y>6){g.en.push({x,y,t:0});n++;}}g.range=2;},
+  free(g,x,y){return g.m[y*15+x]===0&&!g.bombs.some(b=>b.x===x&&b.y===y);},
+  key(g,k){const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(m&&this.free(g,g.px+m[0],g.py+m[1])){g.px+=m[0];g.py+=m[1];}
+    if(k==='Space'&&g.bombs.length<2&&!g.bombs.some(b=>b.x===g.px&&b.y===g.py)){g.bombs.push({x:g.px,y:g.py,t:2});A.beep(200,.05);}},
+  repeat:true,
+  update(g,dt){for(const b of g.bombs){b.t-=dt;if(b.t<=0){b.done=1;A.beep(80,.25,'sawtooth',.08);g.fire.push({x:b.x,y:b.y,t:.5});
+        for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]])for(let r=1;r<=g.range;r++){const X=b.x+dx*r,Y=b.y+dy*r,v=g.m[Y*15+X];if(v===1)break;g.fire.push({x:X,y:Y,t:.5});if(v===2){g.m[Y*15+X]=0;g.score++;break;}}}}
+    g.bombs=g.bombs.filter(b=>!b.done);g.fire.forEach(f=>f.t-=dt);g.fire=g.fire.filter(f=>f.t>0);
+    const burn=(x,y)=>g.fire.some(f=>f.x===x&&f.y===y);
+    for(const e of g.en){if(burn(e.x,e.y)){e.dead=1;g.score+=10;continue;}e.t-=dt;if(e.t<=0){e.t=.6;const d=A.pick([[1,0],[-1,0],[0,1],[0,-1]]);if(this.free(g,e.x+d[0],e.y+d[1])){e.x+=d[0];e.y+=d[1];}}
+      if(e.x===g.px&&e.y===g.py)return A.over(g,'Слузът те хвана!');}
+    g.en=g.en.filter(e=>!e.dead);if(burn(g.px,g.py))return A.over(g,'Взриви се сам!');
+    if(!g.en.length){g.score+=50;A.tune([523,659,784]);this.level(g);}},
+  draw(g){A.bg('#3d7a2a');const T=32;for(let i=0;i<165;i++){const x=(i%15)*T,y=Math.floor(i/15)*T+4;if(g.m[i]===1)A.block(x,y,T,C.stone);else if(g.m[i]===2)A.block(x+1,y+1,T-2,C.wood);}
+    for(const b of g.bombs){c.fillStyle='#222';c.fillRect(b.x*T+7,b.y*T+11,18,18);c.fillStyle=Math.sin(b.t*20)>0?'#f33':'#ff0';c.fillRect(b.x*T+14,b.y*T+6,4,6);}
+    for(const f of g.fire){c.fillStyle='rgba(255,'+(120+Math.random()*100|0)+',0,.85)';c.fillRect(f.x*T+2,f.y*T+6,T-4,T-4);}
+    for(const e of g.en){A.block(e.x*T+5,e.y*T+9,22,'#7cb342');c.fillStyle='#000';c.fillRect(e.x*T+10,e.y*T+15,4,4);c.fillRect(e.x*T+18,e.y*T+15,4,4);}
+    A.block(g.px*T+7,g.py*T+6,18,'#fff',24);c.fillStyle='#3b7bd6';c.fillRect(g.px*T+7,g.py*T+20,18,10);A.txt('Ниво '+g.lv,472,10,12,'#fff','right');}
+});
+</script>
+</body>
+</html>

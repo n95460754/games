@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Надолу</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⬇️ Надолу</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 59. Надолу по стъпалата
+A.add({id:'falldown',cat:'action',icon:'⬇️',name:'Надолу',desc:'Слизай и не докосвай тавана',help:'← → — движи се. Платформите се качват нагоре. Падай през дупките и не допускай шиповете горе да те стигнат!',
+  start(g){g.x=230;g.y=100;g.v=0;g.rows=[];for(let i=0;i<6;i++)this.row(g,140+i*60);},
+  row(g,y){const gap=A.ri(0,400);g.rows.push({y,gap,w:Math.max(50,80-g.t)});},
+  update(g,dt){const sp=50+g.t*2;if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=240*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=240*dt;g.x=A.clamp(g.x,0,464);
+    for(const r of g.rows)r.y-=sp*dt;g.v+=800*dt;g.y+=g.v*dt;
+    for(const r of g.rows)if(g.v>=0&&g.y+16>=r.y&&g.y+16<=r.y+14&&!(g.x+16>r.gap&&g.x<r.gap+r.w)){g.y=r.y-16;g.v=0;}
+    if(g.rows[0].y<-20){g.rows.shift();g.score++;}while(g.rows[g.rows.length-1].y<360)this.row(g,g.rows[g.rows.length-1].y+60);
+    if(g.y<20)return A.over(g,'Шиповете те стигнаха!');if(g.y>380)g.y=380;},
+  draw(g){A.bg('#1d1a24');for(const r of g.rows){for(let x=0;x<480;x+=20)if(!(x+20>r.gap&&x<r.gap+r.w))A.block(x,r.y,20,C.wood,10);}
+    c.fillStyle='#ccc';for(let x=0;x<480;x+=12){c.beginPath();c.moveTo(x,0);c.lineTo(x+6,16);c.lineTo(x+12,0);c.fill();}A.block(g.x,g.y,16,'#3b7bd6');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пожарникар</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚒 Пожарникар</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 90. Пожарникар
+A.add({id:'firefighter',cat:'skill',icon:'🚒',name:'Пожарникар',desc:'Гаси пожарите в селото',help:'← → — движи се. Задръж Space / мишката — пръскай вода нагоре. Гаси огньовете, преди къщите да изгорят! 3 изгорели къщи и край.',
+  start(g){g.x=240;g.h=[0,1,2,3,4].map(i=>({x:20+i*92,fire:0,burnt:false}));g.sp=2;g.drops=[];g.lost=0;},
+  move(g,x){g.mx=x;},
+  update(g,dt){if(A.keys.ArrowLeft||A.keys.KeyA){g.x-=240*dt;g.mx=undefined;}if(A.keys.ArrowRight||A.keys.KeyD){g.x+=240*dt;g.mx=undefined;}if(g.mx!==undefined)g.x+=(g.mx-g.x)*Math.min(1,dt*6);g.x=A.clamp(g.x,10,470);
+    g.sp-=dt;if(g.sp<=0){g.sp=Math.max(.8,2.5-g.t*.03);const ok=g.h.filter(h=>!h.burnt&&!h.fire);if(ok.length)A.pick(ok).fire=.01;}
+    if(A.keys.Space||A.mouse.down)for(let i=0;i<2;i++)g.drops.push({x:g.x+A.rnd(-4,4),y:300,vy:-A.rnd(320,380)});
+    for(const d of g.drops){d.y+=d.vy*dt;d.vy+=200*dt;for(const h of g.h)if(h.fire>0&&d.x>h.x&&d.x<h.x+70&&d.y<220&&d.y>150){h.fire-=.02;d.y=-99;if(h.fire<=0){h.fire=0;g.score++;A.beep(900,.05);}}}
+    g.drops=g.drops.filter(d=>d.y>0);
+    for(const h of g.h)if(h.fire>0&&!h.burnt){h.fire+=dt*.12;if(h.fire>=1){h.burnt=true;h.fire=0;g.lost++;A.beep(80,.4,'sawtooth');if(g.lost>=3)return A.over(g,'Селото изгоря!');}}},
+  draw(g){A.bg('#2a3550');for(let x=0;x<480;x+=20)A.block(x,320,20,C.grass,40);
+    for(const h of g.h){if(h.burnt){A.block(h.x,240,70,'#333',80);continue;}A.block(h.x,230,70,C.wood,90);c.fillStyle=C.red;c.beginPath();c.moveTo(h.x-6,232);c.lineTo(h.x+35,180);c.lineTo(h.x+76,232);c.fill();c.fillStyle='#ffd54f';c.fillRect(h.x+12,250,18,18);
+      if(h.fire>0){for(let i=0;i<6;i++){c.fillStyle=Math.random()<.5?'#ff6a00':'#ffd23f';const s=8+h.fire*30*Math.random();c.fillRect(h.x+Math.random()*70-s/2,190+Math.random()*50-s,s,s);}c.fillStyle='#000';c.fillRect(h.x,222,70,4);c.fillStyle='#f33';c.fillRect(h.x,222,70*h.fire,4);}}
+    c.fillStyle='#7ec8ff';for(const d of g.drops)c.fillRect(d.x-2,d.y-2,4,4);A.block(g.x-14,300,28,C.red,20);c.fillStyle='#ccc';c.fillRect(g.x-3,290,6,12);A.txt('Изгорели: '+g.lost+'/3',10,14,14,'#f88');}
+});
+</script>
+</body>
+</html>

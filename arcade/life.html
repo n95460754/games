@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Играта на живота</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧬 Играта на живота</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 95. Играта на живота
+A.add({id:'life',cat:'board',icon:'🧬',name:'Играта на живота',desc:'Клетъчен автомат на Конуей',noScore:true,help:'Кликни/рисувай клетки. Space — пусни/спри. R — случайно, C — изчисти, G — планер. Правило: жива клетка с 2–3 съседа живее, празна с точно 3 се ражда.',
+  W:48,H:34,
+  start(g){g.m=new Uint8Array(this.W*this.H);g.run=false;g.gen=0;g.acc=0;for(let i=0;i<g.m.length;i++)g.m[i]=Math.random()<.2?1:0;},
+  key(g,k){const W=this.W;if(k==='Space')g.run=!g.run;if(k==='KeyC'){g.m.fill(0);g.gen=0;}if(k==='KeyR')for(let i=0;i<g.m.length;i++)g.m[i]=Math.random()<.25?1:0;
+    if(k==='KeyG'){const x=Math.floor(A.mouse.x/10)||5,y=Math.floor(A.mouse.y/10)||5;for(const[dx,dy]of[[1,0],[2,1],[0,2],[1,2],[2,2]])if(x+dx<W&&y+dy<this.H)g.m[(y+dy)*W+x+dx]=1;}},
+  click(g,mx,my){const i=Math.floor(my/10)*this.W+Math.floor(mx/10);if(my<340&&i>=0&&i<g.m.length){g.paint=g.m[i]?0:1;g.m[i]=g.paint;}},
+  move(g,mx,my){if(A.mouse.down&&my<340){const i=Math.floor(my/10)*this.W+Math.floor(mx/10);if(i>=0&&i<g.m.length)g.m[i]=g.paint;}},
+  update(g,dt){if(!g.run)return;g.acc+=dt;if(g.acc<.08)return;g.acc=0;const W=this.W,H=this.H,n=new Uint8Array(W*H);
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){let k=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(dx||dy)k+=g.m[((y+dy+H)%H)*W+(x+dx+W)%W];const a=g.m[y*W+x];n[y*W+x]=(a&&(k===2||k===3))||(!a&&k===3)?1:0;}g.m=n;g.gen++;},
+  draw(g){A.bg('#0b1a12');for(let i=0;i<g.m.length;i++)if(g.m[i])A.block((i%this.W)*10,Math.floor(i/this.W)*10,10,'#6cbf47');
+    c.fillStyle='#000';c.fillRect(0,340,480,20);A.txt((g.run?'▶ ':'⏸ ')+'Поколение '+g.gen+'   Живи: '+g.m.reduce((a,b)=>a+b,0)+'   Space · R · C · G',8,350,12,'#9ccc65');}
+});
+</script>
+</body>
+</html>

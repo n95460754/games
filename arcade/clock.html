@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Часовник</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🕒 Часовник</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 80. Часовник
+A.add(choiceGame({id:'clock',cat:'brain',icon:'🕒',name:'Часовник',desc:'Колко е часът?',help:'Прочети стрелковия часовник и избери верния час (клик или 1–4). 60 секунди.',
+  next(g){const h=A.ri(1,12),m=A.ri(0,11)*5,f=(h,m)=>h+':'+String(m).padStart(2,'0');g.h=h;g.m=m;g.ans=f(h,m);g.opts=opts4(g.ans,()=>Math.random()<.5?f(A.ri(1,12),m):f(h,A.ri(0,11)*5));},
+  pic(g){const cx=240,cy=135,r=105;c.fillStyle='#f5f0e6';c.beginPath();c.arc(cx,cy,r,0,7);c.fill();c.strokeStyle='#5e4428';c.lineWidth=8;c.stroke();
+    for(let i=1;i<=12;i++){const a=i/12*6.283-1.5708;A.txt(i,cx+Math.cos(a)*(r-20),cy+Math.sin(a)*(r-20),15,'#333','center');}
+    const ha=((g.h%12)+g.m/60)/12*6.283-1.5708,ma=g.m/60*6.283-1.5708;c.strokeStyle='#222';c.lineCap='round';c.lineWidth=7;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(ha)*55,cy+Math.sin(ha)*55);c.stroke();
+    c.lineWidth=4;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(ma)*85,cy+Math.sin(ma)*85);c.stroke();c.lineCap='butt';}}));
+</script>
+</body>
+</html>

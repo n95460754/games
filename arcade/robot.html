@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Програмирай робота</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🤖 Програмирай робота</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 69. Програмирай робота
+A.add({id:'robot',cat:'puzzle',icon:'🤖',name:'Програмирай робота',desc:'Напиши програма до целта',help:'↑ = напред, ← = завий наляво, → = завий надясно (добавят команда). Backspace трие. Enter — пусни програмата. Стигни до зеленото поле!',
+  start(g){g.lives=3;this.make(g);},
+  make(g){for(;;){g.w=[];for(let i=0;i<36;i++)g.w.push(Math.random()<.2?1:0);g.sx=0;g.sy=0;g.w[0]=0;g.gx=A.ri(3,5);g.gy=A.ri(2,5);g.w[g.gy*6+g.gx]=0;
+      const seen=new Set(['0,0']),q=[[0,0]];while(q.length){const[x,y]=q.shift();for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy;if(X>=0&&Y>=0&&X<6&&Y<6&&!g.w[Y*6+X]&&!seen.has(X+','+Y)){seen.add(X+','+Y);q.push([X,Y]);}}}
+      if(seen.has(g.gx+','+g.gy))break;}
+    g.prog=[];g.run=null;this.reset(g);},
+  reset(g){g.rx=g.sx;g.ry=g.sy;g.rd=0;},
+  key(g,k){if(g.run)return;if(g.prog.length<16){if(k==='ArrowUp'||k==='KeyW')g.prog.push('F');if(k==='ArrowLeft'||k==='KeyA')g.prog.push('L');if(k==='ArrowRight'||k==='KeyD')g.prog.push('R');}
+    if(k==='Backspace')g.prog.pop();if((k==='Enter'||k==='Space')&&g.prog.length){this.reset(g);g.run={i:0,t:.3};}A.beep(500,.02);},
+  update(g,dt){if(!g.run)return;g.run.t-=dt;if(g.run.t>0)return;g.run.t=.3;const cmd=g.prog[g.run.i++];const D=[[1,0],[0,1],[-1,0],[0,-1]];
+    if(cmd==='L')g.rd=(g.rd+3)%4;if(cmd==='R')g.rd=(g.rd+1)%4;
+    if(cmd==='F'){const X=g.rx+D[g.rd][0],Y=g.ry+D[g.rd][1];if(X<0||Y<0||X>5||Y>5||g.w[Y*6+X]){this.fail(g,'Блъсна се!');return;}g.rx=X;g.ry=Y;A.beep(400,.03);}
+    if(g.rx===g.gx&&g.ry===g.gy){g.score++;A.tune([523,659,784]);g.run=null;this.make(g);return;}
+    if(g.run.i>=g.prog.length)this.fail(g,'Не стигна целта');},
+  fail(g,m){g.run=null;g.lives--;g.msg=m;A.beep(120,.2,'sawtooth');if(!g.lives)A.over(g,m);this.reset(g);},
+  draw(g){A.bg('#1d2433');const T=44,ox=20,oy=40;for(let i=0;i<36;i++){const x=ox+(i%6)*T,y=oy+Math.floor(i/6)*T;if(g.w[i])A.block(x,y,T,C.stone);else{c.fillStyle=(i+Math.floor(i/6))%2?'#2b3646':'#323e52';c.fillRect(x,y,T,T);}}
+    A.block(ox+g.gx*T+6,oy+g.gy*T+6,T-12,C.grass);const X=ox+g.rx*T,Y=oy+g.ry*T;A.block(X+8,Y+8,T-16,'#9e9e9e');const D=[[1,0],[0,1],[-1,0],[0,-1]][g.rd];c.fillStyle='#ffd23f';c.fillRect(X+T/2-4+D[0]*12,Y+T/2-4+D[1]*12,8,8);
+    A.txt('Програма:',300,50,14,'#ffd54f');g.prog.forEach((p,i)=>{const x=300+(i%6)*28,y=70+Math.floor(i/6)*28;A.block(x,y,24,g.run&&g.run.i-1===i?'#ffb300':'#5a6b8c');A.txt({F:'↑',L:'↺',R:'↻'}[p],x+12,y+12,14,'#fff','center');});
+    A.txt('❤'.repeat(g.lives),300,200,14,'#f55');if(g.msg)A.txt(g.msg,300,225,13,'#f88');A.txt('Ниво '+(g.score+1),300,20,14,'#fff');}
+});
+</script>
+</body>
+</html>

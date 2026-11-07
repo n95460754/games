@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>НОД и НОК</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">➗ НОД и НОК</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 75. НОД и НОК
+A.add(numGame({id:'gcd',cat:'brain',icon:'➗',name:'НОД и НОК',desc:'Най-голям делител, най-малко кратно',lives:true,help:'НОД = най-големият общ делител, НОК = най-малкото общо кратно. Напиши отговора. 3 грешки и край.',
+  gcd(a,b){return b?this.gcd(b,a%b):a;},
+  next(g){const k=A.ri(1,Math.min(12,3+g.score)),a=k*A.ri(1,9),b=k*A.ri(1,9);if(Math.random()<.5){g.ans=this.gcd(a,b);g.q='НОД('+a+', '+b+') = ?';}else{const x=A.ri(2,12),y=A.ri(2,12);g.ans=x*y/this.gcd(x,y);g.q='НОК('+x+', '+y+') = ?';}}}));
+</script>
+</body>
+</html>
