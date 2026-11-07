@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forest Tap Rush #14</title>
+<style>
+  body { margin:0; background:#07140a; color:#e8f5e9; font-family:system-ui,sans-serif;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:8px; box-sizing:border-box; }
+  h1 { margin:0 0 8px; font-size:24px; }
+  canvas { background:#0f2414; border:2px solid #aeea0055; border-radius:8px; touch-action:none; max-width:100%; height:auto; }
+  p { opacity:.75; margin:8px 0 0; text-align:center; }
+  a { color:#aeea00; }
+</style>
+</head>
+<body>
+<h1>🎯 Forest Tap Rush #14 🌲</h1>
+<canvas id="c" width="400" height="500"></canvas>
+<p>Кликай/докосвай целите, преди да изчезнат! 30 секунди.<br>Space / клик след край = нова игра · <a href="../games.html">← Всички игри</a></p>
+<script>
+// Auto-generated game #14 (type: Tap Rush, theme: Forest).
+const c = document.getElementById('c'), x = c.getContext('2d'), W = c.width, H = c.height;
+const T = {"name":"Forest","emoji":"🌲","bg":"#07140a","field":"#0f2414","player":"#aeea00","enemy":"#8d6e63","good":"#ffca28","text":"#e8f5e9"};
+const P = {"life":1.85,"time":30};
+const KEY = 'auto-game-14-best';
+const G = {}, keys = {}, ptr = { x: W/2, y: H/2, moved: false };
+let score = 0, best = 0, over = false, started = false;
+try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
+function end() { if (over) return; over = true; if (score > best) { best = score; try { localStorage.setItem(KEY, best); } catch (e) {} } }
+function restart() { score = 0; over = false; started = true; G.reset(); }
+function rect(r, col) { x.fillStyle = col; x.fillRect(r.x, r.y, r.w, r.h); }
+function circle(cx, cy, r, col) { x.fillStyle = col; x.beginPath(); x.arc(cx, cy, Math.max(0, r), 0, 7); x.fill(); }
+function hit(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+function pos(e) { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; }
+addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if (e.key === ' ' && (over || !started)) { restart(); return; }
+  keys[e.key] = true; if (G.key && !over) G.key(e.key);
+});
+addEventListener('keyup', e => keys[e.key] = false);
+let sx = 0, sy = 0;
+c.addEventListener('pointermove', e => { [ptr.x, ptr.y] = pos(e); ptr.moved = true; });
+c.addEventListener('pointerdown', e => {
+  [ptr.x, ptr.y] = pos(e); sx = ptr.x; sy = ptr.y;
+  if (over || !started) { restart(); return; }
+  if (G.tap) G.tap(); if (G.click) G.click(ptr.x, ptr.y);
+});
+c.addEventListener('pointerup', e => { const [ux, uy] = pos(e); if (G.swipe && Math.hypot(ux-sx, uy-sy) > 25) G.swipe(ux-sx, uy-sy); });
+
+let t, tg, f, miss;
+G.reset = () => { t = P.time*60; tg = []; f = 0; miss = 0; };
+G.click = (px, py) => { for (const o of tg) if (Math.hypot(px-o.x, py-o.y) < o.r) { o.dead = 1; score += o.gold ? 5 : 1; return; } miss++; score = Math.max(0, score-1); };
+G.update = () => {
+  f++; if (--t <= 0) return end();
+  if (f % Math.max(15, 45 - Math.floor(score/4)) === 0) tg.push({ x: 40+Math.random()*(W-80), y: 80+Math.random()*(H-120), r: 28, age: 0, gold: Math.random() < .15 });
+  tg.forEach(o => { o.age++; o.r = 28 * (1 - o.age/(P.life*60)); if (o.r <= 3) o.dead = 1; });
+  tg = tg.filter(o => !o.dead);
+};
+G.draw = () => { tg.forEach(o => { circle(o.x, o.y, o.r, o.gold ? T.good : T.enemy); circle(o.x, o.y, o.r*.45, T.text); });
+  x.fillStyle = T.text; x.textAlign = 'right'; x.fillText('⏱ ' + Math.ceil(t/60), W-10, 50); x.textAlign = 'left'; };
+G.reset();
+function loop() {
+  if (started && !over) G.update();
+  x.clearRect(0, 0, W, H); G.draw();
+  x.fillStyle = T.text; x.font = '18px system-ui';
+  x.fillText('Точки: ' + score, 10, 25);
+  x.textAlign = 'right'; x.fillText('Рекорд: ' + best, W - 10, 25); x.textAlign = 'left';
+  if (over || !started) {
+    x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, W, H);
+    x.fillStyle = T.text; x.textAlign = 'center';
+    x.font = 'bold 32px system-ui'; x.fillText(over ? 'GAME OVER' : "🎯 Tap Rush", W/2, 230);
+    x.font = '18px system-ui'; x.fillText(over ? 'Space или клик = пак' : 'Space или клик = старт', W/2, 268);
+    x.textAlign = 'left';
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
