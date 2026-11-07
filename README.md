@@ -441,6 +441,10 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 
 *This is a fan project and is not affiliated with Mojang or Microsoft. "Minecraft" is a trademark of Mojang Studios.*
 
-## Games
+## 🤖 Auto Games
 
-- [Dodge Run #1](games/game-1.html) — added 2026-11-07
+A new mini-game is generated and added here automatically **every 10 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
+
+<!-- AUTO-GAMES:START -->
+- 🧱 [Dodge Run #1](games/game-1.html) — added 2026-11-07
+<!-- AUTO-GAMES:END -->
