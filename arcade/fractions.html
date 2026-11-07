@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дроби</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🍕 Дроби</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 29. Дроби
+A.add({id:'fractions',cat:'brain',icon:'🍕',name:'Дроби',desc:'Коя дроб е по-голяма?',help:'← ако лявата дроб е по-голяма, → ако дясната, ↓ ако са равни. 45 секунди.',
+  start(g){g.time=45;this.next(g);},
+  next(g){const mk=()=>{const d=A.ri(2,12);return[A.ri(1,d-1),d];};g.a=mk();if(Math.random()<.2){const k=A.ri(2,3);g.b=[g.a[0]*k,g.a[1]*k];}else g.b=mk();},
+  key(g,k){const x=g.a[0]*g.b[1],y=g.b[0]*g.a[1];const want=x>y?'L':x<y?'R':'E';const got={ArrowLeft:'L',KeyA:'L',ArrowRight:'R',KeyD:'R',ArrowDown:'E',KeyS:'E'}[k];if(!got)return;
+    const ok=got===want;flash(g,ok);g.score=Math.max(0,g.score+(ok?1:-1));this.next(g);},
+  update(g,dt){tick(g,dt);},
+  frac(f,x){A.txt(f[0],x,120,34,'#fff','center');c.fillStyle='#fff';c.fillRect(x-30,145,60,4);A.txt(f[1],x,175,34,'#fff','center');
+    for(let i=0;i<f[1];i++){const w=160/f[1];A.block(x-80+i*w,230,Math.max(2,w-1),i<f[0]?C.gold:'#444',26);}},
+  draw(g){A.bg('#1d2b3a');this.frac(g.a,120);this.frac(g.b,360);A.txt('?',240,150,40,'#ffd54f','center');A.txt('⏱ '+Math.ceil(g.time),20,20,16);
+    A.txt('← по-голяма   ↓ равни   по-голяма →',240,320,14,'#ffd54f','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>

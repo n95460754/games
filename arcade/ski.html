@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ски спускане</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛷️ Ски спускане</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 37. Ски спускане
+A.add({id:'ski',cat:'skill',icon:'⛷️',name:'Ски спускане',desc:'Мини през вратичките',help:'← → — завивай. Минавай между двете знаменца за +10. Не удряй елхите!',
+  start(g){g.x=240;g.obj=[];g.sp=0;g.dist=0;g.bonus=0;},
+  update(g,dt){const v=160+g.t*4;if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=220*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=220*dt;g.x=A.clamp(g.x,10,470);
+    g.dist+=v*dt;g.score=Math.floor(g.dist/50)+g.bonus;g.sp-=v*dt;
+    if(g.sp<=0){g.sp=70;if(Math.random()<.35){const x=A.ri(40,360);g.obj.push({k:'gate',x,y:380,w:A.ri(70,110)});}else for(let i=0;i<A.ri(1,3);i++)g.obj.push({k:'tree',x:A.ri(0,460),y:380+A.ri(0,40)});}
+    for(const o of g.obj){o.y-=v*dt;if(o.k==='tree'&&Math.abs(o.x+10-g.x)<14&&o.y<92&&o.y>56)return A.over(g,'Удари елха!');
+      if(o.k==='gate'&&!o.done&&o.y<80){o.done=1;if(g.x>o.x&&g.x<o.x+o.w){g.bonus+=10;A.beep(900,.06);}else A.beep(200,.06);}}
+    g.obj=g.obj.filter(o=>o.y>-40);},
+  draw(g){A.bg(C.snow);for(const o of g.obj){if(o.k==='tree'){c.fillStyle='#2e6b1e';c.fillRect(o.x,o.y,20,24);c.fillRect(o.x+4,o.y-10,12,12);c.fillStyle='#6b4a2a';c.fillRect(o.x+8,o.y+24,4,8);}
+      else{c.fillStyle=o.done?'#9e9e9e':'#e33';c.fillRect(o.x-3,o.y-20,4,24);c.fillRect(o.x+o.w,o.y-20,4,24);c.fillRect(o.x+1,o.y-20,10,8);c.fillRect(o.x+o.w-10,o.y-20,10,8);}}
+    const tilt=(A.keys.ArrowLeft||A.keys.KeyA)?-3:(A.keys.ArrowRight||A.keys.KeyD)?3:0;A.block(g.x-8,60,16,'#3b7bd6',20);c.fillStyle='#f1c27d';c.fillRect(g.x-5,52,10,9);c.fillStyle='#333';c.fillRect(g.x-12+tilt,80,10,3);c.fillRect(g.x+2+tilt,80,10,3);}
+});
+</script>
+</body>
+</html>

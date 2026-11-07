@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Плъзгащ пъзел</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Плъзгащ пъзел</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 15. Плъзгащ пъзел
+A.add({id:'slide15',cat:'puzzle',icon:'🔢',name:'Плъзгащ пъзел',desc:'Подреди от 1 до 15',low:true,unit:' хода',help:'Кликни плочка до празното място или ползвай стрелките. Подреди числата 1–15.',
+  start(g){g.t15=[...Array(15).keys()].map(i=>i+1).concat(0);g.moves=0;for(let i=0;i<300;i++)this.mv(g,A.pick([[1,0],[-1,0],[0,1],[0,-1]]),true);},
+  mv(g,[dx,dy],silent){const e=g.t15.indexOf(0),ex=e%4,ey=Math.floor(e/4),x=ex-dx,y=ey-dy;if(x<0||y<0||x>3||y>3)return;
+    const j=y*4+x;g.t15[e]=g.t15[j];g.t15[j]=0;if(!silent){g.moves++;g.score=g.moves;A.beep(400,.03);if(g.t15.every((v,i)=>v===(i+1)%16))A.over(g,'🏆 Подредено!');}},
+  key(g,k){const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(m)this.mv(g,m);},
+  click(g,mx,my){const x=Math.floor((mx-100)/70),y=Math.floor((my-40)/70);if(x<0||y<0||x>3||y>3)return;const e=g.t15.indexOf(0),ex=e%4,ey=Math.floor(e/4);
+    if(Math.abs(ex-x)+Math.abs(ey-y)===1)this.mv(g,[x-ex,y-ey]);},
+  draw(g){A.bg('#2a2018');g.t15.forEach((v,i)=>{if(!v)return;const x=100+(i%4)*70,y=40+Math.floor(i/4)*70;A.block(x+2,y+2,66,v===i+1?C.grass:C.wood);A.txt(v,x+35,y+36,26,'#fff','center');});
+    A.txt('Ходове: '+g.moves,400,60,14);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Три в ред</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💎 Три в ред</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 12. Три в ред
+A.add({id:'match3',cat:'puzzle',icon:'💎',name:'Три в ред',desc:'Размествай скъпоценности',unit:'',help:'Кликни камък, после съседен — разменят се. Направи 3+ еднакви в ред. Имаш 90 секунди.',
+  start(g){g.N=8;g.sel=null;do{g.b=[];for(let i=0;i<64;i++)g.b.push(A.ri(0,5));}while(this.find(g).size);g.time=90;g.anim=0;},
+  cols:[C.red,C.gold,C.grass,C.water,C.purple,C.white],
+  find(g){const m=new Set();for(let y=0;y<8;y++)for(let x=0;x<8;x++){const v=g.b[y*8+x];if(v<0)continue;
+    if(x<6&&g.b[y*8+x+1]===v&&g.b[y*8+x+2]===v)[0,1,2].forEach(i=>m.add(y*8+x+i));
+    if(y<6&&g.b[(y+1)*8+x]===v&&g.b[(y+2)*8+x]===v)[0,1,2].forEach(i=>m.add((y+i)*8+x));}return m;},
+  resolve(g){let combo=0;for(;;){const m=this.find(g);if(!m.size)break;combo++;g.score+=m.size*10*combo;A.beep(500+combo*150,.06);
+    for(const i of m)g.b[i]=-1;
+    for(let x=0;x<8;x++){const col=[];for(let y=7;y>=0;y--)if(g.b[y*8+x]>=0)col.push(g.b[y*8+x]);for(let y=7;y>=0;y--){const v=col[7-y];g.b[y*8+x]=v===undefined?A.ri(0,5):v;}}}},
+  click(g,mx,my){const x=Math.floor((mx-80)/40),y=Math.floor((my-20)/40);if(x<0||y<0||x>7||y>7)return;const i=y*8+x;
+    if(g.sel===null){g.sel=i;return;}
+    const s=g.sel,sx=s%8,sy=Math.floor(s/8);g.sel=null;if(Math.abs(sx-x)+Math.abs(sy-y)!==1){g.sel=i;return;}
+    [g.b[s],g.b[i]]=[g.b[i],g.b[s]];if(!this.find(g).size){[g.b[s],g.b[i]]=[g.b[i],g.b[s]];A.beep(150,.08);return;}this.resolve(g);},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#20182c');for(let i=0;i<64;i++){const x=80+(i%8)*40,y=20+Math.floor(i/8)*40;c.fillStyle=(i+Math.floor(i/8))%2?'#2b2238':'#30263f';c.fillRect(x,y,40,40);
+      const col=this.cols[g.b[i]];c.fillStyle=col;c.beginPath();c.moveTo(x+20,y+5);c.lineTo(x+35,y+20);c.lineTo(x+20,y+35);c.lineTo(x+5,y+20);c.fill();c.fillStyle='rgba(255,255,255,.5)';c.fillRect(x+15,y+13,5,5);
+      if(g.sel===i){c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(x+2,y+2,36,36);}}
+    A.txt('⏱ '+Math.ceil(g.time),410,40,18,g.time<10?'#f66':'#fff');}
+});
+</script>
+</body>
+</html>

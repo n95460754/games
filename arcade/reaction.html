@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Реакция</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚡ Реакция</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 25. Реакция
+A.add({id:'reaction',cat:'brain',icon:'⚡',name:'Реакция',desc:'Колко бърз си?',low:true,unit:' мс',help:'Чакай блокът да стане ЗЕЛЕН и тогава натисни Space или кликни. 5 опита — резултатът е средното време.',
+  start(g){g.res=[];this.arm(g);},
+  arm(g){g.st='wait';g.w=A.rnd(1.2,3.5);},
+  key(g,k){if(k==='Space')this.hitIt(g);},click(g){this.hitIt(g);},
+  hitIt(g){if(g.st==='wait'){g.st='early';g.et=1;A.beep(150,.2,'sawtooth');return;}
+    if(g.st==='go'){const ms=(performance.now()-g.go);g.res.push(ms);A.beep(900,.08);g.last=ms;
+      if(g.res.length>=5){g.score=g.res.reduce((a,b)=>a+b)/5;return A.over(g,'Средно: '+Math.round(g.score)+' мс');}g.st='show';g.et=1;}},
+  update(g,dt){if(g.st==='wait'){g.w-=dt;if(g.w<=0){g.st='go';g.go=performance.now();}}else if(g.st==='early'||g.st==='show'){g.et-=dt;if(g.et<=0)this.arm(g);}},
+  draw(g){A.bg('#1d1d1d');const col=g.st==='go'?'#2ecc40':g.st==='early'?'#c62828':'#7a1f1f';A.block(140,80,200,col,200);
+    A.txt(g.st==='go'?'СЕГА!':g.st==='early'?'Твърде рано!':g.st==='show'?Math.round(g.last)+' мс':'Чакай зелено...',240,180,22,'#fff','center');
+    A.txt('Опит '+Math.min(5,g.res.length+1)+'/5',240,320,16,'#bbb','center');}
+});
+</script>
+</body>
+</html>

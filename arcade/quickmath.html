@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бърза сметка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">➕ Бърза сметка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 21. Бърза сметка
+A.add({id:'quickmath',cat:'brain',icon:'➕',name:'Бърза сметка',desc:'Колко сметки за 60 секунди?',help:'Напиши отговора с цифрите и натисни Enter. Сметките стават по-трудни с всеки верен отговор.',
+  start(g){g.time=60;g.inp='';this.next(g);},
+  next(g){const s=g.score,op=A.pick(s<5?['+','-']:s<12?['+','-','×']:['+','-','×','÷']);let a,b,r;
+    if(op==='+'){a=A.ri(2,20+s*4);b=A.ri(2,20+s*4);r=a+b;}if(op==='-'){a=A.ri(5,30+s*4);b=A.ri(1,a);r=a-b;}
+    if(op==='×'){a=A.ri(2,9+Math.floor(s/5));b=A.ri(2,9);r=a*b;}if(op==='÷'){b=A.ri(2,9);r=A.ri(2,9+Math.floor(s/6));a=b*r;}
+    g.q=a+' '+op+' '+b+' = ?';g.ans=r;},
+  key(g,k,ch){if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.ans;flash(g,ok);if(ok){g.score++;this.next(g);}g.inp='';}},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#1d2b3a');A.txt(g.q,240,130,38,'#fff','center');inputBox(g,220);A.txt('⏱ '+Math.ceil(g.time),20,20,18,g.time<10?'#f66':'#fff');drawFlash(g);}
+});
+</script>
+</body>
+</html>

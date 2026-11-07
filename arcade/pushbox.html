@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бутай сандъците</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📦 Бутай сандъците</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 17. Бутай сандъците
+A.add({id:'pushbox',cat:'puzzle',icon:'📦',name:'Бутай сандъците',desc:'Сложи сандъците на местата им',help:'Стрелки — движи се и бутай. Сложи всеки сандък на жълто поле. R — започни нивото отначало.',
+  levels:[
+    ['#####','#@ .#','# $ #','#   #','#####'],
+    ['######','#    #','# $$ #','#.@ .#','######'],
+    ['#######','#.  $ #','# #   #','#. @$ #','#######'],
+    ['########','#  .   #','# #$#  #','#  @ $.#','# .$ # #','#      #','########'],
+    ['  ####','###  #','#.$  #','#.$@ #','#.$  #','######'],
+    ['  #####','###   #','#.@$  #','### $.#','#.##$ #','# # . ##','#$ *$$.#','#   .  #','########']
+  ],
+  start(g){g.lv=0;this.load(g);},
+  load(g){const L=this.levels[g.lv];g.w=[];g.goal=[];g.box=[];L.forEach((row,y)=>[...row].forEach((ch,x)=>{
+      if(ch==='#')g.w.push(x+','+y);if('.*+'.includes(ch))g.goal.push(x+','+y);if('$*'.includes(ch))g.box.push(x+','+y);if('@+'.includes(ch)){g.px=x;g.py=y;}}));
+    g.H=L.length;g.Wd=Math.max(...L.map(r=>r.length));g.T=Math.min(40,Math.floor(Math.min(440/g.Wd,320/g.H)));},
+  key(g,k){if(k==='KeyR'){this.load(g);return;}
+    const m={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];if(!m)return;
+    const nx=g.px+m[0],ny=g.py+m[1],K=nx+','+ny;if(g.w.includes(K))return;
+    const bi=g.box.indexOf(K);if(bi>=0){const K2=(nx+m[0])+','+(ny+m[1]);if(g.w.includes(K2)||g.box.includes(K2))return;g.box[bi]=K2;A.beep(200,.05);}
+    g.px=nx;g.py=ny;
+    if(g.box.every(b=>g.goal.includes(b))){g.score++;A.tune([523,659,784]);g.lv++;if(g.lv>=this.levels.length)return A.over(g,'🏆 Всички нива!');this.load(g);}},
+  draw(g){A.bg('#2a2420');const T=g.T,ox=(480-g.Wd*T)/2,oy=(360-g.H*T)/2+10;
+    for(let y=0;y<g.H;y++)for(let x=0;x<g.Wd;x++){const K=x+','+y;if(g.w.includes(K))A.block(ox+x*T,oy+y*T,T,C.stone);else{c.fillStyle='#3a322b';c.fillRect(ox+x*T,oy+y*T,T,T);}
+      if(g.goal.includes(K)){c.fillStyle=C.gold;c.fillRect(ox+x*T+T*.3,oy+y*T+T*.3,T*.4,T*.4);}}
+    for(const b of g.box){const[x,y]=b.split(',').map(Number);A.block(ox+x*T+2,oy+y*T+2,T-4,g.goal.includes(b)?'#c9a64a':C.wood);c.fillStyle='rgba(0,0,0,.35)';c.fillRect(ox+x*T+T/2-2,oy+y*T+2,4,T-4);}
+    A.block(ox+g.px*T+T*.2,oy+g.py*T+T*.15,T*.6,'#3b7bd6',T*.7);c.fillStyle='#f1c27d';c.fillRect(ox+g.px*T+T*.25,oy+g.py*T+T*.15,T*.5,T*.25);
+    A.txt('Ниво '+(g.lv+1)+'/'+this.levels.length+'  ·  R = отначало',240,14,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пикселно платно</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎨 Пикселно платно</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 45. Пикселно платно
+A.add({id:'paint',cat:'board',icon:'🎨',name:'Пикселно платно',desc:'Рисувай с блокчета',noScore:true,help:'Рисувай с мишката (влачи). Десен бутон трие. Избери цвят отдолу или 1–9. C изчиства.',
+  pal:['#000','#fff','#d84a3a','#ff8c1a','#ffd23f','#5aa13a','#3b7bd6','#8e24aa','#7a5233','#7d7d7d','#4de8f5','#f1c27d'],
+  start(g){g.px=Array(24*16).fill(null);g.col=2;},
+  paint(g,x,y,b){if(y>=320){if(b===0){const i=Math.floor((x-6)/39);if(i>=0&&i<this.pal.length)g.col=i;}return;}const X=Math.floor(x/20),Y=Math.floor(y/20);if(X<0||Y<0||X>23||Y>15)return;g.px[Y*24+X]=b===2?null:this.pal[g.col];},
+  click(g,x,y,b){g.btn=b;this.paint(g,x,y,b);},
+  move(g,x,y){if(A.mouse.down)this.paint(g,x,y,g.btn||0);},
+  key(g,k,ch){if(k==='KeyC')g.px.fill(null);const n=+ch;if(n>=1&&n<=9)g.col=n-1;},
+  draw(g){A.bg('#ddd');for(let i=0;i<g.px.length;i++){const x=(i%24)*20,y=Math.floor(i/24)*20;if(g.px[i]){c.fillStyle=g.px[i];c.fillRect(x,y,20,20);}else{c.fillStyle=((i%24)+Math.floor(i/24))%2?'#eee':'#e4e4e4';c.fillRect(x,y,20,20);}}
+    c.fillStyle='#333';c.fillRect(0,320,480,40);this.pal.forEach((p,i)=>{c.fillStyle=p;c.fillRect(6+i*39,326,33,28);if(i===g.col){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(5+i*39,325,35,30);}});}
+});
+</script>
+</body>
+</html>

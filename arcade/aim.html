@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мерник</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎯 Мерник</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 26. Мерник
+A.add({id:'aim',cat:'brain',icon:'🎯',name:'Мерник',desc:'Уцели блоковете с мишката',help:'Кликай бързо върху появяващите се блокове, преди да изчезнат. 30 секунди. Пропуск = -1 точка.',
+  start(g){g.time=30;g.tg=[];g.sp=0;},
+  click(g,mx,my){for(let i=g.tg.length-1;i>=0;i--){const t=g.tg[i],s=t.s*t.life/t.max;if(Math.abs(mx-t.x)<s/2+3&&Math.abs(my-t.y)<s/2+3){g.tg.splice(i,1);g.score+=t.gold?3:1;A.beep(t.gold?1200:800,.05);return;}}
+    g.score=Math.max(0,g.score-1);A.beep(150,.05);},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');g.sp-=dt;
+    if(g.sp<=0){g.sp=Math.max(.35,.8-g.t*.015);const max=A.rnd(1.2,2);g.tg.push({x:A.rnd(30,450),y:A.rnd(40,330),s:A.rnd(28,46),life:max,max,gold:Math.random()<.12});}
+    for(const t of g.tg)t.life-=dt;g.tg=g.tg.filter(t=>t.life>0);},
+  draw(g){A.bg('#20302a');for(const t of g.tg){const s=t.s*t.life/t.max;A.block(t.x-s/2,t.y-s/2,s,t.gold?C.gold:C.ruby);}
+    c.strokeStyle='#fff';c.lineWidth=2;c.beginPath();c.arc(A.mouse.x,A.mouse.y,10,0,7);c.stroke();A.txt('⏱ '+Math.ceil(g.time),20,20,16);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сборни блокове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧊 Сборни блокове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 20. Сборни блокове
+A.add({id:'collapse',cat:'puzzle',icon:'🧊',name:'Сборни блокове',desc:'Махай групи еднакви блокове',help:'Кликни група от 2+ еднакви съседни блока. По-големите групи дават много повече точки (n-1)². Играта свършва, когато няма ходове.',
+  start(g){g.b=[];for(let x=0;x<15;x++){const col=[];for(let y=0;y<10;y++)col.push(A.ri(0,3));g.b.push(col);}},
+  cols:[C.red,C.gold,C.grass,C.water],
+  group(g,x,y){const v=g.b[x]&&g.b[x][y];if(v===undefined||v===null)return[];const out=[],seen=new Set([x+','+y]),st=[[x,y]];
+    while(st.length){const[a,b]=st.pop();out.push([a,b]);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=a+dx,Y=b+dy,K=X+','+Y;if(!seen.has(K)&&g.b[X]&&g.b[X][Y]===v){seen.add(K);st.push([X,Y]);}}}return out;},
+  click(g,mx,my){const x=Math.floor(mx/32),y=Math.floor((340-my)/32);const gr=this.group(g,x,y);if(gr.length<2)return;
+    for(const[a,b]of gr)g.b[a][b]=null;g.b=g.b.map(col=>col.filter(v=>v!==null)).filter(col=>col.length);
+    g.score+=(gr.length-1)**2;A.beep(300+gr.length*30,.06);
+    let any=false;for(let x=0;x<g.b.length&&!any;x++)for(let y=0;y<g.b[x].length&&!any;y++)if(this.group(g,x,y).length>1)any=true;
+    if(!any){if(!g.b.length){g.score+=500;A.over(g,'🏆 Изчисти всичко! +500');}else A.over(g,'Няма повече ходове');}},
+  draw(g){A.bg('#181d26');g.b.forEach((col,x)=>col.forEach((v,y)=>A.block(x*32,340-(y+1)*32,32,this.cols[v])));A.txt('Блокове: '+g.b.reduce((a,c)=>a+c.length,0),8,14,14);}
+});
+</script>
+</body>
+</html>

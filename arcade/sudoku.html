@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мини судоку</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Мини судоку</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 47. Мини судоку
+A.add({id:'sudoku',cat:'board',icon:'🔢',name:'Мини судоку',desc:'Судоку 4×4',help:'Кликни празно поле и напиши 1–4. Всеки ред, колона и квадрат 2×2 трябва да има 1, 2, 3 и 4. 3 минути за колкото може повече.',
+  start(g){g.time=180;this.make(g);},
+  make(g){const base=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];const p=A.shuffle([1,2,3,4]);let s=base.map(r=>r.map(v=>p[v-1]));
+    if(Math.random()<.5)s=s[0].map((_,i)=>s.map(r=>r[i]));if(Math.random()<.5)s=[s[1],s[0],s[2],s[3]];if(Math.random()<.5)s=s.map(r=>[r[1],r[0],r[2],r[3]]);
+    g.sol=s.flat();g.fix=g.sol.map(()=>true);const holes=A.shuffle([...Array(16).keys()]).slice(0,Math.min(11,7+g.score));for(const i of holes)g.fix[i]=false;
+    g.cur=g.sol.map((v,i)=>g.fix[i]?v:0);g.sel=holes[0];},
+  click(g,mx,my){const x=Math.floor((mx-140)/50),y=Math.floor((my-60)/50);if(x>=0&&y>=0&&x<4&&y<4&&!g.fix[y*4+x])g.sel=y*4+x;},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4&&!g.fix[g.sel]){g.cur[g.sel]=n;A.beep(500,.03);
+      const okL=idx=>{const v=idx.map(i=>g.cur[i]);return v.every(Boolean)&&new Set(v).size===4;};
+      let ok=true;for(let i=0;i<4;i++){ok=ok&&okL([0,1,2,3].map(j=>i*4+j))&&okL([0,1,2,3].map(j=>j*4+i));}
+      for(const b of[0,2,8,10])ok=ok&&okL([b,b+1,b+4,b+5]);if(ok){g.score++;A.tune([523,659,784]);this.make(g);}}
+    const m={ArrowLeft:-1,ArrowRight:1,ArrowUp:-4,ArrowDown:4}[k];if(m){const n2=g.sel+m;if(n2>=0&&n2<16)g.sel=n2;}
+    if(k==='Backspace'&&!g.fix[g.sel])g.cur[g.sel]=0;},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1f2a3d');for(let i=0;i<16;i++){const x=140+(i%4)*50,y=60+Math.floor(i/4)*50;c.fillStyle=i===g.sel?'#5a6b8c':g.fix[i]?'#3a4a60':'#2b3646';c.fillRect(x+1,y+1,48,48);
+      if(g.cur[i]){const dup=!g.fix[i]&&[...Array(16).keys()].some(j=>j!==i&&g.cur[j]===g.cur[i]&&(j%4===i%4||Math.floor(j/4)===Math.floor(i/4)||(Math.floor(j/8)===Math.floor(i/8)&&Math.floor(j%4/2)===Math.floor(i%4/2))));
+        A.txt(g.cur[i],x+25,y+26,26,g.fix[i]?'#fff':dup?'#ff6b6b':'#9ecbff','center');}}
+    c.fillStyle='#ffd54f';c.fillRect(239,60,3,200);c.fillRect(140,159,200,3);A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>

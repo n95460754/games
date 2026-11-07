@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Четири в ред</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔴 Четири в ред</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 42. Четири в ред
+A.add({id:'connect4',cat:'board',icon:'🔴',name:'Четири в ред',desc:'Пусни 4 в линия',help:'Кликни колона (или 1–7), за да пуснеш блок. Наредѝ 4 в ред преди робота. Победа = точка.',
+  start(g){g.b=[];for(let i=0;i<7;i++)g.b.push([]);g.msg='';g.wait=0;},
+  won(b,p){const at=(x,y)=>b[x]&&b[x][y];for(let x=0;x<7;x++)for(let y=0;y<6;y++)if(at(x,y)===p)for(const[dx,dy]of[[1,0],[0,1],[1,1],[1,-1]]){let k=1;while(k<4&&at(x+dx*k,y+dy*k)===p)k++;if(k===4)return true;}return false;},
+  drop(g,x,p){if(g.b[x].length>=6)return false;g.b[x].push(p);return true;},
+  ai(g){const ok=[0,1,2,3,4,5,6].filter(x=>g.b[x].length<6);if(!ok.length)return;
+    const tryW=p=>ok.find(x=>{g.b[x].push(p);const w=this.won(g.b,p);g.b[x].pop();return w;});
+    let mv=tryW(2);if(mv===undefined)mv=tryW(1);
+    if(mv===undefined){const safe=ok.filter(x=>{g.b[x].push(2);let bad=false;if(g.b[x].length<6){g.b[x].push(1);bad=this.won(g.b,1);g.b[x].pop();}g.b[x].pop();return!bad;});
+      const pool=safe.length?safe:ok;mv=pool.sort((a,b)=>Math.abs(a-3)-Math.abs(b-3)+A.rnd(-1.5,1.5))[0];}
+    this.drop(g,mv,2);A.beep(300,.05);if(this.won(g.b,2))A.over(g,'Роботът нареди 4!');else if(g.b.every(c2=>c2.length>=6)){g.msg='Равенство';g.wait=1.2;}},
+  put(g,x){if(g.wait>0||A.state!=='play')return;if(!this.drop(g,x,1))return;A.beep(600,.05);
+    if(this.won(g.b,1)){g.score++;g.msg='Победа! 🎉';A.tune([660,880]);g.wait=1.5;return;}this.ai(g);},
+  click(g,mx){const x=Math.floor((mx-100)/40);if(x>=0&&x<7)this.put(g,x);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=7)this.put(g,n-1);},
+  update(g,dt){if(g.wait>0){g.wait-=dt;if(g.wait<=0){g.b.forEach(c2=>c2.length=0);g.msg='';}}},
+  draw(g){A.bg('#14202c');A.block(96,96,288,'#3b5bd6',248);for(let x=0;x<7;x++)for(let y=0;y<6;y++){const v=g.b[x][y],px=104+x*40,py=304-y*40;
+      if(v)A.block(px,py,32,v===1?C.gold:C.red);else{c.fillStyle='#0b1220';c.fillRect(px+2,py+2,28,28);}}
+    const hx=Math.floor((A.mouse.x-100)/40);if(hx>=0&&hx<7){c.fillStyle='rgba(255,213,79,.6)';c.fillRect(104+hx*40,70,32,16);}A.txt(g.msg||'Ти си 🟨',240,30,18,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

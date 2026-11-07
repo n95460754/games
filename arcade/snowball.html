@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Снежна битка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛄ Снежна битка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 40. Снежна битка
+A.add({id:'snowball',cat:'skill',icon:'⛄',name:'Снежна битка',desc:'Уцели снежните човеци',help:'Кликай, за да хвърляш снежни топки. Имаш 6 топки, после се презареждаш автоматично. Не уцелвай кученцето! 40 секунди.',
+  start(g){g.time=40;g.t2=[];g.sp=0;g.ammo=6;g.rel=0;g.balls=[];},
+  click(g,mx,my){if(g.rel>0||g.ammo<=0)return;g.ammo--;if(!g.ammo)g.rel=1.2;g.balls.push({x:240,y:360,tx:mx,ty:my,t:0});A.beep(300,.04);},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');if(g.rel>0){g.rel-=dt;if(g.rel<=0)g.ammo=6;}
+    g.sp-=dt;if(g.sp<=0){g.sp=A.rnd(.5,1.1);const slots=[60,150,240,330,420].filter(x=>!g.t2.some(t=>t.x===x));if(slots.length)g.t2.push({x:A.pick(slots),up:0,life:A.rnd(1.2,2.2),dog:Math.random()<.18});}
+    for(const t of g.t2){t.life-=dt;t.up=A.clamp(t.up+(t.life>0?4:-4)*dt,0,1);}g.t2=g.t2.filter(t=>t.life>0||t.up>0);
+    for(const b of g.balls){b.t+=dt*3.5;if(b.t>=1&&!b.done){b.done=1;for(const t of g.t2)if(t.up>.5&&Math.abs(b.tx-t.x)<24&&b.ty>200-t.up*60&&b.ty<230){t.life=0;if(t.dog){g.score=Math.max(0,g.score-3);A.beep(120,.2);}else{g.score++;A.beep(900,.05);}}}}
+    g.balls=g.balls.filter(b=>b.t<1.2);},
+  draw(g){A.bg('#a8c8e8');c.fillStyle='#fff';c.fillRect(0,230,480,130);
+    for(const t of g.t2){const y=230-t.up*60;if(t.dog){A.block(t.x-18,y+10,36,'#a1887f',24);c.fillStyle='#000';c.fillRect(t.x-10,y+16,4,4);c.fillRect(t.x+6,y+16,4,4);c.fillStyle='#6d4c41';c.fillRect(t.x-20,y+6,8,10);c.fillRect(t.x+12,y+6,8,10);}
+      else{A.block(t.x-18,y+20,36,'#fff',30);A.block(t.x-13,y,26,'#fff',22);c.fillStyle='#000';c.fillRect(t.x-7,y+6,4,4);c.fillRect(t.x+3,y+6,4,4);c.fillStyle='#ff8c1a';c.fillRect(t.x-2,y+11,8,3);}}
+    for(let i=0;i<5;i++)A.block(30+i*90,226,60,'#dfe9f5',30);
+    for(const b of g.balls){const t=Math.min(1,b.t),x=b.x+(b.tx-b.x)*t,y=b.y+(b.ty-b.y)*t-Math.sin(t*Math.PI)*60,s=14-t*6;c.fillStyle='#fff';c.fillRect(x-s/2,y-s/2,s,s);c.strokeStyle='#99b';c.strokeRect(x-s/2,y-s/2,s,s);}
+    A.txt('⏱ '+Math.ceil(g.time)+'   Топки: '+(g.rel>0?'презареждане...':'⚪'.repeat(g.ammo)),10,14,14,'#123');}
+});
+</script>
+</body>
+</html>

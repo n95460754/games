@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Редици</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔮 Редици</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 30. Редици
+A.add({id:'sequence',cat:'brain',icon:'🔮',name:'Редици',desc:'Кое е следващото число?',help:'Открий правилото и напиши следващото число в редицата. Enter за проверка. 3 грешки и край.',
+  start(g){g.lives=3;g.inp='';this.next(g);},
+  next(g){const s=g.score,t=A.ri(0,Math.min(5,1+Math.floor(s/2)));let a=A.ri(1,9),d=A.ri(2,9),seq=[];
+    if(t===0)for(let i=0;i<5;i++)seq.push(a+d*i);
+    if(t===1)for(let i=0;i<5;i++)seq.push(a+40-d*i);
+    if(t===2){d=A.ri(2,3);for(let i=0;i<5;i++)seq.push(a*d**i);}
+    if(t===3)for(let i=0;i<5;i++)seq.push((i+a)**2);
+    if(t===4){seq=[a,d];for(let i=2;i<5;i++)seq.push(seq[i-1]+seq[i-2]);}
+    if(t===5){seq=[a];for(let i=1;i<5;i++)seq.push(seq[i-1]+i*d);}
+    g.ans=seq.pop();g.seq=seq;},
+  key(g,k,ch){if(typeNum(g,k,ch)&&g.inp){const ok=+g.inp===g.ans;flash(g,ok);if(ok)g.score++;else{g.lives--;g.why=g.seq.join(', ')+' → '+g.ans;if(!g.lives)return A.over(g,'Отговорът беше '+g.ans);}g.inp='';this.next(g);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;},
+  draw(g){A.bg('#20182c');g.seq.forEach((v,i)=>{A.block(30+i*90,90,80,C.purple,60);A.txt(v,70+i*90,120,20,'#fff','center');});A.block(390,90,80,'#444',60);A.txt('?',430,120,24,'#ffd54f','center');
+    inputBox(g,230);A.txt('❤'.repeat(g.lives),20,20,16,'#f55');if(g.why)A.txt(g.why,240,330,13,'#bbb','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тримино</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟫 Тримино</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 11. Тримино — падащи фигури от по 3 блока
+A.add({id:'trimino',cat:'puzzle',icon:'🟫',name:'Тримино',desc:'Нареди падащите тройки',help:'← → местене, ↑ завъртане, ↓ по-бързо, Space — пусни. Пълен ред изчезва.',
+  start(g){g.b=[];for(let y=0;y<16;y++)g.b.push(Array(8).fill(null));g.next=this.rnd();this.spawn(g);g.fall=0;g.lines=0;},
+  rnd(){const sh=A.pick([[[0,0],[1,0],[2,0]],[[0,0],[1,0],[0,1]],[[0,0],[1,1],[1,0]],[[0,0],[0,1],[1,1]]]);return {s:sh.map(p=>p.slice()),col:A.pick([C.red,C.gold,C.grass,C.water,C.purple,C.iron])};},
+  spawn(g){g.p=g.next;g.next=this.rnd();g.px=3;g.py=0;if(!this.fits(g,g.p.s,g.px,g.py))A.over(g,'Няма място!');},
+  fits(g,s,px,py){return s.every(([x,y])=>{const X=px+x,Y=py+y;return X>=0&&X<8&&Y<16&&(Y<0||!g.b[Y][X]);});},
+  key(g,k){const p=g.p;if(!p)return;
+    if(k==='ArrowLeft'||k==='KeyA'){if(this.fits(g,p.s,g.px-1,g.py))g.px--;}
+    if(k==='ArrowRight'||k==='KeyD'){if(this.fits(g,p.s,g.px+1,g.py))g.px++;}
+    if(k==='ArrowUp'||k==='KeyW'){const r=p.s.map(([x,y])=>[1-y,x]);const mx=Math.min(...r.map(q=>q[0])),my=Math.min(...r.map(q=>q[1]));const n=r.map(([x,y])=>[x-mx,y-my]);
+      for(const dx of[0,-1,1])if(this.fits(g,n,g.px+dx,g.py)){p.s=n;g.px+=dx;A.beep(500,.03);break;}}
+    if(k==='Space'){while(this.fits(g,p.s,g.px,g.py+1))g.py++;this.lock(g);}},
+  repeat:true,
+  lock(g){for(const[x,y]of g.p.s)if(g.py+y>=0)g.b[g.py+y][g.px+x]=g.p.col;
+    let n=0;for(let y=15;y>=0;y--)if(g.b[y].every(v=>v)){g.b.splice(y,1);g.b.unshift(Array(8).fill(null));n++;y++;}
+    if(n){g.score+=10*n*n;g.lines+=n;A.tune([660,880,1100].slice(0,n));}else A.beep(200,.04);this.spawn(g);},
+  update(g,dt){g.fall+=dt*(A.keys.ArrowDown||A.keys.KeyS?12:1);if(g.fall>Math.max(.12,.6-g.lines*.02)){g.fall=0;if(this.fits(g,g.p.s,g.px,g.py+1))g.py++;else this.lock(g);}},
+  draw(g){A.bg('#1d1a24');c.fillStyle='#000';c.fillRect(156,16,168,328);
+    for(let y=0;y<16;y++)for(let x=0;x<8;x++){if(g.b[y][x])A.block(160+x*20,20+y*20,20,g.b[y][x]);else{c.fillStyle='#24202c';c.fillRect(161+x*20,21+y*20,18,18);}}
+    if(g.p)for(const[x,y]of g.p.s)A.block(160+(g.px+x)*20,20+(g.py+y)*20,20,g.p.col);
+    A.txt('Следваща:',340,40,14);for(const[x,y]of g.next.s)A.block(350+x*20,60+y*20,20,g.next.col);A.txt('Редове: '+g.lines,340,140,14);}
+});
+</script>
+</body>
+</html>

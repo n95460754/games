@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Водопровод</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚰 Водопровод</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 49. Водопровод
+A.add({id:'pipes',cat:'board',icon:'🚰',name:'Водопровод',desc:'Свържи тръбите',help:'Кликни тръба, за да я завъртиш. Свържи извора отляво с кофата отдясно. 3 минути за колкото може повече нива.',
+  // връзки: битове 1=горе 2=дясно 4=долу 8=ляво
+  start(g){g.time=180;this.make(g);},
+  rot(v){return((v<<1)|(v>>3))&15;},
+  make(g){const N=6;g.N=N;g.sr=A.ri(0,N-1);g.er=A.ri(0,N-1);g.p=Array(N*N).fill(0);
+    let x=0,y=g.sr,from=8;const seen=new Set();
+    while(true){seen.add(x+','+y);let opts=[];if(x===N-1&&y===g.er){g.p[y*N+x]|=from|2;break;}
+      for(const[dx,dy,b,ob]of[[1,0,2,8],[0,1,4,1],[0,-1,1,4]]){const X=x+dx,Y=y+dy;if(X<N&&Y>=0&&Y<N&&!seen.has(X+','+Y))opts.push([X,Y,b,ob]);}
+      if(!opts.length){return this.make(g);}const right=opts.filter(o=>o[0]>x);const o=(Math.random()<.45&&right.length)?right[0]:A.pick(opts);
+      g.p[y*N+x]|=from|o[2];x=o[0];y=o[1];from=o[3];}
+    for(let i=0;i<N*N;i++){if(!g.p[i])g.p[i]=A.pick([5,10,3,6,12,9,7,11]);for(let r=A.ri(0,3);r>0;r--)g.p[i]=this.rot(g.p[i]);}
+    this.flow(g);},
+  flow(g){const N=g.N;g.wet=new Set();if(!(g.p[g.sr*N]&8))return false;const st=[[0,g.sr]];g.wet.add(g.sr*N);
+    while(st.length){const[x,y]=st.pop(),v=g.p[y*N+x];for(const[dx,dy,b,ob]of[[0,-1,1,4],[1,0,2,8],[0,1,4,1],[-1,0,8,2]]){const X=x+dx,Y=y+dy;if(!(v&b)||X<0||Y<0||X>=N||Y>=N)continue;const j=Y*N+X;if(!g.wet.has(j)&&(g.p[j]&ob)){g.wet.add(j);st.push([X,Y]);}}}
+    return g.wet.has(g.er*N+N-1)&&(g.p[g.er*N+N-1]&2);},
+  click(g,mx,my){const T=50,x=Math.floor((mx-90)/T),y=Math.floor((my-30)/T);if(x<0||y<0||x>=g.N||y>=g.N)return;g.p[y*g.N+x]=this.rot(g.p[y*g.N+x]);A.beep(400,.03);
+    if(this.flow(g)){g.score++;A.tune([523,659,784]);g.done=.8;}},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече!');if(g.done>0){g.done-=dt;if(g.done<=0)this.make(g);}},
+  draw(g){A.bg('#2a2420');const T=50,N=g.N;for(let i=0;i<N*N;i++){const x=90+(i%N)*T,y=30+Math.floor(i/N)*T,v=g.p[i];c.fillStyle='#3a322b';c.fillRect(x+1,y+1,T-2,T-2);
+      c.fillStyle=g.wet.has(i)?C.water:'#9a9aa2';const m=T/2,w=10;c.fillRect(x+m-w/2,y+m-w/2,w,w);if(v&1)c.fillRect(x+m-w/2,y,w,m);if(v&2)c.fillRect(x+m,y+m-w/2,m,w);if(v&4)c.fillRect(x+m-w/2,y+m,w,m);if(v&8)c.fillRect(x,y+m-w/2,m,w);}
+    A.block(50,30+g.sr*T+10,36,C.water,30);A.block(395,30+g.er*T+10,36,C.wood,30);A.txt('⏱ '+Math.ceil(g.time),10,14,14);}
+});
+</script>
+</body>
+</html>
