@@ -446,5 +446,8 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 10 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
+**2 auto games so far.** Newest first:
+
+- 🏃 [Retro Runner #2](games/game-2.html) — Runner · Retro theme · added 2026-11-07 21:48 UTC
 - 🧱 [Dodge Run #1](games/game-1.html) — added 2026-11-07
 <!-- AUTO-GAMES:END -->
