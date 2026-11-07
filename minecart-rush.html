@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вагонетка</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#0d0a08;font-family:Consolas,"Courier New",monospace;user-select:none;color:#fff}
+canvas{display:block;touch-action:none}
+#hud{position:fixed;left:12px;top:10px;font-size:16px;line-height:1.5;text-shadow:2px 2px 0 #000;pointer-events:none;white-space:pre}
+#score{position:fixed;right:14px;top:10px;font-size:30px;font-weight:bold;color:#ffd54f;text-shadow:3px 3px 0 #000;pointer-events:none}
+.panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:5}
+.box{background:#3a2a1c;border:4px solid #000;box-shadow:0 0 0 4px #8d6e4f;padding:22px 28px;max-width:520px;width:calc(100% - 64px);text-align:center}
+.box h1{margin:0 0 8px;color:#ffca28;text-shadow:3px 3px 0 #000;font-size:32px}
+.box p{line-height:1.5;color:#efe1cf;margin:8px 0}
+button{font:inherit;font-size:20px;padding:10px 28px;margin-top:10px;background:#5d9c3a;color:#fff;border:3px solid #000;box-shadow:inset -3px -3px 0 #3c6d22,inset 3px 3px 0 #8fd16a;cursor:pointer}
+button:hover{filter:brightness(1.15)}
+kbd{background:#555;border:1px solid #000;padding:0 5px;border-radius:3px}
+a{color:#ffcc80}
+</style>
+</head>
+<body>
+<div id="hud"></div>
+<div id="score"></div>
+<div class="panel" id="menu"><div class="box">
+  <h1>🛤️ Вагонетка</h1>
+  <p>Летиш с вагонетка през безкрайна мина. Сменяй релсите, скачай над ниските блокове, навеждай се под гредите и събирай <b>кристали</b> 💎.</p>
+  <p>Колкото по-далеч стигнеш, толкова по-бързо става!</p>
+  <p><kbd>A</kbd><kbd>D</kbd> / <kbd>←</kbd><kbd>→</kbd> смени релсата · <kbd>W</kbd> / <kbd>Space</kbd> скок · <kbd>S</kbd> / <kbd>↓</kbd> наведи се<br>На телефон: плъзгай с пръст ← → ↑ ↓</p>
+  <p id="best"></p>
+  <button id="play">▶ Тръгвай</button>
+  <p><a href="games.html">← към всички игри</a></p>
+</div></div>
+<script src="three.min.js"></script>
+<script>
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function tex(base,dots,n,extra){
+  const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');
+  g.fillStyle=base;g.fillRect(0,0,16,16);
+  for(let i=0;i<n;i++){g.fillStyle=dots[i%dots.length];g.fillRect(Math.random()*16|0,Math.random()*16|0,1,1);}
+  if(extra)extra(g);
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t;
+}
+
+// ---------- сцена ----------
+const renderer=new THREE.WebGLRenderer({antialias:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0d0a08);scene.fog=new THREE.Fog(0x0d0a08,10,46);
+const camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,.1,100);
+scene.add(new THREE.AmbientLight(0xffe0b0,.45));
+const lamp=new THREE.PointLight(0xffc070,1.4,22);scene.add(lamp);
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+
+const M={
+  stone:new THREE.MeshLambertMaterial({map:tex('#6b6b6b',['#5a5a5a','#808080'],60)}),
+  gravel:new THREE.MeshLambertMaterial({map:tex('#55493d',['#3e342b','#6e6052'],80)}),
+  plank:new THREE.MeshLambertMaterial({map:tex('#8d6a3f',['#7a5a33','#a07a4a'],30,g=>{g.fillStyle='rgba(0,0,0,.3)';g.fillRect(0,5,16,1);g.fillRect(0,11,16,1);})}),
+  log:new THREE.MeshLambertMaterial({map:tex('#5e4428',['#4a341e','#6e5232'],40,g=>{g.fillStyle='rgba(0,0,0,.25)';for(let x=1;x<16;x+=4)g.fillRect(x,0,1,16);})}),
+  rail:new THREE.MeshLambertMaterial({color:0x9a9aa2}),
+  tie:new THREE.MeshLambertMaterial({color:0x6b4a2a}),
+  box:new THREE.MeshLambertMaterial({map:tex('#a0522d',['#8b4513','#c46a3a'],30,g=>{g.fillStyle='#3a2410';g.fillRect(0,0,16,2);g.fillRect(0,14,16,2);g.fillRect(0,0,2,16);g.fillRect(14,0,2,16);g.fillRect(7,0,2,16);})}),
+  ore:new THREE.MeshLambertMaterial({map:tex('#6b6b6b',['#ffd23f','#5a5a5a','#ffd23f'],50)}),
+  gem:new THREE.MeshLambertMaterial({color:0x4de8f5,emissive:0x0a6a7a}),
+  cart:new THREE.MeshLambertMaterial({color:0x7d7d85}),
+  cartIn:new THREE.MeshLambertMaterial({color:0x3a3a40}),
+  wheel:new THREE.MeshLambertMaterial({color:0x222222}),
+  torch:new THREE.MeshBasicMaterial({color:0xffb300})
+};
+const LANES=[-2,0,2];
+const SEG=4;           // дължина на един сегмент тунел
+const NSEG=14;
+
+// ---------- тунел (сегменти, които се рециклират) ----------
+const segs=[];
+function makeSeg(){
+  const g=new THREE.Group();
+  const floor=new THREE.Mesh(new THREE.BoxGeometry(8,.5,SEG),M.gravel);floor.position.y=-.25;g.add(floor);
+  for(const s of[-1,1]){const w=new THREE.Mesh(new THREE.BoxGeometry(1,5,SEG),M.stone);w.position.set(s*4.5,2.25,0);g.add(w);}
+  const ceil=new THREE.Mesh(new THREE.BoxGeometry(10,1,SEG),M.stone);ceil.position.y=5.2;g.add(ceil);
+  for(const x of LANES){
+    for(const s of[-.45,.45]){const r=new THREE.Mesh(new THREE.BoxGeometry(.1,.12,SEG),M.rail);r.position.set(x+s,.06,0);g.add(r);}
+    for(let z=-SEG/2+.5;z<SEG/2;z+=1){const t=new THREE.Mesh(new THREE.BoxGeometry(1.2,.08,.3),M.tie);t.position.set(x,.02,z);g.add(t);}
+  }
+  // дървена подпора и факли на всеки сегмент
+  for(const s of[-1,1]){const p=new THREE.Mesh(new THREE.BoxGeometry(.5,4.7,.5),M.log);p.position.set(s*3.7,2.35,0);g.add(p);
+    const t=new THREE.Mesh(new THREE.BoxGeometry(.15,.4,.15),M.torch);t.position.set(s*3.35,2.6,.4);g.add(t);}
+  const beam=new THREE.Mesh(new THREE.BoxGeometry(7.9,.5,.5),M.log);beam.position.y=4.65;g.add(beam);
+  scene.add(g);return g;
+}
+for(let i=0;i<NSEG;i++){const s=makeSeg();s.position.z=-i*SEG;segs.push(s);}
+
+// ---------- вагонетка ----------
+const cart=new THREE.Group();
+(()=>{
+  const base=new THREE.Mesh(new THREE.BoxGeometry(1.3,.2,1.6),M.cart);base.position.y=.35;cart.add(base);
+  for(const[x,z,w,d]of[[-.6,0,.1,1.6],[.6,0,.1,1.6],[0,-.75,1.3,.1],[0,.75,1.3,.1]]){const s=new THREE.Mesh(new THREE.BoxGeometry(w,.6,d),M.cart);s.position.set(x,.75,z);cart.add(s);}
+  const inner=new THREE.Mesh(new THREE.BoxGeometry(1.1,.05,1.4),M.cartIn);inner.position.y=.47;cart.add(inner);
+  for(const x of[-.55,.55])for(const z of[-.5,.5]){const w=new THREE.Mesh(new THREE.BoxGeometry(.15,.3,.3),M.wheel);w.position.set(x,.2,z);cart.add(w);}
+  // миньорът
+  const body=new THREE.Mesh(new THREE.BoxGeometry(.6,.6,.4),new THREE.MeshLambertMaterial({color:0xe67e22}));body.position.y=1.1;cart.add(body);
+  const head=new THREE.Mesh(new THREE.BoxGeometry(.45,.45,.45),new THREE.MeshLambertMaterial({color:0xf1c27d}));head.position.y=1.62;cart.add(head);
+  const hat=new THREE.Mesh(new THREE.BoxGeometry(.52,.15,.52),new THREE.MeshLambertMaterial({color:0xffd23f}));hat.position.y=1.9;cart.add(hat);
+  cart.userData.rider=[body,head,hat];
+})();
+scene.add(cart);
+
+// ---------- препятствия и кристали ----------
+// low: нисък сандък (скочи), high: греда отгоре (наведи се), wall: камък с руда (смени релсата)
+let objs=[];
+const geoLow=new THREE.BoxGeometry(1.3,1,1),geoWall=new THREE.BoxGeometry(1.5,3,1),geoBeam=new THREE.BoxGeometry(1.8,.6,.6),geoGem=new THREE.OctahedronGeometry(.3);
+function spawnRow(z){
+  const d=Math.min(1,dist/1500);
+  const nObs=Math.random()<.35+d*.4?2:1;
+  const lanes=[0,1,2].sort(()=>Math.random()-.5);
+  for(let i=0;i<3;i++){
+    const L=lanes[i];
+    if(i<nObs){
+      const r=Math.random();
+      const type=r<.4?'low':r<.7?'high':'wall';
+      let m;
+      if(type==='low'){m=new THREE.Mesh(geoLow,M.box);m.position.set(LANES[L],.5,z);}
+      else if(type==='high'){m=new THREE.Group();const b=new THREE.Mesh(geoBeam,M.log);b.position.y=1.55;m.add(b);
+        for(const s of[-1,1]){const p=new THREE.Mesh(new THREE.BoxGeometry(.2,1.6,.2),M.log);p.position.set(s*.85,.8,0);m.add(p);}m.position.set(LANES[L],0,z);}
+      else{m=new THREE.Mesh(geoWall,M.ore);m.position.set(LANES[L],1.5,z);}
+      scene.add(m);objs.push({m,type,lane:L});
+    }else if(Math.random()<.6){
+      for(let k=0;k<3;k++){const m=new THREE.Mesh(geoGem,M.gem);m.position.set(LANES[L],.9,z+k*1.4);scene.add(m);objs.push({m,type:'gem',lane:L});}
+    }
+  }
+}
+
+// ---------- звук ----------
+let ac=null;
+function beep(f,d,type,vol){try{if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;
+  g.gain.setValueAtTime(vol||0.06,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
+  o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
+
+// ---------- състояние ----------
+let state='menu',lane=1,cx=0,y=0,vy=0,duck=0,speed=12,dist=0,gems=0,nextRow=-30,shake=0,best=load('cartBest',0);
+const hud=document.getElementById('hud'),scoreEl=document.getElementById('score'),menu=document.getElementById('menu');
+document.getElementById('best').textContent=best?('🏆 Рекорд: '+best):'';
+const score=()=>Math.floor(dist)+gems*10;
+function reset(){
+  for(const o of objs)scene.remove(o.m);objs=[];
+  lane=1;cx=0;y=0;vy=0;duck=0;speed=12;dist=0;gems=0;nextRow=-30;
+}
+function start(){reset();menu.style.display='none';state='play';beep(440,.1);}
+document.getElementById('play').onclick=start;
+function crash(){
+  state='over';shake=.5;beep(80,.5,'sawtooth',.12);
+  const s=score();if(s>best){best=s;save('cartBest',best);}
+  setTimeout(()=>{menu.querySelector('h1').textContent='💥 Катастрофа!';
+    document.getElementById('best').innerHTML='Резултат: <b>'+s+'</b> ('+Math.floor(dist)+' м + '+gems+' 💎)<br>🏆 Рекорд: '+best;
+    document.getElementById('play').textContent='↻ Пак';menu.style.display='flex';state='menu';},900);
+}
+
+// ---------- управление ----------
+function act(a){
+  if(state!=='play')return;
+  if(a==='L'&&lane>0){lane--;beep(300,.05);}
+  if(a==='R'&&lane<2){lane++;beep(300,.05);}
+  if(a==='U'&&y<=0.001){vy=9;duck=0;beep(520,.08);}
+  if(a==='D'){duck=.75;if(y>0)vy=-14;}
+}
+addEventListener('keydown',e=>{
+  if(e.repeat)return;
+  const k=e.code;
+  if(k==='KeyA'||k==='ArrowLeft')act('L');
+  if(k==='KeyD'||k==='ArrowRight')act('R');
+  if(k==='KeyW'||k==='ArrowUp'||k==='Space'){e.preventDefault();act('U');}
+  if(k==='KeyS'||k==='ArrowDown'){e.preventDefault();act('D');}
+  if((k==='Space'||k==='Enter')&&state==='menu'&&menu.style.display!=='none')start();
+});
+let ts=null;
+addEventListener('touchstart',e=>{const t=e.touches[0];ts={x:t.clientX,y:t.clientY};},{passive:true});
+addEventListener('touchend',e=>{if(!ts)return;const t=e.changedTouches[0],dx=t.clientX-ts.x,dy=t.clientY-ts.y;ts=null;
+  if(Math.max(Math.abs(dx),Math.abs(dy))<25)return;
+  if(Math.abs(dx)>Math.abs(dy))act(dx<0?'L':'R');else act(dy<0?'U':'D');},{passive:true});
+
+// ---------- цикъл ----------
+let last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  const moving=state==='play'?1:state==='menu'?.35:0;
+  if(state==='play'){speed=Math.min(34,12+dist/60);dist+=speed*dt;}
+  const step=(state==='play'?speed:6)*dt*moving;
+  // тунелът се движи към нас
+  for(const s of segs){s.position.z+=step;if(s.position.z>SEG*2)s.position.z-=NSEG*SEG;}
+  if(state==='play'){
+    nextRow+=step;
+    if(nextRow>=-30+0){/* not yet */}
+    // нов ред препятствия на всеки ~ (12 - трудност) метра
+    if(nextRow>-30+Math.max(9,16-dist/200)){nextRow=-30;spawnRow(-48);}
+  }
+  for(let i=objs.length-1;i>=0;i--){
+    const o=objs[i];o.m.position.z+=state==='play'?step:0;
+    if(o.type==='gem')o.m.rotation.y+=dt*3;
+    if(o.m.position.z>6){scene.remove(o.m);objs.splice(i,1);continue;}
+    if(state!=='play'||o.lane!==lane)continue;
+    const dz=Math.abs(o.m.position.z);
+    if(o.type==='gem'){if(dz<.8&&y<1.5){scene.remove(o.m);objs.splice(i,1);gems++;beep(1200+gems%5*120,.07,'triangle');}continue;}
+    if(dz<.85&&Math.abs(cx-LANES[lane])<.9){
+      if(o.type==='low'&&y<1.05)crash();
+      else if(o.type==='high'&&duck<=0&&y<1.6)crash();
+      else if(o.type==='high'&&y>=1.6)crash();
+      else if(o.type==='wall')crash();
+    }
+  }
+  // физика на вагонетката
+  cx+=(LANES[lane]-cx)*Math.min(1,dt*14);
+  vy-=26*dt;y+=vy*dt;if(y<0){y=0;vy=0;}
+  duck=Math.max(0,duck-dt);
+  cart.position.set(cx,y,0);
+  cart.rotation.z=(LANES[lane]-cx)*-.15;
+  const r=cart.userData.rider;const dh=duck>0?-.45:0;
+  r[0].position.y=1.1+dh*.5;r[1].position.y=1.62+dh;r[2].position.y=1.9+dh;
+  // камера
+  shake=Math.max(0,shake-dt);
+  camera.position.set(cx*.6+(Math.random()-.5)*shake,3.2+y*.4+(Math.random()-.5)*shake,5.2);
+  camera.lookAt(cx*.6,1.2,-6);
+  camera.fov=70+(speed-12)*.4;camera.updateProjectionMatrix();
+  lamp.position.set(cx,2.5,-2);
+  // HUD
+  if(state!=='menu'){hud.textContent='📏 '+Math.floor(dist)+' м\n💎 '+gems+'\n⚡ '+Math.round(speed*3.6)+' км/ч';scoreEl.textContent=score();}
+  else{hud.textContent='';scoreEl.textContent='';}
+  renderer.render(scene,camera);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

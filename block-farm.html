@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блокова ферма</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#2d4a1e;font-family:Consolas,"Courier New",monospace;user-select:none;color:#fff}
+#wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+#top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:8px 12px;background:#3b2a1c;border-bottom:3px solid #000;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#stage{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;gap:14px;padding:8px;flex-wrap:wrap}
+canvas{image-rendering:pixelated;border:3px solid #000;max-width:100%}
+#side{background:#3b2a1c;border:3px solid #000;padding:10px 12px;width:240px;font-size:13px;line-height:1.5;max-height:100%;overflow:auto}
+#side h3{margin:4px 0 6px;color:#ffd54f;font-size:14px}
+#bar{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:#3b2a1c;border-top:3px solid #000;justify-content:center}
+.tool{padding:6px 10px;background:#5a4632;border:3px solid #000;cursor:pointer;font-size:13px;text-align:center;min-width:64px}
+.tool.sel{outline:3px solid #ffd54f;background:#7a5f42}
+.tool small{display:block;color:#ffe0b2}
+button{font:inherit;font-size:13px;padding:5px 9px;margin:2px 0;background:#5d9c3a;color:#fff;border:3px solid #000;box-shadow:inset -2px -2px 0 #3c6d22,inset 2px 2px 0 #8fd16a;cursor:pointer;width:100%;text-align:left}
+button:disabled{filter:grayscale(1) brightness(.7);cursor:default}
+.q{padding:4px 0;border-bottom:1px dashed #6b543c}
+.q.done{color:#9ccc65}
+a{color:#ffcc80}
+.panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:5}
+.box{background:#3b2a1c;border:4px solid #000;box-shadow:0 0 0 4px #8d6e4f;padding:22px 28px;max-width:520px;width:calc(100% - 64px);text-align:center}
+.box h1{margin:0 0 8px;color:#ffd54f;text-shadow:3px 3px 0 #000;font-size:30px}
+.box p{line-height:1.5;color:#efe1cf}
+.box button{width:auto;font-size:18px;padding:9px 24px;text-align:center}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="top"><span>💰 <b id="money">0</b></span><span>📅 Ден <b id="day">1</b></span><span id="msg" style="color:#ffe082"></span><span style="margin-left:auto"><a href="games.html">← всички игри</a></span></div>
+  <div id="stage"><canvas id="c"></canvas><div id="side"></div></div>
+  <div id="bar"></div>
+</div>
+<div class="panel" id="menu"><div class="box">
+  <h1>🌾 Блокова ферма</h1>
+  <p>1. С <b>мотиката</b> разкопай тревата. 2. Посади <b>семе</b>. 3. <b>Полей</b> и растението расте само докато пръстта е мокра. 4. Когато узрее, кликни, за да го <b>събереш</b>.</p>
+  <p>Продавай реколтата, купувай нови семена, разширявай нивата и слагай <b>пръскачки</b>, които поливат вместо теб. Изпълни всички задачи!</p>
+  <p>Играта се пази автоматично.</p>
+  <button id="play">▶ Към фермата</button>
+</div></div>
+<script>
+function load(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+const $=id=>document.getElementById(id);
+
+// ---------- растения ----------
+const CROPS={
+  wheat:{n:'Пшеница',e:'🌾',grow:20,seed:2,sell:6,col:'#e8c84a',unlock:0},
+  carrot:{n:'Морков',e:'🥕',grow:35,seed:5,sell:14,col:'#ff8c1a',unlock:0},
+  potato:{n:'Картоф',e:'🥔',grow:50,seed:9,sell:24,col:'#c9a063',unlock:60},
+  beet:{n:'Цвекло',e:'🟣',grow:45,seed:12,sell:30,col:'#a3214f',unlock:150},
+  pumpkin:{n:'Тиква',e:'🎃',grow:90,seed:25,sell:75,col:'#f08a14',unlock:400},
+  melon:{n:'Диня',e:'🍉',grow:120,seed:40,sell:130,col:'#3fa34d',unlock:900}
+};
+const COLS=10,ROWS=7,T=56;
+const QUESTS=[
+  {t:'Събери 5 пшеници',k:'wheat',n:5,r:20},
+  {t:'Събери 5 моркова',k:'carrot',n:5,r:40},
+  {t:'Купи пръскачка',k:'sprinkler',n:1,r:50},
+  {t:'Събери 10 картофа',k:'potato',n:10,r:120},
+  {t:'Разшири фермата 2 пъти',k:'expand',n:2,r:150},
+  {t:'Събери 8 цвекла',k:'beet',n:8,r:200},
+  {t:'Събери 5 тикви',k:'pumpkin',n:5,r:400},
+  {t:'Събери 5 дини',k:'melon',n:5,r:800},
+  {t:'Натрупай $5000',k:'money',n:5000,r:0}
+];
+
+// ---------- състояние ----------
+function fresh(){
+  const plots=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)plots.push({soil:false,wet:0,crop:null,g:0,spr:false});
+  return {money:20,time:0,plots,open:{w:4,h:3},seeds:{wheat:6},inv:{},tool:'hoe',stats:{},quest:0,expand:0};
+}
+let S=load('farmSave',null)||fresh();
+const P=(x,y)=>S.plots[y*COLS+x];
+const isOpen=(x,y)=>x<S.open.w&&y<S.open.h;
+
+// ---------- канава ----------
+const cv=$('c'),ctx=cv.getContext('2d');cv.width=COLS*T;cv.height=ROWS*T;ctx.imageSmoothingEnabled=false;
+function fit(){const st=$('stage');const w=Math.min(st.clientWidth-(innerWidth>820?280:20),cv.width),s=Math.min(w/cv.width,(st.clientHeight-(innerWidth>820?16:200))/cv.height,1.2);cv.style.width=cv.width*s+'px';cv.style.height=cv.height*s+'px';}
+addEventListener('resize',fit);
+function pat(base,dots){const c=document.createElement('canvas');c.width=c.height=16;const g=c.getContext('2d');g.fillStyle=base;g.fillRect(0,0,16,16);
+  for(let i=0;i<40;i++){g.fillStyle=dots[i%dots.length];g.fillRect(Math.random()*16|0,Math.random()*16|0,1,1);}return c;}
+const GRASS=pat('#5aa13a',['#4e8a34','#6cbf47']),SOIL=pat('#7a5233',['#6a4428','#8a6040']),WET=pat('#4e3220',['#3e2618','#5e3c28']),LOCK=pat('#3d5e2a',['#35522a','#46683a']);
+const FENCE='#8d6a3f';
+
+// ---------- инструменти ----------
+function bar(){
+  const b=$('bar');b.innerHTML='';
+  const tools=[['hoe','⛏️','Мотика',''],['water','💧','Лейка',''],['harvest','🧺','Бери','']];
+  for(const k in CROPS)if((S.seeds[k]||0)>0)tools.push(['seed:'+k,CROPS[k].e,CROPS[k].n,'x'+S.seeds[k]]);
+  tools.push(['sprinkler','⛲','Пръскачка','x'+(S.inv.sprinkler||0)]);
+  for(const[id,e,n,c]of tools){const d=document.createElement('div');d.className='tool'+(S.tool===id?' sel':'');d.innerHTML=e+' '+n+(c?'<small>'+c+'</small>':'');d.onclick=()=>{S.tool=id;bar();};b.appendChild(d);}
+}
+function side(){
+  let h='<h3>🏪 Пазар</h3>';
+  const sellAll=Object.entries(S.inv).filter(([k])=>CROPS[k]).reduce((a,[k,n])=>a+n*CROPS[k].sell,0);
+  h+='<button data-a="sell" '+(sellAll?'':'disabled')+'>Продай реколтата: $'+sellAll+'</button>';
+  for(const k in CROPS){const c=CROPS[k];if(S.money<c.unlock&&!(S.stats['u_'+k])){h+='<div style="color:#998">🔒 '+c.n+' (при $'+c.unlock+')</div>';continue;}
+    S.stats['u_'+k]=1;
+    h+='<button data-a="buy:'+k+'" '+(S.money>=c.seed*5?'':'disabled')+'>'+c.e+' 5 семена '+c.n+' — $'+c.seed*5+'</button>';}
+  const sprC=120+(S.stats.sprinkler||0)*60;
+  h+='<button data-a="spr" '+(S.money>=sprC?'':'disabled')+'>⛲ Пръскачка — $'+sprC+'</button>';
+  const exC=expandCost();
+  if(exC)h+='<button data-a="exp" '+(S.money>=exC?'':'disabled')+'>🧱 Разшири нивата — $'+exC+'</button>';
+  h+='<h3>🎒 Склад</h3>'+(Object.entries(S.inv).filter(([k,n])=>CROPS[k]&&n).map(([k,n])=>CROPS[k].e+' '+n).join(' &nbsp;')||'празно');
+  h+='<h3>📜 Задачи</h3>';
+  QUESTS.forEach((q,i)=>{if(i>S.quest+1)return;const prog=Math.min(q.n,qProg(q));h+='<div class="q'+(i<S.quest?' done':'')+'">'+(i<S.quest?'✔ ':'')+q.t+(i>=S.quest?' ('+prog+'/'+q.n+')':'')+(q.r?' → $'+q.r:'')+'</div>';});
+  if(S.quest>=QUESTS.length)h+='<div class="q done">🏆 Всички задачи са изпълнени! Ти си майстор фермер!</div>';
+  h+='<br><button data-a="reset" style="background:#8c3b3b">↺ Нова ферма</button>';
+  $('side').innerHTML=h;
+  $('side').querySelectorAll('button').forEach(b=>b.onclick=()=>shop(b.dataset.a));
+}
+function expandCost(){if(S.open.w>=COLS&&S.open.h>=ROWS)return 0;return 80+S.expand*90;}
+function qProg(q){if(q.k==='money')return S.money;if(q.k==='expand')return S.expand;if(q.k==='sprinkler')return S.stats.sprinkler||0;return S.stats['h_'+q.k]||0;}
+function checkQuests(){
+  while(S.quest<QUESTS.length&&qProg(QUESTS[S.quest])>=QUESTS[S.quest].n){const q=QUESTS[S.quest];S.money+=q.r;S.quest++;say('📜 Задачата е изпълнена! +$'+q.r);tune([523,659,784,1046]);}
+}
+function shop(a){
+  if(a==='sell'){let v=0;for(const k in S.inv)if(CROPS[k]){v+=S.inv[k]*CROPS[k].sell;S.inv[k]=0;}S.money+=v;tune([880,1046]);}
+  if(a.startsWith('buy:')){const k=a.slice(4),c=CROPS[k].seed*5;if(S.money>=c){S.money-=c;S.seeds[k]=(S.seeds[k]||0)+5;S.tool='seed:'+k;beep(600,.06);}}
+  if(a==='spr'){const c=120+(S.stats.sprinkler||0)*60;if(S.money>=c){S.money-=c;S.inv.sprinkler=(S.inv.sprinkler||0)+1;S.stats.sprinkler=(S.stats.sprinkler||0)+1;S.tool='sprinkler';beep(600,.06);}}
+  if(a==='exp'){const c=expandCost();if(c&&S.money>=c){S.money-=c;S.expand++;if(S.open.w<COLS&&(S.open.w<=S.open.h+3||S.open.h>=ROWS))S.open.w+=2;else S.open.h+=1;S.open.w=Math.min(COLS,S.open.w);S.open.h=Math.min(ROWS,S.open.h);tune([440,660]);}}
+  if(a==='reset'){if(confirm('Да започнем ли нова ферма? Всичко ще се изтрие.')){S=fresh();}}
+  checkQuests();bar();side();save('farmSave',S);
+}
+
+// ---------- клик по нивата ----------
+cv.addEventListener('click',e=>{
+  const r=cv.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*COLS),y=Math.floor((e.clientY-r.top)/r.height*ROWS);
+  if(x<0||y<0||x>=COLS||y>=ROWS)return;
+  if(!isOpen(x,y)){say('Тази земя още не е твоя. Разшири нивата от пазара.');return;}
+  const p=P(x,y),t=S.tool;
+  // зрял плод се бере с какъвто и да е инструмент
+  if(p.crop&&p.g>=CROPS[p.crop].grow){harvest(p,x,y);return;}
+  if(t==='hoe'){if(p.spr){p.spr=false;S.inv.sprinkler=(S.inv.sprinkler||0)+1;say('Прибра пръскачката');}else if(!p.soil){p.soil=true;beep(200,.05);parts(x,y,'#7a5233');}else if(p.crop){say('Тук вече расте нещо');}}
+  else if(t==='water'){if(p.soil){p.wet=30;beep(900,.05,'sine');parts(x,y,'#4fc3f7');}else say('Първо разкопай с мотиката');}
+  else if(t.startsWith('seed:')){const k=t.slice(5);
+    if(!p.soil)say('Първо разкопай с мотиката');else if(p.crop)say('Тук вече има растение');
+    else if((S.seeds[k]||0)<=0)say('Нямаш семена');
+    else{p.crop=k;p.g=0;S.seeds[k]--;beep(500,.05);if(!S.seeds[k])S.tool='water';bar();}}
+  else if(t==='sprinkler'){if((S.inv.sprinkler||0)<=0)say('Нямаш пръскачки. Купи от пазара.');else if(p.crop)say('Сложи я на празно място');else{p.spr=true;p.soil=false;S.inv.sprinkler--;beep(700,.08);bar();}}
+  else if(t==='harvest'){if(p.crop)say('Още не е узряло ('+Math.floor(p.g/CROPS[p.crop].grow*100)+'%)');}
+  save('farmSave',S);
+});
+function harvest(p,x,y){
+  const k=p.crop;p.crop=null;p.g=0;
+  const n=1+(Math.random()<.25?1:0);
+  S.inv[k]=(S.inv[k]||0)+n;S.stats['h_'+k]=(S.stats['h_'+k]||0)+n;
+  if(Math.random()<.5)S.seeds[k]=(S.seeds[k]||0)+1; // понякога получаваш и семе
+  floats.push({x:x+.5,y:y,t:1,s:'+'+n+' '+CROPS[k].e});beep(1000,.07,'triangle');parts(x,y,CROPS[k].col);
+  checkQuests();bar();side();
+}
+let msgT=0;function say(s){$('msg').textContent=s;msgT=2.5;}
+
+// ---------- звук и частици ----------
+let ac=null;
+function beep(f,d,type,vol){try{if(!ac)ac=new (window.AudioContext||window.webkitAudioContext)();
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type||'square';o.frequency.value=f;
+  g.gain.setValueAtTime(vol||0.04,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ac.currentTime+d);
+  o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d);}catch(e){}}
+function tune(fs){fs.forEach((f,i)=>setTimeout(()=>beep(f,.12,'triangle'),i*100));}
+const ps=[],floats=[];
+function parts(x,y,c){for(let i=0;i<8;i++)ps.push({x:x+.5,y:y+.5,vx:(Math.random()-.5)*3,vy:-Math.random()*3,t:.5,c});}
+
+// ---------- ъпдейт ----------
+function update(dt){
+  S.time+=dt;
+  // пръскачките мокрят 3x3 около себе си
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(P(x,y).spr)for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const q=(x+dx>=0&&y+dy>=0&&x+dx<COLS&&y+dy<ROWS)?P(x+dx,y+dy):null;if(q&&q.soil)q.wet=Math.max(q.wet,5);}
+  for(const p of S.plots){
+    if(p.wet>0){p.wet-=dt;if(p.crop)p.g=Math.min(CROPS[p.crop].grow,p.g+dt);}
+  }
+  for(let i=ps.length-1;i>=0;i--){const p=ps[i];p.t-=dt;p.vy+=8*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.t<=0)ps.splice(i,1);}
+  for(let i=floats.length-1;i>=0;i--){const f=floats[i];f.t-=dt;f.y-=dt;if(f.t<=0)floats.splice(i,1);}
+}
+function drawCrop(p,x,y,now){
+  const c=CROPS[p.crop],f=p.g/c.grow,X=x*T,Y=y*T,s=T/16;
+  const ripe=f>=1;
+  if(f<.34){ctx.fillStyle='#6cbf47';ctx.fillRect(X+7*s,Y+10*s,2*s,3*s);ctx.fillRect(X+5*s,Y+9*s,2*s,1*s);}
+  else if(f<.67){ctx.fillStyle='#4e9a2e';ctx.fillRect(X+7*s,Y+6*s,2*s,7*s);ctx.fillRect(X+4*s,Y+7*s,3*s,2*s);ctx.fillRect(X+9*s,Y+5*s,3*s,2*s);}
+  else{
+    ctx.fillStyle='#3f8a24';ctx.fillRect(X+7*s,Y+4*s,2*s,9*s);ctx.fillRect(X+3*s,Y+6*s,4*s,2*s);ctx.fillRect(X+9*s,Y+5*s,4*s,2*s);
+    if(ripe){const b=Math.sin(now*.006+x+y)*s*.6;ctx.fillStyle=c.col;
+      if(p.crop==='pumpkin'||p.crop==='melon'){ctx.fillRect(X+3*s,Y+8*s+b,10*s,6*s);ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(X+6*s,Y+8*s+b,1*s,6*s);ctx.fillRect(X+10*s,Y+8*s+b,1*s,6*s);}
+      else if(p.crop==='wheat'){for(let i=0;i<4;i++)ctx.fillRect(X+(3+i*3)*s,Y+(2+(i%2))*s+b,2*s,6*s);}
+      else{ctx.fillRect(X+5*s,Y+3*s+b,6*s,4*s);}
+      ctx.strokeStyle='rgba(255,255,160,.8)';ctx.lineWidth=2;ctx.strokeRect(X+2,Y+2,T-4,T-4);}
+  }
+  if(!ripe){ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(X+4,Y+T-8,T-8,4);ctx.fillStyle=p.wet>0?'#8bc34a':'#ffb74d';ctx.fillRect(X+4,Y+T-8,(T-8)*f,4);}
+}
+function draw(now){
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
+    const p=P(x,y),X=x*T,Y=y*T;
+    if(!isOpen(x,y)){ctx.drawImage(LOCK,X,Y,T,T);continue;}
+    ctx.drawImage(p.soil?(p.wet>0?WET:SOIL):GRASS,X,Y,T,T);
+    if(p.soil){ctx.fillStyle='rgba(0,0,0,.12)';for(let i=1;i<4;i++)ctx.fillRect(X,Y+i*T/4,T,2);}
+    if(p.crop)drawCrop(p,x,y,now);
+    if(p.spr){ctx.fillStyle='#777';ctx.fillRect(X+T*.3,Y+T*.35,T*.4,T*.4);ctx.fillStyle='#4fc3f7';
+      for(let i=0;i<6;i++){const a=now*.004+i;ctx.fillRect(X+T/2+Math.cos(a)*T*.4-2,Y+T/2+Math.sin(a)*T*.3-2,4,4);}}
+  }
+  // ограда около отключената земя
+  ctx.strokeStyle=FENCE;ctx.lineWidth=5;ctx.strokeRect(2,2,S.open.w*T-4,S.open.h*T-4);
+  for(const p of ps){ctx.fillStyle=p.c;ctx.globalAlpha=p.t/.5;ctx.fillRect(p.x*T-3,p.y*T-3,6,6);}ctx.globalAlpha=1;
+  ctx.font='bold 18px monospace';ctx.textAlign='center';
+  for(const f of floats){ctx.globalAlpha=f.t;ctx.fillStyle='#000';ctx.fillText(f.s,f.x*T+2,f.y*T+2);ctx.fillStyle='#fff';ctx.fillText(f.s,f.x*T,f.y*T);}ctx.globalAlpha=1;
+  // ден и нощ (един ден = 2 минути)
+  const ph=(S.time%120)/120,dark=Math.max(0,Math.sin((ph-.5)*Math.PI*2))*.35;
+  if(dark>.01){ctx.fillStyle='rgba(10,20,60,'+dark+')';ctx.fillRect(0,0,cv.width,cv.height);}
+}
+
+let last=performance.now(),saveT=0,sideT=0,playing=false;
+$('play').onclick=()=>{$('menu').style.display='none';playing=true;};
+function loop(now){
+  requestAnimationFrame(loop);
+  const dt=Math.min(.1,(now-last)/1000);last=now;
+  if(playing)update(dt);
+  draw(now);
+  $('money').textContent=S.money;$('day').textContent=1+Math.floor(S.time/120);
+  if(msgT>0){msgT-=dt;if(msgT<=0)$('msg').textContent='';}
+  saveT+=dt;if(saveT>5){saveT=0;save('farmSave',S);}
+  sideT+=dt;if(sideT>1){sideT=0;checkQuests();side();}
+}
+bar();side();fit();setTimeout(fit,50);requestAnimationFrame(loop);
+</script>
+</body>
+</html>
