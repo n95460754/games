@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**286 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 276 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**289 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 279 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-286-5aa13a)
+![Games](https://img.shields.io/badge/games-289-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 276 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 279 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -421,8 +421,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 274 | 🧗 Wall Jump (Стенен скок) | [`walljump.html`](arcade/walljump.html) | Climb a stone shaft above rising lava by jumping from wall to wall; dodge cactus blocks on the walls and bats in the middle, grab gold, and it keeps speeding up |
 | 275 | 🐷 Trap the Pig (Огради прасето) | [`trappig.html`](arcade/trappig.html) | Circle-the-cat style puzzle on a staggered block meadow: place one fence per turn while the pig runs toward the edge; surround it before it escapes |
 | 276 | 🔁 Mob Echo (Ехо от мобове) | [`mobecho.html`](arcade/mobecho.html) | N-back memory game: mobs appear one by one, say if the current mob is the same as the one 1, 2 or 3 steps ago; N grows every 8 correct answers |
+| 277 | 🟣 Ender Pearl Jump (Ендър скок) | [`pearljump.html`](arcade/pearljump.html) | Slingshot-aim ender pearls to teleport from one floating island to the next; land in the centre for +3, grab gold in the air, islands shrink and wind starts blowing |
+| 278 | 🔢 Number Mosaic (Числова мозайка) | [`mosaic.html`](arcade/mosaic.html) | Fill-a-pix logic puzzle: every number tells how many filled blocks are in the 3×3 square around it; reveal the hidden picture before time runs out, grids grow up to 9×9 |
+| 279 | 🧭 Mind Walk (Мислена разходка) | [`mindwalk.html`](arcade/mindwalk.html) | Mental-map memory game: remember where Steve stands, follow the arrows in your head while he is hidden, then click the square where he ends up |
 
-All 276 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 279 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -450,8 +453,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–275
-│   └── mobecho.html        # 276. Mob Echo
+│   ├── ...                 # games 51–278
+│   └── mindwalk.html       # 279. Mind Walk
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

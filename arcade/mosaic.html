@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числова мозайка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Числова мозайка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 278. Числова мозайка
+const MZ_COL=['#4de8f5','#ffd23f','#ff2e55','#5aa13a','#d8a07a','#8e24aa'];
+A.add({id:'mosaic',cat:'puzzle',icon:'🔢',name:'Числова мозайка',desc:'Всяко число казва колко блока има около него — открий картинката',
+  help:'Всяко число казва колко запълнени блока има в квадрата 3×3 около него (заедно със самото поле). Клик = блок → ✕ → празно, десен клик = ✕. Клавиатура: стрелки + Space (блок) / X (✕). Зелено число = изпълнено. Всяка картинка дава точки и +30 секунди!',
+  start(g){g.lvl=1;g.time=150;g.cx=0;g.cy=0;this.newPuzzle(g);},
+  newPuzzle(g){const n=Math.min(9,4+g.lvl);g.n=n;g.cs=Math.floor(300/n);g.ox=Math.floor((480-g.cs*n)/2);g.oy=40;
+    g.col=A.pick(MZ_COL);g.sol=[];g.cell=[];g.clue=[];
+    for(let i=0;i<n*n;i++){g.sol.push(Math.random()<.5?1:0);g.cell.push(0);}
+    const hide=g.lvl>=6?.4:g.lvl>=3?.22:0;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){let s=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const a=x+dx,b=y+dy;if(a>=0&&b>=0&&a<n&&b<n)s+=g.sol[b*n+a];}
+      g.clue.push(Math.random()<hide?-1:s);}
+    g.cx=Math.min(g.cx,n-1);g.cy=Math.min(g.cy,n-1);g.won=0;},
+  stat(g,x,y){const n=g.n;let f=0,u=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const a=x+dx,b=y+dy;if(a>=0&&b>=0&&a<n&&b<n){const v=g.cell[b*n+a];if(v===1)f++;else if(v===0)u++;}}return {f,u};},
+  solved(g){for(let y=0;y<g.n;y++)for(let x=0;x<g.n;x++){const k=g.clue[y*g.n+x];if(k>=0&&this.stat(g,x,y).f!==k)return false;}return true;},
+  set(g,i,v){if(g.won)return;g.cell[i]=v;A.beep(v===1?520:v===2?300:200,.03);
+    if(this.solved(g)){const pts=g.n*2+g.lvl;g.score+=pts;g.time+=30;g.won=1.4;g.msg='Готово! +'+pts;
+      for(let j=0;j<g.cell.length;j++)if(g.cell[j]!==1)g.cell[j]=0;A.tune([523,659,784,1046]);}},
+  click(g,mx,my,btn){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x<0||y<0||x>=g.n||y>=g.n)return;
+    g.cx=x;g.cy=y;const i=y*g.n+x,v=g.cell[i];this.set(g,i,btn===2?(v===2?0:2):(v+1)%3);},
+  key(g,k){const n=g.n;
+    if(k==='ArrowLeft'||k==='KeyA')g.cx=(g.cx+n-1)%n;else if(k==='ArrowRight'||k==='KeyD')g.cx=(g.cx+1)%n;
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=(g.cy+n-1)%n;else if(k==='ArrowDown'||k==='KeyS')g.cy=(g.cy+1)%n;
+    else{const i=g.cy*n+g.cx;if(k==='Space'||k==='Enter')this.set(g,i,g.cell[i]===1?0:1);else if(k==='KeyX'||k==='KeyZ')this.set(g,i,g.cell[i]===2?0:2);}},
+  update(g,dt){if(g.won>0){g.won-=dt;if(g.won<=0){g.lvl++;this.newPuzzle(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Ниво '+g.lvl);},
+  draw(g){A.bg('#2b1d14');const n=g.n,cs=g.cs;
+    c.fillStyle='#000';c.fillRect(g.ox-4,g.oy-4,cs*n+8,cs*n+8);
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=y*n+x,v=g.cell[i],px=g.ox+x*cs,py=g.oy+y*cs;
+      if(v===1)A.block(px,py,cs,g.won>0?g.col:'#7d7d7d');else{A.block(px,py,cs,'#7a5233');}
+      if(v===1&&g.won<=0){c.fillStyle=g.col;c.fillRect(px+cs*.38,py+cs*.38,cs*.24,cs*.24);}
+      if(v===2){c.strokeStyle='rgba(0,0,0,.55)';c.lineWidth=2;c.beginPath();c.moveTo(px+cs*.25,py+cs*.25);c.lineTo(px+cs*.75,py+cs*.75);c.moveTo(px+cs*.75,py+cs*.25);c.lineTo(px+cs*.25,py+cs*.75);c.stroke();}
+      const k=g.clue[i];if(k>=0&&g.won<=0){const s=this.stat(g,x,y),col=s.f===k?'#8f8':(s.f>k||s.f+s.u<k)?'#f66':'#fff';A.txt(''+k,px+cs/2,py+cs/2+1,Math.floor(cs*.5),col,'center');}}
+    if(g.won<=0){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(g.ox+g.cx*cs+1.5,g.oy+g.cy*cs+1.5,cs-3,cs-3);}
+    c.fillStyle='rgba(0,0,0,.55)';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl+'  ('+n+'×'+n+')',8,14,14,'#ffd54f');A.txt('⏱ '+Math.ceil(g.time),470,14,14,g.time<20?'#f66':'#fff','right');
+    if(g.won>0)A.txt(g.msg,240,200,28,'#fff','center');}
+});
+</script>
+</body>
+</html>

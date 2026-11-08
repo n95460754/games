@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ендър скок</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟣 Ендър скок</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 277. Ендър скок
+const PJ_G=420;
+A.add({id:'pearljump',cat:'skill',icon:'🟣',name:'Ендър скок',desc:'Хвърляй ендър перли и скачай от остров на остров',
+  help:'Хвърли ендър перла и се телепортирай на следващия летящ остров. Мишка/пръст: натисни, дръпни назад като прашка и пусни. Клавиатура: ↑/↓ ъгъл, ←/→ сила, Space = хвърли. Кацане в центъра = +3, злато във въздуха = +1. От 5-ия скок духа вятър! 3 живота.',
+  start(g){g.lives=3;g.ang=50;g.pow=280;g.jumps=0;g.isl=[{x:30,w:80,y:250}];g.on=0;g.parts=[];g.msg='';g.mt=0;g.aim=null;g.pearl=null;g.ph='aim';this.newTarget(g);},
+  newTarget(g){const me=g.isl[0],n=g.jumps,k=Math.max(3,8-Math.floor(n/3)),w=k*10;
+    const x=A.ri(170,Math.min(470-w,240+n*25)),y=A.clamp(me.y+A.ri(-70,60),120,300);
+    g.isl[1]={x,w,y};g.wind=n>=4?Math.round(A.rnd(-1,1)*Math.min(90,20+n*6)):0;
+    g.gold=Math.random()<.6?{x:(me.x+me.w/2+x+w/2)/2+A.ri(-30,30),y:Math.max(45,Math.min(me.y,y)-A.ri(50,120))}:null;},
+  launch(g){const p=g.isl[g.on];return {x:p.x+p.w/2+6,y:p.y-30};},
+  vel(g){const a=g.ang*Math.PI/180;return {vx:Math.cos(a)*g.pow,vy:-Math.sin(a)*g.pow};},
+  throwIt(g){if(g.ph!=='aim')return;const l=this.launch(g),v=this.vel(g);g.pearl={x:l.x,y:l.y,vx:v.vx,vy:v.vy};g.ph='fly';A.beep(300,.08,'triangle');},
+  key(g,k){if(k==='Space'||k==='Enter')this.throwIt(g);},
+  click(g,mx,my){if(g.ph==='aim')g.aim={x:mx,y:my,ok:false};},
+  release(g){if(!g.aim)return;const ok=g.aim.ok;g.aim=null;if(ok)this.throwIt(g);},
+  inRow(t,x,y){if(y<t.y||y>t.y+40)return false;const r=Math.floor((y-t.y)/10);return x>=t.x+r*10&&x<=t.x+t.w-r*10;},
+  burst(g,x,y,col,n){for(let i=0;i<n;i++)g.parts.push({x,y,vx:A.rnd(-90,90),vy:A.rnd(-120,30),t:A.rnd(.4,.9),col});},
+  fail(g,msg){g.lives--;g.msg=msg;g.mt=1.4;A.beep(140,.3,'sawtooth');g.pearl=null;if(g.lives<=0)return A.over(g,'Край! '+g.jumps+' скока');g.ph='aim';},
+  update(g,dt){
+    for(const p of g.parts){p.t-=dt;p.vy+=300*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;}g.parts=g.parts.filter(p=>p.t>0);
+    if(g.mt>0)g.mt-=dt;
+    if(g.ph==='aim'){
+      if(A.keys.ArrowUp||A.keys.KeyW)g.ang=Math.min(85,g.ang+40*dt);
+      if(A.keys.ArrowDown||A.keys.KeyS)g.ang=Math.max(5,g.ang-40*dt);
+      if(A.keys.ArrowRight||A.keys.KeyD)g.pow=Math.min(460,g.pow+160*dt);
+      if(A.keys.ArrowLeft||A.keys.KeyA)g.pow=Math.max(80,g.pow-160*dt);
+      if(g.aim&&A.mouse.down){const dx=(g.aim.x-A.mouse.x)*3.2,dy=(g.aim.y-A.mouse.y)*3.2,m=Math.hypot(dx,dy);
+        if(m>50&&dx>0){g.aim.ok=true;g.pow=A.clamp(m,80,460);g.ang=A.clamp(Math.atan2(-dy,dx)*180/Math.PI,5,85);}else g.aim.ok=false;}
+    }else if(g.ph==='fly'){const p=g.pearl,t=g.isl[1],me=g.isl[0];
+      for(let s=0;s<4;s++){const h=dt/4,py=p.y;p.vy+=PJ_G*h;p.vx+=g.wind*h;p.x+=p.vx*h;p.y+=p.vy*h;
+        if(g.gold&&Math.hypot(p.x-g.gold.x,p.y-g.gold.y)<15){g.score++;this.burst(g,g.gold.x,g.gold.y,C.gold,10);g.gold=null;A.beep(990,.08,'triangle');}
+        if(p.vy>0&&py<=t.y&&p.y>=t.y&&p.x>=t.x&&p.x<=t.x+t.w){
+          const off=Math.abs(p.x-(t.x+t.w/2)),perf=off<t.w*.18;g.score+=perf?3:1;g.jumps++;g.msg=perf?'Перфектно! +3':'+1';g.mt=1.2;
+          this.burst(g,p.x,t.y,'#b04ae0',16);A.tune(perf?[523,659,784,1046]:[523,784]);g.pearl=null;g.on=1;g.ph='slide';g.sh=t.x-30;g.sd=0;return;}
+        if(p.vy>0&&py<=me.y&&p.y>=me.y&&p.x>=me.x&&p.x<=me.x+me.w){g.pearl=null;g.ph='aim';g.msg='Твърде слабо!';g.mt=1;A.beep(250,.1);return;}
+        if(this.inRow(t,p.x,p.y)||this.inRow(me,p.x,p.y)){this.burst(g,p.x,p.y,'#2a7a6a',10);return this.fail(g,'Перлата удари скалата!');}
+        if(p.y>380||p.x>520||p.x<-40){return this.fail(g,'Перлата падна в бездната!');}}
+    }else if(g.ph==='slide'){const st=Math.min(g.sh-g.sd,Math.max(60,g.sh*2.4)*dt);g.sd+=st;
+      for(const i of g.isl)i.x-=st;if(g.gold)g.gold.x-=st;for(const p of g.parts)p.x-=st;
+      if(g.sd>=g.sh-.01){g.isl=[g.isl[1]];g.on=0;this.newTarget(g);g.ph='aim';}}
+  },
+  island(t,target){const k=t.w/10;
+    for(let r=0;r<4;r++)for(let i=r;i<k-r;i++)A.block(t.x+i*10,t.y+r*10,10,r===0?C.grass:r===1?C.dirt:C.stone);
+    if(target){c.fillStyle='rgba(255,213,79,.85)';c.fillRect(t.x+t.w/2-t.w*.18,t.y-3,t.w*.36,3);}},
+  steve(x,y,t){A.block(x-6,y-12,5,'#3a3a8a',12);A.block(x+1,y-12,5,'#3a3a8a',12);A.block(x-7,y-24,14,'#2ea8a8',12);
+    A.block(x-7,y-36,14,'#e0a878',12);c.fillStyle='#5a3a1a';c.fillRect(x-7,y-36,14,4);c.fillStyle='#fff';c.fillRect(x-4,y-30,3,2);c.fillRect(x+2,y-30,3,2);
+    c.fillStyle='#3a2a8a';c.fillRect(x-3,y-30,2,2);c.fillRect(x+3,y-30,2,2);},
+  draw(g){const gr=c.createLinearGradient(0,0,0,360);gr.addColorStop(0,'#4a7fc8');gr.addColorStop(.7,'#9cc8f0');gr.addColorStop(1,'#20183a');c.fillStyle=gr;c.fillRect(0,0,480,360);
+    c.fillStyle='rgba(255,255,255,.8)';c.fillRect(60,60,70,14);c.fillRect(80,50,40,12);c.fillRect(330,90,80,14);c.fillRect(350,80,40,12);
+    c.fillStyle='#1a1230';c.fillRect(0,340,480,20);
+    g.isl.forEach((t,i)=>this.island(t,i===1));
+    if(g.gold){const b=Math.sin(g.t*4)*3;A.block(g.gold.x-6,g.gold.y-6+b,12,C.gold);}
+    const me=g.isl[g.on];if(g.ph!=='fly')this.steve(me.x+me.w/2,me.y,g.t);else{c.globalAlpha=.4;this.steve(me.x+me.w/2,me.y,g.t);c.globalAlpha=1;}
+    if(g.ph==='aim'){const l=this.launch(g),v=this.vel(g);let x=l.x,y=l.y,vx=v.vx,vy=v.vy;const n=Math.max(4,16-g.jumps);
+      c.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<n*4;i++){const h=.015;vy+=PJ_G*h;vx+=g.wind*h;x+=vx*h;y+=vy*h;if(i%4===3)c.fillRect(x-2,y-2,4,4);}
+      if(g.aim&&g.aim.ok){c.strokeStyle='rgba(176,74,224,.8)';c.lineWidth=3;c.beginPath();c.moveTo(g.aim.x,g.aim.y);c.lineTo(A.mouse.x,A.mouse.y);c.stroke();}
+      A.block(l.x-4,l.y-4,8,'#1d6b5e');}
+    if(g.pearl){const p=g.pearl;A.block(p.x-5,p.y-5,10,'#1d6b5e');c.fillStyle='#5fe0c0';c.fillRect(p.x-2,p.y-2,4,4);}
+    for(const p of g.parts){c.fillStyle=p.col;c.fillRect(p.x-2,p.y-2,4,4);}
+    c.fillStyle='rgba(0,0,0,.55)';c.fillRect(0,0,480,26);
+    A.txt('Скокове: '+g.jumps,8,13,14,'#ffd54f');A.txt('❤'.repeat(Math.max(0,g.lives)),470,13,14,'#f55','right');
+    if(g.wind){const s=g.wind>0?'→':'←';A.txt('Вятър '+s.repeat(Math.min(3,1+Math.floor(Math.abs(g.wind)/30))),240,13,14,'#cfe8ff','center');}
+    c.fillStyle='rgba(0,0,0,.5)';c.fillRect(8,326,170,26);A.txt('∠'+Math.round(g.ang)+'°',14,339,13,'#fff');
+    c.fillStyle='#333';c.fillRect(70,334,100,10);c.fillStyle='#b04ae0';c.fillRect(70,334,(g.pow-80)/380*100,10);
+    if(g.mt>0)A.txt(g.msg,240,60,20,g.msg[0]==='+'||g.msg[0]==='П'?'#ffd54f':'#ffccbc','center');}
+});
+</script>
+</body>
+</html>

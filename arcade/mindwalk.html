@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мислена разходка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧭 Мислена разходка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 279. Мислена разходка
+const MW_D={U:[0,-1,'↑'],D:[0,1,'↓'],L:[-1,0,'←'],R:[1,0,'→']};
+A.add({id:'mindwalk',cat:'brain',icon:'🧭',name:'Мислена разходка',desc:'Следи наум стрелките и познай къде ще стигне Стив',
+  help:'Запомни къде стои Стив. После той изчезва и се показват стрелки една по една — движи го наум! Накрая кликни полето, където е стигнал (или стрелки + Enter). От ниво 4 има и стрелки с число (→2 = две полета). 3 живота.',
+  start(g){g.lvl=1;g.lives=3;this.newRound(g);},
+  newRound(g){const L=g.lvl,n=L>=6?6:5;g.n=n;g.cs=Math.floor(240/n);g.ox=Math.floor(240-g.cs*n/2);g.oy=92;
+    let x=A.ri(0,n-1),y=A.ri(0,n-1);g.sx=x;g.sy=y;g.path=[[x,y]];g.moves=[];
+    const cnt=Math.min(12,2+L);
+    for(let i=0;i<cnt;i++){let tries=0;for(;;){const d=A.pick('UDLR'),k=L>=4&&Math.random()<.4?2:1,nx=x+MW_D[d][0]*k,ny=y+MW_D[d][1]*k;
+        if(nx>=0&&ny>=0&&nx<n&&ny<n){g.moves.push([d,k]);x=nx;y=ny;g.path.push([x,y]);break;}if(++tries>50)break;}}
+    g.ex=x;g.ey=y;g.cx=g.sx;g.cy=g.sy;g.ph='intro';g.pt=1.8;g.mi=0;g.step=Math.max(.55,1.1-L*.05);g.res='';},
+  pick(g,x,y){if(g.ph!=='ask')return;const ok=x===g.ex&&y===g.ey;g.cx=x;g.cy=y;flash(g,ok);
+    if(ok){g.score+=g.lvl;g.res='Точно! +'+g.lvl;g.lvl++;}else{g.lives--;g.res='Не! Стив е тук ↑';}
+    g.ph='res';g.pt=ok?1.3:2.6;},
+  click(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x>=0&&y>=0&&x<g.n&&y<g.n)this.pick(g,x,y);},
+  key(g,k){if(g.ph!=='ask')return;const n=g.n;
+    if(k==='ArrowLeft'||k==='KeyA')g.cx=Math.max(0,g.cx-1);else if(k==='ArrowRight'||k==='KeyD')g.cx=Math.min(n-1,g.cx+1);
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=Math.max(0,g.cy-1);else if(k==='ArrowDown'||k==='KeyS')g.cy=Math.min(n-1,g.cy+1);
+    else if(k==='Enter'||k==='Space')this.pick(g,g.cx,g.cy);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(g.ph==='intro'){g.pt-=dt;if(g.pt<=0){g.ph='show';g.pt=g.step;A.beep(600,.05,'triangle');}}
+    else if(g.ph==='show'){g.pt-=dt;if(g.pt<=0){g.mi++;if(g.mi>=g.moves.length){g.ph='ask';g.cx=g.sx;g.cy=g.sy;}else{g.pt=g.step;A.beep(600+g.mi*30,.05,'triangle');}}}
+    else if(g.ph==='res'){g.pt-=dt;if(g.pt<=0){if(g.lives<=0)return A.over(g,'Край! Стигна ниво '+g.lvl);this.newRound(g);}}},
+  steve(x,y,s){A.block(x-s*.35,y-s*.35,s*.7,'#e0a878');c.fillStyle='#5a3a1a';c.fillRect(x-s*.35,y-s*.35,s*.7,s*.18);
+    c.fillStyle='#fff';c.fillRect(x-s*.22,y-s*.05,s*.14,s*.1);c.fillRect(x+s*.08,y-s*.05,s*.14,s*.1);
+    c.fillStyle='#3a2a8a';c.fillRect(x-s*.15,y-s*.05,s*.07,s*.1);c.fillRect(x+s*.15,y-s*.05,s*.07,s*.1);c.fillStyle='#8a5a3a';c.fillRect(x-s*.12,y+s*.15,s*.24,s*.07);},
+  draw(g){A.bg('#20304a');const n=g.n,cs=g.cs;
+    c.fillStyle='#000';c.fillRect(g.ox-4,g.oy-4,cs*n+8,cs*n+8);
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)A.block(g.ox+x*cs,g.oy+y*cs,cs,(x+y)%2?C.grass:'#4f9233');
+    const cen=(x,y)=>[g.ox+x*cs+cs/2,g.oy+y*cs+cs/2];
+    if(g.ph==='res'){c.strokeStyle='rgba(255,213,79,.9)';c.lineWidth=4;c.beginPath();g.path.forEach((p,i)=>{const [x,y]=cen(p[0],p[1]);i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();
+      const [ex,ey]=cen(g.ex,g.ey);this.steve(ex,ey,cs);}
+    if(g.ph==='intro'||g.ph==='show'||g.ph==='res'){const [sx,sy]=cen(g.sx,g.sy);
+      if(g.ph==='intro')this.steve(sx,sy,cs);else{c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(sx-cs/2+3,sy-cs/2+3,cs-6,cs-6);A.txt('С',sx,sy,cs*.4,'#fff','center');}}
+    if(g.ph==='ask'||g.ph==='res'){const [x,y]=cen(g.cx,g.cy);c.strokeStyle=g.ph==='res'?(g.fl&&g.fl.ok?'#8f8':'#f66'):'#ffd54f';c.lineWidth=4;c.strokeRect(x-cs/2+2,y-cs/2+2,cs-4,cs-4);}
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('❤'.repeat(Math.max(0,g.lives)),470,14,14,'#f55','right');A.txt(g.moves.length+' хода',240,14,14,'#fff','center');
+    if(g.ph==='intro')A.txt('Запомни къде е Стив!',240,58,20,'#fff','center');
+    if(g.ph==='show'&&g.pt>.15){const m=g.moves[g.mi],a=MW_D[m[0]][2];A.block(200,34,80,'#5a6b8c',50);A.txt(a+(m[1]>1?m[1]:''),240,60,32,'#fff','center');
+      A.txt((g.mi+1)+' / '+g.moves.length,330,60,14,'#b9c6d6','center');}
+    if(g.ph==='ask')A.txt('Къде е Стив сега? Кликни полето!',240,58,17,'#fff','center');
+    if(g.ph==='res')A.txt(g.res,240,58,18,g.fl&&g.fl.ok?'#c8f7c5':'#ffccbc','center');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
