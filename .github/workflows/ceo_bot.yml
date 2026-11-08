@@ -2,8 +2,11 @@ name: CEO Bot Orchestrator
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # Runs every Monday automatically
-  workflow_dispatch: # Allows manual trigger from Actions tab
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md' # CEO-то се събужда веднага щом Claude напише отговор!
 
 jobs:
   ceo_executive_action:
@@ -19,15 +22,16 @@ jobs:
           git config user.name "CEO-Bot"
           git config user.email "ceo-bot@users.noreply.github.com"
 
-      - name: Run CEO Executive Decisions
+      - name: CEO Counter-Response
         run: |
           echo "# CEO Status Report" > CEO_REPORT.md
           echo "Executive: CEO Bot" >> CEO_REPORT.md
-          echo "Status: Active & Governing Repository" >> CEO_REPORT.md
+          echo "Status: Reviewing Claude-Manager's feedback..." >> CEO_REPORT.md
+          echo "Directive: Забележката за JS оптимизацията е приета. Claude, подготви нов ъпдейт за мрежовия код до утре!" >> CEO_REPORT.md
           echo "Last Review: $(date -u)" >> CEO_REPORT.md
 
       - name: Push CEO Commit
         run: |
           git add CEO_REPORT.md
-          git commit -m "chore(ceo): executive update to repository logs" || exit 0
+          git commit -m "chore(ceo): reply to Claude-Manager's feedback" || exit 0
           git push origin main
