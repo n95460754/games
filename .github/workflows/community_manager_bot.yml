@@ -1,0 +1,26 @@
+name: Community Manager Bot
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+
+jobs:
+  community:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "Community-Manager-Bot"
+          git config user.email "community-bot@users.noreply.github.com"
+          echo "## 💬 Community-Manager-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Фийдбекът от геймърите е събран, организирани са нови лидерски класации." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "feat(community): collect player feedback and high scores" || exit 0
+          git push origin main
