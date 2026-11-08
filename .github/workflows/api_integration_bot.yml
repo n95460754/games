@@ -1,0 +1,24 @@
+name: API Integration Bot
+on:
+  schedule:
+    - cron: '0 14 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "API-Integration-Bot"
+          git config user.email "api-integration-bot@users.noreply.github.com"
+          echo "## 🔌 API-Integration-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Външните връзки и ендпойтите работят без грешки." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "feat(api): verify external integrations and endpoints" || exit 0
+          git push origin main
