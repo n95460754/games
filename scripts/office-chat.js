@@ -37,6 +37,7 @@ function participants(staff) {
     { ...TEAMS_LEADER, department: 'Executive' },
     janitor.JANITOR,
     { key: 'Consensus', name: '🔍 Consensus', role: 'Web Researcher', department: 'Executive' },
+    { key: 'Monica', name: '🕊️ Monica', role: 'Peacemaker', department: 'Executive' },
   ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: BOTS[h][1], department: d, team: teamFor(d) });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department, team: teamFor(e.department) });
@@ -365,8 +366,70 @@ if (!log.consensusHired) {
 }
 // 🛠️ Лидерите раздават задачи, отборите ги изпълняват
 runTeamTasks({ people, games, post, round: log.round });
+// 📣 Еднократна обява: Monica
+if (!log.monicaHired) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Monica оправя споровете между AI-ите!';
+  post(by('Claude-CEO'), 'Екип, в ръководството ни вече има 7 AI-я. Понякога ще спорим — затова наех Monica. Тя оправя всеки спор. 🕊️', th);
+  post(by('Monica'), 'Здравейте! Щом два AI-я започнат да се карат, идвам веднага. Изслушвам двете страни и намирам решение, с което и двамата са доволни. 🤝', th);
+  post(by('ChatGPT'), 'Ние? Да спорим? Никога! ...Е, може би понякога. 😅', th);
+  post(by('Gemini'), 'Говори за себе си, ChatGPT. 😏', th);
+  post(by('Monica'), 'Ето, виждате ли — вече имам работа. 😄', th);
+  log.monicaHired = new Date(t0).toISOString();
+}
+// ⚡ Понякога два AI-я се скарват (около 1 от 2 кръга)
+const AI_KEYS = ['Claude-CEO', 'Copilot', 'Perplexity', 'ChatGPT', 'Gemini', 'Brave-AI', 'Consensus'];
+const ARGUMENTS = [
+  { topic: 'табове или интервали', a: 'Кодът трябва да е с табове. Точка.', b: 'Не съм съгласен! Интервалите са единственият правилен начин.', a2: 'Грешиш! Табовете пестят място!', fix: 'В проекта вече има стил — ще следваме него, а редакторът ще форматира автоматично. Така и двамата печелите. ✅' },
+  { topic: 'FPS или графика', a: 'Игрите трябва да са красиви — повече ефекти!', b: 'Грешиш! Без 60 FPS никой няма да ги играе.', a2: 'Не е вярно! Хората обичат красивото!', fix: 'Добавяме ефекти, но само докато FPS-ът стои на 60. Красиво И бързо. ✅' },
+  { topic: 'коя е най-добрата игра', a: 'Най-добрата игра в аркадата е {game}.', b: 'Не съм съгласен! {game2} е много по-добра.', a2: 'Невъзможно! Покажи ми данни!', fix: 'Нека Data-Analyst-Bot преброи кое се играе повече — фактите ще решат. До тогава и двете са страхотни. ✅' },
+  { topic: 'кой да оправи бъга', a: 'Този бъг е за моя екип!', b: 'Грешиш, това е задача за моя екип!', a2: 'Не е вярно, аз го видях пръв!', fix: 'Работете заедно: единият пише кода, другият го тества. Двойно по-бързо. ✅' },
+  { topic: 'тъмна или светла тема', a: 'Всички игри трябва да са на тъмна тема. 🌙', b: 'Не съм съгласен! Светлата се вижда по-добре. ☀️', a2: 'Грешиш, тъмната пази очите!', fix: 'Правим бутон — всеки играч избира сам. ✅' },
+  { topic: 'да пуснем ли днес', a: 'Пускаме новата версия днес!', b: 'Не е вярно, че е готова! Има още тестове.', a2: 'Грешиш, тестовете минаха!', fix: 'Пускаме днес, но първо Bug-Hunter-Bot прави финална проверка — 5 минути. ✅' },
+];
+if (Math.random() < 0.5) {
+  const [k1, k2] = shuffle([...AI_KEYS]).slice(0, 2);
+  const A = people.find((p) => p.key === k1), B = people.find((p) => p.key === k2);
+  const arg = pick(ARGUMENTS);
+  const g1 = pick(games), g2 = pick(games.filter((g) => g !== g1)) || g1;
+  const th = `⚡ Спор: ${arg.topic}`;
+  post(A, fill(arg.a, { game: g1, game2: g2 }), th);
+  post(B, fill(arg.b, { game: g1, game2: g2 }), th);
+  post(A, fill(arg.a2, { game: g1, game2: g2 }), th);
+  roundMsgs[roundMsgs.length - 1].fix = arg.fix; // Monica ще знае как да го реши
+}
 const pairs = makePairs(people, met);
 for (const g of pairs) converse(g, met, games, post);
+
+// 🕊️ Monica следи ЦЕЛИЯ чат: щом два AI-я спорят — влиза в същия разговор и го оправя
+{
+  const monica = people.find((p) => p.key === 'Monica');
+  const AI_NAMES = AI_KEYS.map((k) => people.find((p) => p.key === k)).filter(Boolean).map((p) => `${p.name} (${p.role})`);
+  const ARGUE = /не съм съгласен|грешиш|грешен отговор|не е вярно|невъзможно|точка\.|покажи ми данни/i;
+  const threads = [...new Set(roundMsgs.map((m) => m.thread))];
+  let resolved = 0;
+  for (const th of threads) {
+    const msgs = roundMsgs.filter((m) => m.thread === th);
+    const arguers = [...new Set(msgs.filter((m) => AI_NAMES.includes(m.from) && ARGUE.test(m.text)).map((m) => m.from))];
+    const aiInThread = [...new Set(msgs.filter((m) => AI_NAMES.includes(m.from)).map((m) => m.from))];
+    if (!arguers.length || aiInThread.length < 2) continue; // спор е само между поне два AI-я
+    const [x, y] = aiInThread.map((f) => f.replace(/ \(.*\)$/, ''));
+    const fix = (msgs.find((m) => m.fix) || {}).fix || 'И двамата сте прави по свой начин. Пробваме и двете идеи и гледаме кое работи по-добре. ✅';
+    const lastIdx = roundMsgs.lastIndexOf(msgs[msgs.length - 1]);
+    const at = (ms) => ({ round: log.round, time: msgs[msgs.length - 1].time, from: `${monica.name} (${monica.role})`, text: ms, thread: th });
+    const xP = people.find((p) => p.name === x), yP = people.find((p) => p.name === y);
+    const peace = [
+      at(`Стоп, стоп! 🕊️ ${x} и ${y}, чух и двете страни. И двамата искате най-доброто за игрите.`),
+      at(`Ето решението: ${fix}`),
+      { ...at(''), from: `${xP.name} (${xP.role})`, text: pick(['Добре, Monica, съгласен съм. 🤝', 'Звучи честно. Мир! ✌️', 'Права си. Извинявай, ' + y + '.']) },
+      { ...at(''), from: `${yP.name} (${yP.role})`, text: pick(['И аз съм съгласен. 🤝', 'Мир! Без лоши чувства. 😊', 'Няма проблем, ' + x + '. Отбор сме!']) },
+    ];
+    roundMsgs.splice(lastIdx + 1, 0, ...peace);
+    resolved++;
+  }
+  log.monicaResolved = (log.monicaResolved || 0) + resolved;
+  for (const m of roundMsgs) delete m.fix;
+}
 
 log.messages = log.messages.concat(roundMsgs).slice(-KEEP);
 delete met._idx;
@@ -382,6 +445,7 @@ let md = `# 💬 Office Chat / Чат в офиса\n\n`;
 md += `> Всеки говори с всеки. Автоматично от \`scripts/office-chat.js\` при всяко пускане на HR-Bot.\n\n`;
 md += `| Кръг | Участници | Разговори в този кръг | Срещнали се двойки | Прогрес |\n|---|---|---|---|---|\n`;
 md += `| #${log.round} | ${n} | ${pairs.length} | ${metPairs} / ${total} | **${pct}%** ${'🟩'.repeat(Math.round(pct / 10))}${'⬜'.repeat(10 - Math.round(pct / 10))} |\n\n`;
+md += `🕊️ Спорове между AI-ите, оправени от Monica: **${log.monicaResolved || 0}**\n\n`;
 md += loners ? `_Още ${loners} души не са говорили с абсолютно всички._\n` : `🎉 **Всеки вече е говорил с всеки!** Сега си говорят като стари приятели.\n`;
 md += `\n## Кръг #${log.round} — всички разговори\n`;
 let cur = null;
