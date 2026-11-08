@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков билярд</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎱 Блоков билярд</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 252. Блоков билярд
+A.add({id:'pool',cat:'skill',icon:'🎱',name:'Блоков билярд',desc:'Вкарай рудните топки в джобовете с бялата топка',help:'Мишка / пръст: насочи към мястото, задръж за сила и пусни за удар. Клавиатура: ← → (или A D) — завърти щеката, задръж Space за сила и пусни. Всяка топка = 10 т., златната = 25, няколко с един удар = бонус. Внимавай да не вкараш бялата!',
+  L:34,T:54,R:446,B:326,r:9,
+  start(g){g.shots=15;g.ang=0;g.pow=0;g.ch=false;g.ct=0;g.msg='';g.mt=0;g.rack=0;g.pot=0;g.parts=[];this.rack(g);},
+  rack(g){g.rack++;const cols=[C.coal,C.iron,C.gem,C.ruby,'#43a047',C.purple,C.lava,C.water,'#ff80ab',C.gold];A.shuffle(cols);
+    const gi=cols.indexOf(C.gold);[cols[gi],cols[4]]=[cols[4],cols[gi]];
+    g.balls=[{x:140,y:190,vx:0,vy:0,col:'#fafafa',cue:true}];let k=0;const d=this.r*2+.5;
+    for(let row=0;row<4;row++)for(let i=0;i<=row;i++)g.balls.push({x:300+row*d*.87,y:190+(i-row/2)*d,vx:0,vy:0,col:cols[k++]});
+    g.moving=false;},
+  pockets(){const {L,T,R,B}=this,m=(L+R)/2;return [[L,T],[m,T-3],[R,T],[L,B],[m,B+3],[R,B]];},
+  cue(g){return g.balls.find(b=>b.cue);},
+  key(g,k){if(k==='ArrowLeft'||k==='ArrowRight'||k==='KeyA'||k==='KeyD')g.useM=false;},
+  move(g){g.useM=true;},
+  click(g){g.useM=true;},
+  shoot(g){const cb=this.cue(g),sp=80+g.pow*820;cb.vx=Math.cos(g.ang)*sp;cb.vy=Math.sin(g.ang)*sp;g.shots--;g.moving=true;g.pot=0;g.scratch=false;
+    A.beep(200+g.pow*300,.06,'triangle',.07);g.pow=0;},
+  update(g,dt){g.mt-=dt;
+    g.parts=g.parts.filter(q=>(q.t-=dt)>0);g.parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;});
+    const cb=this.cue(g);
+    if(!g.moving){
+      if(g.useM){g.ang=Math.atan2(A.mouse.y-cb.y,A.mouse.x-cb.x);}
+      else{if(A.keys.ArrowLeft||A.keys.KeyA)g.ang-=dt*1.6;if(A.keys.ArrowRight||A.keys.KeyD)g.ang+=dt*1.6;if(A.keys.ArrowUp||A.keys.KeyW)g.ang-=dt*.25;if(A.keys.ArrowDown||A.keys.KeyS)g.ang+=dt*.25;}
+      const hold=A.keys.Space||A.keys.Enter||A.mouse.down;
+      if(hold){if(!g.ch){g.ch=true;g.ct=0;}g.ct+=dt;const p=(g.ct/1.4)%2;g.pow=p<1?p:2-p;}
+      else if(g.ch){g.ch=false;this.shoot(g);}
+      return;}
+    // физика на стъпки
+    const n=6,h=dt/n,{L,T,R,B,r}=this,P=this.pockets();
+    for(let s=0;s<n;s++){
+      for(const b of g.balls){if(b.hide)continue;b.x+=b.vx*h;b.y+=b.vy*h;
+        for(const [px,py] of P)if((b.x-px)**2+(b.y-py)**2<17*17){b.in=true;break;}
+        if(b.in)continue;
+        if(b.x<L+r){b.x=L+r;b.vx=-b.vx*.85;}if(b.x>R-r){b.x=R-r;b.vx=-b.vx*.85;}
+        if(b.y<T+r){b.y=T+r;b.vy=-b.vy*.85;}if(b.y>B-r){b.y=B-r;b.vy=-b.vy*.85;}}
+      for(let i=0;i<g.balls.length;i++)for(let j=i+1;j<g.balls.length;j++){const a=g.balls[i],b=g.balls[j];if(a.in||b.in||a.hide||b.hide)continue;
+        const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2>=4*r*r||d2===0)continue;const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,o=(2*r-d)/2;
+        a.x-=nx*o;a.y-=ny*o;b.x+=nx*o;b.y+=ny*o;const vr=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+        if(vr>0){const k=vr*.97;a.vx-=k*nx;a.vy-=k*ny;b.vx+=k*nx;b.vy+=k*ny;if(vr>60)A.beep(900,.02,'square',Math.min(.05,vr/9000));}}
+      // вкарани топки
+      for(const b of g.balls.filter(b=>b.in)){
+        for(let i=0;i<8;i++)g.parts.push({x:b.x,y:b.y,vx:A.rnd(-60,60),vy:A.rnd(-60,60),t:.4,col:b.col});
+        if(b.cue){g.scratch=true;b.in=false;b.vx=b.vy=0;b.x=-100;b.y=-100;b.hide=true;A.beep(150,.3,'sawtooth',.05);}
+        else{g.pot++;const v=(b.col===C.gold?25:10)+(g.pot-1)*5;g.score+=v;g.msg='+'+v+(g.pot>1?' комбо!':'');g.mt=1.2;A.tune([660,990]);g.balls.splice(g.balls.indexOf(b),1);}}
+    }
+    let still=true;
+    for(const b of g.balls){const sp=Math.hypot(b.vx,b.vy);if(sp<6){b.vx=b.vy=0;}else{const ns=Math.max(0,sp-110*dt)*(1-.25*dt);b.vx*=ns/sp;b.vy*=ns/sp;still=false;}}
+    if(still){g.moving=false;
+      if(g.scratch){g.shots--;g.msg='Бялата падна! −1 удар';g.mt=1.8;cb.hide=false;cb.x=140;cb.y=190;
+        while(g.balls.some(b=>!b.cue&&Math.hypot(b.x-cb.x,b.y-cb.y)<2*this.r+1))cb.x+=4;}
+      if(g.balls.length===1){const bon=50+g.shots*5;g.score+=bon;g.shots+=10;g.msg='Чиста маса! +'+bon+' и +10 удара';g.mt=2.5;A.tune([523,659,784,1046]);this.rack(g);}
+      else if(g.shots<=0){g.shots=0;A.over(g,'Ударите свършиха!');}}
+  },
+  aim(g){const cb=this.cue(g),dx=Math.cos(g.ang),dy=Math.sin(g.ang),{L,T,R,B,r}=this;let t=1e9,hit=null;
+    if(dx>0)t=Math.min(t,(R-r-cb.x)/dx);if(dx<0)t=Math.min(t,(L+r-cb.x)/dx);if(dy>0)t=Math.min(t,(B-r-cb.y)/dy);if(dy<0)t=Math.min(t,(T+r-cb.y)/dy);
+    for(const b of g.balls){if(b.cue)continue;const fx=b.x-cb.x,fy=b.y-cb.y,p=fx*dx+fy*dy;if(p<=0)continue;const q=fx*fx+fy*fy-p*p,R2=4*r*r;if(q>R2)continue;
+      const tt=p-Math.sqrt(R2-q);if(tt<t){t=tt;hit=b;}}
+    return {x:cb.x+dx*t,y:cb.y+dy*t,hit};},
+  ball(b){const s=16;A.block(b.x-s/2,b.y-s/2,s,b.col);if(b.cue){c.fillStyle='#bbb';c.fillRect(b.x-2,b.y-2,4,4);}},
+  draw(g){A.bg('#1d2b3a');const {L,T,R,B}=this;
+    for(let x=L-24;x<R+24;x+=16){A.block(x,T-24,16,C.wood);A.block(x,B+8,16,C.wood);}
+    for(let y=T-8;y<B+8;y+=16){A.block(L-24,y,16,C.wood);A.block(R+8,y,16,C.wood);}
+    c.fillStyle='#2e7d32';c.fillRect(L-8,T-8,R-L+16,B-T+16);
+    for(let x=L-8;x<R+8;x+=24)for(let y=T-8;y<B+8;y+=24)if(((x+y)/24)%2===0){c.fillStyle='#2a7430';c.fillRect(x,y,24,24);}
+    for(const [px,py] of this.pockets()){c.fillStyle='#000';c.fillRect(px-13,py-13,26,26);c.fillStyle='#222';c.fillRect(px-13,py-13,26,4);}
+    c.fillStyle='rgba(255,255,255,.12)';c.fillRect(139,T,2,B-T);
+    const cb=this.cue(g);
+    if(!g.moving&&!cb.hide){const a=this.aim(g);c.strokeStyle='rgba(255,255,255,.55)';c.setLineDash([4,5]);c.lineWidth=2;c.beginPath();c.moveTo(cb.x,cb.y);c.lineTo(a.x,a.y);c.stroke();c.setLineDash([]);
+      c.strokeStyle='rgba(255,255,255,.7)';c.strokeRect(a.x-8,a.y-8,16,16);
+      if(a.hit){const nx=a.hit.x-a.x,ny=a.hit.y-a.y,d=Math.hypot(nx,ny)||1;c.strokeStyle='rgba(255,213,79,.7)';c.beginPath();c.moveTo(a.hit.x,a.hit.y);c.lineTo(a.hit.x+nx/d*40,a.hit.y+ny/d*40);c.stroke();}
+      const back=14+g.pow*30,dx=Math.cos(g.ang),dy=Math.sin(g.ang);c.strokeStyle='#8d5a2b';c.lineWidth=5;c.beginPath();c.moveTo(cb.x-dx*back,cb.y-dy*back);c.lineTo(cb.x-dx*(back+120),cb.y-dy*(back+120));c.stroke();
+      c.strokeStyle='#eee';c.lineWidth=5;c.beginPath();c.moveTo(cb.x-dx*back,cb.y-dy*back);c.lineTo(cb.x-dx*(back+6),cb.y-dy*(back+6));c.stroke();}
+    g.balls.forEach(b=>{if(!b.hide)this.ball(b);});
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x-2,q.y-2,4,4);});
+    A.txt('Удари: '+g.shots,10,14,14,g.shots<4?'#f55':'#fff');A.txt('Маса '+g.rack,240,14,13,'#ffd54f','center');
+    c.fillStyle='#000';c.fillRect(350,6,120,14);c.fillStyle=g.pow>.8?'#e53935':g.pow>.5?'#ffb300':'#43a047';c.fillRect(352,8,116*g.pow,10);A.txt('сила',345,14,11,'#b9c6d6','right');
+    if(g.mt>0)A.txt(g.msg,240,346,15,'#aef78f','center');}
+});
+</script>
+</body>
+</html>

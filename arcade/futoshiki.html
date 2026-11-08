@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Неравенства</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔣 Неравенства</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 251. Неравенства
+A.add({id:'futoshiki',cat:'puzzle',icon:'🔣',name:'Неравенства',desc:'Попълни всеки ред и колона с различни числа, спазвайки знаците < и >',help:'Всяко число от 1 до N е по веднъж във всеки ред и колона, а знаците < > ∧ ∨ между блоковете трябва да са верни. Клик / стрелки — избор на клетка, цифри или бутоните вдясно — число, 0 / Backspace — изтрий, H — подсказка (−15 с). Всеки решен пъзел дава точки и време.',
+  start(g){g.time=240;g.lv=0;g.sel=[0,0];g.msg='';g.mt=0;this.make(g);},
+  make(g){g.lv++;const N=g.lv<3?4:5;g.N=N;
+    // случаен латински квадрат
+    const p=A.shuffle([...Array(N).keys()]),r=A.shuffle([...Array(N).keys()]),q=A.shuffle([...Array(N).keys()]);
+    g.sol=r.map(i=>q.map(j=>p[(i+j)%N]+1));
+    g.h=[];g.v=[];const cl=[];
+    for(let y=0;y<N;y++){g.h.push([]);g.v.push([]);for(let x=0;x<N;x++){
+      if(x<N-1){g.h[y][x]=g.sol[y][x]<g.sol[y][x+1]?1:-1;cl.push(['h',y,x]);}
+      if(y<N-1){g.v[y][x]=g.sol[y][x]<g.sol[y+1][x]?1:-1;cl.push(['v',y,x]);}}}
+    g.giv=g.sol.map(row=>row.map(v=>v));for(let y=0;y<N;y++)for(let x=0;x<N;x++)cl.push(['g',y,x]);
+    // махаме подсказки, докато решението остава единствено
+    A.shuffle(cl);
+    for(const [t,y,x] of cl){const arr=t==='h'?g.h:t==='v'?g.v:g.giv,old=arr[y][x];arr[y][x]=0;if(this.count(g)!==1)arr[y][x]=old;}
+    // по-лесно: върни 1-2 числа
+    const extra=g.lv<2?2:g.lv<5?1:0;for(let k=0;k<extra;k++){const e=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!g.giv[y][x])e.push([y,x]);if(e.length){const [y,x]=A.pick(e);g.giv[y][x]=g.sol[y][x];}}
+    g.b=g.giv.map(row=>row.slice());g.hints=0;g.pt=0;
+  },
+  count(g){const N=g.N,b=g.giv.map(r=>r.slice());let n=0;
+    const ok=(y,x,v)=>{for(let i=0;i<N;i++){if(i!==x&&b[y][i]===v)return false;if(i!==y&&b[i][x]===v)return false;}
+      if(x>0&&b[y][x-1]&&g.h[y][x-1]&&(g.h[y][x-1]>0?b[y][x-1]>=v:b[y][x-1]<=v))return false;
+      if(x<N-1&&b[y][x+1]&&g.h[y][x]&&(g.h[y][x]>0?v>=b[y][x+1]:v<=b[y][x+1]))return false;
+      if(y>0&&b[y-1][x]&&g.v[y-1][x]&&(g.v[y-1][x]>0?b[y-1][x]>=v:b[y-1][x]<=v))return false;
+      if(y<N-1&&b[y+1][x]&&g.v[y][x]&&(g.v[y][x]>0?v>=b[y+1][x]:v<=b[y+1][x]))return false;return true;};
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(b[y][x]){const v=b[y][x];b[y][x]=0;if(!ok(y,x,v))return 0;b[y][x]=v;}
+    const rec=i=>{if(n>1)return;if(i===N*N){n++;return;}const y=Math.floor(i/N),x=i%N;if(g.giv[y][x])return rec(i+1);
+      for(let v=1;v<=N;v++)if(ok(y,x,v)){b[y][x]=v;rec(i+1);b[y][x]=0;if(n>1)return;}};
+    rec(0);return n;},
+  geo(g){const N=g.N,s=N===4?56:46,gap=N===4?24:18,tot=N*s+(N-1)*gap;return {s,gap,ox:Math.round((340-tot)/2)+10,oy:Math.round((360-tot)/2)+8};},
+  put(g,v){const [y,x]=g.sel;if(g.giv[y][x])return;g.b[y][x]=v;A.beep(v?500+v*60:250,.04);this.check(g);},
+  bad(g,y,x){const N=g.N,v=g.b[y][x];if(!v)return false;
+    for(let i=0;i<N;i++)if((i!==x&&g.b[y][i]===v)||(i!==y&&g.b[i][x]===v))return true;
+    const t=(a,b2,s)=>a&&b2&&(s>0?a>=b2:a<=b2);
+    return (x>0&&g.h[y][x-1]&&t(g.b[y][x-1],v,g.h[y][x-1]))||(x<N-1&&g.h[y][x]&&t(v,g.b[y][x+1],g.h[y][x]))||
+      (y>0&&g.v[y-1][x]&&t(g.b[y-1][x],v,g.v[y-1][x]))||(y<N-1&&g.v[y][x]&&t(v,g.b[y+1][x],g.v[y][x]));},
+  check(g){const N=g.N;for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!g.b[y][x]||this.bad(g,y,x))return;
+    const pts=N*10+Math.max(0,30-Math.floor(g.pt/5))-g.hints*5;g.score+=Math.max(5,pts);g.time+=N===4?40:70;
+    g.msg='Решено! +'+Math.max(5,pts);g.mt=2;A.tune([660,880,990,1320]);this.make(g);},
+  hint(g){const N=g.N,e=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(g.b[y][x]!==g.sol[y][x])e.push([y,x]);if(!e.length)return;
+    const [y,x]=A.pick(e);g.b[y][x]=g.sol[y][x];g.giv[y][x]=g.sol[y][x];g.hints++;g.time-=15;g.msg='Подсказка −15 с';g.mt=1.5;A.beep(400,.1,'triangle');this.check(g);},
+  key(g,k,ch){const N=g.N,m={ArrowUp:[-1,0],KeyW:[-1,0],ArrowDown:[1,0],KeyS:[1,0],ArrowLeft:[0,-1],KeyA:[0,-1],ArrowRight:[0,1],KeyD:[0,1]}[k];
+    if(m){g.sel=[(g.sel[0]+m[0]+N)%N,(g.sel[1]+m[1]+N)%N];return;}
+    const n=+ch;if(ch>='1'&&ch<='9'&&n<=N)this.put(g,n);else if(ch==='0'||k==='Backspace'||k==='Delete')this.put(g,0);else if(k==='KeyH')this.hint(g);},
+  click(g,mx,my){const N=g.N,o=this.geo(g);
+    if(mx>=360){for(let v=0;v<=N;v++){const by=40+v*44;if(my>=by&&my<by+38){this.put(g,v===N?0:v+1);return;}}if(my>=300&&my<340)this.hint(g);return;}
+    const x=Math.floor((mx-o.ox)/(o.s+o.gap)),y=Math.floor((my-o.oy)/(o.s+o.gap));
+    if(x>=0&&y>=0&&x<N&&y<N&&(mx-o.ox)-x*(o.s+o.gap)<o.s&&(my-o.oy)-y*(o.s+o.gap)<o.s){g.sel=[y,x];A.beep(800,.02);}},
+  update(g,dt){g.pt+=dt;g.mt-=dt;g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Решени: '+(g.lv-1));}},
+  draw(g){A.bg('#3e2a1e');const N=g.N,o=this.geo(g),st=o.s+o.gap;
+    c.fillStyle='#2a1c13';c.fillRect(o.ox-10,o.oy-10,N*st-o.gap+20,N*st-o.gap+20);
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){const px=o.ox+x*st,py=o.oy+y*st,v=g.b[y][x],gv=g.giv[y][x],sel=g.sel[0]===y&&g.sel[1]===x,bad=this.bad(g,y,x);
+      A.block(px,py,o.s,gv?'#8d8d8d':bad?'#c0504a':sel?'#e0c068':'#c9a26b');
+      if(sel){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(px-2,py-2,o.s+4,o.s+4);}
+      if(v)A.txt(String(v),px+o.s/2,py+o.s/2+1,o.s*.55,gv?'#fff':bad?'#ffe':'#3b2412','center');
+      c.strokeStyle='#ffd54f';c.lineWidth=3;c.lineCap='square';
+      if(x<N-1&&g.h[y][x]){const cx=px+o.s+o.gap/2,cy=py+o.s/2,d=g.h[y][x]>0?1:-1,w=5;c.beginPath();c.moveTo(cx+d*w,cy-7);c.lineTo(cx-d*w,cy);c.lineTo(cx+d*w,cy+7);c.stroke();}
+      if(y<N-1&&g.v[y][x]){const cx=px+o.s/2,cy=py+o.s+o.gap/2,d=g.v[y][x]>0?1:-1,w=5;c.beginPath();c.moveTo(cx-7,cy+d*w);c.lineTo(cx,cy-d*w);c.lineTo(cx+7,cy+d*w);c.stroke();}}
+    for(let v=0;v<=N;v++){const by=40+v*44;A.block(372,by,96,v===N?'#7d4b4b':'#5a6b8c',38);A.txt(v===N?'Изтрий':String(v+1),420,by+19,v===N?13:20,'#fff','center');}
+    A.block(372,300,96,'#3f8a24',38);A.txt('💡 Подсказка',420,319,11,'#fff','center');
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<30?'#f55':'#fff');A.txt('Пъзел '+g.lv+' ('+N+'×'+N+')',350,14,13,'#ffd54f','right');
+    if(g.mt>0)A.txt(g.msg,180,348,15,'#aef78f','center');}
+});
+</script>
+</body>
+</html>
