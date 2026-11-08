@@ -256,7 +256,10 @@ const GAMES=[
   {"id": "trading", "cat": "brain", "icon": "💎", "name": "Търговия със селяни", "desc": "Пазарувай с изумруди: смятай цени, ресто и най-изгодната сделка", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "spleef", "cat": "action", "icon": "❄️", "name": "Спийф", "desc": "Счупи снега под враговете, преди те да счупят твоя", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "orelines", "cat": "puzzle", "icon": "⛏️", "name": "Рудни линии", "desc": "Мести рудите и нареждай по 5 еднакви в линия", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "mobhouse", "cat": "brain", "icon": "🏠", "name": "Колко са в къщата?", "desc": "Мобове влизат и излизат — запомни колко са вътре", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "mobhouse", "cat": "brain", "icon": "🏠", "name": "Колко са в къщата?", "desc": "Мобове влизат и излизат — запомни колко са вътре", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "walljump", "cat": "action", "icon": "🧗", "name": "Стенен скок", "desc": "Скачай между стените, избягвай кактусите и прилепите", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "trappig", "cat": "puzzle", "icon": "🐷", "name": "Огради прасето", "desc": "Слагай огради, за да не избяга прасето", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "mobecho", "cat": "brain", "icon": "🔁", "name": "Ехо от мобове", "desc": "Същият ли е мобът като преди 1, 2 или 3 хода?", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Огради прасето</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐷 Огради прасето</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 275. Огради прасето
+const TP_N=11,TP_S=28,TP_X=79,TP_Y=40;
+A.add({id:'trappig',cat:'puzzle',icon:'🐷',name:'Огради прасето',desc:'Слагай огради, за да не избяга прасето',
+  help:'Клик / докосване върху тревата — слагаш ограда. След всеки твой ход прасето прави крачка към края на ливадата. Ако стигне ръба — бяга! Затвори го отвсякъде. С клавиатура: стрелки движат рамката, Space / Enter слага ограда.',
+  start(g){g.lvl=1;g.cx=5;g.cy=4;this.newLvl(g);},
+  newLvl(g){g.f=[];for(let y=0;y<TP_N;y++){g.f.push(new Array(TP_N).fill(0));}g.p=[5,5];g.moves=0;g.msg='';g.wait=0;g.won=0;
+    let n=Math.max(4,13-g.lvl);while(n>0){const x=A.ri(0,TP_N-1),y=A.ri(0,TP_N-1);if(g.f[y][x]||Math.abs(x-5)+Math.abs(y-5)<2)continue;g.f[y][x]=1;n--;}},
+  nb(x,y){const d=y%2?[[0,-1],[1,-1],[-1,0],[1,0],[0,1],[1,1]]:[[-1,-1],[0,-1],[-1,0],[1,0],[-1,1],[0,1]];return d.map(e=>[x+e[0],y+e[1]]);},
+  inside(x,y){return x>=0&&y>=0&&x<TP_N&&y<TP_N;},
+  edge(x,y){return x===0||y===0||x===TP_N-1||y===TP_N-1;},
+  free(g,x,y){return this.inside(x,y)&&!g.f[y][x]&&!(g.p[0]===x&&g.p[1]===y);},
+  path(g){const [sx,sy]=g.p,prev={},q=[[sx,sy]],k=(x,y)=>x+','+y;prev[k(sx,sy)]=null;
+    const ends=[];let found=-1;
+    for(let i=0;i<q.length;i++){const [x,y]=q[i],d=prev[k(x,y)];const depth=d===null?0:d[2]+1;
+      if(found>=0&&depth>found)break;
+      if(this.edge(x,y)&&!(x===sx&&y===sy)){found=depth;ends.push([x,y]);continue;}
+      for(const [nx,ny] of A.shuffle(this.nb(x,y)))if(this.free(g,nx,ny)&&!(k(nx,ny) in prev)){prev[k(nx,ny)]=[x,y,depth];q.push([nx,ny]);}}
+    if(!ends.length)return null;let c2=A.pick(ends);while(true){const pr=prev[k(c2[0],c2[1])];if(pr[0]===sx&&pr[1]===sy)return c2;c2=[pr[0],pr[1]];}},
+  place(g,x,y){if(g.wait>0||!this.free(g,x,y))return;g.f[y][x]=1;g.moves++;A.beep(400,.05,'square');
+    const opts=this.nb(...g.p).filter(([a,b])=>this.free(g,a,b));
+    if(!opts.length){g.won=1;const pts=Math.max(5,40-g.moves*2);g.score+=pts;g.msg='Хванато! +'+pts+' точки';g.wait=1.6;A.tune([660,880,1100]);return;}
+    if(this.edge(...g.p)){g.esc=1;g.msg='Прасето избяга!';g.wait=1.3;A.tune([400,300,200]);return;}
+    const st=this.path(g);g.p=st||A.pick(opts);if(!st)g.msg='Прасето е в капан...';},
+  key(g,k){const m={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(m){g.cx=A.clamp(g.cx+m[0],0,TP_N-1);g.cy=A.clamp(g.cy+m[1],0,TP_N-1);}else if(k==='Space'||k==='Enter')this.place(g,g.cx,g.cy);},
+  cell(mx,my){const y=Math.floor((my-TP_Y)/TP_S);if(y<0||y>=TP_N)return null;const x=Math.floor((mx-TP_X-(y%2?TP_S/2:0))/TP_S);return this.inside(x,y)?[x,y]:null;},
+  move(g,mx,my){const p=this.cell(mx,my);if(p){g.cx=p[0];g.cy=p[1];}},
+  click(g,mx,my){const p=this.cell(mx,my);if(p){g.cx=p[0];g.cy=p[1];this.place(g,p[0],p[1]);}},
+  update(g,dt){if(g.wait>0){g.wait-=dt;if(g.wait<=0){if(g.esc)return A.over(g,'Прасето избяга! Ниво '+g.lvl);g.lvl++;this.newLvl(g);}}},
+  draw(g){A.bg('#2e5a22');
+    for(let y=0;y<TP_N;y++)for(let x=0;x<TP_N;x++){const px=TP_X+x*TP_S+(y%2?TP_S/2:0),py=TP_Y+y*TP_S;
+      A.block(px,py,TP_S,this.edge(x,y)?'#6fb04a':((x+y)%2?C.grass:'#62a843'));
+      if(g.f[y][x]){c.fillStyle='#7a5230';c.fillRect(px+4,py+3,5,22);c.fillRect(px+19,py+3,5,22);c.fillStyle=C.wood;c.fillRect(px+2,py+8,24,4);c.fillRect(px+2,py+17,24,4);}
+      if(x===g.cx&&y===g.cy&&!g.wait){c.strokeStyle='#ffd54f';c.lineWidth=2;c.strokeRect(px+1,py+1,TP_S-2,TP_S-2);}}
+    const [x,y]=g.p,px=TP_X+x*TP_S+(y%2?TP_S/2:0)+3,py=TP_Y+y*TP_S+5,b=Math.sin(g.t*8)*1.5;
+    if(!g.esc||g.wait>.9){A.block(px,py+4+b,18,'#f0a0b0',14);A.block(px+12,py+b,12,'#f4b0c0',12);c.fillStyle='#d77a90';c.fillRect(px+19,py+5+b,5,4);c.fillStyle='#000';c.fillRect(px+16,py+2+b,2,2);}
+    c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,0,480,30);A.txt('Ниво '+g.lvl,8,15,14,'#ffd54f');A.txt('Огради: '+g.moves,472,15,14,'#fff','right');
+    if(g.msg)A.txt(g.msg,240,15,14,g.won?'#c8f7c5':g.esc?'#ffccbc':'#fff','center');}
+});
+</script>
+</body>
+</html>

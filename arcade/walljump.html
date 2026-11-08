@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стенен скок</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧗 Стенен скок</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 274. Стенен скок
+A.add({id:'walljump',cat:'action',icon:'🧗',name:'Стенен скок',desc:'Скачай между стените, избягвай кактусите и прилепите',
+  help:'Space / клик / докосване — скок на другата стена (или ← → за избор на стена). Избягвай кактусите по стените и прилепите в средата. Златото дава +3. Колкото по-нагоре, толкова по-бързо!',
+  start(g){g.side=0;g.h=0;g.air=0;g.gold=0;g.obs=[];g.bats=[];g.golds=[];g.ny=320;g.ls=1;g.parts=[];},
+  px(g){const L=80,R=380;if(g.air<=0)return g.side?R:L;const k=1-g.air/.26,a=g.side?R:L,b=g.side?L:R;return a+(b-a)*k;},
+  jump(g,to){if(g.air>0)return;if(to===undefined)to=1-g.side;if(to===g.side)return;g.air=.26;A.beep(520,.05,'triangle');},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.jump(g);else if(k==='ArrowLeft'||k==='KeyA')this.jump(g,0);else if(k==='ArrowRight'||k==='KeyD')this.jump(g,1);},
+  click(g){this.jump(g);},
+  spawn(g){while(g.ny<g.h+520){const s=Math.random()<.62?1-g.ls:g.ls,h=A.ri(30,70+Math.min(60,g.h/200));
+      g.obs.push({s,y:g.ny,h});g.ls=s;
+      const gap=A.ri(95,165)+Math.min(60,g.h/150);
+      if(Math.random()<.45)g.golds.push({x:A.ri(150,330),y:g.ny+h+gap/2,a:0});
+      else if(g.h>600&&Math.random()<.4)g.bats.push({x0:A.ri(170,310),y:g.ny+h+gap/2-10,p:Math.random()*6});
+      g.ny+=h+gap;}
+    g.obs=g.obs.filter(o=>o.y+o.h>g.h-200);g.golds=g.golds.filter(o=>o.y>g.h-200&&!o.got);g.bats=g.bats.filter(o=>o.y>g.h-200);},
+  update(g,dt){const v=Math.min(330,115+g.h*.028);g.h+=v*dt;this.spawn(g);
+    if(g.air>0){g.air-=dt;if(g.air<=0){g.air=0;g.side=1-g.side;const x=this.px(g)+(g.side?20:0);for(let i=0;i<6;i++)g.parts.push({x,y:250,vx:A.rnd(-60,60)*(g.side?-1:1),vy:A.rnd(-80,20),t:.4});}}
+    const x=this.px(g),me={x,y:g.h,w:20,h:26};
+    if(g.air<=0)for(const o of g.obs)if(o.s===g.side&&g.h<o.y+o.h&&g.h+26>o.y){A.tune([300,200,120]);return A.over(g,'Ох! Кактус!');}
+    for(const b of g.bats){b.x=b.x0+Math.sin(g.t*2.2+b.p)*70;if(A.hit(me,{x:b.x-12,y:b.y,w:24,h:16})){A.tune([300,200,120]);return A.over(g,'Блъсна прилеп!');}}
+    for(const o of g.golds)if(!o.got&&A.hit(me,{x:o.x-9,y:o.y-9,w:18,h:18})){o.got=1;g.gold++;A.tune([880,1175]);}
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=300*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+    g.score=Math.floor(g.h/30)+g.gold*3;},
+  sy(g,w){return 256-(w-g.h);},
+  draw(g){A.bg('#2b2f36');const o2=(g.h*.5)%40;
+    for(let y=-40;y<400;y+=40)for(let x=80;x<400;x+=40){c.fillStyle=((x/40+Math.floor((y+g.h*.5)/40))%2)?'#30353d':'#282c33';c.fillRect(x,y+o2,40,40);}
+    const o=g.h%20;for(let y=-20;y<380;y+=20)for(let x=0;x<80;x+=20){const k=Math.floor((y-o)/20);A.block(x,y+o,20,(x/20+k)%3?C.stone:'#6a6a6a');A.block(400+x,y+o,20,(x/20+k+1)%3?C.stone:'#6a6a6a');}
+    for(const b of g.obs){const y1=this.sy(g,b.y+b.h),x=b.s?384:64;for(let y=y1;y<y1+b.h;y+=16){const hh=Math.min(16,y1+b.h-y);A.block(x,y,16,'#3e9a3a',hh);c.fillStyle='#e8f5c8';c.fillRect(b.s?x-2:x+16,y+5,3,2);c.fillRect(x+6,y+2,2,2);}}
+    for(const s of g.golds){if(s.got)continue;const y=this.sy(g,s.y),bob=Math.sin(g.t*5+s.x)*3;A.block(s.x-9,y-9+bob,18,C.gold);c.fillStyle='#fff6b0';c.fillRect(s.x-5,y-5+bob,4,4);}
+    for(const b of g.bats){const y=this.sy(g,b.y+16),f=Math.sin(g.t*20)>0?-6:4;c.fillStyle='#3a2a4a';c.fillRect(b.x-14,y+4+f,10,5);c.fillRect(b.x+4,y+4+f,10,5);A.block(b.x-6,y,12,'#4a3a5a',14);c.fillStyle='#f33';c.fillRect(b.x-4,y+4,2,2);c.fillRect(b.x+2,y+4,2,2);}
+    const x=this.px(g),arc=g.air>0?-Math.sin((1-g.air/.26)*Math.PI)*18:0,y=230+arc;
+    A.block(x+2,y+12,16,'#1fa0b8',8);A.block(x+3,y+19,14,'#2b3f9a',7);A.block(x+3,y,14,'#c99a6e',13);c.fillStyle='#4a2e1a';c.fillRect(x+3,y,14,4);
+    c.fillStyle='#fff';c.fillRect(x+5,y+6,3,2);c.fillRect(x+12,y+6,3,2);c.fillStyle='#3b2bff';c.fillRect(x+6,y+6,2,2);c.fillRect(x+13,y+6,2,2);
+    g.parts.forEach(p=>{c.fillStyle='#bbb';c.fillRect(p.x,p.y,3,3);});
+    const lg=c.createLinearGradient(0,300,0,360);lg.addColorStop(0,'rgba(255,106,0,0)');lg.addColorStop(1,'rgba(255,106,0,.85)');c.fillStyle=lg;c.fillRect(0,300,480,60);
+    for(let i=0;i<24;i++){const hh=6+Math.sin(g.t*4+i)*4;c.fillStyle=i%2?C.lava:'#ffb300';c.fillRect(i*20,360-hh,20,hh);}
+    c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,0,480,26);A.txt('Височина: '+Math.floor(g.h/10)+' м',8,13,14,'#fff');A.txt('Злато: '+g.gold,472,13,14,C.gold,'right');}
+});
+</script>
+</body>
+</html>
