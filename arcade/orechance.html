@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шанс за диамант</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎲 Шанс за диамант</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 297. Шанс за диамант
+const OC_ORES=[{n:'Диамант',col:C.gem},{n:'Злато',col:C.gold},{n:'Желязо',col:C.iron},{n:'Въглища',col:C.coal},{n:'Изумруд',col:'#2fd15a'},{n:'Редстоун',col:C.red}];
+function ocGcd(a,b){return b?ocGcd(b,a%b):a;}
+function ocFr(a,b){if(a<=0)return '0';if(a>=b)return '1';const d=ocGcd(a,b);return (a/d)+'/'+(b/d);}
+function ocOre(x,y,s,col){A.block(x,y,s,'#7d7d7d');c.fillStyle=col;const u=s/6;c.fillRect(x+u,y+u,u*1.5,u*1.5);c.fillRect(x+u*3.5,y+u*2,u*1.5,u*1.5);c.fillRect(x+u*1.8,y+u*3.8,u*1.5,u*1.2);}
+A.add(Object.assign(choiceGame({time:75,bg:'#1f2a1c',
+  next(g){
+    const lv=Math.min(4,Math.floor(g.score/4)),type=A.ri(0,lv<1?1:lv<2?3:5);
+    g.dice=null;g.type=type;
+    if(type===4){ // зар
+      const ev=A.pick([['число, по-голямо от ',k=>6-k,[2,3,4,5]],['число, по-малко от ',k=>k-1,[2,3,4,5,6]],['точно ',()=>1,[1,2,3,4,5,6]],['четно число',()=>3,[0]],['кратно на 3',()=>2,[0]]]);
+      const k=A.pick(ev[2]);g.q='Хвърляш зар. Шанс за '+ev[0]+(k?k:'')+'?';g.dice=k||A.ri(1,6);
+      g.ans=ocFr(ev[1](k),6);g.opts=opts4(g.ans,()=>A.pick([ocFr(A.ri(1,5),6),ocFr(A.ri(1,5),A.ri(2,10)),ocFr(A.ri(1,3),A.ri(4,12))]));return;}
+    // сандък с руди
+    let ores,cnt;
+    do{ores=A.shuffle(OC_ORES.slice()).slice(0,type===1||type===2?4:A.ri(2,lv<2?3:4));cnt=ores.map(()=>A.ri(1,lv<2?5:7));}
+    while(cnt.reduce((a,b)=>a+b,0)>20||((type===1||type===2)&&cnt.filter(v=>v===(type===1?Math.max:Math.min)(...cnt)).length>1));
+    g.ores=ores;g.cnt=cnt;const tot=cnt.reduce((a,b)=>a+b,0);
+    g.bag=A.shuffle(cnt.flatMap((n,i)=>Array(n).fill(i)));
+    if(type===1||type===2){const v=(type===1?Math.max:Math.min)(...cnt);g.q=type===1?'Кое е НАЙ-вероятно да изтеглиш?':'Кое е НАЙ-МАЛКО вероятно да изтеглиш?';
+      g.ans=ores[cnt.indexOf(v)].n;g.opts=A.shuffle(ores.map(o=>o.n));return;}
+    const i=A.ri(0,ores.length-1),n=cnt[i];
+    if(type===3||type===5){g.q='Шанс да НЕ изтеглиш '+ores[i].n+'?';g.ans=ocFr(tot-n,tot);}
+    else{g.q='Шанс да изтеглиш '+ores[i].n+'?';g.ans=ocFr(n,tot);}
+    g.opts=opts4(g.ans,()=>A.pick([ocFr(n,tot),ocFr(tot-n,tot),ocFr(n,tot-n||1),ocFr(A.pick(cnt),tot),ocFr(n+1,tot),ocFr(1,tot),ocFr(A.ri(1,tot-1),tot)]));
+    while(g.opts.length<4){const f=ocFr(A.ri(1,9),A.ri(10,20));if(!g.opts.includes(f))g.opts.push(f);}
+  },
+  pic(g){A.txt(g.q,240,40,g.q.length>34?14:17,'#fff','center');
+    if(g.dice){A.block(200,80,80,'#f2f2f2');c.fillStyle='#222';const pip={1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],4:[[0,0],[2,0],[0,2],[2,2]],5:[[0,0],[2,0],[1,1],[0,2],[2,2]],6:[[0,0],[2,0],[0,1],[2,1],[0,2],[2,2]]}[g.dice];
+      for(const [x,y] of pip)c.fillRect(212+x*22,92+y*22,12,12);A.txt('1  2  3  4  5  6 — всички са еднакво вероятни',240,195,13,'#b9c6d6','center');return;}
+    // сандък
+    A.block(60,62,360,'#8a5a2a',128);c.fillStyle='#4a2e14';c.fillRect(66,68,348,116);
+    g.bag.forEach((o,k)=>ocOre(72+(k%10)*34,74+Math.floor(k/10)*36,30,g.ores[o].col));
+    A.txt('Тегли една руда напосоки от сандъка:',240,202,12,'#b9c6d6','center');
+    const w=480/g.ores.length;g.ores.forEach((o,i)=>{ocOre(i*w+w/2-46,214,22,o.col);A.txt(o.n,i*w+w/2-20,225,12,'#fff');});
+  }
+}),{id:'orechance',cat:'brain',icon:'🎲',name:'Шанс за диамант',desc:'Вероятност с руди и зар: какъв е шансът да изтеглиш диамант от сандъка?',
+  help:'Преброй рудите в сандъка и избери верния шанс (дроб) с 1–4 или с клик / докосване. Шанс = желани / всички. „Да НЕ изтеглиш“ = 1 − шанса. 75 секунди — колкото повече верни, толкова по-трудни въпроси.'}));
+</script>
+</body>
+</html>

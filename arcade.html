@@ -277,7 +277,10 @@ const GAMES=[
   {"id": "stacks", "cat": "brain", "icon": "📦", "name": "Стакове по 64", "desc": "Сметки с инвентара: колко са стаковете, колко блока остават и колко слота трябват", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "dragonfight", "cat": "action", "icon": "🐉", "name": "Битка с дракона", "desc": "В Края: разбий кристалите на стълбовете и свали Ендър дракона с лъка", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "torchlight", "cat": "puzzle", "icon": "🔥", "name": "Факли срещу мобове", "desc": "Освети цялата пещера с малко факли, за да не се появяват мобове в тъмното", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "nethercoords", "cat": "brain", "icon": "🟪", "name": "Портал към Недъра", "desc": "1 блок в Недъра = 8 блока в обикновения свят: смятай къде да строиш порталите", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "nethercoords", "cat": "brain", "icon": "🟪", "name": "Портал към Недъра", "desc": "1 блок в Недъра = 8 блока в обикновения свят: смятай къде да строиш порталите", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "phantoms", "cat": "action", "icon": "👻", "name": "Фантоми в нощта", "desc": "Стреляй с лъка по фантомите, които пикират към теб през нощта", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "redstone", "cat": "puzzle", "icon": "🔴", "name": "Червен прах", "desc": "Прокарай червен прах от блока до всички лампи — прахът е ограничен, а сигналът отслабва", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "orechance", "cat": "brain", "icon": "🎲", "name": "Шанс за диамант", "desc": "Вероятност с руди и зар: какъв е шансът да изтеглиш диамант от сандъка?", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Червен прах</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔴 Червен прах</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 296. Червен прах
+const RS_W=12,RS_H=8,RS_S=36,RS_X=24,RS_Y=50,RS_D=[[1,0],[-1,0],[0,1],[0,-1]];
+A.add({id:'redstone',cat:'puzzle',icon:'🔴',name:'Червен прах',desc:'Прокарай червен прах от блока до всички лампи с ограничен брой прах',
+  help:'Клик / докосване или влачене — сложи или махни прах. Стрелки + Space — същото с клавиатурата. Сигналът отслабва с 1 на всеки блок прах (макс. 15). Светни всички лампи! R — изчисти, N — нов пъзел (−15 сек).',
+  start(g){g.lvl=0;g.time=120;g.cx=0;g.cy=0;g.win=0;this.gen(g);},
+  inb(x,y){return x>=0&&y>=0&&x<RS_W&&y<RS_H;},
+  gen(g){g.lvl++;
+    for(let tries=0;tries<300;tries++){
+      const m=[];for(let y=0;y<RS_H;y++){m.push([]);for(let x=0;x<RS_W;x++)m[y].push(Math.random()<.2?1:0);}
+      const sx=A.ri(1,RS_W-2),sy=A.ri(1,RS_H-2);m[sy][sx]=2;
+      const n=Math.min(5,2+Math.floor(g.lvl/2)),lamps=[];
+      for(let k=0;k<200&&lamps.length<n;k++){const x=A.ri(0,RS_W-1),y=A.ri(0,RS_H-1);
+        if(m[y][x]===0&&Math.abs(x-sx)+Math.abs(y-sy)>=3&&!lamps.some(l=>Math.abs(l[0]-x)+Math.abs(l[1]-y)<3)){m[y][x]=3;lamps.push([x,y]);}}
+      if(lamps.length<n)continue;
+      // алчно дърво: свързваме лампите една по една към вече положения прах
+      const dust=new Set(),tree=[[sx,sy]];let ok=true;
+      const left=lamps.slice();
+      while(left.length){
+        // BFS от дървото през празни клетки
+        const prev={},q=[];for(const t of tree){prev[t[0]+','+t[1]]=null;q.push(t);}
+        let found=null;
+        for(let i=0;i<q.length&&!found;i++){const [x,y]=q[i];
+          for(const [dx,dy] of RS_D){const nx=x+dx,ny=y+dy;if(!this.inb(nx,ny))continue;
+            if(m[ny][nx]===3){const li=left.findIndex(l=>l[0]===nx&&l[1]===ny);if(li>=0){found=[x,y,li];break;}}
+            const key=nx+','+ny;if(m[ny][nx]!==0||key in prev)continue;prev[key]=[x,y];q.push([nx,ny]);}}
+        if(!found){ok=false;break;}
+        let cur=[found[0],found[1]];while(cur){const key=cur[0]+','+cur[1];if(m[cur[1]][cur[0]]===0&&!dust.has(key)){dust.add(key);tree.push(cur);}cur=prev[key];}
+        left.splice(found[2],1);
+      }
+      if(!ok||dust.size<3)continue;
+      g.m=m;g.lamps=lamps;g.src=[sx,sy];g.budget=dust.size;g.sol=[...dust];g.dust=new Set();
+      if(this.power(g,dust).lit<lamps.length)continue;
+      this.power(g,g.dust);return;
+    }
+    g.lvl--;this.gen(g);
+  },
+  power(g,dust){const P={},q=[];
+    for(const [dx,dy] of RS_D){const k=(g.src[0]+dx)+','+(g.src[1]+dy);if(dust.has(k)){P[k]=15;q.push([g.src[0]+dx,g.src[1]+dy]);}}
+    for(let i=0;i<q.length;i++){const [x,y]=q[i],s=P[x+','+y];if(s<=1)continue;
+      for(const [dx,dy] of RS_D){const k=(x+dx)+','+(y+dy);if(dust.has(k)&&!(k in P)){P[k]=s-1;q.push([x+dx,y+dy]);}}}
+    let lit=0;const on=g.lamps.map(([x,y])=>{const v=RS_D.some(([dx,dy])=>{const nx=x+dx,ny=y+dy;return (nx===g.src[0]&&ny===g.src[1])||(P[nx+','+ny]>0);});if(v)lit++;return v;});
+    if(dust===g.dust){g.P=P;g.on=on;}return {lit};},
+  set(g,x,y,add){if(!this.inb(x,y)||g.m[y][x]!==0||g.win>0)return;const k=x+','+y;
+    if(add&&!g.dust.has(k)){if(g.dust.size>=g.budget){A.beep(150,.1,'sawtooth');return;}g.dust.add(k);A.beep(400+g.dust.size*20,.03);}
+    else if(!add&&g.dust.has(k)){g.dust.delete(k);A.beep(250,.03);}
+    else return;
+    if(this.power(g,g.dust).lit===g.lamps.length){g.win=1.2;g.score+=g.lamps.length+Math.max(0,g.budget-g.dust.size);g.time+=20;A.tune([523,659,784,1046]);}},
+  cell(mx,my){return [Math.floor((mx-RS_X)/RS_S),Math.floor((my-RS_Y)/RS_S)];},
+  click(g,mx,my,b){const [x,y]=this.cell(mx,my);if(!this.inb(x,y))return;g.cx=x;g.cy=y;g.mode=b===2?false:!g.dust.has(x+','+y);this.set(g,x,y,g.mode);},
+  move(g,mx,my){if(!A.mouse.down||g.mode===undefined)return;const [x,y]=this.cell(mx,my);this.set(g,x,y,g.mode);},
+  release(g){g.mode=undefined;},
+  key(g,k){const d={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(d){g.cx=A.clamp(g.cx+d[0],0,RS_W-1);g.cy=A.clamp(g.cy+d[1],0,RS_H-1);}
+    else if(k==='Space'||k==='Enter')this.set(g,g.cx,g.cy,!g.dust.has(g.cx+','+g.cy));
+    else if(k==='KeyR'&&!g.win){g.dust.clear();this.power(g,g.dust);}
+    else if(k==='KeyN'&&!g.win){g.time-=15;g.lvl--;this.gen(g);}},
+  update(g,dt){if(g.win>0){g.win-=dt;if(g.win<=0){g.win=0;this.gen(g);}return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Ниво '+g.lvl);},
+  draw(g){A.bg('#2a1d14');
+    for(let y=0;y<RS_H;y++)for(let x=0;x<RS_W;x++){const px=RS_X+x*RS_S,py=RS_Y+y*RS_S,v=g.m[y][x];
+      if(v===1)A.block(px,py,RS_S,'#3a2f4f');
+      else{c.fillStyle=(x+y)%2?'#8a8a8a':'#828282';c.fillRect(px,py,RS_S,RS_S);}
+      if(v===2){A.block(px+2,py+2,RS_S-4,'#c41818');c.fillStyle='#ff6060';for(let i=0;i<5;i++)c.fillRect(px+6+(i*7)%22,py+6+(i*11)%22,4,4);}
+      if(v===3){const i=g.lamps.findIndex(l=>l[0]===x&&l[1]===y),on=g.on&&g.on[i];
+        if(on){c.fillStyle='rgba(255,220,100,.35)';c.fillRect(px-6,py-6,RS_S+12,RS_S+12);}
+        A.block(px+2,py+2,RS_S-4,on?'#ffd860':'#5a3a22');c.fillStyle=on?'#fff3b0':'#3a2414';c.fillRect(px+10,py+10,RS_S-20,RS_S-20);}
+      const k=x+','+y;if(g.dust.has(k)){const s=g.P[k]||0,col=s?'rgb('+(110+s*9)+','+(s*3)+','+(s*2)+')':'#4a1010';
+        const cx=px+RS_S/2,cy=py+RS_S/2;c.fillStyle=col;c.fillRect(cx-5,cy-5,10,10);
+        for(const [dx,dy] of RS_D){const nx=x+dx,ny=y+dy;if(!this.inb(nx,ny))continue;const nv=g.m[ny][nx];
+          if(g.dust.has(nx+','+ny)||nv===2||nv===3){c.fillRect(dx>0?cx:dx<0?px:cx-2,dy>0?cy:dy<0?py:cy-2,dx?RS_S/2:4,dy?RS_S/2:4);}}
+        if(s)A.txt(s,px+RS_S-8,py+8,9,'#ffb0b0','center');}
+    }
+    c.strokeStyle='#ffd54f';c.lineWidth=2;c.strokeRect(RS_X+g.cx*RS_S+1,RS_Y+g.cy*RS_S+1,RS_S-2,RS_S-2);
+    A.txt('⏱ '+Math.ceil(g.time),10,20,15);A.txt('Ниво '+g.lvl,180,20,15,'#ffd54f','center');
+    A.txt('Прах: '+g.dust.size+' / '+g.budget,470,20,15,g.dust.size>=g.budget?'#ff7070':'#fff','right');
+    const lit=g.on?g.on.filter(Boolean).length:0;A.txt('💡 '+lit+'/'+g.lamps.length,300,20,15,'#ffe080','center');
+    if(g.win>0){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,150,480,60);A.txt('Всички лампи светят! +20 сек',240,180,22,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

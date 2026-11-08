@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**304 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 294 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**307 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 297 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-304-5aa13a)
+![Games](https://img.shields.io/badge/games-307-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 294 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 297 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -439,8 +439,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 292 | 🐉 Ender Dragon Fight (Битка с дракона) | [`dragonfight.html`](arcade/dragonfight.html) | Boss battle in the End: run left/right and shoot arrows up, smash the healing End Crystals on the obsidian pillars, dodge purple fireballs and bring down the dragon — each round has more crystals and a faster dragon |
 | 293 | 🔥 Torches vs Mobs (Факли срещу мобове) | [`torchlight.html`](arcade/torchlight.html) | Light-level puzzle: place a limited number of torches (light spreads 3 blocks and goes around stone) so no dark tile is left for mobs to spawn; spare torches give bonus points and time |
 | 294 | 🟪 Nether Portal (Портал към Недъра) | [`nethercoords.html`](arcade/nethercoords.html) | Nether maths: 1 Nether block = 8 Overworld blocks — divide or multiply by 8 to place linked portals, with distances, negative coordinates and rounding down; on-screen keypad for touch |
+| 295 | 👻 Phantoms at Night (Фантоми в нощта) | [`phantoms.html`](arcade/phantoms.html) | Night-sky shooter: move left/right and fire arrows up at phantoms that glide and then dive-bomb you; diving ones are worth double, catch falling membranes for bonus points, 3 hearts |
+| 296 | 🔴 Redstone Dust (Червен прах) | [`redstone.html`](arcade/redstone.html) | Wiring puzzle: draw redstone dust from the redstone block to every lamp with a limited amount of dust; the signal weakens by 1 per block (max 15) and walls block the way; solve fast for bonus time |
+| 297 | 🎲 Diamond Chance (Шанс за диамант) | [`orechance.html`](arcade/orechance.html) | Probability quiz: count the ores in a chest and pick the chance of drawing one (as a fraction), the most/least likely ore, the chance of NOT drawing it, and dice questions; gets harder as you score |
 
-All 294 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 297 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -468,8 +471,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–293
-│   └── nethercoords.html   # 294. Nether Portal
+│   ├── ...                 # games 51–296
+│   └── orechance.html      # 297. Diamond Chance
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
