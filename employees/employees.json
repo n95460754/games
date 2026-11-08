@@ -1,0 +1,43 @@
+{
+  "ceo": {
+    "id": "CEO-Bot",
+    "name": "CEO-Bot",
+    "role": "Chief Executive Officer",
+    "department": "Executive"
+  },
+  "employees": [
+    {
+      "id": "EMP-0001",
+      "name": "Spark Fox",
+      "level": "Intern",
+      "role": "Pixel Artist",
+      "role_bg": "Пиксел артист",
+      "department": "Design",
+      "manager": "UX-UI-Bot",
+      "reports_to_ceo": "CEO-Bot",
+      "hired_at": "2026-11-08T22:54:30.831Z"
+    },
+    {
+      "id": "EMP-0002",
+      "name": "Rogue Miner",
+      "level": "Senior",
+      "role": "Community Moderator",
+      "role_bg": "Модератор",
+      "department": "Community",
+      "manager": "Community-Manager-Bot",
+      "reports_to_ceo": "CEO-Bot",
+      "hired_at": "2026-11-08T22:54:30.842Z"
+    },
+    {
+      "id": "EMP-0003",
+      "name": "Neon Fox",
+      "level": "Junior",
+      "role": "Bug Hunter",
+      "role_bg": "Ловец на бъгове",
+      "department": "Quality",
+      "manager": "QA-Tester-Bot",
+      "reports_to_ceo": "CEO-Bot",
+      "hired_at": "2026-11-08T22:54:30.843Z"
+    }
+  ]
+}

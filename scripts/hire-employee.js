@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+// HR-Bot: наема ЕДИН нов служител при всяко пускане и го записва в регистъра.
+// Служителите са записи в employees/employees.json (НЕ нови workflow файлове),
+// за да не се множат scheduled runs и да не се горят GitHub Actions минути.
+// Usage: node scripts/hire-employee.js [count]
+
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.join(__dirname, '..');
+const DB = path.join(ROOT, 'employees', 'employees.json');
+const CHART = path.join(ROOT, 'EMPLOYEES.md');
+const MAX_EMPLOYEES = parseInt(process.env.MAX_EMPLOYEES || '500', 10);
+
+const CEO = { id: 'CEO-Bot', name: 'CEO-Bot', role: 'Chief Executive Officer', department: 'Executive' };
+
+// Отдели -> мениджър (съществуващите ботове в .github/workflows) + длъжности [EN, BG]
+const DEPARTMENTS = {
+  Engineering: { head: 'Dev-Bot', roles: [['Game Developer', 'Разработчик на игри'], ['Engine Programmer', 'Програмист на енджина'], ['WebGL Specialist', 'WebGL специалист']] },
+  Quality: { head: 'QA-Tester-Bot', roles: [['QA Tester', 'Тестер'], ['Bug Hunter', 'Ловец на бъгове'], ['Speedrun Tester', 'Спийдрън тестер']] },
+  Design: { head: 'UX-UI-Bot', roles: [['Level Designer', 'Дизайнер на нива'], ['Pixel Artist', 'Пиксел артист'], ['UI Animator', 'UI аниматор']] },
+  Audio: { head: 'Sound-Engineer-Bot', roles: [['Sound Designer', 'Звуков дизайнер'], ['Chiptune Composer', 'Чиптюн композитор']] },
+  Security: { head: 'SecOps-Bot', roles: [['Security Analyst', 'Анализатор по сигурност'], ['Anti-Cheat Engineer', 'Анти-чийт инженер']] },
+  Operations: { head: 'DevOps-Master-Bot', roles: [['DevOps Engineer', 'DevOps инженер'], ['Performance Optimizer', 'Оптимизатор на FPS']] },
+  Community: { head: 'Community-Manager-Bot', roles: [['Community Moderator', 'Модератор'], ['Translator', 'Преводач'], ['Tutorial Writer', 'Автор на туториали']] },
+};
+
+const FIRST = ['Byte', 'Pixel', 'Nova', 'Turbo', 'Glitch', 'Echo', 'Vector', 'Blaze', 'Quark', 'Zen', 'Rogue', 'Frost', 'Neon', 'Orbit', 'Spark', 'Delta'];
+const LAST = ['Smith', 'Runner', 'Forge', 'Walker', 'Stone', 'Storm', 'Knight', 'Fox', 'Volt', 'Hawk', 'Miner', 'Coder'];
+const LEVELS = ['Intern', 'Junior', 'Mid', 'Senior', 'Lead'];
+
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+function load() {
+  try { return JSON.parse(fs.readFileSync(DB, 'utf8')); }
+  catch { return { ceo: CEO, employees: [] }; }
+}
+
+function hire(db) {
+  const n = db.employees.length + 1;
+  const department = pick(Object.keys(DEPARTMENTS));
+  const dept = DEPARTMENTS[department];
+  const [roleEn, roleBg] = pick(dept.roles);
+  const emp = {
+    id: `EMP-${String(n).padStart(4, '0')}`,
+    name: `${pick(FIRST)} ${pick(LAST)}`,
+    level: pick(LEVELS),
+    role: roleEn,
+    role_bg: roleBg,
+    department,
+    manager: dept.head,
+    reports_to_ceo: dept.head !== CEO.id ? CEO.id : null,
+    hired_at: new Date().toISOString(),
+  };
+  db.employees.push(emp);
+  return emp;
+}
+
+function renderChart(db) {
+  const byDept = {};
+  for (const e of db.employees) (byDept[e.department] ||= []).push(e);
+  let md = `# 🏢 Org Chart / Структура на компанията\n\n`;
+  md += `> Автоматично генерирано от HR-Bot (\`scripts/hire-employee.js\`). Не редактирай ръчно.\n\n`;
+  md += `**👔 ${CEO.name}** — ${CEO.role}\n\n`;
+  md += `Общо служители: **${db.employees.length}** / ${MAX_EMPLOYEES}\n\n`;
+  for (const dep of Object.keys(DEPARTMENTS)) {
+    const list = byDept[dep] || [];
+    md += `## ${dep} — мениджър: ${DEPARTMENTS[dep].head} (→ ${CEO.name}) · ${list.length} души\n\n`;
+    if (!list.length) { md += `_Още няма наети._\n\n`; continue; }
+    md += `| ID | Име | Ниво | Длъжност | Нает |\n|---|---|---|---|---|\n`;
+    for (const e of list.slice(-50)) {
+      md += `| ${e.id} | ${e.name} | ${e.level} | ${e.role} / ${e.role_bg} | ${e.hired_at.slice(0, 16).replace('T', ' ')} UTC |\n`;
+    }
+    if (list.length > 50) md += `\n_…показани са последните 50 от ${list.length}._\n`;
+    md += `\n`;
+  }
+  return md;
+}
+
+const count = Math.max(1, parseInt(process.argv[2] || '1', 10));
+const db = load();
+let hired = 0;
+for (let i = 0; i < count; i++) {
+  if (db.employees.length >= MAX_EMPLOYEES) {
+    console.log(`🛑 Лимитът от ${MAX_EMPLOYEES} служители е достигнат. HR-Bot спира да наема.`);
+    break;
+  }
+  const e = hire(db);
+  hired++;
+  console.log(`✅ Нает: ${e.id} ${e.name} — ${e.level} ${e.role} (${e.department}, шеф: ${e.manager})`);
+}
+fs.mkdirSync(path.dirname(DB), { recursive: true });
+fs.writeFileSync(DB, JSON.stringify(db, null, 2) + '\n');
+fs.writeFileSync(CHART, renderChart(db));
+console.log(`👥 Общо: ${db.employees.length}. Нови: ${hired}.`);
