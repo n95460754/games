@@ -1,16 +1,21 @@
 name: Check Games
 
-# Opens every game in a headless browser and looks for JS errors, missing files,
-# broken links and arcade games missing from the menu. If something is wrong it
-# opens (or updates) a GitHub issue labeled "auto-check". The hourly Claude Code
-# fixer reads that issue, fixes the problem and opens a pull request.
+# Browser-check the collection on changes, pull requests and a daily schedule.
+# On the main branch, report failures through one auto-check issue.
 
 on:
   push:
     branches: [main]
     paths-ignore:
-      - 'games/**'      # auto games are pushed every 5 min; they come from tested templates
+      - 'games/**'      # auto games are generated from the existing templates
       - 'README.md'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'games/**'
+      - 'README.md'
+  schedule:
+    - cron: '17 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -18,13 +23,13 @@ permissions:
   issues: write
 
 concurrency:
-  group: check-games
+  group: check-games-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -40,7 +45,9 @@ jobs:
         continue-on-error: true
         run: node scripts/check-games.js
 
+      # Pull-request runs (including forks) stay read-only and report in the run log.
       - name: Open, update or close the auto-check issue
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -48,7 +55,7 @@ jobs:
           num=$(gh issue list --label auto-check --state open --json number --jq '.[0].number')
           run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           if [ "${{ steps.check.outcome }}" = "failure" ]; then
-            printf '%s\n\nRun: %s\n\n_Claude Code checks this issue every hour and opens a pull request with a fix._\n' "$(cat check-report.md)" "$run_url" > body.md
+            printf '%s\n\nRun: %s\n\n_Review the report and fix the affected game files._\n' "$(cat check-report.md)" "$run_url" > body.md
             if [ -n "$num" ]; then gh issue edit "$num" --body-file body.md
             else gh issue create --title "🔍 Game check found problems" --label auto-check --body-file body.md; fi
           elif [ -n "$num" ]; then
