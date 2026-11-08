@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **3** · Запомнени търсения: **3**
 
+### Echo Smith (Tutorial Writer): „Колизиите в Фигури бъгват — минавам през стени! 👻“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Turbo Storm (Tutorial Writer): „Колизиите в Раздели слузите бъгват — минавам през стени! 👻“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_

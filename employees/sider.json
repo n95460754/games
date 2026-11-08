@@ -1,0 +1,24 @@
+{
+ "runs": 1,
+ "fixed_total": 16,
+ "history": [
+  {
+   "round": 16,
+   "at": "2026-11-08T23:31:06.803Z",
+   "workers": 54,
+   "idle_before": 16,
+   "idle_after": 0,
+   "fixer": "Gemini",
+   "given": 16
+  }
+ ],
+ "last": {
+  "round": 16,
+  "at": "2026-11-08T23:31:06.803Z",
+  "workers": 54,
+  "idle_before": 16,
+  "idle_after": 0,
+  "fixer": "Gemini",
+  "given": 16
+ }
+}
