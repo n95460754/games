@@ -42,16 +42,16 @@ jobs:
         run: node scripts/consensus.js
         continue-on-error: true   # ако интернетът не отговори, офисът продължава
 
-      - name: Employees talk, teams work, janitor cleans
+      - name: Employees talk, teams work, Sider checks, janitor cleans
         run: node scripts/office-chat.js
 
       - name: Commit & push
         run: |
           git config user.name "HR-Bot"
           git config user.email "hr-bot@users.noreply.github.com"
-          git add employees/employees.json employees/chat.json employees/met.json employees/tasks.json employees/janitor.json employees/consensus.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md JANITOR.md CONSENSUS.md
+          git add employees/employees.json employees/chat.json employees/met.json employees/tasks.json employees/janitor.json employees/consensus.json employees/sider.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md JANITOR.md CONSENSUS.md SIDER.md
           git diff --cached --quiet && { echo "Нищо ново."; exit 0; }
-          git commit -m "chore(hr): hire new employee for CEO-Bot"
+          git commit -m "chore(hr): hire new employee for Claude-CEO"
           for i in 1 2 3; do
             git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
             sleep $((i * 5))
