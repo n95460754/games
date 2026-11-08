@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков волейбол</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏐 Блоков волейбол</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 262. Блоков волейбол
+const GR=330,NX=240,NT=262,BR=10,PR=34;
+A.add({id:'volley',cat:'action',icon:'🏐',name:'Блоков волейбол',desc:'Прехвърли топката през мрежата и победи робота',help:'A/D или ←/→ — движение, W/↑/Space — скок. С мишка или пръст блокчето следва показалеца, клик/докосване = скок. Не давай топката да падне на твоята страна! Роботът печели при 5 точки — колко ще вкараш ти?',
+  start(g){g.p={x:120,y:GR,vy:0};g.r={x:360,y:GR,vy:0};g.me=0;g.ai=0;g.tx=null;g.pvx=0;g.rvx=0;this.serve(g,0);},
+  serve(g,side){g.bx=side?360:120;g.by=150;g.vx=0;g.vy=0;g.wait=1;g.off=A.rnd(4,20);},
+  jump(p){if(p.y>=GR){p.vy=-470;A.beep(300,.05);}},
+  key(g,k){if(k==='KeyW'||k==='ArrowUp'||k==='Space')this.jump(g.p);if(k==='ArrowLeft'||k==='ArrowRight'||k==='KeyA'||k==='KeyD')g.tx=null;},
+  move(g,x){g.tx=x;},
+  click(g,x){g.tx=x;this.jump(g.p);},
+  phys(p,lo,hi,dt){p.vy+=1300*dt;p.y+=p.vy*dt;if(p.y>=GR){p.y=GR;p.vy=0;}p.x=A.clamp(p.x,lo,hi);},
+  hitP(g,p,pvx){const dx=g.bx-p.x,dy=g.by-p.y,d=Math.hypot(dx,dy);if(d>=PR+BR||d===0||dy>6)return;
+    const nx=dx/d,ny=dy/d;g.bx=p.x+nx*(PR+BR);g.by=p.y+ny*(PR+BR);
+    const dot=(g.vx-pvx)*nx+(g.vy-p.vy)*ny;if(dot<0){g.vx-=1.8*dot*nx;g.vy-=1.8*dot*ny;}
+    g.vx+=pvx*.3;g.vy=Math.min(g.vy,-200);const s=Math.hypot(g.vx,g.vy);if(s>560){g.vx*=560/s;g.vy*=560/s;}A.beep(520,.04);},
+  land(g){let x=g.bx,y=g.by,vx=g.vx,vy=g.vy;for(let i=0;i<150&&!(vy>0&&y>GR-PR);i++){vy+=520/60;x+=vx/60;y+=vy/60;if(x<BR){x=BR;vx=-vx;}if(x>480-BR){x=480-BR;vx=-vx;}}return x;},
+  point(g,me){if(me){g.me++;g.score=g.me;A.tune([660,880]);}else{g.ai++;A.beep(160,.25,'sawtooth');}
+    if(g.ai>=5)return A.over(g,'Роботът спечели. Ти вкара '+g.me+' точки!');this.serve(g,me?0:1);},
+  update(g,dt){const p=g.p,r=g.r;
+    let vx=0;if(A.keys.KeyA||A.keys.ArrowLeft)vx=-300;else if(A.keys.KeyD||A.keys.ArrowRight)vx=300;else if(g.tx!==null&&Math.abs(g.tx-p.x)>6)vx=Math.sign(g.tx-p.x)*300;
+    const ox=p.x;p.x+=vx*dt;this.phys(p,PR,NX-4-PR,dt);g.pvx=(p.x-ox)/dt;
+    const sp=180+Math.min(150,g.me*15);let tgt=360;
+    if(g.wait<=0){const L=this.land(g);if(L>NX)tgt=L+g.off;}else if(g.bx>NX)tgt=g.bx+g.off;
+    const ro=r.x;r.x+=A.clamp(tgt-r.x,-sp*dt,sp*dt);this.phys(r,NX+4+PR,480-PR,dt);g.rvx=(r.x-ro)/dt;
+    if(g.wait<=0&&g.bx>NX&&Math.abs(g.bx-r.x)<45&&g.by>170&&g.by<270&&g.vy>0&&Math.random()<.06+g.me*.01)this.jump(r);
+    if(g.wait>0){g.wait-=dt;return;}
+    g.vy+=520*dt;g.bx+=g.vx*dt;g.by+=g.vy*dt;
+    if(g.bx<BR){g.bx=BR;g.vx=Math.abs(g.vx);}if(g.bx>480-BR){g.bx=480-BR;g.vx=-Math.abs(g.vx);}
+    if(Math.abs(g.bx-NX)<4+BR&&g.by>NT-BR){
+      if(g.by<NT){g.by=NT-BR;g.vy=-Math.max(140,Math.abs(g.vy)*.7);if(Math.abs(g.vx)<40)g.vx=g.bx<NX?-80:80;}
+      else{const L=g.bx<NX;g.bx=L?NX-4-BR:NX+4+BR;g.vx=(L?-1:1)*Math.max(60,Math.abs(g.vx)*.8);}A.beep(250,.03);}
+    this.hitP(g,p,g.pvx);this.hitP(g,r,g.rvx);
+    if(g.by>=GR-BR)this.point(g,g.bx>NX);},
+  dome(x,y,col,bx,by){[68,60,48,30].forEach((w,i)=>A.block(x-w/2,y-(i+1)*9,w,col,9));
+    const a=Math.atan2(by-(y-24),bx-x);[-1,1].forEach(s=>{const ex=x+s*10-4;c.fillStyle='#fff';c.fillRect(ex,y-28,9,9);c.fillStyle='#000';c.fillRect(ex+2+Math.cos(a)*2,y-26+Math.sin(a)*2,5,5);});},
+  draw(g){A.bg('#8fd3ff');c.fillStyle='rgba(255,255,255,.8)';[[60,50],[300,80],[400,40]].forEach(([x,y])=>{c.fillRect(x,y,60,16);c.fillRect(x+14,y-10,30,10);});
+    for(let x=0;x<480;x+=24)A.block(x,GR,24,C.sand,30);
+    for(let y=NT;y<GR;y+=12)A.block(NX-4,y,8,'#e8e8e8',12);A.block(NX-6,NT-6,12,C.wood,6);
+    c.fillStyle='rgba(0,0,0,.2)';const sw=Math.max(6,20-(GR-g.by)/20);c.fillRect(g.bx-sw/2,GR-3,sw,4);
+    this.dome(g.p.x,g.p.y,C.grass,g.bx,g.by);this.dome(g.r.x,g.r.y,C.stone,g.bx,g.by);
+    A.block(g.bx-BR,g.by-BR,BR*2,'#fafafa');c.fillStyle='#ffd23f';c.fillRect(g.bx-BR+2,g.by-2,BR*2-4,4);c.fillStyle='#3b7bd6';c.fillRect(g.bx-2,g.by-BR+2,4,BR*2-4);
+    A.txt('Ти: '+g.me,12,16,16,'#fff');A.txt('Робот: '+g.ai+' / 5',468,16,16,'#ffd54f','right');
+    if(g.wait>0)A.txt('Готови...',240,110,22,'#fff','center');}
+});
+</script>
+</body>
+</html>

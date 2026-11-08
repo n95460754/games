@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Без повторения</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⬛ Без повторения</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 263. Без повторения
+A.add({id:'hitori',cat:'puzzle',icon:'⬛',name:'Без повторения',desc:'Зачерни блокове, така че в редовете и колоните да няма еднакви числа',help:'Хитори: зачерни блокове (клик или стрелки + Space), така че във всеки ред и колона числата да не се повтарят. Два черни блока не може да се допират отстрани, а белите трябва да са свързани. Десен клик или X = точка (сигурно бял). Червено = проблем. Всеки решен пъзел дава +60 секунди!',
+  start(g){g.time=240;g.lvl=0;g.cx=0;g.cy=0;g.msg='';this.make(g);},
+  adj(m,n,x,y){return (x>0&&m[y][x-1]===1)||(x<n-1&&m[y][x+1]===1)||(y>0&&m[y-1][x]===1)||(y<n-1&&m[y+1][x]===1);},
+  conn(m,n){let s=-1,tot=0;for(let i=0;i<n*n;i++)if(m[i/n|0][i%n]!==1){tot++;if(s<0)s=i;}if(s<0)return false;
+    const seen=new Set([s]),q=[s];while(q.length){const i=q.pop(),x=i%n,y=i/n|0;
+      for(const [a,b] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]){const j=b*n+a;if(a>=0&&b>=0&&a<n&&b<n&&!seen.has(j)&&m[b][a]!==1){seen.add(j);q.push(j);}}}
+    return seen.size===tot;},
+  make(g){const n=g.lvl<3?5:6,target=Math.round(n*n*.26);g.n=n;
+    for(let tries=0;tries<80;tries++){
+      const base=A.shuffle([...Array(n).keys()].map(i=>i+1)),rp=A.shuffle([...Array(n).keys()]),cp=A.shuffle([...Array(n).keys()]);
+      const v=[...Array(n)].map((_,y)=>[...Array(n)].map((_,x)=>base[(rp[y]+cp[x])%n])),sh=[...Array(n)].map(()=>Array(n).fill(0));let cnt=0;
+      for(const i of A.shuffle([...Array(n*n).keys()])){if(cnt>=target)break;const x=i%n,y=i/n|0;if(this.adj(sh,n,x,y))continue;sh[y][x]=1;if(!this.conn(sh,n)){sh[y][x]=0;continue;}cnt++;}
+      if(cnt<target)continue;
+      for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(sh[y][x]){const cand=[];for(let k=0;k<n;k++){if(!sh[y][k])cand.push(v[y][k]);if(!sh[k][x])cand.push(v[k][x]);}v[y][x]=A.pick(cand);}
+      g.v=v;break;}
+    g.m=[...Array(n)].map(()=>Array(n).fill(0));g.win=0;g.msg='';g.cx=Math.min(g.cx,n-1);g.cy=Math.min(g.cy,n-1);g.B=this.bad(g);},
+  bad(g){const n=g.n,v=g.v,m=g.m,B=new Set();
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=y*n+x;
+      if(m[y][x]===1){if(x+1<n&&m[y][x+1]===1){B.add(i);B.add(i+1);}if(y+1<n&&m[y+1][x]===1){B.add(i);B.add(i+n);}continue;}
+      for(let k=x+1;k<n;k++)if(m[y][k]!==1&&v[y][k]===v[y][x]){B.add(i);B.add(y*n+k);}
+      for(let k=y+1;k<n;k++)if(m[k][x]!==1&&v[k][x]===v[y][x]){B.add(i);B.add(k*n+x);}}
+    return B;},
+  set(g,x,y,val){if(g.win>0)return;g.m[y][x]=val;A.beep(val===1?260:500,.04);g.B=this.bad(g);g.msg='';
+    if(!g.B.size){if(this.conn(g.m,g.n)){g.score++;g.time+=60;g.win=1.3;A.tune([523,659,784,1047]);}else g.msg='Белите блокове трябва да са свързани!';}},
+  geo(g){const s=g.n===5?56:48;return {s,ox:(480-g.n*s)/2,oy:40+(300-g.n*s)/2};},
+  click(g,mx,my,b){const {s,ox,oy}=this.geo(g),x=Math.floor((mx-ox)/s),y=Math.floor((my-oy)/s);if(x<0||y<0||x>=g.n||y>=g.n)return;
+    g.cx=x;g.cy=y;const m=g.m[y][x];this.set(g,x,y,b===2?(m===2?0:2):(m+1)%3);},
+  key(g,k){const n=g.n;if(k==='ArrowLeft')g.cx=(g.cx+n-1)%n;else if(k==='ArrowRight')g.cx=(g.cx+1)%n;else if(k==='ArrowUp')g.cy=(g.cy+n-1)%n;else if(k==='ArrowDown')g.cy=(g.cy+1)%n;
+    else if(k==='Space'||k==='Enter'){const m=g.m[g.cy][g.cx];this.set(g,g.cx,g.cy,m===1?0:1);}
+    else if(k==='KeyX'){const m=g.m[g.cy][g.cx];this.set(g,g.cx,g.cy,m===2?0:2);}},
+  update(g,dt){if(g.win>0){g.win-=dt;if(g.win<=0){g.lvl++;this.make(g);}return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени пъзели: '+g.score);},
+  draw(g){A.bg('#2b2f3a');const {s,ox,oy}=this.geo(g),n=g.n;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const X=ox+x*s,Y=oy+y*s,m=g.m[y][x],bad=g.B.has(y*n+x);
+      if(m===1){A.block(X,Y,s,'#1b1b22');A.txt(''+g.v[y][x],X+s/2,Y+s/2,s*.4,'#555','center');if(bad){c.strokeStyle='#ff4d4d';c.lineWidth=3;c.strokeRect(X+3,Y+3,s-6,s-6);}}
+      else{A.block(X,Y,s,g.win>0?'#8bc34a':'#a8a8a8');A.txt(''+g.v[y][x],X+s/2,Y+s/2,s*.5,bad?'#ff3030':'#fff','center');if(m===2){c.fillStyle='#2ecc71';c.fillRect(X+5,Y+5,8,8);}}}
+    c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(ox+g.cx*s+1,oy+g.cy*s+1,s-2,s-2);
+    A.txt('⏱ '+Math.ceil(g.time),10,16,15);A.txt('Пъзел '+(g.lvl+1)+' · '+n+'×'+n,240,16,15,'#ffd54f','center');A.txt('Решени: '+g.score,470,16,15,'#fff','right');
+    if(g.win>0)A.txt('✔ Браво! +60 с',240,350,16,'#7cff6b','center');else if(g.msg)A.txt(g.msg,240,350,13,'#ff8a80','center');}
+});
+</script>
+</body>
+</html>

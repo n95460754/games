@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Календарни задачи</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📅 Календарни задачи</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 264. Календарни задачи
+const DNI=['понеделник','вторник','сряда','четвъртък','петък','събота','неделя'],MES=['януари','февруари','март','април','май','юни','юли','август','септември','октомври','ноември','декември'],MD=[31,28,31,30,31,30,31,31,30,31,30,31];
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+A.add(choiceGame({id:'calendar',cat:'brain',icon:'📅',name:'Календарни задачи',desc:'Дни от седмицата, месеци и високосни години — смятай с календара',time:90,help:'Смятай с календара: кой ден ще е след няколко дни, колко дни има месецът, кой месец идва, коя година е високосна. Избери верния отговор с клик или 1–4. След 6 точки задачите стават по-трудни! 90 секунди.',
+  next(g){const hard=g.score>=6,t=A.pick(['after','after','before','date','date','days','month','weeks','leap']),d=A.ri(0,6),mo=A.ri(0,11);g.hd=-1;g.pg=null;g.q2='';
+    const day=i=>cap(DNI[((i%7)+7)%7]),dayOpts=()=>{g.opts=opts4(g.ans,()=>cap(A.pick(DNI)));};
+    if(t==='after'||t==='before'){const N=A.ri(2,hard?45:14);g.hd=d;g.q='Днес е '+DNI[d]+'.';g.q2=(t==='after'?'Кой ден ще е след ':'Кой ден беше преди ')+N+' дни?';g.ans=day(t==='after'?d+N:d-N);dayOpts();}
+    else if(t==='date'){const D=A.ri(2,MD[mo]);g.hd=d;g.pg={m:mo,d:D};g.q='1 '+MES[mo]+' е '+DNI[d]+'.';g.q2='Какъв ден е '+D+' '+MES[mo]+'?';g.ans=day(d+D-1);dayOpts();}
+    else if(t==='days'){g.pg={m:mo,d:'?'};g.q='Колко дни има месец '+MES[mo]+'?';g.q2=mo===1?'(в година, която не е високосна)':'';g.ans=MD[mo];g.opts=A.shuffle([28,29,30,31]);}
+    else if(t==='month'){const k=A.ri(1,hard?11:4);g.pg={m:mo,d:''};g.q='Сега е '+MES[mo]+'.';g.q2='Кой месец ще е след '+k+(k===1?' месец?':' месеца?');g.ans=cap(MES[(mo+k)%12]);g.opts=opts4(g.ans,()=>cap(A.pick(MES)));}
+    else if(t==='weeks'){const w=A.ri(2,hard?12:6);if(Math.random()<.5){g.q='Колко дни има в '+w+' седмици?';g.ans=7*w;}else{g.q='Колко седмици са '+7*w+' дни?';g.ans=w;}
+      g.opts=opts4(g.ans,()=>Math.max(1,g.ans+A.pick([-7,-2,-1,1,2,7])));}
+    else{g.q='Коя година е високосна?';g.q2='(има 29 февруари)';g.ans=4*A.ri(502,524);g.opts=opts4(g.ans,()=>{let y;do y=A.ri(2005,2099);while(y%4===0);return y;});}},
+  pic(g){A.txt(g.q,240,30,g.q.length>32?15:18,'#fff','center');if(g.q2)A.txt(g.q2,240,56,g.q2.length>32?14:17,'#ffd54f','center');
+    A.block(180,80,120,'#f2f2f2',112);A.block(180,80,120,C.red,28);A.txt(g.pg?cap(MES[g.pg.m]):'Календар',240,94,14,'#fff','center');
+    A.txt(g.pg?''+g.pg.d:'📅',240,150,g.pg?44:40,'#333','center');
+    'ПВСЧПСН'.split('').forEach((L,i)=>{const x=114+i*36;A.block(x,206,32,i===g.hd?'#ffd23f':i>4?'#c0645a':'#5a6b8c',30);A.txt(L,x+16,221,14,i===g.hd?'#000':'#fff','center');});}
+}));
+</script>
+</body>
+</html>
