@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Търкаляй блока</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧱 Търкаляй блока</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 254. Търкаляй блока
+// плочки: 0 празно, 1 камък, 2 крехка (не стой изправен!), 3 дупка-цел
+A.add({id:'rollblock',cat:'puzzle',icon:'🧱',name:'Търкаляй блока',desc:'Търкаляй дългия блок по плочките и го изправи точно над дупката',help:'Стрелки / WASD или клик / докосване откъм страната, накъдето да се търкулне блокът. Изправи го точно върху тъмната дупка! Не падай от ръба и не стъпвай изправен върху оранжевите крехки плочки. R — нивото отначало. Колкото по-малко ходове, толкова повече точки.',
+  GW:12,GH:8,S:36,X0:24,Y0:58,D4:[[1,0],[-1,0],[0,1],[0,-1]],
+  start(g){g.lvl=0;g.lives=3;this.level(g);},
+  cells(t){const [x,y,o]=t;return o===0?[[x,y]]:o===1?[[x,y],[x+1,y]]:[[x,y],[x,y+1]];},
+  roll(t,d){const [x,y,o]=t,[dx,dy]=d;
+    if(o===0)return dx?[dx>0?x+1:x-2,y,1]:[x,dy>0?y+1:y-2,2];
+    if(o===1)return dx?[dx>0?x+2:x-1,y,0]:[x,y+dy,1];
+    return dy?[x,dy>0?y+2:y-1,0]:[x+dx,y,2];},
+  ok(m,t){for(const [x,y] of this.cells(t))if(x<0||y<0||x>=this.GW||y>=this.GH||!m[y][x])return false;
+    return !(t[2]===0&&m[t[1]][t[0]]===2);},
+  bfs(m,s){const K=t=>t.join(','),D=new Map([[K(s),0]]),q=[s];
+    for(let i=0;i<q.length;i++){const t=q[i];for(const d of this.D4){const n=this.roll(t,d);if(this.ok(m,n)&&!D.has(K(n))){D.set(K(n),D.get(K(t))+1);q.push(n);}}}
+    return {D,q};},
+  gen(lvl){const W=this.GW,H=this.GH,want=Math.min(6+lvl*2,22);let best=null;
+    for(let n=0;n<400;n++){const m=[];for(let y=0;y<H;y++){m.push([]);for(let x=0;x<W;x++)m[y].push(Math.random()<.66?(lvl>2&&Math.random()<.1+lvl*.01?2:1):0);}
+      const s=[A.ri(0,W-1),A.ri(0,H-1),0];if(m[s[1]][s[0]]!==1)continue;
+      const {D,q}=this.bfs(m,s);let gl=null,gd=0;
+      for(const t of q)if(t[2]===0&&m[t[1]][t[0]]===1){const d=D.get(t.join(','));if(d>gd){gd=d;gl=t;}}
+      if(gl&&(!best||gd>best.d)){best={m,s,gl,d:gd,q};if(gd>=want)break;}}
+    const keep=new Set();for(const t of best.q)for(const [x,y] of this.cells(t))keep.add(x+','+y);
+    best.m.forEach((r,y)=>r.forEach((v,x)=>{if(!keep.has(x+','+y))r[x]=0;}));best.m[best.gl[1]][best.gl[0]]=3;return best;},
+  level(g){g.lvl++;const L=this.gen(g.lvl);g.m=L.m;g.s0=L.s;g.opt=L.d;g.b=L.s.slice();g.moves=0;g.fall=0;g.win=0;g.msg='Ниво '+g.lvl;g.mt=1.5;},
+  go(g,d){if(g.fall>0||g.win>0)return;const n=this.roll(g.b,d);g.b=n;g.moves++;
+    if(!this.ok(g.m,n)){g.fall=.7;A.beep(200,.3,'sawtooth');return;}
+    A.beep(n[2]===0?330:262,.05,'square',.03);
+    if(n[2]===0&&g.m[n[1]][n[0]]===3){g.win=.8;const p=Math.max(20,100-(g.moves-g.opt)*5)+g.lvl*10;g.score+=p;g.msg=(g.moves<=g.opt?'Перфектно! ':'Браво! ')+'+'+p;g.mt=1.2;A.tune([523,659,784,1047]);}},
+  key(g,k){const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(d)this.go(g,d);else if(k==='KeyR'&&!g.fall&&!g.win){g.b=g.s0.slice();g.moves=0;}},
+  click(g,mx,my){const cs=this.cells(g.b),S=this.S;let cx=0,cy=0;cs.forEach(([x,y])=>{cx+=this.X0+x*S+S/2;cy+=this.Y0+y*S+S/2;});cx/=cs.length;cy/=cs.length;
+    const dx=mx-cx,dy=my-cy;if(Math.max(Math.abs(dx),Math.abs(dy))<8)return;this.go(g,Math.abs(dx)>Math.abs(dy)?[Math.sign(dx),0]:[0,Math.sign(dy)]);},
+  update(g,dt){g.mt-=dt;
+    if(g.fall>0){g.fall-=dt;if(g.fall<=0){g.fall=0;g.lives--;if(g.lives<=0)return A.over(g,'Блокът падна в бездната!');g.b=g.s0.slice();g.moves=0;g.msg='Опитай пак!';g.mt=1;}}
+    if(g.win>0){g.win-=dt;if(g.win<=0)this.level(g);}},
+  draw(g){A.bg('#0b1a28');const S=this.S,X0=this.X0,Y0=this.Y0;
+    for(let i=0;i<40;i++){c.fillStyle='rgba(255,255,255,'+(.1+(i*37%10)/40)+')';c.fillRect((i*97)%480,(i*53)%360,2,2);}
+    g.m.forEach((r,y)=>r.forEach((v,x)=>{if(!v)return;const X=X0+x*S,Y=Y0+y*S;c.fillStyle='rgba(0,0,0,.45)';c.fillRect(X+4,Y+S-2,S-4,6);
+      if(v===1){A.block(X+1,Y+1,S-2,(x+y)%2?'#8d8d8d':'#9a9a9a');}
+      else if(v===2){A.block(X+1,Y+1,S-2,'#e08a3a');c.fillStyle='#8a4a1a';c.fillRect(X+8,Y+10,14,2);c.fillRect(X+20,Y+10,2,12);}
+      else{A.block(X+1,Y+1,S-2,'#9a9a9a');c.fillStyle='#000';c.fillRect(X+6,Y+6,S-12,S-12);c.strokeStyle=Math.sin(g.t*5)>0?C.gold:'#a07020';c.lineWidth=2;c.strokeRect(X+6,Y+6,S-12,S-12);}}));
+    const cs=this.cells(g.b);let x0=Math.min(...cs.map(p=>p[0])),y0=Math.min(...cs.map(p=>p[1])),x1=Math.max(...cs.map(p=>p[0])),y1=Math.max(...cs.map(p=>p[1]));
+    let X=X0+x0*S+3,Y=Y0+y0*S+3,w=(x1-x0+1)*S-6,h=(y1-y0+1)*S-6;const up=g.b[2]===0?12:6;
+    if(g.fall>0){const k=g.fall/.7;X+=w*(1-k)/2;Y+=h*(1-k)/2+(1-k)*40;w*=k;h*=k;}
+    if(g.win>0){const k=g.win/.8;Y+=(1-k)*20;h*=k;}
+    if(w>1&&h>1){c.fillStyle='#4a148c';c.fillRect(X,Y-up+h,w,up);A.block(X,Y-up,w,'#ab47bc',h);c.fillStyle='rgba(255,255,255,.35)';c.fillRect(X+5,Y-up+5,6,6);
+      if(g.b[2]===0){c.fillStyle='#6a1b9a';c.fillRect(X+w/2-5,Y-up+h/2-5,10,10);}}
+    A.txt('Ниво '+g.lvl,10,22,16,'#fff');A.txt('Ходове: '+g.moves+' (най-малко '+g.opt+')',240,22,14,'#b9c6d6','center');A.txt('❤'.repeat(Math.max(0,g.lives)),470,22,16,'#f55','right');
+    A.txt('R — отначало',470,346,11,'#6c7f93','right');
+    if(g.mt>0)A.txt(g.msg,240,40,16,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

@@ -235,7 +235,10 @@ const GAMES=[
   {"id": "rounding", "cat": "brain", "icon": "🔽", "name": "Закръгли числото", "desc": "Насочи падащия блок с число към сандъка с правилно закръгленото число", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "centipede", "cat": "action", "icon": "🐛", "name": "Стоножката", "desc": "Стреляй по стоножката, която пълзи надолу между камъните", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "futoshiki", "cat": "puzzle", "icon": "🔣", "name": "Неравенства", "desc": "Попълни всеки ред и колона с различни числа, спазвайки знаците < и >", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "pool", "cat": "skill", "icon": "🎱", "name": "Блоков билярд", "desc": "Вкарай рудните топки в джобовете с бялата топка", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "pool", "cat": "skill", "icon": "🎱", "name": "Блоков билярд", "desc": "Вкарай рудните топки в джобовете с бялата топка", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "boulderdash", "cat": "action", "icon": "💎", "name": "Падащи камъни", "desc": "Копай под земята, събирай диаманти и не позволявай камък да те затисне", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "rollblock", "cat": "puzzle", "icon": "🧱", "name": "Търкаляй блока", "desc": "Търкаляй дългия блок по плочките и го изправи точно над дупката", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "opsorder", "cat": "brain", "icon": "🧮", "name": "Ред на действията", "desc": "Пресметни израза в правилния ред: скоби, после × и ÷, накрая + и −", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

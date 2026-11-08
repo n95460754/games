@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ред на действията</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧮 Ред на действията</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 255. Ред на действията
+A.add(choiceGame({id:'opsorder',cat:'brain',icon:'🧮',name:'Ред на действията',desc:'Пресметни израза в правилния ред: скоби, после × и ÷, накрая + и −',help:'Избери верния отговор (клик или 1–4). Първо смятай в скобите, после умножение и деление, накрая събиране и изваждане! 60 секунди.',
+  calc(s){return Function('return ('+s.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-')+')')();},
+  ltr(s){const t=s.replace(/[()]/g,'').split(' ');let v=+t[0];for(let i=1;i<t.length;i+=2){const n=+t[i+1],o=t[i];v=o==='+'?v+n:o==='−'?v-n:o==='×'?v*n:v/n;}return v;},
+  make(lv){const r=A.ri,T=A.pick(lv<4?[0,1,2]:lv<9?[0,1,2,3,4]:[2,3,4,5,6,7]);let a,b,c2,d;
+    switch(T){
+      case 0:return r(2,20)+' + '+r(2,9)+' × '+r(2,9);
+      case 1:b=r(2,9);c2=r(2,9);return (b*c2+r(1,30))+' − '+b+' × '+c2;
+      case 2:return '('+r(2,12)+' + '+r(2,9)+') × '+r(2,6);
+      case 3:c2=r(2,9);return r(2,30)+' + '+(c2*r(2,9))+' ÷ '+c2;
+      case 4:return r(2,9)+' × '+r(2,9)+' + '+r(2,9)+' × '+r(2,9);
+      case 5:b=r(5,15);c2=r(1,b-1);return r(2,6)+' × ('+b+' − '+c2+') + '+r(1,20);
+      case 6:c2=r(2,6);d=r(2,5);b=c2*r(2,6);return (b/c2*d+r(1,40))+' − '+b+' ÷ '+c2+' × '+d;
+      default:a=r(2,9);b=r(2,9);return '('+(a*b+r(1,9))+' − '+(a*b)+' ÷ '+a+') × '+r(2,5);}},
+  next(g){let s,v;do{s=this.make(g.score);v=this.calc(s);}while(v<0||v!==Math.floor(v));g.expr=s;g.ans=String(v);
+    let w=s.includes('(')?this.calc(s.replace(/[()]/g,'')):this.ltr(s);const extra=[];if(w!==v&&w>=0&&w===Math.floor(w))extra.push(String(w));
+    const st=new Set([g.ans,...extra]);let n=0;while(st.size<4&&n++<200){const x=v+A.pick([-1,1])*A.ri(1,Math.max(3,Math.ceil(v*.3)));if(x>=0)st.add(String(x));}
+    g.opts=A.shuffle([...st]);},
+  pic(g){c.fillStyle='#000';c.fillRect(44,74,400,100);c.fillStyle='#2f4a63';c.fillRect(40,70,400,100);A.txt(g.expr+' = ?',240,120,g.expr.length>20?24:30,'#fff','center');
+    A.txt('① ( )   ② × ÷   ③ + −',240,215,16,'#ffd54f','center');A.txt('Точки: '+g.score,240,40,14,'#b9c6d6','center');}}));
+</script>
+</body>
+</html>
