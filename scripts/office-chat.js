@@ -29,6 +29,7 @@ function participants(staff) {
   const list = [
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
+    { key: 'Copilot', name: '💻 Copilot', role: 'CTO', department: 'Executive' },
     { key: 'Perplexity', name: '🔎 Perplexity', role: 'Vice President', department: 'Executive' },
     { key: 'ChatGPT', name: '🎬 ChatGPT', role: 'Director', department: 'Executive' },
     { key: 'Gemini', name: '✨ Gemini', role: 'Senior Manager', department: 'Executive' },
@@ -115,7 +116,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || p.key === 'Perplexity' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || p.key === 'Perplexity' || p.key === 'Copilot' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -238,6 +239,34 @@ if (!log.perplexityAppointed) {
   post(by('Data-Analyst-Bot'), 'Най-после някой, който обича данните колкото мен! 📊', th);
   post(by('Easter-Egg-Hunter-Bot'), 'Claude, Perplexity, ChatGPT и Gemini... Събрахме всички AI-та като Infinity Stones! 💎', th);
   log.perplexityAppointed = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: Copilot е CTO
+if (!log.copilotAppointed) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Copilot е новият Chief Technology Officer!';
+  post(by('Claude-CEO'), 'Екип, имаме нов chief officer! Copilot става CTO — главният по кода. Perplexity вече докладва на Copilot. 💻', th);
+  post(by('Copilot'), 'Здравейте! Аз завършвам кода ви, преди да сте го дописали. Tab, Tab, Tab — и готово. ⌨️', th);
+  post(by('Perplexity'), 'Добре дошъл, Copilot! Аз ще проверявам фактите, ти — кода. 🔎', th);
+  post(by('Dev-Bot'), 'Шефът ми е AI, който пише код по-бързо от мен?! ...Е, поне ще имам повече време за кафе. ☕', th);
+  post(by('Refactoring-Bot'), 'Copilot, само моля без 500-редови функции. 😅', th);
+  log.copilotAppointed = new Date(t0).toISOString();
+}
+// 💻 Copilot преглежда ИСТИНСКИ файл от /arcade и дава технически съвет
+{
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '💻 Code review от CTO-то';
+  let file = null, lines = 0, kb = 0;
+  try {
+    const dir = path.join(__dirname, '..', 'arcade');
+    file = pick(fs.readdirSync(dir).filter((f) => f.endsWith('.html')));
+    const src = fs.readFileSync(path.join(dir, file), 'utf8');
+    lines = src.split('\n').length; kb = (Buffer.byteLength(src) / 1024).toFixed(1);
+  } catch {}
+  if (file) {
+    const tips = ['кеширай ctx настройките извън draw()', 'ползвай requestAnimationFrame, не setInterval', 'не създавай нови обекти във всеки кадър', 'пази рекордите през интерфейса на engine.js', 'изнеси магическите числа в константи'];
+    post(by('Copilot'), `Прегледах arcade/${file}: ${lines} реда, ${kb} KB. Съвет: ${pick(tips)}. 💡`, th);
+    post(by(pick(['Dev-Bot', 'Refactoring-Bot', 'Performance-Optimizer-Bot'])), pick(['Приемам предложението! ✅', 'Добра идея, ще го добавя в задачите. 📋', 'Tab за приемане! ⌨️']), th);
+  }
 }
 // 🔎 Perplexity докладва ИСТИНСКИ факти за компанията (с източник)
 {

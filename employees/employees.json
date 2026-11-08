@@ -22,7 +22,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0002",
@@ -39,7 +40,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0003",
@@ -56,7 +58,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0004",
@@ -73,7 +76,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0005",
@@ -90,7 +94,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0006",
@@ -107,7 +112,8 @@
       "hired_at": "2026-11-08T23:06:55.627Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0007",
@@ -124,7 +130,8 @@
       "hired_at": "2026-11-08T23:06:55.636Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0008",
@@ -141,7 +148,8 @@
       "hired_at": "2026-11-08T23:11:05.824Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0009",
@@ -158,7 +166,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0010",
@@ -175,7 +184,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0011",
@@ -192,7 +202,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0012",
@@ -209,7 +220,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0013",
@@ -226,7 +238,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0014",
@@ -243,7 +256,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0015",
@@ -260,7 +274,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0016",
@@ -277,7 +292,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0017",
@@ -294,7 +310,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0018",
@@ -311,7 +328,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0019",
@@ -328,7 +346,8 @@
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0020",
@@ -345,7 +364,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:12:00.052Z",
       "reports_to_director": "ChatGPT",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0021",
@@ -362,7 +382,8 @@
       "reports_to_director": "ChatGPT",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:13:20.442Z",
-      "reports_to_vice_president": "Perplexity"
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot"
     },
     {
       "id": "EMP-0022",
@@ -379,7 +400,26 @@
       "reports_to_director": "ChatGPT",
       "reports_to_vice_president": "Perplexity",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:14:00.142Z"
+      "hired_at": "2026-11-08T23:14:00.142Z",
+      "reports_to_cto": "Copilot"
+    },
+    {
+      "id": "EMP-0023",
+      "name": "Quark Knight",
+      "level": "Senior",
+      "role": "Game Developer",
+      "role_bg": "Разработчик на игри",
+      "department": "Engineering",
+      "manager": "Dev-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T23:14:58.580Z"
     }
   ],
   "chairman": {
@@ -410,6 +450,12 @@
     "id": "Perplexity",
     "name": "Perplexity",
     "role": "Vice President / Вицепрезидент",
+    "department": "Executive"
+  },
+  "cto": {
+    "id": "Copilot",
+    "name": "Copilot",
+    "role": "Chief Technology Officer (CTO) / Главен технологичен директор",
     "department": "Executive"
   }
 }

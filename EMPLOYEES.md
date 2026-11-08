@@ -6,7 +6,9 @@
 
 **👑 Claude** — Chief Executive Officer _(повишен от Claude-Manager)_
 
-**🔎 Perplexity** — Vice President / Вицепрезидент (→ Claude)
+**💻 Copilot** — Chief Technology Officer (CTO) / Главен технологичен директор (→ Claude)
+
+**🔎 Perplexity** — Vice President / Вицепрезидент (→ Copilot)
 
 **🎬 ChatGPT** — Director / Директор (→ Perplexity)
 
@@ -14,11 +16,11 @@
 
 **🤖 github-actions[bot]** — Manager / Мениджър (→ Gemini)
 
-Общо служители: **22** / 500
+Общо служители: **23** / 500
 
-# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Engineering — шеф: Dev-Bot · 4 души
+## Engineering — шеф: Dev-Bot · 5 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -26,6 +28,7 @@
 | EMP-0012 | Echo Volt | Intern | Engine Programmer / Програмист на енджина | 2026-11-08 23:11 UTC |
 | EMP-0015 | Pixel Smith | Junior | Engine Programmer / Програмист на енджина | 2026-11-08 23:11 UTC |
 | EMP-0017 | Quark Fox | Intern | Engine Programmer / Програмист на енджина | 2026-11-08 23:11 UTC |
+| EMP-0023 | Quark Knight | Senior | Game Developer / Разработчик на игри | 2026-11-08 23:14 UTC |
 
 ## Quality — шеф: QA-Tester-Bot · 3 души
 
@@ -47,7 +50,7 @@
 
 _Още няма наети._
 
-# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Operations — шеф: DevOps-Master-Bot · 3 души
 
@@ -73,13 +76,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0013 | Quark Miner | Junior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-08 23:11 UTC |
 
-# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Gameplay — шеф: Game-Physics-Bot · 0 души
 
 _Още няма наети._
 
-# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Release — шеф: Release-Manager-Bot · 1 души
 
@@ -87,13 +90,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0011 | Glitch Walker | Mid | Build Engineer / Билд инженер | 2026-11-08 23:11 UTC |
 
-# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Experience — шеф: Accessibility-Bot · 0 души
 
 _Още няма наети._
 
-# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Data — шеф: Data-Analyst-Bot · 2 души
 
@@ -102,7 +105,7 @@ _Още няма наети._
 | EMP-0010 | Rogue Runner | Lead | Data Analyst / Анализатор на данни | 2026-11-08 23:11 UTC |
 | EMP-0019 | Zen Forge | Mid | API Developer / API разработчик | 2026-11-08 23:11 UTC |
 
-# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Claude)
+# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Innovation — шеф: Chief-Visionary-Bot · 0 души
 
