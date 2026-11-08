@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рудни линии</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛏️ Рудни линии</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 272. Рудни линии
+const OL={N:9,S:36,X:12,Y:18};
+const OL_ORE=[['#ffd23f','злато'],['#4de8f5','диамант'],['#ff2e55','редстоун'],['#2ecc55','изумруд'],['#2a4bd8','лапис'],['#d8a07a','желязо'],['#2a2a2a','въглища']];
+A.add({id:'orelines',cat:'puzzle',icon:'⛏️',name:'Рудни линии',desc:'Мести рудите и нареждай по 5 еднакви в линия',repeat:true,
+  help:'Кликни руда, после празно поле — тя отива там, ако има свободен път. Нареди 5+ еднакви руди в ред, колона или диагонал и те изчезват. Всеки ход без линия добавя 3 нови руди. Стрелки + Space също работят.',
+  start(g){g.b=[];for(let y=0;y<OL.N;y++)g.b.push(new Array(OL.N).fill(-1));g.sel=null;g.cur=[4,4];g.anim=null;g.pops=[];g.err=0;g.lines=0;
+    g.nx=this.gen(g,5);this.spawn(g);g.nx=this.gen(g,3);},
+  cols(g){return g.score>=250?7:g.score>=100?6:5;},
+  gen(g,n){const a=[];for(let i=0;i<n;i++)a.push(A.ri(0,this.cols(g)-1));return a;},
+  empty(g){const e=[];for(let y=0;y<OL.N;y++)for(let x=0;x<OL.N;x++)if(g.b[y][x]<0)e.push([x,y]);return e;},
+  spawn(g){for(const col of g.nx){const e=this.empty(g);if(!e.length)break;const p=A.pick(e);g.b[p[1]][p[0]]=col;g.pops.push({x:p[0],y:p[1],t:.3,col,grow:true});this.check(g,p[0],p[1]);}
+    g.nx=this.gen(g,3);if(!this.empty(g).length)A.over(g,'Няма място за нови руди!');},
+  path(g,a,b){const N=OL.N,prev={},key=(x,y)=>y*N+x,q=[a];prev[key(a[0],a[1])]=null;
+    while(q.length){const [x,y]=q.shift();if(x===b[0]&&y===b[1]){const p=[];let k=key(x,y);while(k!==null){p.unshift([k%N,Math.floor(k/N)]);k=prev[k];}return p;}
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=N||ny>=N||g.b[ny][nx]>=0)continue;const k=key(nx,ny);if(k in prev)continue;prev[k]=key(x,y);q.push([nx,ny]);}}
+    return null;},
+  check(g,x,y){const col=g.b[y][x];if(col<0)return false;const set=new Map();
+    for(const [dx,dy] of [[1,0],[0,1],[1,1],[1,-1]]){const line=[[x,y]];
+      for(const s of [1,-1]){let cx=x+dx*s,cy=y+dy*s;while(cx>=0&&cy>=0&&cx<OL.N&&cy<OL.N&&g.b[cy][cx]===col){line.push([cx,cy]);cx+=dx*s;cy+=dy*s;}}
+      if(line.length>=5)for(const p of line)set.set(p[1]*OL.N+p[0],p);}
+    if(!set.size)return false;
+    for(const p of set.values()){g.b[p[1]][p[0]]=-1;g.pops.push({x:p[0],y:p[1],t:.45,col});}
+    const n=set.size;g.score+=10+(n-5)*4;g.lines++;A.tune([660,880,1100].slice(0,n>5?3:2));return true;},
+  act(g,x,y){if(g.anim)return;const v=g.b[y][x];
+    if(v>=0){g.sel=[x,y];A.beep(600,.04,'triangle');return;}
+    if(!g.sel)return;const p=this.path(g,g.sel,[x,y]);
+    if(!p){g.err=.4;A.beep(140,.15,'sawtooth');return;}
+    g.anim={p,col:g.b[g.sel[1]][g.sel[0]],i:0,t:0};g.b[g.sel[1]][g.sel[0]]=-1;g.sel=null;},
+  key(g,k){const m={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(m){g.cur=[A.clamp(g.cur[0]+m[0],0,OL.N-1),A.clamp(g.cur[1]+m[1],0,OL.N-1)];return;}
+    if(k==='Space'||k==='Enter')this.act(g,g.cur[0],g.cur[1]);
+    if(k==='Backspace')g.sel=null;},
+  click(g,mx,my){const x=Math.floor((mx-OL.X)/OL.S),y=Math.floor((my-OL.Y)/OL.S);if(x<0||y<0||x>=OL.N||y>=OL.N)return;g.cur=[x,y];this.act(g,x,y);},
+  update(g,dt){if(g.err>0)g.err-=dt;g.pops=g.pops.filter(p=>(p.t-=dt)>0);
+    const a=g.anim;if(a){a.t+=dt;while(a.t>.04&&g.anim){a.t-=.04;a.i++;
+      if(a.i>=a.p.length-1){const e=a.p[a.p.length-1];g.b[e[1]][e[0]]=a.col;g.anim=null;A.beep(440,.04,'triangle');if(!this.check(g,e[0],e[1]))this.spawn(g);}}}},
+  ore(x,y,s,col){A.block(x,y,s,'#7d7d7d');const u=s/28;c.fillStyle=OL_ORE[col][0];
+    for(const [a,b] of [[4,5],[15,3],[9,12],[19,14],[5,19],[14,21]])c.fillRect(x+a*u,y+b*u,6*u,5*u);
+    c.fillStyle='rgba(255,255,255,.5)';c.fillRect(x+5*u,y+6*u,2*u,2*u);c.fillRect(x+16*u,y+4*u,2*u,2*u);},
+  draw(g){A.bg('#1d2b3a');const S=OL.S;
+    for(let y=0;y<OL.N;y++)for(let x=0;x<OL.N;x++){c.fillStyle=(x+y)%2?'#3a2e24':'#43352a';c.fillRect(OL.X+x*S,OL.Y+y*S,S,S);}
+    c.strokeStyle='#000';c.lineWidth=3;c.strokeRect(OL.X-1,OL.Y-1,OL.N*S+2,OL.N*S+2);
+    for(let y=0;y<OL.N;y++)for(let x=0;x<OL.N;x++){const v=g.b[y][x];if(v<0)continue;
+      const sel=g.sel&&g.sel[0]===x&&g.sel[1]===y,b=sel?Math.abs(Math.sin(g.t*8))*-5:0;this.ore(OL.X+x*S+4,OL.Y+y*S+4+b,S-8,v);}
+    for(const p of g.pops){const k=p.grow?1-p.t/.3:p.t/.45;if(p.grow)continue;c.globalAlpha=k;this.ore(OL.X+p.x*S+4+(1-k)*14,OL.Y+p.y*S+4+(1-k)*14,(S-8)*k,p.col);c.globalAlpha=1;}
+    if(g.anim){const q=g.anim.p[g.anim.i];this.ore(OL.X+q[0]*S+4,OL.Y+q[1]*S+4,S-8,g.anim.col);}
+    if(g.sel){c.strokeStyle='#fff';c.lineWidth=2;c.strokeRect(OL.X+g.sel[0]*S+1,OL.Y+g.sel[1]*S+1,S-2,S-2);}
+    c.strokeStyle=g.err>0?'#ff5050':'#ffd54f';c.lineWidth=3;c.strokeRect(OL.X+g.cur[0]*S+2,OL.Y+g.cur[1]*S+2,S-4,S-4);
+    const px=350;A.txt('Следващи:',px,34,15,'#ffd54f');g.nx.forEach((v,i)=>this.ore(px+i*40,50,30,v));
+    A.txt('Линии: '+g.lines,px,110,15,'#fff');A.txt('Руди: '+this.cols(g)+' вида',px,134,13,'#b9c6d6');
+    A.txt('5 в линия =',px,170,13,'#b9c6d6');A.txt('10 точки,',px,188,13,'#b9c6d6');A.txt('+4 за всяка',px,206,13,'#b9c6d6');A.txt('следваща',px,224,13,'#b9c6d6');
+    for(let i=0;i<this.cols(g);i++)this.ore(px+(i%4)*30,250+Math.floor(i/4)*30,24,i);
+    if(g.err>0)A.txt('Няма път!',px,330,16,'#ff7070');}
+});
+</script>
+</body>
+</html>

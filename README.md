@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**280 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 270 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**283 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 273 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-280-5aa13a)
+![Games](https://img.shields.io/badge/games-283-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 270 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 273 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -415,8 +415,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 268 | 🪽 Elytra Flight (Полет с елитра) | [`elytra.html`](arcade/elytra.html) | Glide with elytra wings over blocky hills: hold to climb (and lose speed), let go to dive (and speed up); fly through gold rings for combos, grab fireworks and avoid towers |
 | 269 | 📦 Fill the Box (Попълни кутията) | [`boxfill.html`](arcade/boxfill.html) | Packing puzzle: rotate and place block shapes so they fill the whole box exactly; every solved box adds points and time, and the boxes keep growing |
 | 270 | 💎 Villager Trading (Търговия със селяни) | [`trading.html`](arcade/trading.html) | Emerald shopping maths: how many emeralds for N items, how much you get, change left over, two-step prices and which villager has the best deal |
+| 271 | ❄️ Spleef (Спийф) | [`spleef.html`](arcade/spleef.html) | Snowy arena battle: walk on snow blocks that crumble behind you and dig the block under the mobs before they dig yours; win the round when every mob falls |
+| 272 | ⛏️ Ore Lines (Рудни линии) | [`orelines.html`](arcade/orelines.html) | Lines-98 style puzzle: move ores along a free path and line up 5+ of the same ore to clear them; every move without a line adds 3 new ores |
+| 273 | 🏠 Mob House (Колко са в къщата?) | [`mobhouse.html`](arcade/mobhouse.html) | Counting memory game: mobs walk in and out of a house, keep count in your head and type how many are inside; later levels mix mobs and you count only one kind |
 
-All 270 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 273 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -444,8 +447,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–269
-│   └── trading.html        # 270. Villager Trading
+│   ├── ...                 # games 51–272
+│   └── mobhouse.html       # 273. Mob House
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Колко са в къщата?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏠 Колко са в къщата?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 273. Колко са в къщата?
+const MH_T={zombie:['зомбита','🧟'],pig:['прасета','🐷'],creeper:['крийпъри','💚'],chicken:['пилета','🐔']};
+const MH_PAD=[['1','2','3','⌫'],['4','5','6','0'],['7','8','9','✔']];
+A.add({id:'mobhouse',cat:'brain',icon:'🏠',name:'Колко са в къщата?',desc:'Мобове влизат и излизат — запомни колко са вътре',
+  help:'Гледай как мобовете влизат (отляво) и излизат (отдясно) от къщата и брой наум. Накрая напиши колко са вътре — с цифрите и Enter или с бутоните. От ниво 4 броиш само един вид моб! 3 живота.',
+  start(g){g.lvl=1;g.lives=3;this.newRound(g);},
+  newRound(g){const L=g.lvl,all=Object.keys(MH_T);
+    const types=L>=7?A.shuffle(all.slice()).slice(0,3):L>=4?A.shuffle(all.slice()).slice(0,2):[A.pick(all)];
+    g.target=types[0];g.ins={};types.forEach(t=>g.ins[t]=0);
+    if(L>=3){const n=A.ri(1,3);for(let i=0;i<n;i++)g.ins[A.pick(types)]++;}
+    g.start0=g.ins[g.target];g.startAll=Object.values(g.ins).reduce((a,b)=>a+b,0);
+    g.evs=[];const ne=Math.min(11,2+L),cnt=Object.assign({},g.ins);
+    for(let i=0;i<ne;i++){const tot=Object.values(cnt).reduce((a,b)=>a+b,0),out=tot>0&&Math.random()<.42,mx=L>=5?4:3,n=A.ri(1,out?Math.min(mx,tot):mx),mobs=[];
+      for(let j=0;j<n;j++){if(out){const av=types.filter(t=>cnt[t]>0),t=A.pick(av);cnt[t]--;mobs.push(t);}else{const t=A.pick(types);cnt[t]++;mobs.push(t);}}
+      g.evs.push({out,mobs});}
+    g.ans=cnt[g.target];g.final=cnt;
+    g.wd=Math.max(.75,1.7-L*.09);g.st=Math.max(.16,.38-L*.02);
+    g.ph='intro';g.pt=L>=4?2.2:1.4;g.ev=0;g.et=0;g.inp='';g.res='';},
+  submit(g){if(g.ph!=='ask'||g.inp===''||g.inp==='-')return;const ok=+g.inp===g.ans;flash(g,ok);
+    if(ok){g.score++;g.lvl++;g.res='Вярно! Вътре има '+g.ans+' '+MH_T[g.target][0]+'.';}
+    else{g.lives--;g.res='Не! Вътре имаше '+g.ans+' '+MH_T[g.target][0]+'.';}
+    g.ph='res';g.pt=2;},
+  key(g,k,ch){if(g.ph!=='ask')return;if(typeNum(g,k,ch))this.submit(g);},
+  click(g,mx,my){if(g.ph!=='ask')return;const col=Math.floor((mx-100)/72),row=Math.floor((my-150)/50);
+    if(col<0||col>3||row<0||row>2||(mx-100)%72>64||(my-150)%50>42)return;const b=MH_PAD[row][col];
+    if(b==='⌫')g.inp=g.inp.slice(0,-1);else if(b==='✔')this.submit(g);else if(g.inp.length<3){g.inp+=b;A.beep(700,.02);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(g.ph==='intro'){g.pt-=dt;if(g.pt<=0){g.ph='show';g.et=0;}}
+    else if(g.ph==='show'){g.et+=dt;const e=g.evs[g.ev];if(!e){g.ph='ask';return;}
+      const dur=g.wd+g.st*(e.mobs.length-1)+.3;if(g.et>=dur){g.ev++;g.et=0;A.beep(e.out?330:520,.05,'triangle');}}
+    else if(g.ph==='res'){g.pt-=dt;if(g.pt<=0){if(g.lives<=0)return A.over(g,'Край! Стигна ниво '+g.lvl);this.newRound(g);}}},
+  mob(t,x,y,w){const s=Math.sin(w*10)*3;
+    if(t==='pig'){A.block(x-14,y-20,28,'#f0a0b0',14);A.block(x+8,y-26,14,'#f4b0c0',14);c.fillStyle='#d77a90';c.fillRect(x+18,y-20,5,5);c.fillStyle='#000';c.fillRect(x+15,y-23,3,3);
+      c.fillStyle='#e08ca0';c.fillRect(x-12+s,y-6,5,6);c.fillRect(x+6-s,y-6,5,6);return;}
+    if(t==='chicken'){A.block(x-8,y-18,16,'#f4f4f4',12);A.block(x+2,y-28,10,'#ffffff',12);c.fillStyle='#ffb300';c.fillRect(x+12,y-24,4,3);c.fillStyle='#d32f2f';c.fillRect(x+10,y-20,3,4);
+      c.fillStyle='#000';c.fillRect(x+8,y-26,2,2);c.fillStyle='#ff9800';c.fillRect(x-3+s/2,y-6,2,6);c.fillRect(x+3-s/2,y-6,2,6);return;}
+    if(t==='creeper'){A.block(x-7,y-30,14,'#4caf50',22);A.block(x-8,y-44,16,'#5cbf60',15);c.fillStyle='#000';c.fillRect(x-5,y-40,4,4);c.fillRect(x+1,y-40,4,4);c.fillRect(x-2,y-36,4,5);
+      c.fillStyle='#3d8b40';c.fillRect(x-7+s/2,y-8,6,8);c.fillRect(x+1-s/2,y-8,6,8);return;}
+    A.block(x-7,y-30,14,'#2e8fa8',14);A.block(x-8,y-45,16,'#5a9a4a',15);c.fillStyle='#000';c.fillRect(x-1,y-40,3,3);c.fillRect(x+5,y-40,3,3);
+    c.fillStyle='#5a9a4a';c.fillRect(x+2,y-28,14,5);c.fillStyle='#3a3a8a';c.fillRect(x-6+s,y-16,5,16);c.fillRect(x+1-s,y-16,5,16);},
+  house(g,open){A.block(170,120,140,C.wood,110);for(let i=0;i<5;i++){c.fillStyle='rgba(0,0,0,.15)';c.fillRect(170,132+i*22,140,2);}
+    for(let i=0;i<5;i++){const x=158+i*12,y=108-i*14,w=164-i*24;c.fillStyle='#7a3b2e';c.fillRect(x,y,w,14);c.fillStyle='#9a5240';c.fillRect(x,y,w,3);c.fillStyle='#5a2a20';c.fillRect(x,y+11,w,3);}
+    c.fillStyle='#2a1a10';c.fillRect(172,180,16,50);c.fillRect(292,180,16,50);
+    A.block(205,145,22,'#9ad0f5');A.block(253,145,22,'#9ad0f5');
+    if(open){c.fillStyle='rgba(20,12,6,.88)';c.fillRect(178,132,124,96);let i=0;
+      for(const t in g.final)for(let j=0;j<g.final[t]&&i<18;j++){const x=196+(i%6)*20,y=160+Math.floor(i/6)*34,hl=t===g.target;c.save();c.translate(x,y);c.scale(.6,.6);this.mob(t,0,0,0);c.restore();
+        if(hl){c.fillStyle='#ffd54f';c.fillRect(x-6,y+2,12,3);}i++;}}},
+  draw(g){A.bg(C.sky);c.fillStyle='#fff';c.fillRect(40,40,60,14);c.fillRect(380,60,70,14);
+    c.fillStyle=C.grass;c.fillRect(0,230,480,14);c.fillStyle='#6fbf4a';c.fillRect(0,230,480,3);c.fillStyle=C.dirt;c.fillRect(0,244,480,116);c.fillStyle='#8a6a48';c.fillRect(0,232,480,6);
+    if(g.ph==='show'){const e=g.evs[g.ev];if(e)e.mobs.forEach((t,i)=>{const k=(g.et-i*g.st)/g.wd;if(k<0||k>1)return;
+      const x=e.out?260+k*260:-30+k*230;this.mob(t,x,236,g.et);});}
+    this.house(g,g.ph==='res');
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('❤'.repeat(Math.max(0,g.lives)),470,14,14,'#f55','right');
+    const tn=MH_T[g.target];A.txt('Брой: '+tn[1]+' '+tn[0],240,14,15,'#fff','center');
+    if(g.ph==='intro'){A.txt(g.startAll?'В къщата вече има '+g.start0+' '+tn[0]+'.':'Къщата е празна.',240,60,18,'#fff','center');
+      if(Object.keys(g.ins).length>1)A.txt('Брой само '+tn[0]+'! Другите не се броят.',240,86,15,'#ffd54f','center');}
+    if(g.ph==='show'){const e=g.evs[g.ev];if(e)A.txt(e.out?'излизат →':'→ влизат',e.out?400:80,100,16,e.out?'#ffccbc':'#c8f7c5','center');
+      A.txt((g.ev+1)+' / '+g.evs.length,240,300,14,'#fff','center');}
+    if(g.ph==='ask'){c.fillStyle='rgba(10,18,30,.9)';c.fillRect(40,36,400,316);
+      A.txt('Колко '+tn[0]+' има в къщата?',240,62,18,'#fff','center');inputBox(g,108);
+      MH_PAD.forEach((r,ri)=>r.forEach((b,ci)=>{const x=100+ci*72,y=150+ri*50;A.block(x,y,64,b==='✔'?'#3a8a3a':b==='⌫'?'#8a3a3a':'#5a6b8c',42);A.txt(b,x+32,y+21,20,'#fff','center');}));}
+    if(g.ph==='res')A.txt(g.res,240,300,16,g.fl&&g.fl.ok?'#c8f7c5':'#ffccbc','center');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
