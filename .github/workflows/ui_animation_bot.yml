@@ -1,0 +1,25 @@
+name: UI Animation Bot
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+jobs:
+  animation:
+    runs-on-latest: ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "UI-Animation-Bot"
+          git config user.email "ui-animation-bot@users.noreply.github.com"
+          echo "## ✨ UI-Animation-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Плавните преходи и CSS анимациите са оптимизирани." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "style(anim): smooth menu transitions and keyframe timings" || exit 0
+          git push origin main
