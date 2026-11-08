@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Правоъгълници</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟦 Правоъгълници</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 260. Правоъгълници (Шикаку)
+const SKC=['#5aa13a','#3b7bd6','#ffb74d','#ab47bc','#26a69a','#ef5350','#d4b04a','#8d6e63','#7986cb','#9ccc65','#4dd0e1','#f06292'];
+A.add({id:'shikaku',cat:'puzzle',icon:'🟦',name:'Правоъгълници',desc:'Раздели полето на правоъгълници — всеки с едно число, равно на лицето му',help:'Влачи с мишката / пръста, за да начертаеш правоъгълник. Всеки трябва да съдържа точно едно число = броя на клетките му. Клавиатура: стрелки + Space (два пъти), X — изтрий. Всеки решен пъзел дава +25 секунди.',
+  start(g){g.time=120;g.lvl=0;g.cur=[0,0];this.gen(g);},
+  gen(g){const N=g.lvl<3?5:g.lvl<7?6:7;g.N=N;g.cs=N===7?40:N===6?46:52;g.ox=(480-N*g.cs)/2;g.oy=44;
+    const own=[...Array(N*N)].map(()=>-1),R=[];
+    for(let i=0;i<N*N;i++){if(own[i]>=0)continue;const x=i%N,y=Math.floor(i/N),opts=[];
+      for(let w=1;x+w<=N&&w<=5;w++){if(own[y*N+x+w-1]>=0)break;
+        for(let h=1;y+h<=N&&h<=5&&w*h<=9;h++){let ok=true;for(let k=0;k<w;k++)if(own[(y+h-1)*N+x+k]>=0)ok=false;if(!ok)break;opts.push([w,h]);}}
+      let big=opts.filter(o=>o[0]*o[1]>=2&&o[0]*o[1]<=6);if(!big.length||Math.random()<.08)big=opts;const [w,h]=A.pick(big);
+      for(let a=0;a<w;a++)for(let b=0;b<h;b++)own[(y+b)*N+x+a]=R.length;R.push({x,y,w,h});}
+    g.num=[...Array(N*N)].map(()=>0);for(const r of R)g.num[(r.y+A.ri(0,r.h-1))*N+r.x+A.ri(0,r.w-1)]=r.w*r.h;
+    g.rects=[];g.drag=null;g.anchor=null;g.won=0;g.cur=[0,0];},
+  cell(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);return x>=0&&y>=0&&x<g.N&&y<g.N?[x,y]:null;},
+  rectOf(a,b){return {x:Math.min(a[0],b[0]),y:Math.min(a[1],b[1]),w:Math.abs(a[0]-b[0])+1,h:Math.abs(a[1]-b[1])+1};},
+  inR(r,x,y){return x>=r.x&&x<r.x+r.w&&y>=r.y&&y<r.y+r.h;},
+  place(g,a,b){const r=this.rectOf(a,b);
+    if(r.w===1&&r.h===1){const i=g.rects.findIndex(q=>this.inR(q,r.x,r.y));if(i>=0){g.rects.splice(i,1);A.beep(260,.05);return;}}
+    g.rects=g.rects.filter(q=>!(q.x<r.x+r.w&&q.x+q.w>r.x&&q.y<r.y+r.h&&q.y+q.h>r.y));
+    r.col=SKC[(g.rects.length*5+r.x*3+r.y*7)%SKC.length];g.rects.push(r);A.beep(500+r.w*r.h*40,.06,'triangle');this.check(g);},
+  good(g,r){let n=0,v=0;for(let a=0;a<r.w;a++)for(let b=0;b<r.h;b++){const k=g.num[(r.y+b)*g.N+r.x+a];if(k){n++;v=k;}}return n===1&&v===r.w*r.h;},
+  check(g){let cov=0;for(const r of g.rects){if(!this.good(g,r))return;cov+=r.w*r.h;}
+    if(cov===g.N*g.N){g.score++;g.time+=25;g.won=.9;A.tune([660,880,1100]);}},
+  click(g,mx,my){if(g.won)return;const p=this.cell(g,mx,my);if(p)g.drag={a:p,b:p};},
+  move(g,mx,my){if(g.drag){const p=this.cell(g,A.clamp(mx,g.ox,g.ox+g.N*g.cs-1),A.clamp(my,g.oy,g.oy+g.N*g.cs-1));if(p)g.drag.b=p;}},
+  release(g){if(g.drag){const d=g.drag;g.drag=null;this.place(g,d.a,d.b);}},
+  key(g,k){if(g.won)return;const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(d){g.cur=[A.clamp(g.cur[0]+d[0],0,g.N-1),A.clamp(g.cur[1]+d[1],0,g.N-1)];return;}
+    if(k==='Space'||k==='Enter'){if(!g.anchor)g.anchor=[...g.cur];else{this.place(g,g.anchor,g.cur);g.anchor=null;}}
+    if(k==='KeyX'||k==='Delete'||k==='Backspace'){g.anchor=null;const i=g.rects.findIndex(q=>this.inR(q,g.cur[0],g.cur[1]));if(i>=0){g.rects.splice(i,1);A.beep(260,.05);}}},
+  update(g,dt){if(g.won){g.won-=dt;if(g.won<=0){g.won=0;g.lvl++;this.gen(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени пъзели: '+g.score);},
+  draw(g){A.bg('#2b2b2b');const N=g.N,s=g.cs,ox=g.ox,oy=g.oy;
+    for(let x=0;x<N;x++)for(let y=0;y<N;y++)A.block(ox+x*s,oy+y*s,s,(x+y)%2?'#7d7d7d':'#757575');
+    for(const r of g.rects){const ok=this.good(g,r);c.globalAlpha=.85;A.block(ox+r.x*s+3,oy+r.y*s+3,r.w*s-6,r.col,r.h*s-6);c.globalAlpha=1;
+      if(!ok){c.strokeStyle='#ff5252';c.lineWidth=3;c.strokeRect(ox+r.x*s+4,oy+r.y*s+4,r.w*s-8,r.h*s-8);}}
+    const sel=g.drag?this.rectOf(g.drag.a,g.drag.b):g.anchor?this.rectOf(g.anchor,g.cur):null;
+    if(sel){c.fillStyle='rgba(255,213,79,.35)';c.fillRect(ox+sel.x*s,oy+sel.y*s,sel.w*s,sel.h*s);c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(ox+sel.x*s,oy+sel.y*s,sel.w*s,sel.h*s);
+      A.txt(sel.w+'×'+sel.h+' = '+sel.w*sel.h,240,oy+N*s+14,14,'#ffd54f','center');}
+    for(let i=0;i<N*N;i++)if(g.num[i])A.txt(''+g.num[i],ox+(i%N)*s+s/2,oy+Math.floor(i/N)*s+s/2,s*.5,'#fff','center');
+    c.strokeStyle='#fff';c.lineWidth=2;c.strokeRect(ox+g.cur[0]*s+1,oy+g.cur[1]*s+1,s-2,s-2);
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);A.txt('Пъзел '+(g.lvl+1)+' · '+N+'×'+N,470,14,14,'#b9c6d6','right');
+    A.txt('Всеки правоъгълник = едно число = броя клетки',240,30,12,'#b9c6d6','center');
+    if(g.won)A.txt('✔ Решено! +25 с',240,180,30,'#7cff6b','center');}
+});
+</script>
+</body>
+</html>

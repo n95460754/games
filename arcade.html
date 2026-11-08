@@ -241,7 +241,10 @@ const GAMES=[
   {"id": "opsorder", "cat": "brain", "icon": "🧮", "name": "Ред на действията", "desc": "Пресметни израза в правилния ред: скоби, после × и ÷, накрая + и −", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "orebubbles", "cat": "puzzle", "icon": "🫧", "name": "Рудни мехури", "desc": "Изстрелвай руди нагоре и събирай по 3 еднакви, за да ги пукнеш", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "placevalue", "cat": "brain", "icon": "🔢", "name": "Строй числото", "desc": "Построй числото от стотици, десетици и единици — и с прехвърляне", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "cartbrake", "cat": "skill", "icon": "🛒", "name": "Спри вагонетката", "desc": "Дръпни спирачката навреме, за да спре вагонетката точно до ръба на пропастта", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "cartbrake", "cat": "skill", "icon": "🛒", "name": "Спри вагонетката", "desc": "Дръпни спирачката навреме, за да спре вагонетката точно до ръба на пропастта", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "cocoabar", "cat": "action", "icon": "☕", "name": "Какао за селяните", "desc": "Плъзгай чаши какао по тезгяхите, преди селяните да стигнат до теб", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "shikaku", "cat": "puzzle", "icon": "🟦", "name": "Правоъгълници", "desc": "Раздели полето на правоъгълници — всеки с едно число, равно на лицето му", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "barchart", "cat": "brain", "icon": "📊", "name": "Чети графиката", "desc": "Разчети стълбчеста диаграма от блокове руди и отговори на въпроса", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

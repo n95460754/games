@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Чети графиката</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📊 Чети графиката</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 261. Чети графиката
+const ORES=[['Въглища','#2a2a2a'],['Желязо','#d8a07a'],['Злато','#ffd23f'],['Диаманти','#4de8f5'],['Рубини','#ff2e55'],['Изумруди','#2ecc71']];
+A.add(choiceGame({id:'barchart',cat:'brain',icon:'📊',name:'Чети графиката',desc:'Разчети стълбчеста диаграма от блокове руди и отговори на въпроса',help:'Погледни диаграмата: колко руди е изкопал миньорът? Избери верния отговор (клик или 1–4). След 8 точки всеки блок става 2 руди! 60 секунди.',
+  next(g){const step=g.score>=8?2:1;g.step=step;g.bars=A.shuffle(ORES.slice()).slice(0,4).map(o=>({n:o[0],col:o[1],v:A.ri(1,10)*step}));
+    const b=g.bars,vs=b.map(x=>x.v),mx=Math.max(...vs),mn=Math.min(...vs),num=n=>Math.max(0,n+A.ri(-3,3)*step);
+    const types=['one','diff','sum','total'];if(vs.filter(v=>v===mx).length===1)types.push('max');if(vs.filter(v=>v===mn).length===1)types.push('min');
+    const t=A.pick(types),[p,q]=A.shuffle([0,1,2,3]).slice(0,2),hi=b[p].v>=b[q].v?b[p]:b[q],lo=hi===b[p]?b[q]:b[p];
+    if(t==='one'){g.q='Колко '+b[p].n.toLowerCase()+' е изкопал?';g.ans=b[p].v;}
+    else if(t==='diff'){g.q='С колко '+hi.n.toLowerCase()+' са повече от '+lo.n.toLowerCase()+'?';g.ans=hi.v-lo.v;}
+    else if(t==='sum'){g.q='Колко са '+b[p].n.toLowerCase()+' и '+b[q].n.toLowerCase()+' заедно?';g.ans=b[p].v+b[q].v;}
+    else if(t==='total'){g.q='Колко руди е изкопал общо?';g.ans=vs.reduce((a,v)=>a+v,0);}
+    else{const bb=b.find(x=>x.v===(t==='max'?mx:mn));g.q=t==='max'?'От коя руда има най-много?':'От коя руда има най-малко?';g.ans=bb.n;g.opts=A.shuffle(b.map(x=>x.n));return;}
+    g.opts=opts4(g.ans,()=>num(g.ans));},
+  pic(g){const base=226,u=16;
+    A.txt(g.q,240,34,g.q.length>40?13:15,'#ffd54f','center');
+    c.fillStyle='#b9c6d6';for(let k=0;k<=10;k+=2){const y=base-k*u;c.fillRect(60,y,380,1);A.txt(''+k*g.step,52,y,11,'#b9c6d6','right');}
+    if(g.step>1)A.txt('1 блок = 2',470,62,11,'#7cff6b','right');
+    g.bars.forEach((b,i)=>{const x=86+i*90,h=b.v/g.step;for(let k=0;k<h;k++)A.block(x,base-(k+1)*u,44,b.col,u);
+      A.txt(b.n,x+22,base+14,12,'#fff','center');});}
+}));
+</script>
+</body>
+</html>

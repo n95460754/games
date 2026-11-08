@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Какао за селяните</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">☕ Какао за селяните</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 259. Какао за селяните
+const LY=[95,165,235,305];
+A.add({id:'cocoabar',cat:'action',icon:'☕',name:'Какао за селяните',desc:'Плъзгай чаши какао по тезгяхите, преди селяните да стигнат до теб',help:'↑ ↓ / W S — смени тезгяха, Space — плъзни чаша какао. Мишка / докосване: кликни на тезгях. Хващай празните чаши, които се връщат! Чаша без селянин = -1 точка. 3 живота.',
+  start(g){g.lane=0;g.v=[];g.m=[];g.lives=3;g.sp=1;g.fx=[];g.cd=0;},
+  pour(g){if(g.cd>0)return;g.cd=.18;g.m.push({l:g.lane,x:405,full:true});A.beep(520,.05);},
+  key(g,k){if(k==='ArrowUp'||k==='KeyW'){g.lane=(g.lane+3)%4;A.beep(330,.03);}
+    else if(k==='ArrowDown'||k==='KeyS'){g.lane=(g.lane+1)%4;A.beep(330,.03);}
+    else if(k==='Space'||k==='Enter')this.pour(g);},
+  click(g,mx,my){g.lane=A.clamp(Math.floor((my-50)/70),0,3);this.pour(g);},
+  lose(g,l,x,msg){g.lives--;g.fx.push({l,x,t:1,s:'💥'});A.beep(140,.25,'sawtooth',.06);if(g.lives<=0)A.over(g,msg);},
+  update(g,dt){
+    g.cd-=dt;g.sp-=dt;
+    if(g.sp<=0){g.sp=Math.max(.75,2.6-g.t*.025)*A.rnd(.7,1.3);
+      g.v.push({l:A.ri(0,3),x:-24,spd:A.rnd(26,38)+Math.min(40,g.t*.4),robe:A.pick(['#6a1b9a','#2e7d32','#1565c0','#795548','#ad1457']),go:false});}
+    for(const v of g.v){if(v.go){v.x-=160*dt;continue;}v.x+=v.spd*dt;
+      if(v.x>372){v.go=true;v.gone=true;this.lose(g,v.l,380,'Селянинът се ядоса — не получи какао!');}}
+    for(const m of g.m){
+      if(m.full){m.x-=240*dt;let t=null;
+        for(const v of g.v)if(!v.go&&v.l===m.l&&(!t||v.x>t.x))t=v;
+        if(t&&t.x+22>=m.x){t.go=true;m.full=false;m.x=t.x+24;g.score++;A.beep(780,.06,'triangle');g.fx.push({l:m.l,x:t.x,t:.8,s:'😊'});}
+        else if(m.x<14){m.dead=true;g.score=Math.max(0,g.score-1);g.fx.push({l:m.l,x:14,t:.8,s:'-1'});A.beep(200,.1);}}
+      else{m.x+=95*dt;
+        if(m.x>=400){m.dead=true;if(g.lane===m.l){g.score++;A.beep(990,.05,'triangle');}else this.lose(g,m.l,400,'Празната чаша се счупи!');}}
+    }
+    g.m=g.m.filter(m=>!m.dead);g.v=g.v.filter(v=>v.x>-40);
+    for(const f of g.fx)f.t-=dt;g.fx=g.fx.filter(f=>f.t>0);
+  },
+  mug(x,y,full){A.block(x,y,12,'#e8e8e8');c.fillStyle=full?'#6d3b1f':'#9e9e9e';c.fillRect(x+2,y+2,8,3);c.fillStyle='#e8e8e8';c.fillRect(x+12,y+3,3,6);},
+  draw(g){
+    A.bg('#5d4037');c.fillStyle='#4e342e';for(let y=0;y<360;y+=24)c.fillRect(0,y,480,3);
+    for(let x=0;x<480;x+=60)c.fillRect(x+(Math.floor(x/60)%2)*30,0,3,360);
+    for(let l=0;l<4;l++){const y=LY[l];
+      for(let x=14;x<400;x+=24)A.block(x,y,24,'#9a6a3a',14);c.fillStyle='#3e2723';c.fillRect(14,y+14,386,6);
+      A.block(404,y-34,24,'#7d7d7d',48);c.fillStyle='#6d3b1f';c.fillRect(409,y-30,14,8);}
+    for(const v of g.v){const y=LY[v.l],x=v.x;
+      A.block(x,y-28,22,v.robe,28);A.block(x+1,y-48,20,'#b07850',20);
+      c.fillStyle='#3e2723';c.fillRect(x+3,y-42,16,3);c.fillStyle='#fff';c.fillRect(x+4,y-38,5,4);c.fillRect(x+13,y-38,5,4);
+      c.fillStyle='#2e7d32';c.fillRect(x+6,y-37,3,3);c.fillRect(x+15,y-37,3,3);c.fillStyle='#8d5a3b';c.fillRect(x+9,y-36,4,9);
+      if(!v.go&&v.x>300){A.txt('!',x+11,y-58,14,'#ff5252','center');}}
+    for(const m of g.m)this.mug(m.x,LY[m.l]-12,m.full);
+    const py=LY[g.lane];A.block(440,py-30,22,'#00acc1',26);A.block(441,py-50,20,'#c68e5a',20);c.fillStyle='#4a2d16';c.fillRect(441,py-50,20,6);
+    c.fillStyle='#fff';c.fillRect(444,py-40,5,4);c.fillStyle='#3949ab';c.fillRect(445,py-39,3,3);A.block(440,py-4,22,'#283593',10);
+    A.txt('◀',432,py-15,14,'#ffd54f','right');
+    for(const f of g.fx)A.txt(f.s,f.x+10,LY[f.l]-60-(1-f.t)*20,18,'#fff','center');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,15,'#ff5252');A.txt('☕ '+g.score,470,14,15,'#ffd54f','right');
+  }
+});
+</script>
+</body>
+</html>

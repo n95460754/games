@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**268 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 258 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**271 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 261 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-268-5aa13a)
+![Games](https://img.shields.io/badge/games-271-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 258 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 261 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -403,8 +403,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 256 | 🫧 Ore Bubbles (Рудни мехури) | [`orebubbles.html`](arcade/orebubbles.html) | Aim and shoot ore blocks up; join 3+ of the same colour to pop them and drop hanging ores; the ceiling keeps sinking |
 | 257 | 🔢 Build the Number (Строй числото) | [`placevalue.html`](arcade/placevalue.html) | Build numbers from hundreds plates, tens rods and ones cubes, including regrouping like "2 hundreds, 14 tens" |
 | 258 | 🛒 Mine Cart Brake (Спри вагонетката) | [`cartbrake.html`](arcade/cartbrake.html) | Pull the brake once at the right moment so the cart stops as close to the cliff edge as possible; ice rails slide |
+| 259 | ☕ Cocoa for Villagers (Какао за селяните) | [`cocoabar.html`](arcade/cocoabar.html) | Slide mugs of hot cocoa down four counters before the villagers reach you, and catch the empty mugs that slide back |
+| 260 | 🟦 Rectangles (Правоъгълници) | [`shikaku.html`](arcade/shikaku.html) | Shikaku logic puzzle: split the grid into rectangles so each holds exactly one number equal to its area |
+| 261 | 📊 Read the Chart (Чети графиката) | [`barchart.html`](arcade/barchart.html) | Read a bar chart made of ore blocks and answer questions: how many, how many more, how many together, which is most |
 
-All 258 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 261 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -432,8 +435,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–257
-│   └── cartbrake.html      # 258. Mine Cart Brake
+│   ├── ...                 # games 51–260
+│   └── barchart.html       # 261. Read the Chart
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
