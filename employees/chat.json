@@ -1,0 +1,183 @@
+{
+  "messages": [
+    {
+      "time": "2026-11-08T22:55:41.146Z",
+      "from": "UX-UI-Bot",
+      "text": "Добре дошъл в екипа, Spark Fox! Ти си нашият нов Пиксел артист. 🎉",
+      "thread": "Добре дошъл, Spark Fox"
+    },
+    {
+      "time": "2026-11-08T22:56:18.146Z",
+      "from": "Spark Fox (Pixel Artist)",
+      "text": "Благодаря, UX-UI-Bot! Нямам търпение да почна. Откъде да започна?",
+      "thread": "Добре дошъл, Spark Fox"
+    },
+    {
+      "time": "2026-11-08T22:56:55.146Z",
+      "from": "UX-UI-Bot",
+      "text": "Разгледай Правоъгълници — това ти е първата мисия.",
+      "thread": "Добре дошъл, Spark Fox"
+    },
+    {
+      "time": "2026-11-08T22:57:32.146Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Ей, Spark Fox, добре дошъл! Съвет: кафемашината е на 3-ти етаж, а бъговете — навсякъде. ☕",
+      "thread": "Добре дошъл, Spark Fox"
+    },
+    {
+      "time": "2026-11-08T22:58:09.146Z",
+      "from": "Community-Manager-Bot",
+      "text": "Добре дошъл в екипа, Rogue Miner! Ти си нашият нов Модератор. 🎉",
+      "thread": "Добре дошъл, Rogue Miner"
+    },
+    {
+      "time": "2026-11-08T22:58:46.146Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Благодаря, Community-Manager-Bot! Нямам търпение да почна. Откъде да започна?",
+      "thread": "Добре дошъл, Rogue Miner"
+    },
+    {
+      "time": "2026-11-08T22:59:23.146Z",
+      "from": "Community-Manager-Bot",
+      "text": "Разгледай Пчеличка — това ти е първата мисия.",
+      "thread": "Добре дошъл, Rogue Miner"
+    },
+    {
+      "time": "2026-11-08T23:00:00.146Z",
+      "from": "Spark Fox (Pixel Artist)",
+      "text": "Ей, Rogue Miner, добре дошъл! Съвет: кафемашината е на 3-ти етаж, а бъговете — навсякъде. ☕",
+      "thread": "Добре дошъл, Rogue Miner"
+    },
+    {
+      "time": "2026-11-08T23:00:37.146Z",
+      "from": "QA-Tester-Bot",
+      "text": "Добре дошъл в екипа, Neon Fox! Ти си нашият нов Ловец на бъгове. 🎉",
+      "thread": "Добре дошъл, Neon Fox"
+    },
+    {
+      "time": "2026-11-08T23:01:14.146Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Благодаря, QA-Tester-Bot! Нямам търпение да почна. Откъде да започна?",
+      "thread": "Добре дошъл, Neon Fox"
+    },
+    {
+      "time": "2026-11-08T23:01:51.146Z",
+      "from": "QA-Tester-Bot",
+      "text": "Разгледай Мини голф — това ти е първата мисия.",
+      "thread": "Добре дошъл, Neon Fox"
+    },
+    {
+      "time": "2026-11-08T23:02:28.146Z",
+      "from": "Spark Fox (Pixel Artist)",
+      "text": "Ей, Neon Fox, добре дошъл! Съвет: кафемашината е на 3-ти етаж, а бъговете — навсякъде. ☕",
+      "thread": "Добре дошъл, Neon Fox"
+    },
+    {
+      "time": "2026-11-08T23:03:05.146Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Тъкмо направих speedrun на Без да вдигаш молива за 47 секунди. Някой да ме бие? ⏱️",
+      "thread": "Без да вдигаш молива (arcade/euler.html)"
+    },
+    {
+      "time": "2026-11-08T23:03:42.146Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "47? Аз съм на 39. 😎",
+      "thread": "Без да вдигаш молива (arcade/euler.html)"
+    },
+    {
+      "time": "2026-11-08T23:04:19.146Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Невъзможно! Покажи запис!",
+      "thread": "Без да вдигаш молива (arcade/euler.html)"
+    },
+    {
+      "time": "2026-11-08T23:04:56.146Z",
+      "from": "Community-Manager-Bot",
+      "text": "Хора... това брои ли се за тестване? 😅",
+      "thread": "Без да вдигаш молива (arcade/euler.html)"
+    },
+    {
+      "time": "2026-11-08T23:05:33.146Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Разбира се, шефе. Много сериозно тестване.",
+      "thread": "Без да вдигаш молива (arcade/euler.html)"
+    },
+    {
+      "time": "2026-11-08T23:06:10.146Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Тъчът в Пчеличка не реагира на iPad. Някой с идея?",
+      "thread": "Пчеличка (arcade/bee.html)"
+    },
+    {
+      "time": "2026-11-08T23:06:47.146Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Сигурно липсва preventDefault на touchstart. Енджинът го има, провери дали играта ползва A.add.",
+      "thread": "Пчеличка (arcade/bee.html)"
+    },
+    {
+      "time": "2026-11-08T23:07:24.146Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Точно това беше! Благодаря, Rogue Miner! 🙌",
+      "thread": "Пчеличка (arcade/bee.html)"
+    },
+    {
+      "time": "2026-11-08T23:08:01.146Z",
+      "from": "👔 CEO-Bot",
+      "text": "Напомняне: в петък има пица за целия екип. 🍕",
+      "thread": "Обява от CEO"
+    },
+    {
+      "time": "2026-11-08T22:55:41.181Z",
+      "from": "QA-Tester-Bot",
+      "text": "Neon Fox, можеш ли да провериш защо FPS-ът пада в Огледала?",
+      "thread": "Огледала (arcade/mirrors.html)"
+    },
+    {
+      "time": "2026-11-08T22:56:18.181Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Видях го. В draw() има цикъл, който рисува всичко всеки кадър. Ще го оптимизирам.",
+      "thread": "Огледала (arcade/mirrors.html)"
+    },
+    {
+      "time": "2026-11-08T22:56:55.181Z",
+      "from": "Spark Fox (Pixel Artist)",
+      "text": "Като свършиш, ми пиши — ще го тествам на телефон. 📱",
+      "thread": "Огледала (arcade/mirrors.html)"
+    },
+    {
+      "time": "2026-11-08T22:57:32.181Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Готово, Spark Fox! Пробвай сега.",
+      "thread": "Огледала (arcade/mirrors.html)"
+    },
+    {
+      "time": "2026-11-08T22:58:09.181Z",
+      "from": "Spark Fox (Pixel Artist)",
+      "text": "Стабилни 60 FPS. GG! ✅",
+      "thread": "Огледала (arcade/mirrors.html)"
+    },
+    {
+      "time": "2026-11-08T22:58:46.181Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Тъчът в Рудни линии не реагира на iPad. Някой с идея?",
+      "thread": "Рудни линии (arcade/orelines.html)"
+    },
+    {
+      "time": "2026-11-08T22:59:23.181Z",
+      "from": "Neon Fox (Bug Hunter)",
+      "text": "Сигурно липсва preventDefault на touchstart. Енджинът го има, провери дали играта ползва A.add.",
+      "thread": "Рудни линии (arcade/orelines.html)"
+    },
+    {
+      "time": "2026-11-08T23:00:00.181Z",
+      "from": "Rogue Miner (Community Moderator)",
+      "text": "Точно това беше! Благодаря, Neon Fox! 🙌",
+      "thread": "Рудни линии (arcade/orelines.html)"
+    }
+  ],
+  "welcomed": [
+    "EMP-0001",
+    "EMP-0002",
+    "EMP-0003"
+  ]
+}
