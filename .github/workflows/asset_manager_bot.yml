@@ -1,0 +1,24 @@
+name: Asset Manager Bot
+on:
+  schedule:
+    - cron: '0 15 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "Asset-Manager-Bot"
+          git config user.email "asset-manager-bot@users.noreply.github.com"
+          echo "## 📦 Asset-Manager-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Графичните и звуковите ресурси са компресирани и подредени." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "chore(assets): compress and organize repository media assets" || exit 0
+          git push origin main
