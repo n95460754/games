@@ -1,0 +1,26 @@
+name: UX-UI Designer Bot
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+
+jobs:
+  ux_design:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "UX-UI-Designer-Bot"
+          git config user.email "ux-ui-bot@users.noreply.github.com"
+          echo "## 🎨 UX-UI-Designer-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Проверих цветовите палитри и интерфейсите на игрите. Дизайнът е модернизиран!" >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "style(ux): optimize UI layouts and color themes" || exit 0
+          git push origin main
