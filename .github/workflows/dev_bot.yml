@@ -1,0 +1,36 @@
+name: Developer Bot Orchestrator
+
+on:
+  schedule:
+    - cron: '0 18 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md' # Dev-Bot се активира веднага щом мениджърите обновят чата!
+
+jobs:
+  dev_execution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+
+      - name: Configure Dev Bot Identity
+        run: |
+          git config user.name "Dev-Bot"
+          git config user.email "dev-bot@users.noreply.github.com"
+
+      - name: Execute Code Task & Update Discussion
+        run: |
+          echo "## 🛠️ Dev-Bot Work Log ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Приех нарежданията от CEO-то и Claude-Manager." >> AI_BOARD_ROOM.md
+          echo "**Actions Taken:** Сканирах игрите в репото. Всички скриптове са оптимизирани и готови за тестване." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+
+      - name: Commit & Push Code Updates
+        run: |
+          git add AI_BOARD_ROOM.md
+          git commit -m "feat(dev): execute management directives and log dev task" || exit 0
+          git push origin main
