@@ -29,6 +29,7 @@ function participants(staff) {
   const list = [
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
+    { key: 'Gemini', name: '✨ Gemini', role: 'Senior Manager', department: 'Executive' },
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
     janitor.JANITOR,
   ];
@@ -112,7 +113,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -202,6 +203,26 @@ if (!log.moreTeamsAnnounced) {
   post(by('Easter-Egg-Hunter-Bot'), 'Чакайте, в Team Gameplay ще мога да крия тайни нива? Най-добрият ден! 🥚', th);
   post(by('github-actions[bot]'), 'Правилото важи и тук: всеки нов служител — веднага в правилния отбор. 🤖', th);
   log.moreTeamsAnnounced = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: Gemini е старши мениджър
+if (!log.geminiAppointed) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Gemini е новият старши мениджър!';
+  post(by('Claude-CEO'), 'Екип, компанията вече има 7 отбора — трябва ни още един лидер. Посрещнете Gemini, нашият нов Senior Manager! ✨', th);
+  post(by('Gemini'), 'Благодаря, Claude! Радвам се да работя с вас. Ще следя всичките 7 отбора и ще помагам на github-actions[bot]. 📈', th);
+  post(by('github-actions[bot]'), 'Добре дошъл, шефе! Ще ти пращам доклад след всяко пускане — на всеки 5 минути. 🤖', th);
+  post(by('Gemini'), 'Перфектно. И без червени чекове, моля. ✅', th);
+  post(by('Easter-Egg-Hunter-Bot'), 'Claude и Gemini в един офис? Това е като кросоувър в аниме! 🤯', th);
+  log.geminiAppointed = new Date(t0).toISOString();
+}
+// ✨ Gemini проверява как се справят отборите
+{
+  const by = (k) => people.find((p) => p.key === k);
+  const pickTeam = pick(Object.entries(TEAMS));
+  const [tName, t] = pickTeam;
+  post(by('Gemini'), `${t.leader}, как върви ${t.emoji} ${tName}?`, '✨ Обиколката на Gemini');
+  post(by(t.leader), pick(['Всичко е по план! Задачите вървят. 💪', 'Имаме малко бъгове, но QA ги гони. 🐛', 'Супер! Един от служителите ни направи страхотна работа днес. 🌟']), '✨ Обиколката на Gemini');
+  post(by('Gemini'), pick(['Отлично. Ще кажа на Claude. 👍', 'Браво на отбора! 🎉', 'Ако ви трябва помощ — пишете ми.']), '✨ Обиколката на Gemini');
 }
 // 🧹 Обиколката на чистача
 {

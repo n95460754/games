@@ -19,7 +19,8 @@
       "hired_at": "2026-11-08T22:54:30.831Z",
       "reports_to_manager": "github-actions[bot]",
       "team": "Team Dev",
-      "team_leader": "Dev-Bot"
+      "team_leader": "Dev-Bot",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0002",
@@ -33,7 +34,8 @@
       "hired_at": "2026-11-08T22:54:30.842Z",
       "reports_to_manager": "github-actions[bot]",
       "team": "Team DevOps",
-      "team_leader": "DevOps-Master-Bot"
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0003",
@@ -47,7 +49,8 @@
       "hired_at": "2026-11-08T22:54:30.843Z",
       "reports_to_manager": "github-actions[bot]",
       "team": "Team Dev",
-      "team_leader": "Dev-Bot"
+      "team_leader": "Dev-Bot",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0004",
@@ -61,7 +64,8 @@
       "hired_at": "2026-11-08T22:58:25.125Z",
       "reports_to_manager": "github-actions[bot]",
       "team": "Team Dev",
-      "team_leader": "Dev-Bot"
+      "team_leader": "Dev-Bot",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0005",
@@ -75,7 +79,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:59:18.930Z",
       "team": "Team Dev",
-      "team_leader": "Dev-Bot"
+      "team_leader": "Dev-Bot",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0006",
@@ -89,7 +94,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:06:55.627Z"
+      "hired_at": "2026-11-08T23:06:55.627Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0007",
@@ -103,7 +109,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:06:55.636Z"
+      "hired_at": "2026-11-08T23:06:55.636Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0008",
@@ -117,7 +124,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.824Z"
+      "hired_at": "2026-11-08T23:11:05.824Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0009",
@@ -131,7 +139,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0010",
@@ -145,7 +154,8 @@
       "team_leader": "Data-Analyst-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0011",
@@ -159,7 +169,8 @@
       "team_leader": "Release-Manager-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0012",
@@ -173,7 +184,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0013",
@@ -187,7 +199,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0014",
@@ -201,7 +214,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0015",
@@ -215,7 +229,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0016",
@@ -229,7 +244,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0017",
@@ -243,7 +259,8 @@
       "team_leader": "Dev-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0018",
@@ -257,7 +274,8 @@
       "team_leader": "DevOps-Master-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
     },
     {
       "id": "EMP-0019",
@@ -271,7 +289,23 @@
       "team_leader": "Data-Analyst-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:11:05.829Z"
+      "hired_at": "2026-11-08T23:11:05.829Z",
+      "reports_to_senior_manager": "Gemini"
+    },
+    {
+      "id": "EMP-0020",
+      "name": "Echo Smith",
+      "level": "Senior",
+      "role": "Tutorial Writer",
+      "role_bg": "Автор на туториали",
+      "department": "Community",
+      "manager": "Community-Manager-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T23:12:00.052Z"
     }
   ],
   "chairman": {
@@ -284,6 +318,12 @@
     "id": "github-actions[bot]",
     "name": "github-actions[bot]",
     "role": "Manager / Мениджър",
+    "department": "Executive"
+  },
+  "senior_manager": {
+    "id": "Gemini",
+    "name": "Gemini",
+    "role": "Senior Manager / Старши мениджър",
     "department": "Executive"
   }
 }

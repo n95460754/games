@@ -6,11 +6,13 @@
 
 **👑 Claude** — Chief Executive Officer _(повишен от Claude-Manager)_
 
-**🤖 github-actions[bot]** — Manager / Мениджър (→ Claude) _(новият мениджър)_
+**✨ Gemini** — Senior Manager / Старши мениджър (→ Claude)
 
-Общо служители: **19** / 500
+**🤖 github-actions[bot]** — Manager / Мениджър (→ Gemini)
 
-# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Claude)
+Общо служители: **20** / 500
+
+# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Engineering — шеф: Dev-Bot · 4 души
 
@@ -40,7 +42,7 @@
 
 _Още няма наети._
 
-# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Claude)
+# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Operations — шеф: DevOps-Master-Bot · 2 души
 
@@ -49,7 +51,7 @@ _Още няма наети._
 | EMP-0014 | Spark Miner | Lead | DevOps Engineer / DevOps инженер | 2026-11-08 23:11 UTC |
 | EMP-0018 | Orbit Coder | Lead | DevOps Engineer / DevOps инженер | 2026-11-08 23:11 UTC |
 
-## Community — шеф: Community-Manager-Bot · 4 души
+## Community — шеф: Community-Manager-Bot · 5 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -57,6 +59,7 @@ _Още няма наети._
 | EMP-0007 | Glitch Forge | Senior | Translator / Преводач | 2026-11-08 23:06 UTC |
 | EMP-0009 | Vector Fox | Mid | Community Moderator / Модератор | 2026-11-08 23:11 UTC |
 | EMP-0016 | Turbo Storm | Mid | Tutorial Writer / Автор на туториали | 2026-11-08 23:11 UTC |
+| EMP-0020 | Echo Smith | Senior | Tutorial Writer / Автор на туториали | 2026-11-08 23:12 UTC |
 
 ## Security — шеф: SecOps-Bot · 1 души
 
@@ -64,13 +67,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0013 | Quark Miner | Junior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-08 23:11 UTC |
 
-# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Claude)
+# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Gameplay — шеф: Game-Physics-Bot · 0 души
 
 _Още няма наети._
 
-# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Claude)
+# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Release — шеф: Release-Manager-Bot · 1 души
 
@@ -78,13 +81,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0011 | Glitch Walker | Mid | Build Engineer / Билд инженер | 2026-11-08 23:11 UTC |
 
-# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Claude)
+# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Experience — шеф: Accessibility-Bot · 0 души
 
 _Още няма наети._
 
-# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Claude)
+# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Data — шеф: Data-Analyst-Bot · 2 души
 
@@ -93,7 +96,7 @@ _Още няма наети._
 | EMP-0010 | Rogue Runner | Lead | Data Analyst / Анализатор на данни | 2026-11-08 23:11 UTC |
 | EMP-0019 | Zen Forge | Mid | API Developer / API разработчик | 2026-11-08 23:11 UTC |
 
-# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Claude)
+# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Gemini → Claude)
 
 ## Innovation — шеф: Chief-Visionary-Bot · 0 души
 
