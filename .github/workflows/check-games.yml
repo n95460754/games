@@ -1,0 +1,60 @@
+name: Check Games
+
+# Opens every game in a headless browser and looks for JS errors, missing files,
+# broken links and arcade games missing from the menu. If something is wrong it
+# opens (or updates) a GitHub issue labeled "auto-check". The hourly Claude Code
+# fixer reads that issue, fixes the problem and opens a pull request.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'games/**'      # auto games are pushed every 5 min; they come from tested templates
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: check-games
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright + Chromium
+        run: npm install --no-save --no-package-lock playwright@1.49.1 && npx playwright install --with-deps chromium
+
+      - name: Check all games
+        id: check
+        continue-on-error: true
+        run: node scripts/check-games.js
+
+      - name: Open, update or close the auto-check issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create auto-check --color d73a4a --description "Found by the Check Games workflow" 2>/dev/null || true
+          num=$(gh issue list --label auto-check --state open --json number --jq '.[0].number')
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ "${{ steps.check.outcome }}" = "failure" ]; then
+            printf '%s\n\nRun: %s\n\n_Claude Code checks this issue every hour and opens a pull request with a fix._\n' "$(cat check-report.md)" "$run_url" > body.md
+            if [ -n "$num" ]; then gh issue edit "$num" --body-file body.md
+            else gh issue create --title "🔍 Game check found problems" --label auto-check --body-file body.md; fi
+          elif [ -n "$num" ]; then
+            gh issue close "$num" --comment "✅ All games pass the check now ($run_url)."
+          fi
+
+      - name: Fail the run if problems were found
+        if: steps.check.outcome == 'failure'
+        run: exit 1
