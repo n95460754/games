@@ -16,7 +16,8 @@
       "department": "Design",
       "manager": "UX-UI-Bot",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T22:54:30.831Z"
+      "hired_at": "2026-11-08T22:54:30.831Z",
+      "reports_to_manager": "github-actions[bot]"
     },
     {
       "id": "EMP-0002",
@@ -27,7 +28,8 @@
       "department": "Community",
       "manager": "Community-Manager-Bot",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T22:54:30.842Z"
+      "hired_at": "2026-11-08T22:54:30.842Z",
+      "reports_to_manager": "github-actions[bot]"
     },
     {
       "id": "EMP-0003",
@@ -38,7 +40,8 @@
       "department": "Quality",
       "manager": "QA-Tester-Bot",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T22:54:30.843Z"
+      "hired_at": "2026-11-08T22:54:30.843Z",
+      "reports_to_manager": "github-actions[bot]"
     },
     {
       "id": "EMP-0004",
@@ -49,13 +52,32 @@
       "department": "Quality",
       "manager": "QA-Tester-Bot",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T22:58:25.125Z"
+      "hired_at": "2026-11-08T22:58:25.125Z",
+      "reports_to_manager": "github-actions[bot]"
+    },
+    {
+      "id": "EMP-0005",
+      "name": "Blaze Hawk",
+      "level": "Intern",
+      "role": "Engine Programmer",
+      "role_bg": "Програмист на енджина",
+      "department": "Engineering",
+      "manager": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T22:59:18.930Z"
     }
   ],
   "chairman": {
     "id": "CEO-Bot",
     "name": "CEO-Bot",
     "role": "Chairman of the Board / Председател на борда",
+    "department": "Executive"
+  },
+  "manager": {
+    "id": "github-actions[bot]",
+    "name": "github-actions[bot]",
+    "role": "Manager / Мениджър",
     "department": "Executive"
   }
 }

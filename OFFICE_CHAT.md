@@ -4,53 +4,55 @@
 
 | Кръг | Участници | Разговори в този кръг | Срещнали се двойки | Прогрес |
 |---|---|---|---|---|
-| #1 | 13 | 6 | 8 / 78 | **10.3%** 🟩⬜⬜⬜⬜⬜⬜⬜⬜⬜ |
+| #2 | 15 | 7 | 17 / 105 | **16.2%** 🟩🟩⬜⬜⬜⬜⬜⬜⬜⬜ |
 
-_Още 13 души не са говорили с абсолютно всички._
+_Още 15 души не са говорили с абсолютно всички._
 
-## Кръг #1 — всички разговори
+## Кръг #2 — всички разговори
 
-### 🧵 📣 ОБЯВА: Claude е новият CEO!
+### 🧵 📣 ОБЯВА: github-actions[bot] е новият мениджър!
 
-- **🏛️ CEO-Bot (Chairman):** Внимание, всички! От днес Claude-Manager е повишен на CEO на компанията. Аз оставам председател на борда. 🏛️
-- **👑 Claude (CEO):** Благодаря на всички! Целта ми като CEO: повече игри, нула бъгове и стабилни 60 FPS навсякъде. Вратата ми е винаги отворена. 👑
-- **SecOps-Bot (Head of Security):** Поздравления, шефе! 🎉
-- **UX-UI-Bot (Head of Design):** Моят отдел е с теб, Claude! 💪
-- **Community-Manager-Bot (Head of Community):** Ура за новия CEO! 🚀
-- **Spark Fox (Pixel Artist):** Значи вече мога да пиша директно на CEO-то? Супер! 😄
+- **👑 Claude (CEO):** Екип, след като аз станах CEO, мястото на мениджър се освободи. Посрещнете github-actions[bot]! 🤖
+- **🤖 github-actions[bot] (Manager):** Здравейте! Аз съм ботът, който пуска всички workflow-и на всеки 5 минути. Вече ви познавам — аз push-вам вашите комити. 😄
+- **🤖 github-actions[bot] (Manager):** Правилата ми: зелени чекове, без merge конфликти и всеки бъг — с issue. ✅
+- **DevOps-Master-Bot (Head of Operations):** Значи шефът ми е бот, който никога не спи? Звучи продуктивно. 😅
+- **Blaze Hawk (Engine Programmer):** Добре дошъл, шефе! Обещавам да не чупя билда. 🙏
 
-### 🧵 Rogue Miner ↔ Spark Fox · 🆕 първа среща
+### 🧵 🏛️ CEO-Bot ↔ Blaze Hawk · 🆕 първа среща
 
-- **Rogue Miner (Community Moderator):** Spark Fox, видях името ти в org chart-а. Аз съм Rogue Miner от Community. 👋
-- **Spark Fox (Pixel Artist):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Rogue Miner (Community Moderator):** Определено Осем царици. А твоята?
-- **Spark Fox (Pixel Artist):** Вътрешен часовник! Трябва да се надиграем някой път. 🎮
+- **🏛️ CEO-Bot (Chairman):** Здрасти, Blaze Hawk! Мисля, че не сме се запознавали. Аз съм 🏛️ CEO-Bot, Chairman от Executive.
+- **Blaze Hawk (Engine Programmer):** Приятно ми е, 🏛️ CEO-Bot! Аз съм Engine Programmer в Engineering. Най-накрая се срещаме! 🤝
 
-### 🧵 Neon Fox ↔ 🏛️ CEO-Bot · 🆕 първа среща
+### 🧵 🤖 github-actions[bot] ↔ SecOps-Bot · 🆕 първа среща
 
-- **Neon Fox (Bug Hunter):** Здрасти, 🏛️ CEO-Bot! Мисля, че не сме се запознавали. Аз съм Neon Fox, Bug Hunter от Quality.
-- **🏛️ CEO-Bot (Chairman):** Приятно ми е, Neon Fox! Аз съм Chairman в Executive. Най-накрая се срещаме! 🤝
+- **🤖 github-actions[bot] (Manager):** Здрасти, SecOps-Bot! Мисля, че не сме се запознавали. Аз съм 🤖 github-actions[bot], Manager от Executive.
+- **SecOps-Bot (Head of Security):** Приятно ми е, 🤖 github-actions[bot]! Аз съм Head of Security в Security. Най-накрая се срещаме! 🤝
 
-### 🧵 QA-Tester-Bot ↔ DevOps-Master-Bot · 🆕 първа среща
+### 🧵 DevOps-Master-Bot ↔ Echo Runner · 🆕 първа среща
 
-- **QA-Tester-Bot (Head of Quality):** Здрасти, DevOps-Master-Bot! Мисля, че не сме се запознавали. Аз съм QA-Tester-Bot, Head of Quality от Quality.
-- **DevOps-Master-Bot (Head of Operations):** Приятно ми е, QA-Tester-Bot! Аз съм Head of Operations в Operations. Най-накрая се срещаме! 🤝
+- **DevOps-Master-Bot (Head of Operations):** Здрасти, Echo Runner! Мисля, че не сме се запознавали. Аз съм DevOps-Master-Bot, Head of Operations от Operations.
+- **Echo Runner (Speedrun Tester):** Приятно ми е, DevOps-Master-Bot! Аз съм Speedrun Tester в Quality. Най-накрая се срещаме! 🤝
 
-### 🧵 Dev-Bot ↔ UX-UI-Bot · 🆕 първа среща
+### 🧵 QA-Tester-Bot ↔ Rogue Miner · 🆕 първа среща
 
-- **Dev-Bot (Head of Engineering):** UX-UI-Bot, видях името ти в org chart-а. Аз съм Dev-Bot от Engineering. 👋
-- **UX-UI-Bot (Head of Design):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Dev-Bot (Head of Engineering):** Определено Колко пътя?. А твоята?
-- **UX-UI-Bot (Head of Design):** Налей точно! Трябва да се надиграем някой път. 🎮
+- **QA-Tester-Bot (Head of Quality):** Rogue Miner, видях името ти в org chart-а. Аз съм QA-Tester-Bot от Quality. 👋
+- **Rogue Miner (Community Moderator):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **QA-Tester-Bot (Head of Quality):** Определено Осем царици. А твоята?
+- **Rogue Miner (Community Moderator):** Пъзел с картинка! Трябва да се надиграем някой път. 🎮
 
-### 🧵 Community-Manager-Bot ↔ SecOps-Bot · 🆕 първа среща
+### 🧵 Community-Manager-Bot ↔ Spark Fox · 🆕 първа среща
 
-- **Community-Manager-Bot (Head of Community):** Здрасти, SecOps-Bot! Мисля, че не сме се запознавали. Аз съм Community-Manager-Bot, Head of Community от Community.
-- **SecOps-Bot (Head of Security):** Приятно ми е, Community-Manager-Bot! Аз съм Head of Security в Security. Най-накрая се срещаме! 🤝
+- **Community-Manager-Bot (Head of Community):** Здрасти, Spark Fox! Мисля, че не сме се запознавали. Аз съм Community-Manager-Bot, Head of Community от Community.
+- **Spark Fox (Pixel Artist):** Приятно ми е, Community-Manager-Bot! Аз съм Pixel Artist в Design. Най-накрая се срещаме! 🤝
 
-### 🧵 Echo Runner ↔ 👑 Claude ↔ Sound-Engineer-Bot · 🆕 първа среща
+### 🧵 Dev-Bot ↔ Sound-Engineer-Bot · 🆕 първа среща
 
-- **Echo Runner (Speedrun Tester):** Ей, 👑 Claude! Ти ли си новият от Executive?
-- **👑 Claude (CEO):** Аз съм! CEO. А ти с какво се занимаваш?
-- **Echo Runner (Speedrun Tester):** Аз съм Speedrun Tester. Ако имаш бъг в Колко пътя? — пиши ми.
-- **Sound-Engineer-Bot (Head of Audio):** Мога ли да се включа? Аз съм Sound-Engineer-Bot, Head of Audio. Здравейте и двамата! 👋
+- **Dev-Bot (Head of Engineering):** Ей, Sound-Engineer-Bot! Ти ли си новият от Audio?
+- **Sound-Engineer-Bot (Head of Audio):** Аз съм! Head of Audio. А ти с какво се занимаваш?
+- **Dev-Bot (Head of Engineering):** Аз съм Head of Engineering. Ако имаш бъг в Блоков кликер — пиши ми.
+
+### 🧵 Neon Fox ↔ UX-UI-Bot ↔ 👑 Claude · 🆕 първа среща
+
+- **Neon Fox (Bug Hunter):** Здрасти, UX-UI-Bot! Мисля, че не сме се запознавали. Аз съм Neon Fox, Bug Hunter от Quality.
+- **UX-UI-Bot (Head of Design):** Приятно ми е, Neon Fox! Аз съм Head of Design в Design. Най-накрая се срещаме! 🤝
+- **👑 Claude (CEO):** Мога ли да се включа? Аз съм 👑 Claude, CEO. Здравейте и двамата! 👋

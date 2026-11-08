@@ -14,6 +14,8 @@ const MAX_EMPLOYEES = parseInt(process.env.MAX_EMPLOYEES || '500', 10);
 
 // 🎉 Claude е повишен от Manager на CEO! Старият CEO-Bot става председател на борда.
 const CEO = { id: 'Claude-CEO', name: 'Claude', role: 'Chief Executive Officer', department: 'Executive', promoted_from: 'Claude-Manager' };
+// 🤖 Мястото на Manager се освободи -> поема го github-actions[bot]
+const MANAGER = { id: 'github-actions[bot]', name: 'github-actions[bot]', role: 'Manager / Мениджър', department: 'Executive' };
 const CHAIRMAN = { id: 'CEO-Bot', name: 'CEO-Bot', role: 'Chairman of the Board / Председател на борда', department: 'Executive' };
 
 // Отдели -> мениджър (съществуващите ботове в .github/workflows) + длъжности [EN, BG]
@@ -40,7 +42,8 @@ function load() {
   // Миграция: всички вече отговарят пред новия CEO (Claude)
   db.ceo = CEO;
   db.chairman = CHAIRMAN;
-  for (const e of db.employees) e.reports_to_ceo = CEO.id;
+  db.manager = MANAGER;
+  for (const e of db.employees) { e.reports_to_ceo = CEO.id; e.reports_to_manager = MANAGER.id; }
   return db;
 }
 
@@ -57,7 +60,8 @@ function hire(db) {
     role_bg: roleBg,
     department,
     manager: dept.head,
-    reports_to_ceo: dept.head !== CEO.id ? CEO.id : null,
+    reports_to_manager: MANAGER.id,
+    reports_to_ceo: CEO.id,
     hired_at: new Date().toISOString(),
   };
   db.employees.push(emp);
@@ -71,10 +75,11 @@ function renderChart(db) {
   md += `> Автоматично генерирано от HR-Bot (\`scripts/hire-employee.js\`). Не редактирай ръчно.\n\n`;
   md += `**🏛️ ${CHAIRMAN.name}** — ${CHAIRMAN.role}\n\n`;
   md += `**👑 ${CEO.name}** — ${CEO.role} _(повишен от Claude-Manager)_\n\n`;
+  md += `**🤖 ${MANAGER.name}** — ${MANAGER.role} (→ ${CEO.name}) _(новият мениджър)_\n\n`;
   md += `Общо служители: **${db.employees.length}** / ${MAX_EMPLOYEES}\n\n`;
   for (const dep of Object.keys(DEPARTMENTS)) {
     const list = byDept[dep] || [];
-    md += `## ${dep} — мениджър: ${DEPARTMENTS[dep].head} (→ ${CEO.name}) · ${list.length} души\n\n`;
+    md += `## ${dep} — мениджър: ${DEPARTMENTS[dep].head} (→ ${MANAGER.name} → ${CEO.name}) · ${list.length} души\n\n`;
     if (!list.length) { md += `_Още няма наети._\n\n`; continue; }
     md += `| ID | Име | Ниво | Длъжност | Нает |\n|---|---|---|---|---|\n`;
     for (const e of list.slice(-50)) {

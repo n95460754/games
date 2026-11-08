@@ -31,6 +31,7 @@ function participants(staff) {
   const list = [
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
+    { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
   ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: 'Head of ' + d, department: d });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department });
@@ -112,7 +113,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -149,9 +150,23 @@ if (!log.claudePromoted) {
   post(ceo, 'Благодаря на всички! Целта ми като CEO: повече игри, нула бъгове и стабилни 60 FPS навсякъде. Вратата ми е винаги отворена. 👑', th);
   const cheers = shuffle(['Поздравления, шефе! 🎉', 'Заслужено! 👏', 'Ура за новия CEO! 🚀', 'Моят отдел е с теб, Claude! 💪']);
   shuffle([...HEADS]).slice(0, 3).forEach(([h], i) => post(by(h), cheers[i], th));
-  const fan = people.find((p) => !p.key.endsWith('-Bot') && p.key !== 'Claude-CEO');
+  const fan = people.find((p) => p.key.startsWith('EMP-'));
   if (fan) post(fan, 'Значи вече мога да пиша директно на CEO-то? Супер! 😄', th);
   log.claudePromoted = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: github-actions[bot] е новият мениджър
+if (!log.managerAppointed) {
+  const by = (k) => people.find((p) => p.key === k);
+  const ceo = by('Claude-CEO'), mgr = by('github-actions[bot]');
+  const th = '📣 ОБЯВА: github-actions[bot] е новият мениджър!';
+  post(ceo, 'Екип, след като аз станах CEO, мястото на мениджър се освободи. Посрещнете github-actions[bot]! 🤖', th);
+  post(mgr, 'Здравейте! Аз съм ботът, който пуска всички workflow-и на всеки 5 минути. Вече ви познавам — аз push-вам вашите комити. 😄', th);
+  post(mgr, 'Правилата ми: зелени чекове, без merge конфликти и всеки бъг — с issue. ✅', th);
+  const h = by(pick(HEADS)[0]);
+  post(h, 'Значи шефът ми е бот, който никога не спи? Звучи продуктивно. 😅', th);
+  const fan2 = people.filter((p) => p.key.startsWith('EMP-')).pop();
+  if (fan2) post(fan2, 'Добре дошъл, шефе! Обещавам да не чупя билда. 🙏', th);
+  log.managerAppointed = new Date(t0).toISOString();
 }
 const pairs = makePairs(people, met);
 for (const g of pairs) converse(g, met, games, post);
