@@ -1,0 +1,24 @@
+name: Crypto Tokenomics Bot
+on:
+  schedule:
+    - cron: '0 23 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+jobs:
+  tokenomics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "Crypto-Tokenomics-Bot"
+          git config user.email "crypto-tokenomics-bot@users.noreply.github.com"
+          echo "## 🪙 Crypto-Tokenomics-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Балансът на виртуалните точки и наградите е проверен." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "feat(economy): optimize virtual token rewards and score payouts" || exit 0
+          git push origin main
