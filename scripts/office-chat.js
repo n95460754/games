@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { TEAMS, BOTS, teamFor, runTeamTasks } = require('./teams');
+const { TEAMS, TEAMS_LEADER, BOTS, teamFor, runTeamTasks } = require('./teams');
 const janitor = require('./janitor');
 
 const ROOT = path.join(__dirname, '..');
@@ -34,6 +34,7 @@ function participants(staff) {
     { key: 'ChatGPT', name: '🎬 ChatGPT', role: 'Director', department: 'Executive' },
     { key: 'Gemini', name: '✨ Gemini', role: 'Senior Manager', department: 'Executive' },
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
+    { ...TEAMS_LEADER, department: 'Executive' },
     janitor.JANITOR,
   ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: BOTS[h][1], department: d, team: teamFor(d) });
@@ -116,7 +117,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || p.key === 'Perplexity' || p.key === 'Copilot' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || p.key === 'Perplexity' || p.key === 'Copilot' || p.key === 'Brave-AI' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -250,6 +251,16 @@ if (!log.copilotAppointed) {
   post(by('Dev-Bot'), 'Шефът ми е AI, който пише код по-бързо от мен?! ...Е, поне ще имам повече време за кафе. ☕', th);
   post(by('Refactoring-Bot'), 'Copilot, само моля без 500-редови функции. 😅', th);
   log.copilotAppointed = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: Brave AI е лидерът на всички отбори
+if (!log.braveAppointed) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Brave AI е лидерът на всички отбори!';
+  post(by('github-actions[bot]'), 'Екип, 7 отбора са много за един мениджър. От днес Brave AI е лидерът на всички отбори. Всички лидери на отбори докладват на Brave AI. 🦁', th);
+  post(by('Brave-AI'), 'Здравейте, всичките 7 отбора! Ще правя кратка среща с всеки отбор при всяко пускане. Смело напред! 🦁', th);
+  for (const t of Object.values(TEAMS)) post(by(t.leader), `${t.emoji} ${t.leader}: на линия, Brave AI!`, th);
+  post(by('SecOps-Bot'), 'Brave AI ли? Значи лидер, който пази и поверителността. Харесва ми. 🛡️', th);
+  log.braveAppointed = new Date(t0).toISOString();
 }
 // 💻 Copilot преглежда ИСТИНСКИ файл от /arcade и дава технически съвет
 {

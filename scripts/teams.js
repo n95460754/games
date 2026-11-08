@@ -17,6 +17,9 @@ const ROOT = path.join(__dirname, '..');
 const TASKS = path.join(ROOT, 'employees', 'tasks.json');
 const PAGE = path.join(ROOT, 'TEAMS.md');
 
+// 🦁 Brave AI е лидерът на ВСИЧКИ отбори: всеки лидер на отбор докладва на Brave AI
+const TEAMS_LEADER = { key: 'Brave-AI', name: '🦁 Brave AI', role: 'Leader of All Teams' };
+
 const TEAMS = {
   'Team Dev': {
     emoji: '🛠️',
@@ -135,7 +138,16 @@ function runTeamTasks({ people, games, post, round }) {
     const leader = by(t.leader);
     const reviewer = by(t.reviewer);
     const team = roster(teamName, people);
-    const th = `${t.emoji} ${teamName} (лидер: ${t.leader})`;
+    const th = `${t.emoji} ${teamName} (лидер: ${t.leader} → 🦁 Brave AI)`;
+
+    // 0) 🦁 Brave AI прави кратка среща с всеки отбор (истински числа от таблото)
+    const brave = by(TEAMS_LEADER.key);
+    if (brave && leader) {
+      const mine = board.tasks.filter((x) => x.team === teamName);
+      const openN = mine.filter((x) => x.status !== 'done').length, doneN = mine.filter((x) => x.status === 'done').length;
+      post(brave, `${t.leader}, бърза среща: ${teamName} има ${openN} отворени и ${doneN} готови задачи. ${pick(['Давайте! 🦁', 'Фокус върху ревютата. 🔍', 'Пазете отбора мотивиран. 💪', 'Ако нещо блокира — кажете ми веднага.'])}`, th);
+      post(leader, pick(['Разбрано, Brave AI! 🫡', 'Прието, лидере!', 'Отборът е готов! 🚀']), th);
+    }
 
     // 1) Задачите напредват с една стъпка
     for (const task of board.tasks.filter((x) => x.team === teamName && x.status !== 'done')) {
@@ -183,13 +195,13 @@ function runTeamTasks({ people, games, post, round }) {
 function renderTeams(board, people) {
   let md = `# 👥 Отбори / Teams\n\n`;
   md += `> Автоматично от \`scripts/teams.js\`. Правило: всеки нов служител влиза в отбора на своя отдел.\n\n`;
-  md += `🤖 Мениджър: **github-actions[bot]** → ✨ Старши мениджър: **Gemini** → 🎬 Директор: **ChatGPT** → 🔎 Вицепрезидент: **Perplexity** → 💻 CTO: **Copilot** → 👑 CEO: **Claude**\n\n`;
+  md += `🦁 Лидер на всички отбори: **Brave AI** → 🤖 Мениджър: **github-actions[bot]** → ✨ Старши мениджър: **Gemini** → 🎬 Директор: **ChatGPT** → 🔎 Вицепрезидент: **Perplexity** → 💻 CTO: **Copilot** → 👑 CEO: **Claude**\n\n`;
   for (const [teamName, t] of Object.entries(TEAMS)) {
     const team = roster(teamName, people);
     const emps = team.filter((p) => p.key.startsWith('EMP-'));
     const tasks = board.tasks.filter((x) => x.team === teamName);
     md += `## ${t.emoji} ${teamName}\n\n`;
-    md += `- **Лидер:** ${t.leader}\n- **В отбора:** ${t.members.join(', ')}\n`;
+    md += `- **Лидер:** ${t.leader} (→ 🦁 Brave AI)\n- **В отбора:** ${t.members.join(', ')}\n`;
     md += `- **Отдели:** ${t.departments.join(', ')}\n- **Служители:** ${emps.length}\n`;
     md += `- **Задачи:** ${tasks.filter((x) => x.status !== 'done').length} отворени, ${tasks.filter((x) => x.status === 'done').length} готови\n\n`;
     const rows = tasks.filter((x) => x.status !== 'done').concat(tasks.filter((x) => x.status === 'done').slice(-5));
@@ -206,4 +218,4 @@ function renderTeams(board, people) {
   return md;
 }
 
-module.exports = { TEAMS, BOTS, teamFor, runTeamTasks };
+module.exports = { TEAMS, TEAMS_LEADER, BOTS, teamFor, runTeamTasks };

@@ -23,6 +23,8 @@ const VICE_PRESIDENT = { id: 'Perplexity', name: 'Perplexity', role: 'Vice Presi
 const DIRECTOR = { id: 'ChatGPT', name: 'ChatGPT', role: 'Director / Директор', department: 'Executive' };
 // ✨ Gemini е Senior Manager: между CEO-то (Claude) и мениджъра (github-actions[bot])
 const SENIOR_MANAGER = { id: 'Gemini', name: 'Gemini', role: 'Senior Manager / Старши мениджър', department: 'Executive' };
+// 🦁 Brave AI е лидерът на всички отбори (под мениджъра github-actions[bot])
+const TEAMS_LEADER = { id: 'Brave-AI', name: 'Brave AI', role: 'Leader of All Teams / Лидер на всички отбори', department: 'Executive' };
 // 🤖 Мястото на Manager се освободи -> поема го github-actions[bot]
 const MANAGER = { id: 'github-actions[bot]', name: 'github-actions[bot]', role: 'Manager / Мениджър', department: 'Executive' };
 const CHAIRMAN = { id: 'CEO-Bot', name: 'CEO-Bot', role: 'Chairman of the Board / Председател на борда', department: 'Executive' };
@@ -61,9 +63,10 @@ function load() {
   db.director = DIRECTOR;
   db.vice_president = VICE_PRESIDENT;
   db.cto = CTO;
+  db.teams_leader = TEAMS_LEADER;
   // ПРАВИЛО: всеки служител (и старите) е в отбора на своя отдел
   for (const e of db.employees) {
-    e.reports_to_ceo = CEO.id; e.reports_to_manager = MANAGER.id; e.reports_to_senior_manager = SENIOR_MANAGER.id; e.reports_to_director = DIRECTOR.id; e.reports_to_vice_president = VICE_PRESIDENT.id; e.reports_to_cto = CTO.id;
+    e.reports_to_ceo = CEO.id; e.reports_to_manager = MANAGER.id; e.reports_to_senior_manager = SENIOR_MANAGER.id; e.reports_to_director = DIRECTOR.id; e.reports_to_vice_president = VICE_PRESIDENT.id; e.reports_to_cto = CTO.id; e.reports_to_teams_leader = TEAMS_LEADER.id;
     e.team = teamFor(e.department); e.team_leader = TEAMS[e.team].leader;
   }
   return db;
@@ -89,6 +92,7 @@ function hire(db) {
     reports_to_director: DIRECTOR.id,
     reports_to_vice_president: VICE_PRESIDENT.id,
     reports_to_cto: CTO.id,
+    reports_to_teams_leader: TEAMS_LEADER.id,
     reports_to_ceo: CEO.id,
     hired_at: new Date().toISOString(),
   };
@@ -108,9 +112,10 @@ function renderChart(db) {
   md += `**🎬 ${DIRECTOR.name}** — ${DIRECTOR.role} (→ ${VICE_PRESIDENT.name})\n\n`;
   md += `**✨ ${SENIOR_MANAGER.name}** — ${SENIOR_MANAGER.role} (→ ${DIRECTOR.name})\n\n`;
   md += `**🤖 ${MANAGER.name}** — ${MANAGER.role} (→ ${SENIOR_MANAGER.name})\n\n`;
+  md += `**🦁 ${TEAMS_LEADER.name}** — ${TEAMS_LEADER.role} (→ ${MANAGER.name})\n\n`;
   md += `Общо служители: **${db.employees.length}** / ${MAX_EMPLOYEES}\n\n`;
   for (const [teamName, t] of Object.entries(TEAMS)) {
-    md += `# ${t.emoji} ${teamName} — лидер: ${t.leader} (→ ${MANAGER.name} → ${SENIOR_MANAGER.name} → ${DIRECTOR.name} → ${VICE_PRESIDENT.name} → ${CTO.name} → ${CEO.name})\n\n`;
+    md += `# ${t.emoji} ${teamName} — лидер: ${t.leader} (→ ${TEAMS_LEADER.name} → ${MANAGER.name} → ${SENIOR_MANAGER.name} → ${DIRECTOR.name} → ${VICE_PRESIDENT.name} → ${CTO.name} → ${CEO.name})\n\n`;
   for (const dep of t.departments) {
     const list = byDept[dep] || [];
     md += `## ${dep} — шеф: ${DEPARTMENTS[dep].head} · ${list.length} души\n\n`;

@@ -16,9 +16,11 @@
 
 **🤖 github-actions[bot]** — Manager / Мениджър (→ Gemini)
 
-Общо служители: **23** / 500
+**🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+Общо служители: **24** / 500
+
+# 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Engineering — шеф: Dev-Bot · 5 души
 
@@ -50,7 +52,7 @@
 
 _Още няма наети._
 
-# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Operations — шеф: DevOps-Master-Bot · 3 души
 
@@ -76,13 +78,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0013 | Quark Miner | Junior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-08 23:11 UTC |
 
-# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Gameplay — шеф: Game-Physics-Bot · 0 души
 
 _Още няма наети._
 
-# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+# 🚀 Team Release — лидер: Release-Manager-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Release — шеф: Release-Manager-Bot · 1 души
 
@@ -90,22 +92,23 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0011 | Glitch Walker | Mid | Build Engineer / Билд инженер | 2026-11-08 23:11 UTC |
 
-# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+# 🌍 Team Experience — лидер: Accessibility-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Experience — шеф: Accessibility-Bot · 0 души
 
 _Още няма наети._
 
-# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+# 📊 Team Data — лидер: Data-Analyst-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Data — шеф: Data-Analyst-Bot · 2 души
+## Data — шеф: Data-Analyst-Bot · 3 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
 | EMP-0010 | Rogue Runner | Lead | Data Analyst / Анализатор на данни | 2026-11-08 23:11 UTC |
 | EMP-0019 | Zen Forge | Mid | API Developer / API разработчик | 2026-11-08 23:11 UTC |
+| EMP-0024 | Blaze Volt | Intern | Data Analyst / Анализатор на данни | 2026-11-08 23:16 UTC |
 
-# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
+# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
 ## Innovation — шеф: Chief-Visionary-Bot · 0 души
 
