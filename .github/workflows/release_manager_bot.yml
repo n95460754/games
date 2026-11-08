@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: '0 5 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'AI_BOARD_ROOM.md'
 
 jobs:
   release:
@@ -23,4 +20,4 @@ jobs:
           echo "---" >> AI_BOARD_ROOM.md
           git add AI_BOARD_ROOM.md
           git commit -m "chore(release): prepare production release build" || exit 0
-          git push origin main
+          git pull --rebase origin main && git push origin main

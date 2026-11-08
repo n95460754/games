@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: '0 18 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'AI_BOARD_ROOM.md' # Dev-Bot се активира веднага щом мениджърите обновят чата!
 
 jobs:
   dev_execution:
@@ -33,4 +30,4 @@ jobs:
         run: |
           git add AI_BOARD_ROOM.md
           git commit -m "feat(dev): execute management directives and log dev task" || exit 0
-          git push origin main
+          git pull --rebase origin main && git push origin main

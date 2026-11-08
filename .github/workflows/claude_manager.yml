@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: '0 12 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'CEO_REPORT.md' # Claude се задейства веднага щом CEO-то публикува нещо ново!
 
 jobs:
   claude_ceo:
@@ -42,4 +39,4 @@ jobs:
         run: |
           git add AI_BOARD_ROOM.md
           git commit -m "chore(ceo): Claude-CEO issues directive in board room" || exit 0
-          git push origin main
+          git pull --rebase origin main && git push origin main

@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: '0 0 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'AI_BOARD_ROOM.md' # CEO-то се събужда веднага щом Claude напише отговор!
 
 jobs:
   ceo_executive_action:
@@ -35,4 +32,4 @@ jobs:
         run: |
           git add CEO_REPORT.md
           git commit -m "chore(chairman): board notes for Claude-CEO" || exit 0
-          git push origin main
+          git pull --rebase origin main && git push origin main
