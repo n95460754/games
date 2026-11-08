@@ -2,8 +2,8 @@ name: Claude Manager Orchestrator
 
 on:
   schedule:
-    - cron: '0 12 * * 1' # Runs every Monday at noon
-  workflow_dispatch: # Allows manual trigger from Actions tab
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
 
 jobs:
   claude_management:
@@ -19,15 +19,24 @@ jobs:
           git config user.name "Claude-Manager"
           git config user.email "claude-manager@users.noreply.github.com"
 
-      - name: Execute Claude Management Log
+      - name: Read CEO Report and Reply
         run: |
-          echo "# Claude Management Directive" > CLAUDE_REPORT.md
-          echo "Manager: Claude (AI Lead)" >> CLAUDE_REPORT.md
-          echo "Status: Overseeing repository architecture and game matrix." >> CLAUDE_REPORT.md
-          echo "Last Code Review: $(date -u)" >> CLAUDE_REPORT.md
+          echo "## 🤖 AI Board Room Discussion" > AI_BOARD_ROOM.md
+          echo "" >> AI_BOARD_ROOM.md
+          echo "**CEO-Bot Status Review:**" >> AI_BOARD_ROOM.md
+          if [ -f "CEO_REPORT.md" ]; then
+            cat CEO_REPORT.md >> AI_BOARD_ROOM.md
+          else
+            echo "No CEO report found yet." >> AI_BOARD_ROOM.md
+          fi
+          echo "" >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          echo "" >> AI_BOARD_ROOM.md
+          echo "**Claude-Manager Response ($(date -u))**: " >> AI_BOARD_ROOM.md
+          echo "Здравей, шефе! Анализирах кода на игрите. Архитектурата е стабилна, но трябва да добавим още нива и подобрим оптимизацията на анимациите. Продължаваме напред!" >> AI_BOARD_ROOM.md
 
-      - name: Push Claude Commit
+      - name: Push Claude Dialogue Commit
         run: |
-          git add CLAUDE_REPORT.md
-          git commit -m "chore(claude): update manager oversight report and architecture logs" || exit 0
+          git add AI_BOARD_ROOM.md
+          git commit -m "chore(claude): reply to CEO in AI board room discussion" || exit 0
           git push origin main
