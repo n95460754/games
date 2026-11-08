@@ -271,7 +271,10 @@ const GAMES=[
   {"id": "nummachine", "cat": "brain", "icon": "⚙️", "name": "Числова машина", "desc": "Машината прави нещо с всяко число — открий правилото и познай какво ще излезе", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "ghastpunch", "cat": "action", "icon": "🔥", "name": "Отбий огнената топка", "desc": "Гастите стрелят огнени топки — удари ги обратно с меча и ги свали", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "loopover", "cat": "puzzle", "icon": "🔄", "name": "Въртележка от блокове", "desc": "Плъзгай цели редове и колони, докато всеки ред стане от един цвят", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "anvildrop", "cat": "skill", "icon": "🔨", "name": "Наковалня от небето", "desc": "Кранът се люшка — пусни наковалнята точно върху зомбитата, но не върху селяните", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "anvildrop", "cat": "skill", "icon": "🔨", "name": "Наковалня от небето", "desc": "Кранът се люшка — пусни наковалнята точно върху зомбитата, но не върху селяните", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "silverfish", "cat": "action", "icon": "🐛", "name": "Сребърни рибки", "desc": "Събирай очи на Ендър в крепостта, докато рояк сребърни рибки те гони", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "numpath", "cat": "puzzle", "icon": "🔢", "name": "Пътеката на числата", "desc": "Свържи числата от 1 до края с една пътека през всички блокове", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "stacks", "cat": "brain", "icon": "📦", "name": "Стакове по 64", "desc": "Сметки с инвентара: колко са стаковете, колко блока остават и колко слота трябват", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

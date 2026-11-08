@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сребърни рибки</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐛 Сребърни рибки</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 289. Сребърни рибки
+A.add({id:'silverfish',cat:'action',icon:'🐛',name:'Сребърни рибки',desc:'Събирай очи на Ендър в крепостта, докато рояк сребърни рибки те гони',
+  help:'Стрелки / WASD — движение (или задръж мишката / пръста там, където искаш да отидеш). Space или клик/докосване върху Стив = замах с меча (1 точка за всяка рибка). Око на Ендър = 2 точки. Рибките излизат от заразените камъни и стават все повече и по-бързи. 3 сърца.',
+  start(g){g.p={x:240,y:200};g.fish=[];g.lives=3;g.inv=0;g.cd=0;g.sw=0;g.sp=2;g.parts=[];g.pop=[];g.eye=this.spot(g);g.dir=1;
+    g.holes=[[40,48],[440,48],[40,330],[440,330],[240,48],[240,330],[40,190],[440,190]];g.warn=[];},
+  spot(g){let x,y;do{x=A.rnd(50,430);y=A.rnd(70,320);}while(Math.hypot(x-g.p.x,y-g.p.y)<90);return {x,y,ph:0};},
+  swing(g){if(g.cd>0)return;g.cd=.9;g.sw=.25;A.beep(520,.06,'sawtooth',.04);let k=0;
+    for(const f of g.fish){if(!f.dead&&Math.hypot(f.x-g.p.x,f.y-g.p.y)<46){f.dead=1;k++;
+      for(let i=0;i<8;i++)g.parts.push({x:f.x,y:f.y,vx:A.rnd(-80,80),vy:A.rnd(-80,80),t:A.rnd(.25,.5),col:'#b0b8c0'});}}
+    if(k){g.score+=k+(k>2?2:0);g.pop.push({x:g.p.x,y:g.p.y-24,s:'+'+(k+(k>2?2:0))+(k>2?' Комбо!':''),col:'#ffd54f',t:.8});A.beep(880,.08,'triangle',.05);}},
+  key(g,k){if(k==='Space'||k==='Enter')this.swing(g);},
+  click(g,mx,my){if(Math.hypot(mx-g.p.x,my-g.p.y)<40)this.swing(g);},
+  update(g,dt){const K=A.keys,p=g.p;let dx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),dy=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);
+    if(!dx&&!dy&&A.mouse.down){const mx=A.mouse.x-p.x,my=A.mouse.y-p.y,d=Math.hypot(mx,my);if(d>40){dx=mx/d;dy=my/d;}}
+    const l=Math.hypot(dx,dy);if(l){dx/=l;dy/=l;p.x=A.clamp(p.x+dx*140*dt,40,440);p.y=A.clamp(p.y+dy*140*dt,62,332);if(dx)g.dir=dx>0?1:-1;g.walk=(g.walk||0)+dt*10;}
+    g.cd=Math.max(0,g.cd-dt);g.sw=Math.max(0,g.sw-dt);g.inv=Math.max(0,g.inv-dt);g.eye.ph+=dt*3;
+    // око на Ендър
+    if(Math.hypot(g.eye.x-p.x,g.eye.y-p.y)<20){g.score+=2;g.pop.push({x:g.eye.x,y:g.eye.y-14,s:'+2',col:'#4dd0e1',t:.8});A.tune([660,990]);g.eye=this.spot(g);}
+    // нови рибки
+    g.sp-=dt;if(g.sp<=0&&g.fish.length<26){const h=A.pick(g.holes);g.warn.push({x:h[0],y:h[1],t:.7});g.sp=Math.max(.45,2.2-g.t*.03);}
+    g.warn.forEach(w=>{w.t-=dt;if(w.t<=0)g.fish.push({x:w.x,y:w.y,ph:Math.random()*6,v:A.rnd(.85,1.15)});});g.warn=g.warn.filter(w=>w.t>0);
+    const fs=Math.min(115,48+g.t*1.1);
+    for(const f of g.fish){if(f.dead)continue;f.ph+=dt*12;const ax=p.x-f.x,ay=p.y-f.y,d=Math.hypot(ax,ay)||1,w=Math.sin(f.ph*.4)*.5;
+      const vx=ax/d-ay/d*w,vy=ay/d+ax/d*w;f.x+=vx*fs*f.v*dt;f.y+=vy*fs*f.v*dt;f.a=Math.atan2(vy,vx);
+      if(d<16&&g.inv<=0){g.lives--;g.inv=1.2;f.dead=1;A.beep(130,.3,'sawtooth',.06);g.pop.push({x:p.x,y:p.y-24,s:'Ох!',col:'#ff6b6b',t:.8});
+        if(g.lives<=0)return A.over(g,'Рибките те хванаха! Точки: '+g.score);}}
+    g.fish=g.fish.filter(f=>!f.dead);
+    g.parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.t-=dt;});g.parts=g.parts.filter(q=>q.t>0);
+    g.pop.forEach(q=>{q.y-=30*dt;q.t-=dt;});g.pop=g.pop.filter(q=>q.t>0);},
+  steve(g){const p=g.p,x=Math.round(p.x),y=Math.round(p.y),l=Math.sin(g.walk||0)*3;if(g.inv>0&&Math.sin(g.t*30)>0)return;
+    c.fillStyle='#3a3aa8';c.fillRect(x-6,y+6,5,10+l);c.fillRect(x+1,y+6,5,10-l);
+    c.fillStyle='#2aa0a8';c.fillRect(x-7,y-6,14,13);c.fillStyle='#c99a72';c.fillRect(x-6,y-18,12,12);
+    c.fillStyle='#4a2f1b';c.fillRect(x-6,y-18,12,4);c.fillStyle='#fff';c.fillRect(x+(g.dir>0?1:-5),y-12,4,3);
+    // меч
+    const s=g.sw>0?(1-g.sw/.25)*Math.PI*1.6-0.8:-0.6;c.save();c.translate(x+g.dir*7,y);c.scale(g.dir,1);c.rotate(s);
+    c.fillStyle='#4dd0e1';c.fillRect(0,-2,20,4);c.fillStyle='#6d4c41';c.fillRect(-4,-3,5,6);c.restore();
+    if(g.sw>0){c.strokeStyle='rgba(255,255,255,'+(g.sw*3)+')';c.lineWidth=3;c.beginPath();c.arc(x,y,40,0,Math.PI*2);c.stroke();}},
+  fishD(f){c.save();c.translate(f.x,f.y);c.rotate(f.a||0);const w=Math.sin(f.ph)*2;
+    for(let i=0;i<4;i++){c.fillStyle=i%2?'#8d969e':'#aab3bb';c.fillRect(-12+i*6,-4+(i===0?w:0)+(i===3?0:0),6,8-(i===0?2:0));}
+    c.fillStyle='#222';c.fillRect(8,-3,2,2);c.fillRect(8,1,2,2);c.restore();},
+  draw(g){A.bg('#3b3b3b');
+    for(let x=0;x<480;x+=24)for(let y=24;y<360;y+=24){const e=x<24||x>=456||y<48||y>=336;
+      if(e)A.block(x,y,24,((x*7+y*3)%5)?'#6e6e6e':'#5f6a5f');else{c.fillStyle=((x+y)/24)%2?'#4a4a4a':'#444';c.fillRect(x,y,24,24);}}
+    g.holes.forEach(h=>{c.fillStyle='#2b2b2b';c.fillRect(h[0]-8,h[1]-8,16,16);});
+    g.warn.forEach(w=>{c.fillStyle='rgba(255,80,80,'+(.4+Math.sin(w.t*30)*.3)+')';c.fillRect(w.x-12,w.y-12,24,24);});
+    // око на Ендър
+    const e=g.eye,b=Math.sin(e.ph)*3;c.fillStyle='rgba(77,208,225,.25)';c.fillRect(e.x-12,e.y-12+b,24,24);A.block(e.x-8,e.y-8+b,16,'#2e7d6e');c.fillStyle='#b8f2c0';c.fillRect(e.x-3,e.y-3+b,6,6);c.fillStyle='#111';c.fillRect(e.x-1,e.y-2+b,2,4);
+    g.fish.forEach(f=>this.fishD(f));this.steve(g);
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x-2,q.y-2,4,4);});
+    g.pop.forEach(q=>A.txt(q.s,q.x,q.y,14,q.col,'center'));
+    c.fillStyle='#000';c.fillRect(0,0,480,24);
+    A.txt('Точки: '+g.score,8,12,14,'#ffd54f');A.txt('Рибки: '+g.fish.length,240,12,13,'#ccc','center');
+    A.txt(g.cd>0?'⚔ ...':'⚔ готов',330,12,12,g.cd>0?'#888':'#8bc34a');A.txt('❤'.repeat(Math.max(0,g.lives)),472,12,14,'#f55','right');}
+});
+</script>
+</body>
+</html>

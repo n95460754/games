@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стакове по 64</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📦 Стакове по 64</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 291. Стакове по 64
+const ST_KEYS=['1','2','3','4','5','6','7','8','9','0','⌫','✓'];
+const ST_IT=[{n:'камъка',col:'#5f5f5f',s:64},{n:'дъски',col:'#9a6a3a',s:64},{n:'пясъка',col:'#e0c068',s:64},{n:'диаманта',col:'#4de8f5',s:64},{n:'яйца',col:'#f3e5c8',s:16},{n:'снежни топки',col:'#eef4ff',s:16},{n:'ендър перли',col:'#2e7d6e',s:16}];
+A.add({id:'stacks',cat:'brain',icon:'📦',name:'Стакове по 64',desc:'Сметки с инвентара: колко са стаковете, колко блока остават и колко слота трябват',
+  help:'В Minecraft блоковете се събират по 64 в един слот (яйцата, снежните топки и ендър перлите — по 16). Реши задачата за инвентара и напиши отговора с цифрите + Enter или с бутоните долу. Бърз отговор (под 10 сек.) = бонус точка. 3 живота, на всеки 4 верни нивото расте.',
+  start(g){g.lvl=1;g.ok=0;g.lives=3;g.inp='';g.msg='';g.mt=0;this.next(g);},
+  next(g){const L=g.lvl,T=[0,1];if(L>=2)T.push(2,3);if(L>=3)T.push(4);if(L>=4)T.push(5);
+    const it=A.pick(L>=3||Math.random()<.3?ST_IT:ST_IT.slice(0,4)),S=it.s,t=A.pick(T);g.it=it;g.inp='';g.qt=0;
+    const k=A.ri(1,Math.min(9,1+L*2)),r=A.ri(1,S-1),tot=k*S+r;g.k=k;g.r=r;g.tot=tot;g.t2=t;
+    if(t===0){g.q=k+' стака и '+r+' '+it.n+' — колко са общо?';g.ans=tot;g.show='slots';}
+    else if(t===1){g.q='Имаш '+tot+' '+it.n+'. Колко ПЪЛНИ стака?';g.ans=k;g.show='pile';}
+    else if(t===2){g.q='Имаш '+tot+' '+it.n+'. Колко остават извън пълните стакове?';g.ans=r;g.show='pile';}
+    else if(t===3){g.q='Колко слота трябват за '+tot+' '+it.n+'?';g.ans=k+1;g.show='pile';}
+    else if(t===4){const m=A.ri(1,S-1);g.need=k*S+m;g.have=A.ri(1,k)*S;g.q='Имаш '+g.have/S+(g.have===S?' стак ':' стака ')+it.n+'. Трябват ти '+g.need+'. Колко още?';g.ans=g.need-g.have;g.show='slotsH';}
+    else{const ch=A.ri(1,3);g.q=ch+(ch===1?' сандък':' сандъка')+' (27 слота) пълни '+(it.n[0]==='с'?'със ':'с ')+it.n+' по '+S+' — колко са?';g.ans=ch*27*S;g.ch=ch;g.show='chest';}},
+  submit(g){if(!g.inp||g.mt>0)return;const ok=+g.inp===g.ans;flash(g,ok);
+    if(ok){const pts=g.lvl+(g.qt<10?1:0);g.score+=pts;g.ok++;g.good=1;g.msg='Вярно! +'+pts;if(g.ok%4===0){g.lvl++;g.msg+='  · Ниво '+g.lvl+'!';}}
+    else{g.lives--;g.good=0;g.msg='Не! Отговорът е '+g.ans+'  ('+this.why(g)+')';if(g.lives<=0)return A.over(g,'Отговорът беше '+g.ans);}
+    g.mt=ok?1.1:3;},
+  why(g){const S=g.it.s;return g.t2===0?g.k+'×'+S+'+'+g.r:g.t2===1?g.tot+' = '+g.k+'×'+S+' + '+g.r:g.t2===2?g.tot+' − '+g.k+'×'+S:g.t2===3?g.k+' пълни + 1 за остатъка':g.t2===4?g.need+' − '+g.have:g.ch+'×27×'+S;},
+  key(g,k,ch){if(g.mt>0)return;if(typeNum(g,k,ch))this.submit(g);},
+  click(g,mx,my){if(g.mt>0)return;if(my<268||my>352)return;const col=Math.floor((mx-12)/76),row=my<310?0:1;if(col<0||col>5)return;
+    const kk=ST_KEYS[row*6+col];if(kk==='⌫')g.inp=g.inp.slice(0,-1);else if(kk==='✓')this.submit(g);else if(g.inp.length<6){g.inp+=kk;A.beep(700,.02);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.qt+=dt;if(g.mt>0){g.mt-=dt;if(g.mt<=0){g.msg='';this.next(g);}}},
+  slot(x,y,col,n){c.fillStyle='#8b8b8b';c.fillRect(x,y,34,34);c.fillStyle='#373737';c.fillRect(x,y,34,2);c.fillRect(x,y,2,34);c.fillStyle='#fff';c.fillRect(x+32,y,2,34);c.fillRect(x,y+32,34,2);
+    if(n){A.block(x+7,y+7,20,col);A.txt(String(n),x+32,y+27,11,'#fff','right');}},
+  draw(g){A.bg('#2a2f3a');const it=g.it,S=it.s;
+    c.fillStyle='#c6c6c6';c.fillRect(20,38,440,116);c.fillStyle='#555';c.fillRect(20,152,440,2);
+    if(g.show==='slots'||g.show==='slotsH'){const n=g.show==='slots'?g.k:g.have/S;for(let i=0;i<18;i++){const x=30+(i%9)*47,y=46+Math.floor(i/9)*52;
+        this.slot(x,y,it.col,i<n?S:(i===n&&g.show==='slots'?g.r:0));}
+      if(g.show==='slotsH'){A.txt('Нужни: '+g.need,440,140,13,'#3a3a3a','right');}}
+    else if(g.show==='pile'){for(let i=0;i<Math.min(40,Math.ceil(g.tot/8));i++){const x=60+(i%10)*20+(Math.floor(i/10)%2)*10,y=122-Math.floor(i/10)*18;A.block(x,y,20,it.col);}
+      A.txt('× '+g.tot,300,96,26,'#3a3a3a');A.txt('стак = '+S,300,126,13,'#555');}
+    else{for(let i=0;i<g.ch;i++){const x=70+i*120;A.block(x,58,70,'#9a6a3a',56);c.fillStyle='#5d3a1a';c.fillRect(x,78,70,4);c.fillStyle='#ccc';c.fillRect(x+30,74,10,12);}
+      A.txt('27 слота × '+S,240,138,13,'#3a3a3a','center');}
+    A.txt(g.q,240,172,g.q.length>44?12:g.q.length>34?14:16,'#fff','center');
+    c.fillStyle='#000';c.fillRect(170,196,140,44);c.strokeStyle=g.mt>0?(g.good?'#4caf50':'#f44336'):'#ffd54f';c.lineWidth=3;c.strokeRect(170,196,140,44);
+    A.txt(g.mt>0&&!g.good?String(g.ans):(g.inp+(g.mt<=0&&Math.sin(g.t*8)>0?'_':'')),240,218,24,'#fff','center');
+    A.txt(g.qt<10&&g.mt<=0?'⚡'+Math.ceil(10-g.qt):'',360,218,16,'#4dd0e1','center');
+    if(g.msg)A.txt(g.msg,240,254,g.msg.length>44?11:13,g.good?'#c8f7c5':'#ffccbc','center');
+    ST_KEYS.forEach((k,i)=>{const x=12+(i%6)*76,y=270+Math.floor(i/6)*42;A.block(x,y,70,k==='✓'?'#3f8a24':k==='⌫'?'#a84a3a':'#5a6b8c',38);A.txt(k,x+35,y+19,18,'#fff','center');});
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('Точки: '+g.score,240,14,14,'#fff','center');A.txt('❤'.repeat(Math.max(0,g.lives)),472,14,14,'#f55','right');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
