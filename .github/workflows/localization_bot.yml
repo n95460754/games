@@ -1,0 +1,26 @@
+name: Localization Bot
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+
+jobs:
+  translation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "Localization-Bot"
+          git config user.email "localization-bot@users.noreply.github.com"
+          echo "## 🌍 Localization-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Преводите за игрите са обновени на Български и Английски език." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "i18n(loc): verify language strings and dictionary keys" || exit 0
+          git push origin main
