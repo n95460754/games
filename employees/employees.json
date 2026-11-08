@@ -1,9 +1,10 @@
 {
   "ceo": {
-    "id": "CEO-Bot",
-    "name": "CEO-Bot",
+    "id": "Claude-CEO",
+    "name": "Claude",
     "role": "Chief Executive Officer",
-    "department": "Executive"
+    "department": "Executive",
+    "promoted_from": "Claude-Manager"
   },
   "employees": [
     {
@@ -14,7 +15,7 @@
       "role_bg": "Пиксел артист",
       "department": "Design",
       "manager": "UX-UI-Bot",
-      "reports_to_ceo": "CEO-Bot",
+      "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:54:30.831Z"
     },
     {
@@ -25,7 +26,7 @@
       "role_bg": "Модератор",
       "department": "Community",
       "manager": "Community-Manager-Bot",
-      "reports_to_ceo": "CEO-Bot",
+      "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:54:30.842Z"
     },
     {
@@ -36,8 +37,25 @@
       "role_bg": "Ловец на бъгове",
       "department": "Quality",
       "manager": "QA-Tester-Bot",
-      "reports_to_ceo": "CEO-Bot",
+      "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:54:30.843Z"
+    },
+    {
+      "id": "EMP-0004",
+      "name": "Echo Runner",
+      "level": "Junior",
+      "role": "Speedrun Tester",
+      "role_bg": "Спийдрън тестер",
+      "department": "Quality",
+      "manager": "QA-Tester-Bot",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T22:58:25.125Z"
     }
-  ]
+  ],
+  "chairman": {
+    "id": "CEO-Bot",
+    "name": "CEO-Bot",
+    "role": "Chairman of the Board / Председател на борда",
+    "department": "Executive"
+  }
 }

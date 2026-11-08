@@ -2,39 +2,42 @@
 
 > Автоматично генерирано от HR-Bot (`scripts/hire-employee.js`). Не редактирай ръчно.
 
-**👔 CEO-Bot** — Chief Executive Officer
+**🏛️ CEO-Bot** — Chairman of the Board / Председател на борда
 
-Общо служители: **3** / 500
+**👑 Claude** — Chief Executive Officer _(повишен от Claude-Manager)_
 
-## Engineering — мениджър: Dev-Bot (→ CEO-Bot) · 0 души
+Общо служители: **4** / 500
+
+## Engineering — мениджър: Dev-Bot (→ Claude) · 0 души
 
 _Още няма наети._
 
-## Quality — мениджър: QA-Tester-Bot (→ CEO-Bot) · 1 души
+## Quality — мениджър: QA-Tester-Bot (→ Claude) · 2 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
 | EMP-0003 | Neon Fox | Junior | Bug Hunter / Ловец на бъгове | 2026-11-08 22:54 UTC |
+| EMP-0004 | Echo Runner | Junior | Speedrun Tester / Спийдрън тестер | 2026-11-08 22:58 UTC |
 
-## Design — мениджър: UX-UI-Bot (→ CEO-Bot) · 1 души
+## Design — мениджър: UX-UI-Bot (→ Claude) · 1 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
 | EMP-0001 | Spark Fox | Intern | Pixel Artist / Пиксел артист | 2026-11-08 22:54 UTC |
 
-## Audio — мениджър: Sound-Engineer-Bot (→ CEO-Bot) · 0 души
+## Audio — мениджър: Sound-Engineer-Bot (→ Claude) · 0 души
 
 _Още няма наети._
 
-## Security — мениджър: SecOps-Bot (→ CEO-Bot) · 0 души
+## Security — мениджър: SecOps-Bot (→ Claude) · 0 души
 
 _Още няма наети._
 
-## Operations — мениджър: DevOps-Master-Bot (→ CEO-Bot) · 0 души
+## Operations — мениджър: DevOps-Master-Bot (→ Claude) · 0 души
 
 _Още няма наети._
 
-## Community — мениджър: Community-Manager-Bot (→ CEO-Bot) · 1 души
+## Community — мениджър: Community-Manager-Bot (→ Claude) · 1 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|

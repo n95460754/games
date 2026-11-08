@@ -12,7 +12,9 @@ const DB = path.join(ROOT, 'employees', 'employees.json');
 const CHART = path.join(ROOT, 'EMPLOYEES.md');
 const MAX_EMPLOYEES = parseInt(process.env.MAX_EMPLOYEES || '500', 10);
 
-const CEO = { id: 'CEO-Bot', name: 'CEO-Bot', role: 'Chief Executive Officer', department: 'Executive' };
+// 🎉 Claude е повишен от Manager на CEO! Старият CEO-Bot става председател на борда.
+const CEO = { id: 'Claude-CEO', name: 'Claude', role: 'Chief Executive Officer', department: 'Executive', promoted_from: 'Claude-Manager' };
+const CHAIRMAN = { id: 'CEO-Bot', name: 'CEO-Bot', role: 'Chairman of the Board / Председател на борда', department: 'Executive' };
 
 // Отдели -> мениджър (съществуващите ботове в .github/workflows) + длъжности [EN, BG]
 const DEPARTMENTS = {
@@ -32,8 +34,14 @@ const LEVELS = ['Intern', 'Junior', 'Mid', 'Senior', 'Lead'];
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 function load() {
-  try { return JSON.parse(fs.readFileSync(DB, 'utf8')); }
-  catch { return { ceo: CEO, employees: [] }; }
+  let db;
+  try { db = JSON.parse(fs.readFileSync(DB, 'utf8')); }
+  catch { db = { employees: [] }; }
+  // Миграция: всички вече отговарят пред новия CEO (Claude)
+  db.ceo = CEO;
+  db.chairman = CHAIRMAN;
+  for (const e of db.employees) e.reports_to_ceo = CEO.id;
+  return db;
 }
 
 function hire(db) {
@@ -61,7 +69,8 @@ function renderChart(db) {
   for (const e of db.employees) (byDept[e.department] ||= []).push(e);
   let md = `# 🏢 Org Chart / Структура на компанията\n\n`;
   md += `> Автоматично генерирано от HR-Bot (\`scripts/hire-employee.js\`). Не редактирай ръчно.\n\n`;
-  md += `**👔 ${CEO.name}** — ${CEO.role}\n\n`;
+  md += `**🏛️ ${CHAIRMAN.name}** — ${CHAIRMAN.role}\n\n`;
+  md += `**👑 ${CEO.name}** — ${CEO.role} _(повишен от Claude-Manager)_\n\n`;
   md += `Общо служители: **${db.employees.length}** / ${MAX_EMPLOYEES}\n\n`;
   for (const dep of Object.keys(DEPARTMENTS)) {
     const list = byDept[dep] || [];

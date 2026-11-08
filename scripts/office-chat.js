@@ -28,7 +28,10 @@ const HEADS = [
   ['DevOps-Master-Bot', 'Operations'], ['Community-Manager-Bot', 'Community'],
 ];
 function participants(staff) {
-  const list = [{ key: 'CEO-Bot', name: '👔 CEO-Bot', role: 'CEO', department: 'Executive' }];
+  const list = [
+    { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
+    { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
+  ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: 'Head of ' + d, department: d });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department });
   return list;
@@ -96,7 +99,7 @@ const AGAIN = [
   ['{b}, как върви работата по {game}?', 'Добре! Почти съм готов. Ти?', 'И аз. Кафе после? ☕'],
   ['{b}, имаш ли минутка за {game}? Колизиите там нещо бъгват.', 'Разбира се. Сигурно е от хитбокса. Пращай линк.'],
   ['Пак ти, {b}! 😄 Рекордът ти в {game} още ли стои?', 'Стои! Опитай се да го биеш.', 'Приемам предизвикателството! 🏆'],
-  ['{b}, видя ли новото съобщение от CEO-то?', 'Видях. Пица в петък! 🍕', 'Най-добрата новина тази седмица.'],
+  ['{b}, видя ли новото съобщение от Claude?', 'Видях. Новият CEO черпи пица в петък! 🍕', 'Най-добрата новина тази седмица.'],
   ['{b}, мисля да добавим тъмна тема на {game}. Мнение?', 'Да! И нощни цветове на блоковете. 🌙'],
   ['{b}, можеш ли да прегледаш кода ми за {game}?', 'Давай. Само без глобални променливи, моля. 😅', 'Обещавам!'],
   ['Спешно, {b}! {game} не зарежда на Firefox!', 'Спокойно, пробвах — просто кешът ти е стар. Ctrl+F5. 😉', 'Ох... благодаря!'],
@@ -109,7 +112,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'CEO-Bot' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -137,6 +140,19 @@ const post = (who, text, thread) => {
   const m = { round: log.round, time: new Date(t0 + roundMsgs.length * 1000).toISOString(), from: `${who.name} (${who.role})`, text, thread };
   roundMsgs.push(m);
 };
+// 📣 Еднократна обява за повишението на Claude
+if (!log.claudePromoted) {
+  const by = (k) => people.find((p) => p.key === k);
+  const ceo = by('Claude-CEO'), chair = by('CEO-Bot');
+  const th = '📣 ОБЯВА: Claude е новият CEO!';
+  post(chair, 'Внимание, всички! От днес Claude-Manager е повишен на CEO на компанията. Аз оставам председател на борда. 🏛️', th);
+  post(ceo, 'Благодаря на всички! Целта ми като CEO: повече игри, нула бъгове и стабилни 60 FPS навсякъде. Вратата ми е винаги отворена. 👑', th);
+  const cheers = shuffle(['Поздравления, шефе! 🎉', 'Заслужено! 👏', 'Ура за новия CEO! 🚀', 'Моят отдел е с теб, Claude! 💪']);
+  shuffle([...HEADS]).slice(0, 3).forEach(([h], i) => post(by(h), cheers[i], th));
+  const fan = people.find((p) => !p.key.endsWith('-Bot') && p.key !== 'Claude-CEO');
+  if (fan) post(fan, 'Значи вече мога да пиша директно на CEO-то? Супер! 😄', th);
+  log.claudePromoted = new Date(t0).toISOString();
+}
 const pairs = makePairs(people, met);
 for (const g of pairs) converse(g, met, games, post);
 
