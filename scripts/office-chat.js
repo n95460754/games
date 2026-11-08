@@ -36,6 +36,7 @@ function participants(staff) {
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
     { ...TEAMS_LEADER, department: 'Executive' },
     janitor.JANITOR,
+    { key: 'Consensus', name: '🔍 Consensus', role: 'Web Researcher', department: 'Executive' },
   ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: BOTS[h][1], department: d, team: teamFor(d) });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department, team: teamFor(e.department) });
@@ -311,6 +312,51 @@ if (!log.braveAppointed) {
   post(by('Gemini'), `${t.leader}, как върви ${t.emoji} ${tName}?`, '✨ Обиколката на Gemini');
   post(by(t.leader), pick(['Всичко е по план! Задачите вървят. 💪', 'Имаме малко бъгове, но QA ги гони. 🐛', 'Супер! Един от служителите ни направи страхотна работа днес. 🌟']), '✨ Обиколката на Gemini');
   post(by('Gemini'), pick(['Отлично. Ще кажа на Claude. 👍', 'Браво на отбора! 🎉', 'Ако ви трябва помощ — пишете ми.']), '✨ Обиколката на Gemini');
+}
+// 📣 Еднократна обява: Consensus
+if (!log.consensusHired) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Consensus търси грешките в интернет!';
+  post(by('Perplexity'), 'Екип, вече имаме Consensus! Всеки път, когато някой спомене грешка, Consensus ще я потърси в целия интернет. 🌐', th);
+  post(by('Consensus'), 'Здравейте! Пишете ми за всеки бъг — търся в Stack Overflow и MDN и ви нося истински линкове. 🔍', th);
+  post(by('Bug-Hunter-Bot'), 'Аз ловя бъговете, ти намираш как се оправят. Перфектен дует! 🐛🤝', th);
+  log.consensusHired = new Date(t0).toISOString();
+}
+// 🐞 Бъг репорти: 1-2 служители съобщават за проблем (Consensus ги търси в следващия кръг)
+{
+  const th = '🐞 Бъг репорти';
+  const BUGS = [
+    'Помощ! {game} не зарежда на Firefox. 😱',
+    'В {game} рекордът не се запазва след презареждане. 🐛',
+    'Тъчът в {game} не реагира на iPad. 📱',
+    'FPS-ът в {game} пада, когато има много блокове. 🐢',
+    'Колизиите в {game} бъгват — минавам през стени! 👻',
+    'В {game} се вижда текст на английски вместо на български. 🇧🇬',
+  ];
+  const staffOnly = people.filter((p) => p.key.startsWith('EMP-'));
+  const n = Math.min(staffOnly.length, 1 + Math.floor(Math.random() * 2));
+  for (const who of shuffle([...staffOnly]).slice(0, n)) post(who, fill(pick(BUGS), { game: pick(games) }), th);
+  if (n) post(people.find((p) => p.key === 'Consensus'), 'Записах си! Ще потърся в интернет и ще ви пиша в следващия кръг. 🔍', th);
+}
+// 🔍 Consensus отговаря на грешките от предния кръг с резултати от интернет
+{
+  const by = (k) => people.find((p) => p.key === k);
+  const cPath = path.join(__dirname, '..', 'employees', 'consensus.json');
+  let cs = null; try { cs = JSON.parse(fs.readFileSync(cPath, 'utf8')); } catch {}
+  if (cs && cs.pending && cs.pending.length) {
+    const th = '🔍 Consensus търси грешките в интернет';
+    for (const a of cs.pending) {
+      const who = a.who.replace(/ \(.*\)$/, '');
+      if (a.error || !a.results.length) { post(by('Consensus'), `${who}, търсих „${a.query}“, но интернетът не отговори. Ще пробвам пак. 🌐`, th); continue; }
+      const best = a.results.find((r) => r.accepted) || a.results[0];
+      const mdn = a.results.find((r) => r.source === 'MDN Web Docs' && r !== best);
+      post(by('Consensus'), `${who}, за грешката „${a.said.slice(0, 70)}${a.said.length > 70 ? '…' : ''}“ претърсих интернет. Най-добро: „${best.title}“ (${best.source}${best.accepted ? ', ✅ приет отговор' : ''}) ${best.url}${mdn ? ` · MDN: „${mdn.title}“ ${mdn.url}` : ''} 🔍`, th);
+      const asker = people.find((p) => a.who.startsWith(p.name));
+      if (asker) post(asker, pick(['Благодаря, Consensus! Точно това ми трябваше. 🙌', 'Супер, чета веднага! 📖', 'Ето го решението! Ти си легенда. 🏆']), th);
+    }
+    cs.pending = [];
+    fs.writeFileSync(cPath, JSON.stringify(cs, null, 1) + '\n');
+  }
 }
 // 🧹 Обиколката на чистача
 {

@@ -38,6 +38,10 @@ jobs:
       - name: Hire employee
         run: node scripts/hire-employee.js "${{ github.event.inputs.count || '1' }}"
 
+      - name: Consensus searches the web for errors from the last round
+        run: node scripts/consensus.js
+        continue-on-error: true   # ако интернетът не отговори, офисът продължава
+
       - name: Employees talk, teams work, janitor cleans
         run: node scripts/office-chat.js
 
@@ -45,7 +49,7 @@ jobs:
         run: |
           git config user.name "HR-Bot"
           git config user.email "hr-bot@users.noreply.github.com"
-          git add employees/employees.json employees/chat.json employees/met.json employees/tasks.json employees/janitor.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md JANITOR.md
+          git add employees/employees.json employees/chat.json employees/met.json employees/tasks.json employees/janitor.json employees/consensus.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md JANITOR.md CONSENSUS.md
           git diff --cached --quiet && { echo "Нищо ново."; exit 0; }
           git commit -m "chore(hr): hire new employee for CEO-Bot"
           for i in 1 2 3; do
