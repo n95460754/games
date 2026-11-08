@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числова пирамида</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔺 Числова пирамида</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 233. Числова пирамида
+A.add({id:'numpyramid',cat:'brain',icon:'🔺',name:'Числова пирамида',desc:'Всеки блок е сбор от двата под него — намери липсващия',help:'Всеки блок е равен на сбора от двата блока под него. Намери числото на мястото на „?“ — понякога събираш, понякога изваждаш. Пиши с клавиатурата + Enter или натискай бутоните долу. 60 секунди.',
+  start(g){g.time=60;g.inp='';this.next(g);},
+  next(g){const n=g.score<4?3:4,mx=g.score<10?9:20;const r=[[]];for(let j=0;j<n;j++)r[0].push(A.ri(1,mx));
+    for(let i=1;i<n;i++){r.push([]);for(let j=0;j<n-i;j++)r[i].push(r[i-1][j]+r[i-1][j+1]);}
+    let hi,hj;do{hi=A.ri(0,n-1);hj=A.ri(0,n-1-hi);}while(g.hid&&g.hid[0]===hi&&g.hid[1]===hj&&n>1&&Math.random()<.8);
+    g.n=n;g.rows=r;g.hid=[hi,hj];g.ans=r[hi][hj];g.reveal=0;},
+  submit(g){if(!g.inp||g.inp==='-')return;const ok=+g.inp===g.ans;flash(g,ok);
+    if(ok){g.score++;g.why='';}else g.why='Беше '+g.ans+', ти: '+g.inp;g.inp='';this.next(g);},
+  key(g,k,ch){if(typeNum(g,k,ch))this.submit(g);},
+  click(g,mx,my){if(my<304||my>352)return;const i=Math.floor(mx/40);if(i<0||i>11)return;
+    if(i<10){const ch=''+((i+1)%10);if(g.inp.length<6){g.inp+=ch;A.beep(700,.02);}}
+    else if(i===10)g.inp=g.inp.slice(0,-1);else this.submit(g);},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#1d2b3a');A.txt('Колко е „?“',240,20,18,'#fff','center');inputBox(g,62);
+    const W=64,H=40;for(let i=0;i<g.n;i++){const cnt=g.n-i,x0=240-cnt*W/2;for(let j=0;j<cnt;j++){const x=x0+j*W,y=246-i*44;
+      const hid=g.hid[0]===i&&g.hid[1]===j;A.block(x+2,y,W-4,hid?'#8e24aa':i===0?C.stone:i%2?C.wood:C.dirt,H);
+      A.txt(hid?'?':''+g.rows[i][j],x+W/2,y+H/2,hid?24:g.rows[i][j]>99?16:20,hid?'#ffd54f':'#fff','center');}}
+    const lab=['1','2','3','4','5','6','7','8','9','0','⌫','OK'];
+    lab.forEach((s,i)=>{A.block(i*40+2,306,36,i===11?'#3f8a24':i===10?'#a33':'#5a6b8c',44);A.txt(s,i*40+20,328,s==='OK'?13:17,'#fff','center');});
+    A.txt('⏱ '+Math.ceil(g.time),10,20,14);if(g.why)A.txt(g.why,470,20,12,'#bbb','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

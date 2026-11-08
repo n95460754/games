@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Реверси</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚪ Реверси</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 232. Реверси
+A.add({id:'reversi',cat:'board',icon:'⚪',name:'Реверси',desc:'Обърни блоковете на робота: злато срещу въглища',help:'Ти си със златните блокове. Сложи блок така, че да заградиш въглищни блокове в права линия — те стават твои. Клик върху поле или стрелки + Space. Точките са златните блокове накрая. Ъглите са най-ценни!',
+  D:[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]],
+  W:[[100,-20,10,5,5,10,-20,100],[-20,-40,-2,-2,-2,-2,-40,-20],[10,-2,1,1,1,1,-2,10],[5,-2,1,0,0,1,-2,5],[5,-2,1,0,0,1,-2,5],[10,-2,1,1,1,1,-2,10],[-20,-40,-2,-2,-2,-2,-40,-20],[100,-20,10,5,5,10,-20,100]],
+  start(g){g.b=[];for(let y=0;y<8;y++)g.b.push([0,0,0,0,0,0,0,0]);g.b[3][3]=g.b[4][4]=2;g.b[3][4]=g.b[4][3]=1;
+    g.turn=1;g.wait=0;g.cur=[2,3];g.last=null;g.msg='Твой ход';g.flips=[];g.score=2;},
+  flips(b,x,y,p){if(b[y][x])return [];const o=3-p,res=[];
+    for(const [dx,dy] of this.D){let cx=x+dx,cy=y+dy;const line=[];
+      while(cx>=0&&cx<8&&cy>=0&&cy<8&&b[cy][cx]===o){line.push([cx,cy]);cx+=dx;cy+=dy;}
+      if(line.length&&cx>=0&&cx<8&&cy>=0&&cy<8&&b[cy][cx]===p)res.push(...line);}
+    return res;},
+  moves(g,p){const m=[];for(let y=0;y<8;y++)for(let x=0;x<8;x++){const f=this.flips(g.b,x,y,p);if(f.length)m.push({x,y,f});}return m;},
+  count(g,p){let n=0;for(const r of g.b)for(const v of r)if(v===p)n++;return n;},
+  place(g,x,y,p,f){g.b[y][x]=p;for(const [fx,fy] of f)g.b[fy][fx]=p;g.last=[x,y];g.flips=f.map(a=>({x:a[0],y:a[1],t:.35}));
+    A.beep(p===1?660:330,.07,'triangle');g.score=this.count(g,1);},
+  after(g){const nxt=3-g.turn;
+    if(this.moves(g,nxt).length){g.turn=nxt;g.wait=nxt===2?.6:0;g.msg=nxt===1?'Твой ход':'Роботът мисли...';return;}
+    if(this.moves(g,g.turn).length){g.msg=nxt===1?'Нямаш ход!':'Роботът няма ход!';g.wait=g.turn===2?.9:0;return;}
+    this.end(g);},
+  end(g){const a=this.count(g,1),b=this.count(g,2);g.score=a;g.msg='Край!';
+    A.over(g,a>b?'Победа! '+a+' : '+b:a<b?'Роботът печели '+b+' : '+a:'Равенство '+a+' : '+b);},
+  tryAt(g,x,y){if(g.turn!==1||g.wait>0)return;const f=this.flips(g.b,x,y,1);
+    if(!f.length){A.beep(150,.1,'sawtooth');return;}this.place(g,x,y,1,f);this.after(g);},
+  key(g,k){const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(d){g.cur=[A.clamp(g.cur[0]+d[0],0,7),A.clamp(g.cur[1]+d[1],0,7)];A.beep(500,.02);}
+    else if(k==='Space'||k==='Enter'||k==='NumpadEnter')this.tryAt(g,g.cur[0],g.cur[1]);},
+  click(g,mx,my){const x=Math.floor((mx-12)/42),y=Math.floor((my-12)/42);if(x>=0&&x<8&&y>=0&&y<8){g.cur=[x,y];this.tryAt(g,x,y);}},
+  update(g,dt){for(const f of g.flips)f.t-=dt;
+    if(g.wait>0){g.wait-=dt;if(g.wait>0)return;}
+    if(g.turn===2){const m=this.moves(g,2);if(!m.length){this.after(g);return;}
+      let best=null,bs=-1e9;for(const mv of m){const s=this.W[mv.y][mv.x]+mv.f.length*2+A.rnd(0,12);if(s>bs){bs=s;best=mv;}}
+      this.place(g,best.x,best.y,2,best.f);this.after(g);}
+    else if(g.turn===1&&!this.moves(g,1).length)this.after(g);},
+  draw(g){A.bg('#1d2b3a');const ox=12,oy=12,S=42;
+    const mv=g.turn===1&&g.wait<=0?this.moves(g,1):[];
+    for(let y=0;y<8;y++)for(let x=0;x<8;x++){const px=ox+x*S,py=oy+y*S;A.block(px,py,S,(x+y)%2?'#3f8a24':'#4a9a2c');
+      const v=g.b[y][x];if(v){const fl=g.flips.find(f=>f.x===x&&f.y===y&&f.t>0);const sh=fl?Math.abs(Math.cos(fl.t*9))*24+6:30;
+        A.block(px+21-sh/2,py+6,sh,v===1?C.gold:C.coal,30);if(v===2&&!fl){c.fillStyle='#555';c.fillRect(px+12,py+14,5,5);c.fillRect(px+24,py+24,5,5);}}}
+    for(const m of mv){c.fillStyle='rgba(255,213,79,.45)';c.fillRect(ox+m.x*S+16,oy+m.y*S+16,10,10);}
+    if(g.last){c.strokeStyle='#ff2e55';c.lineWidth=2;c.strokeRect(ox+g.last[0]*S+3,oy+g.last[1]*S+3,S-6,S-6);}
+    c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(ox+g.cur[0]*S+1,oy+g.cur[1]*S+1,S-2,S-2);
+    const sx=358;A.block(sx,30,24,C.gold);A.txt('Ти: '+this.count(g,1),sx+30,42,13,'#ffd54f');
+    A.block(sx,70,24,C.coal);A.txt('Робот: '+this.count(g,2),sx+30,82,13,'#ddd');
+    A.txt(g.msg,415,140,11,'#fff','center');
+    A.txt('Жълти точки =',415,200,11,'#b9c6d6','center');A.txt('възможни ходове',415,216,11,'#b9c6d6','center');
+    A.txt('Ъглите не могат',415,260,11,'#b9c6d6','center');A.txt('да се обърнат!',415,276,11,'#b9c6d6','center');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сортирай рудите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📦 Сортирай рудите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 234. Сортирай рудите
+A.add({id:'oresort',cat:'skill',icon:'📦',name:'Сортирай рудите',desc:'Пращай рудите в правилния сандък, а TNT — в лавата',help:'Рудите падат по улея. Прати най-долната в нейния сандък: ← / 1 = въглища, ↓ / 2 = желязо, → / 3 = злато (или клик върху сандъка). TNT не слагай в сандък — пусни го в лавата с Space / ↑ или клик върху улея. 3 живота.',
+  T:[{n:'Въглища',c:'#1a1a1a'},{n:'Желязо',c:'#e0b08a'},{n:'Злато',c:'#ffd23f'}],
+  BX:[30,170,310],
+  start(g){g.lives=3;g.ores=[];g.fly=[];g.boom=[];g.sp=0;g.combo=0;},
+  spawn(g){const t=g.score>4&&Math.random()<.16?3:A.ri(0,2);g.ores.push({t,y:-34});},
+  lose(g,why){g.lives--;g.combo=0;g.why=why;flash(g,false);if(g.lives<=0)A.over(g,why);},
+  good(g){g.score++;g.combo++;flash(g,true);if(g.combo%10===0)A.tune([660,880,1100]);},
+  sortTo(g,i){const o=g.ores[0];if(!o||o.y<-20)return;g.ores.shift();
+    g.fly.push({t:o.t,x:224,y:o.y,tx:this.BX[i]+54,ty:290,k:0});
+    if(o.t===3){g.boom.push({x:this.BX[i]+70,y:300,t:.5});A.beep(80,.3,'sawtooth',.08);this.lose(g,'TNT избухна в сандъка!');}
+    else if(o.t===i)this.good(g);else this.lose(g,this.T[o.t].n+' не е за сандъка „'+this.T[i].n+'“');},
+  drop(g){const o=g.ores[0];if(!o||o.y<-20)return;g.ores.shift();this.toLava(g,o);},
+  toLava(g,o){g.boom.push({x:240,y:252,t:.4});if(o.t===3){A.beep(90,.25,'sawtooth',.07);this.good(g);}else this.lose(g,this.T[o.t].n+' падна в лавата!');},
+  key(g,k,ch){const i={ArrowLeft:0,KeyA:0,Digit1:0,Numpad1:0,ArrowDown:1,KeyS:1,Digit2:1,Numpad2:1,ArrowRight:2,KeyD:2,Digit3:2,Numpad3:2}[k];
+    if(i!==undefined)this.sortTo(g,i);else if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.drop(g);},
+  click(g,mx,my){if(my>=270){const i=mx<160?0:mx<320?1:2;this.sortTo(g,i);}else this.drop(g);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;const v=Math.min(210,60+g.score*3),T=Math.max(.5,1.4-g.score*.025);
+    g.sp-=dt;if(g.sp<=0){g.sp=T;this.spawn(g);}
+    for(const o of g.ores)o.y+=v*dt;
+    while(g.ores.length&&g.ores[0].y>=222){const o=g.ores.shift();this.toLava(g,o);if(A.state!=='play')return;}
+    for(const f of g.fly)f.k+=dt*3;g.fly=g.fly.filter(f=>f.k<1);
+    for(const b of g.boom)b.t-=dt;g.boom=g.boom.filter(b=>b.t>0);},
+  ore(x,y,t){if(t===3){A.block(x,y,32,'#d32f2f');c.fillStyle='#eee';c.fillRect(x,y+11,32,10);A.txt('TNT',x+16,y+16,10,'#d32f2f','center');return;}
+    A.block(x,y,32,C.stone);c.fillStyle=this.T[t].c;[[5,6],[19,4],[11,16],[22,20],[5,23]].forEach(p=>c.fillRect(x+p[0],y+p[1],6,6));},
+  draw(g){A.bg('#2b2118');
+    for(let y=0;y<270;y+=30)for(let x=0;x<480;x+=30)if(x<200||x>=280){c.fillStyle=(x/30+y/30)%2?'#3a2e24':'#33281f';c.fillRect(x,y,30,30);}
+    c.fillStyle='#555';c.fillRect(212,0,8,230);c.fillRect(260,0,8,230);c.fillStyle='#1b1b1b';c.fillRect(220,0,40,230);
+    c.fillStyle=C.lava;c.fillRect(200,236,80,30);c.fillStyle='#ffb300';for(let i=0;i<5;i++)c.fillRect(204+i*16,240+Math.sin(g.t*4+i)*3,8,4);
+    for(const o of g.ores)this.ore(224,o.y,o.t);
+    if(g.ores[0]&&g.ores[0].y>-20){c.strokeStyle='#fff';c.lineWidth=2;c.strokeRect(222,g.ores[0].y-2,36,36);}
+    this.T.forEach((t,i)=>{const x=this.BX[i];A.block(x,275,140,C.wood,70);c.fillStyle='#5a3a1a';c.fillRect(x,300,140,4);
+      this.ore(x+10,285,i);A.txt(t.n,x+88,296,13,'#fff','center');A.txt(['← 1','↓ 2','→ 3'][i],x+88,322,13,'#ffd54f','center');});
+    for(const f of g.fly){const x=224+(f.tx-224)*f.k,y=f.y+(f.ty-f.y)*f.k-Math.sin(f.k*Math.PI)*50;this.ore(x,y,f.t);}
+    for(const b of g.boom){c.fillStyle='rgba(255,'+(120+Math.floor(b.t*200))+',0,'+(b.t*2)+')';const r=(0.5-b.t)*90+10;c.fillRect(b.x-r,b.y-r,r*2,r*2);}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,16,16,'#f55');A.txt('Комбо: '+g.combo,470,16,14,'#ffd54f','right');
+    A.txt('TNT → лава (Space)',340,250,12,'#ffab91','center');if(g.why)A.txt(g.why,10,40,11,'#ddd');drawFlash(g);}
+});
+</script>
+</body>
+</html>

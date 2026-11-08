@@ -214,7 +214,10 @@ const GAMES=[
   {"id": "digitspan", "cat": "brain", "icon": "🧮", "name": "Запомни числото", "desc": "Запомни все по-дълги числа", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "territory", "cat": "action", "icon": "🚜", "name": "Завземи земя", "desc": "Огради поле и пази следата си от слузите", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "flowlink", "cat": "puzzle", "icon": "🔗", "name": "Свържи двойките", "desc": "Свържи еднаквите руди и запълни мрежата", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "coords", "cat": "brain", "icon": "📍", "name": "Координати", "desc": "Намери точката по нейните координати (x, y)", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "coords", "cat": "brain", "icon": "📍", "name": "Координати", "desc": "Намери точката по нейните координати (x, y)", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "reversi", "cat": "board", "icon": "⚪", "name": "Реверси", "desc": "Обърни блоковете на робота: злато срещу въглища", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "numpyramid", "cat": "brain", "icon": "🔺", "name": "Числова пирамида", "desc": "Всеки блок е сбор от двата под него — намери липсващия", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "oresort", "cat": "skill", "icon": "📦", "name": "Сортирай рудите", "desc": "Пращай рудите в правилния сандък, а TNT — в лавата", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
