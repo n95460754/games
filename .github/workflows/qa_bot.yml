@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: '0 20 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'AI_BOARD_ROOM.md'
 
 jobs:
   qa_testing:
@@ -33,4 +30,4 @@ jobs:
         run: |
           git add AI_BOARD_ROOM.md
           git commit -m "test(qa): complete automated regression and link check" || exit 0
-          git push origin main
+          git pull --rebase origin main && git push origin main

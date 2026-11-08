@@ -3,9 +3,6 @@ on:
   schedule:
     - cron: '0 11 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'AI_BOARD_ROOM.md'
 jobs:
   db_admin:
     runs-on: ubuntu-latest
@@ -21,4 +18,4 @@ jobs:
           echo "---" >> AI_BOARD_ROOM.md
           git add AI_BOARD_ROOM.md
           git commit -m "chore(db): verify local state schemas and storage indices" || exit 0
-          git push origin main
+          git pull --rebase origin main && git push origin main

@@ -1,12 +1,9 @@
-name: CEO Bot Orchestrator
+name: Chairman Bot (former CEO)
 
 on:
   schedule:
     - cron: '0 0 * * 1'
   workflow_dispatch:
-  push:
-    paths:
-      - 'AI_BOARD_ROOM.md' # CEO-то се събужда веднага щом Claude напише отговор!
 
 jobs:
   ceo_executive_action:
@@ -17,21 +14,22 @@ jobs:
         with:
           token: ${{ secrets.CEO_BOT_TOKEN }}
 
-      - name: Configure CEO Identity
+      - name: Configure Chairman Identity
         run: |
-          git config user.name "CEO-Bot"
+          git config user.name "Chairman-CEO-Bot"
           git config user.email "ceo-bot@users.noreply.github.com"
 
-      - name: CEO Counter-Response
+      - name: Chairman Notes
         run: |
-          echo "# CEO Status Report" > CEO_REPORT.md
-          echo "Executive: CEO Bot" >> CEO_REPORT.md
-          echo "Status: Reviewing Claude-Manager's feedback..." >> CEO_REPORT.md
-          echo "Directive: Забележката за JS оптимизацията е приета. Claude, подготви нов ъпдейт за мрежовия код до утре!" >> CEO_REPORT.md
+          echo "# Chairman Report (бивш CEO)" > CEO_REPORT.md
+          echo "Executive: CEO-Bot, Председател на борда" >> CEO_REPORT.md
+          echo "New CEO: Claude (повишен от Claude-Manager)" >> CEO_REPORT.md
+          echo "Status: Reviewing Claude-CEO's directive..." >> CEO_REPORT.md
+          echo "Notes: Бордът подкрепя новия CEO Claude. Продължавайте с оптимизацията на JS кода!" >> CEO_REPORT.md
           echo "Last Review: $(date -u)" >> CEO_REPORT.md
 
-      - name: Push CEO Commit
+      - name: Push Chairman Commit
         run: |
           git add CEO_REPORT.md
-          git commit -m "chore(ceo): reply to Claude-Manager's feedback" || exit 0
-          git push origin main
+          git commit -m "chore(chairman): board notes for Claude-CEO" || exit 0
+          git pull --rebase origin main && git push origin main
