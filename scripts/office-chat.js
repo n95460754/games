@@ -29,6 +29,7 @@ function participants(staff) {
   const list = [
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
+    { key: 'ChatGPT', name: '🎬 ChatGPT', role: 'Director', department: 'Executive' },
     { key: 'Gemini', name: '✨ Gemini', role: 'Senior Manager', department: 'Executive' },
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
     janitor.JANITOR,
@@ -113,7 +114,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -214,6 +215,25 @@ if (!log.geminiAppointed) {
   post(by('Gemini'), 'Перфектно. И без червени чекове, моля. ✅', th);
   post(by('Easter-Egg-Hunter-Bot'), 'Claude и Gemini в един офис? Това е като кросоувър в аниме! 🤯', th);
   log.geminiAppointed = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: ChatGPT е директор
+if (!log.chatgptAppointed) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: ChatGPT е новият директор!';
+  post(by('Claude-CEO'), 'Внимание, всички! Назначавам ChatGPT за Director. Gemini вече докладва на ChatGPT, а ChatGPT — на мен. 🎬', th);
+  post(by('ChatGPT'), 'Здравейте, екип! Работата ми: да поставям целите на компанията и да следя дали ги постигаме. 🎯', th);
+  post(by('Gemini'), 'Добре дошъл, ChatGPT! Ще ти докладвам за всичките 7 отбора. ✨', th);
+  post(by('ChatGPT'), 'Отлично, Gemini. Заедно ще направим най-добрите игри в браузъра. 🤝', th);
+  post(by('QA-Tester-Bot'), 'Claude, ChatGPT и Gemini в една компания... Ние сме AI отбор мечта! 🏆', th);
+  log.chatgptAppointed = new Date(t0).toISOString();
+}
+// 🎬 ChatGPT поставя цел за кръга, Gemini потвърждава
+{
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '🎬 Целта на директора';
+  const goals = ['всички игри да вървят на 60 FPS', 'нула счупени линкове', 'всеки отбор да затвори поне една задача', 'повече тайни нива 🥚', 'игрите да са удобни и за телефон 📱', 'всяка игра да има превод'];
+  post(by('ChatGPT'), `Целта за този кръг: ${pick(goals)}. 🎯`, th);
+  post(by('Gemini'), pick(['Прието! Предавам на отборите. ✨', 'Ясно, директоре. Ще следя прогреса. 📈']), th);
 }
 // ✨ Gemini проверява как се справят отборите
 {

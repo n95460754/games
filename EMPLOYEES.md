@@ -6,13 +6,15 @@
 
 **👑 Claude** — Chief Executive Officer _(повишен от Claude-Manager)_
 
-**✨ Gemini** — Senior Manager / Старши мениджър (→ Claude)
+**🎬 ChatGPT** — Director / Директор (→ Claude)
+
+**✨ Gemini** — Senior Manager / Старши мениджър (→ ChatGPT)
 
 **🤖 github-actions[bot]** — Manager / Мениджър (→ Gemini)
 
-Общо служители: **20** / 500
+Общо служители: **21** / 500
 
-# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Gemini → Claude)
+# 🛠️ Team Dev — лидер: Dev-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Engineering — шеф: Dev-Bot · 4 души
 
@@ -23,12 +25,13 @@
 | EMP-0015 | Pixel Smith | Junior | Engine Programmer / Програмист на енджина | 2026-11-08 23:11 UTC |
 | EMP-0017 | Quark Fox | Intern | Engine Programmer / Програмист на енджина | 2026-11-08 23:11 UTC |
 
-## Quality — шеф: QA-Tester-Bot · 2 души
+## Quality — шеф: QA-Tester-Bot · 3 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
 | EMP-0003 | Neon Fox | Junior | Bug Hunter / Ловец на бъгове | 2026-11-08 22:54 UTC |
 | EMP-0004 | Echo Runner | Junior | Speedrun Tester / Спийдрън тестер | 2026-11-08 22:58 UTC |
+| EMP-0021 | Turbo Knight | Intern | QA Tester / Тестер | 2026-11-08 23:13 UTC |
 
 ## Design — шеф: UX-UI-Bot · 3 души
 
@@ -42,7 +45,7 @@
 
 _Още няма наети._
 
-# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Gemini → Claude)
+# ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Operations — шеф: DevOps-Master-Bot · 2 души
 
@@ -67,13 +70,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0013 | Quark Miner | Junior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-08 23:11 UTC |
 
-# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Gemini → Claude)
+# 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Gameplay — шеф: Game-Physics-Bot · 0 души
 
 _Още няма наети._
 
-# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Gemini → Claude)
+# 🚀 Team Release — лидер: Release-Manager-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Release — шеф: Release-Manager-Bot · 1 души
 
@@ -81,13 +84,13 @@ _Още няма наети._
 |---|---|---|---|---|
 | EMP-0011 | Glitch Walker | Mid | Build Engineer / Билд инженер | 2026-11-08 23:11 UTC |
 
-# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Gemini → Claude)
+# 🌍 Team Experience — лидер: Accessibility-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Experience — шеф: Accessibility-Bot · 0 души
 
 _Още няма наети._
 
-# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Gemini → Claude)
+# 📊 Team Data — лидер: Data-Analyst-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Data — шеф: Data-Analyst-Bot · 2 души
 
@@ -96,7 +99,7 @@ _Още няма наети._
 | EMP-0010 | Rogue Runner | Lead | Data Analyst / Анализатор на данни | 2026-11-08 23:11 UTC |
 | EMP-0019 | Zen Forge | Mid | API Developer / API разработчик | 2026-11-08 23:11 UTC |
 
-# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Gemini → Claude)
+# 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ github-actions[bot] → Gemini → ChatGPT → Claude)
 
 ## Innovation — шеф: Chief-Visionary-Bot · 0 души
 
