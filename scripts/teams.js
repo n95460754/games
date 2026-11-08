@@ -183,7 +183,7 @@ function runTeamTasks({ people, games, post, round }) {
 function renderTeams(board, people) {
   let md = `# 👥 Отбори / Teams\n\n`;
   md += `> Автоматично от \`scripts/teams.js\`. Правило: всеки нов служител влиза в отбора на своя отдел.\n\n`;
-  md += `🤖 Мениджър: **github-actions[bot]** → ✨ Старши мениджър: **Gemini** → 🎬 Директор: **ChatGPT** → 👑 CEO: **Claude**\n\n`;
+  md += `🤖 Мениджър: **github-actions[bot]** → ✨ Старши мениджър: **Gemini** → 🎬 Директор: **ChatGPT** → 🔎 Вицепрезидент: **Perplexity** → 👑 CEO: **Claude**\n\n`;
   for (const [teamName, t] of Object.entries(TEAMS)) {
     const team = roster(teamName, people);
     const emps = team.filter((p) => p.key.startsWith('EMP-'));

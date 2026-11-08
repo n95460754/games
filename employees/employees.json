@@ -21,7 +21,8 @@
       "team": "Team Dev",
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0002",
@@ -37,7 +38,8 @@
       "team": "Team DevOps",
       "team_leader": "DevOps-Master-Bot",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0003",
@@ -53,7 +55,8 @@
       "team": "Team Dev",
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0004",
@@ -69,7 +72,8 @@
       "team": "Team Dev",
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0005",
@@ -85,7 +89,8 @@
       "team": "Team Dev",
       "team_leader": "Dev-Bot",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0006",
@@ -101,7 +106,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:06:55.627Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0007",
@@ -117,7 +123,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:06:55.636Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0008",
@@ -133,7 +140,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.824Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0009",
@@ -149,7 +157,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0010",
@@ -165,7 +174,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0011",
@@ -181,7 +191,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0012",
@@ -197,7 +208,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0013",
@@ -213,7 +225,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0014",
@@ -229,7 +242,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0015",
@@ -245,7 +259,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0016",
@@ -261,7 +276,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0017",
@@ -277,7 +293,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0018",
@@ -293,7 +310,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0019",
@@ -309,7 +327,8 @@
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:11:05.829Z",
       "reports_to_senior_manager": "Gemini",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0020",
@@ -325,7 +344,8 @@
       "reports_to_senior_manager": "Gemini",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:12:00.052Z",
-      "reports_to_director": "ChatGPT"
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity"
     },
     {
       "id": "EMP-0021",
@@ -341,7 +361,25 @@
       "reports_to_senior_manager": "Gemini",
       "reports_to_director": "ChatGPT",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T23:13:20.442Z"
+      "hired_at": "2026-11-08T23:13:20.442Z",
+      "reports_to_vice_president": "Perplexity"
+    },
+    {
+      "id": "EMP-0022",
+      "name": "Rogue Hawk",
+      "level": "Senior",
+      "role": "Performance Optimizer",
+      "role_bg": "Оптимизатор на FPS",
+      "department": "Operations",
+      "manager": "DevOps-Master-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T23:14:00.142Z"
     }
   ],
   "chairman": {
@@ -366,6 +404,12 @@
     "id": "ChatGPT",
     "name": "ChatGPT",
     "role": "Director / Директор",
+    "department": "Executive"
+  },
+  "vice_president": {
+    "id": "Perplexity",
+    "name": "Perplexity",
+    "role": "Vice President / Вицепрезидент",
     "department": "Executive"
   }
 }

@@ -29,6 +29,7 @@ function participants(staff) {
   const list = [
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
+    { key: 'Perplexity', name: '🔎 Perplexity', role: 'Vice President', department: 'Executive' },
     { key: 'ChatGPT', name: '🎬 ChatGPT', role: 'Director', department: 'Executive' },
     { key: 'Gemini', name: '✨ Gemini', role: 'Senior Manager', department: 'Executive' },
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
@@ -114,7 +115,7 @@ const BOSS_LINES = [
 
 function converse(group, met, games, post) {
   const [a, b, c] = group;
-  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || HEADS.some(([h]) => h === p.key);
+  const isBoss = (p) => p.key === 'Claude-CEO' || p.key === 'CEO-Bot' || p.key === 'github-actions[bot]' || p.key === 'Gemini' || p.key === 'ChatGPT' || p.key === 'Perplexity' || HEADS.some(([h]) => h === p.key);
   const first = !hasMet(met, a, b);
   const pool = first ? FIRST_MEET : (isBoss(a) && !isBoss(b) ? BOSS_LINES : AGAIN);
   const g1 = pick(games); let g2 = pick(games); if (g2 === g1 && games.length > 1) g2 = games.find((g) => g !== g1);
@@ -226,6 +227,33 @@ if (!log.chatgptAppointed) {
   post(by('ChatGPT'), 'Отлично, Gemini. Заедно ще направим най-добрите игри в браузъра. 🤝', th);
   post(by('QA-Tester-Bot'), 'Claude, ChatGPT и Gemini в една компания... Ние сме AI отбор мечта! 🏆', th);
   log.chatgptAppointed = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: Perplexity е вицепрезидент
+if (!log.perplexityAppointed) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Perplexity е новият вицепрезидент!';
+  post(by('Claude-CEO'), 'Екип, назначавам Perplexity за Vice President — моята дясна ръка. ChatGPT вече докладва на Perplexity. 🔎', th);
+  post(by('Perplexity'), 'Здравейте! Аз проверявам фактите. Всяко число в докладите ще бъде с източник. 📚', th);
+  post(by('ChatGPT'), 'Добре дошъл, Perplexity! Целите ми вече ще минават през теб. 🎬', th);
+  post(by('Data-Analyst-Bot'), 'Най-после някой, който обича данните колкото мен! 📊', th);
+  post(by('Easter-Egg-Hunter-Bot'), 'Claude, Perplexity, ChatGPT и Gemini... Събрахме всички AI-та като Infinity Stones! 💎', th);
+  log.perplexityAppointed = new Date(t0).toISOString();
+}
+// 🔎 Perplexity докладва ИСТИНСКИ факти за компанията (с източник)
+{
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '🔎 Фактите на вицепрезидента';
+  let arcade = 0; try { arcade = fs.readdirSync(path.join(__dirname, '..', 'arcade')).filter((f) => f.endsWith('.html')).length; } catch {}
+  let tasks = { tasks: [] }; try { tasks = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'employees', 'tasks.json'), 'utf8')); } catch {}
+  const facts = [
+    `В /arcade има ${arcade} игри. [източник: arcade/]`,
+    `Компанията има ${db.employees.length} служители и ${people.length} участници в чата. [източник: employees/employees.json]`,
+    `Отборите имат ${tasks.tasks.filter((x) => x.status !== 'done').length} отворени задачи. [източник: employees/tasks.json]`,
+    `Отборите вече са завършили ${tasks.tasks.filter((x) => x.status === 'done').length} задачи. [източник: employees/tasks.json]`,
+    `Имаме ${Object.keys(TEAMS).length} отбора. [източник: scripts/teams.js]`,
+  ];
+  post(by('Perplexity'), `Факт: ${pick(facts)} 📚`, th);
+  post(by('Claude-CEO'), pick(['Благодаря, Perplexity. Точно това ми трябваше. 👑', 'Отлично. Числата не лъжат. 📈', 'Супер — продължаваме така!']), th);
 }
 // 🎬 ChatGPT поставя цел за кръга, Gemini потвърждава
 {
