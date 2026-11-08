@@ -462,6 +462,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T23:16:16.796Z"
+    },
+    {
+      "id": "EMP-0025",
+      "name": "Neon Fox",
+      "level": "Junior",
+      "role": "Tutorial Writer",
+      "role_bg": "Автор на туториали",
+      "department": "Community",
+      "manager": "Community-Manager-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T23:27:40.336Z"
     }
   ],
   "chairman": {
