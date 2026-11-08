@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числова машина</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚙️ Числова машина</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 285. Числова машина
+const NM_KEYS=['1','2','3','4','5','6','7','8','9','0','⌫','✓'];
+A.add({id:'nummachine',cat:'brain',icon:'⚙️',name:'Числова машина',desc:'Машината прави нещо с всяко число — открий правилото и познай какво ще излезе',
+  help:'Виж какво излиза от машината за всяко число отляво и открий тайното правило (например „×2 и +1“). После напиши какво ще излезе за новото число. Пиши с цифрите и Enter или с бутоните долу. Бърз отговор (под 10 сек.) = бонус точка. 3 живота, на всеки 4 верни нивото расте.',
+  start(g){g.lvl=1;g.ok=0;g.lives=3;g.inp='';g.msg='';g.mt=0;g.gear=0;this.next(g);},
+  rule(L){const a=A.ri(2,L>2?9:5),b=A.ri(1,9),R=[];
+    R.push({t:'+'+b,f:n=>n+b},{t:'−'+b,f:n=>n-b,min:b+1});
+    if(L>=2)R.push({t:'×'+a,f:n=>n*a},{t:'×2',f:n=>n*2},{t:'+10',f:n=>n+10});
+    if(L>=3)R.push({t:'×'+a+' и +'+b,f:n=>n*a+b},{t:'×'+a+' и −'+b,f:n=>n*a-b,min:Math.ceil((b+1)/a)},{t:'÷'+a,f:n=>n/a,div:a});
+    if(L>=4)R.push({t:'+'+b+' и ×2',f:n=>(n+b)*2},{t:'n×n',f:n=>n*n,max:12},{t:'÷'+a+' и +'+b,f:n=>n/a+b,div:a});
+    if(L>=5)R.push({t:'n×n и +'+b,f:n=>n*n+b,max:10},{t:'×10 и −'+b,f:n=>n*10-b,min:1},{t:'100 − n',f:n=>100-n,max:99});
+    // при по-високо ниво — по-рядко най-лесните
+    return L>=3&&Math.random()<.7?A.pick(R.slice(2)):A.pick(R);},
+  next(g){const r=this.rule(g.lvl);g.r=r;const used=new Set(),ins=[];
+    const gen=()=>{let n;do{n=r.div?r.div*A.ri(1,12):A.ri(r.min||1,r.max||(g.lvl>3?30:15));}while(used.has(n));used.add(n);return n;};
+    for(let i=0;i<4;i++)ins.push(gen());g.ex=ins.slice(0,3).map(n=>[n,r.f(n)]);g.q=ins[3];g.ans=r.f(g.q);g.inp='';g.qt=0;},
+  submit(g){if(!g.inp||g.mt>0)return;const ok=+g.inp===g.ans;flash(g,ok);
+    if(ok){const pts=g.lvl+(g.qt<10?1:0);g.score+=pts;g.ok++;g.msg='Вярно! +'+pts+'  (правило: '+g.r.t+')';g.good=1;if(g.ok%4===0){g.lvl++;g.msg+='  · Ниво '+g.lvl+'!';}}
+    else{g.lives--;g.good=0;g.msg='Не! '+g.q+' → '+g.ans+'  (правило: '+g.r.t+')';if(g.lives<=0)return A.over(g,'Правилото беше: '+g.r.t);}
+    g.mt=ok?1.3:2.4;g.gear=.6;},
+  key(g,k,ch){if(g.mt>0)return;if(typeNum(g,k,ch))this.submit(g);},
+  click(g,mx,my){if(g.mt>0)return;if(my<268||my>352)return;const col=Math.floor((mx-12)/76),row=my<310?0:1;if(col<0||col>5)return;
+    const kk=NM_KEYS[row*6+col];if(kk==='⌫')g.inp=g.inp.slice(0,-1);else if(kk==='✓')this.submit(g);else if(g.inp.length<6){g.inp+=kk;A.beep(700,.02);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.qt+=dt;g.gear=Math.max(0,g.gear-dt);if(g.mt>0){g.mt-=dt;if(g.mt<=0){g.msg='';this.next(g);}}},
+  numBlock(x,y,w,v,col){A.block(x,y,w,col,30);A.txt(String(v),x+w/2,y+16,v.toString().length>3?13:17,'#fff','center');},
+  machine(x,y,t){A.block(x,y,70,'#7d7d7d',56);c.fillStyle='#3a3a3a';c.fillRect(x+12,y+14,46,28);
+    c.fillStyle=Math.sin(t*10)>0?'#ff8a1a':'#ffd23f';c.fillRect(x+16,y+30,38,10);
+    A.txt('⚙',x+35,y+24,18,'#ddd','center');},
+  draw(g){A.bg('#1d2b3a');const t=g.t;
+    // конвейер с примери
+    A.txt('Примери:',20,44,14,'#b9c6d6');
+    g.ex.forEach(([a,b],i)=>{const y=58+i*44;this.numBlock(20,y,60,a,'#5a6b8c');A.txt('→',100,y+15,18,'#ffd54f','center');
+      c.fillStyle='#555';c.fillRect(118,y+6,64,18);A.txt('⚙',150,y+15,14,'#ddd','center');A.txt('→',200,y+15,18,'#ffd54f','center');this.numBlock(220,y,70,b,'#3f8a24');});
+    // голямата машина
+    const sh=g.gear>0?A.rnd(-2,2):0;this.machine(340+sh,66,t);A.txt('ПРАВИЛО',375,140,12,'#ffd54f','center');A.txt(g.mt>0?g.r.t:'???',375,158,g.mt>0&&g.r.t.length>9?11:15,'#fff','center');
+    // въпросът
+    c.fillStyle='#0f1822';c.fillRect(12,192,456,64);
+    this.numBlock(40,209,70,g.q,'#8e24aa');A.txt('→ ⚙ →',170,224,20,'#ffd54f','center');
+    c.fillStyle='#000';c.fillRect(230,204,130,40);c.strokeStyle=g.mt>0?(g.good?'#4caf50':'#f44336'):'#ffd54f';c.lineWidth=3;c.strokeRect(230,204,130,40);
+    A.txt(g.mt>0&&!g.good?String(g.ans):(g.inp+(g.mt<=0&&Math.sin(t*8)>0?'_':'')),295,224,24,'#fff','center');
+    A.txt(g.qt<10&&g.mt<=0?'⚡'+Math.ceil(10-g.qt):'',420,224,16,'#4dd0e1','center');
+    // бутони
+    NM_KEYS.forEach((k,i)=>{const x=12+(i%6)*76,y=270+Math.floor(i/6)*42;A.block(x,y,70,k==='✓'?'#3f8a24':k==='⌫'?'#a84a3a':'#5a6b8c',38);A.txt(k,x+35,y+19,18,'#fff','center');});
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('Точки: '+g.score,240,14,14,'#fff','center');A.txt('❤'.repeat(Math.max(0,g.lives)),472,14,14,'#f55','right');
+    if(g.msg)A.txt(g.msg,240,182,g.msg.length>40?11:13,g.good?'#c8f7c5':'#ffccbc','center');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

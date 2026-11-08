@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Буталата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">➡️ Буталата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 284. Буталата
+const TA_DX=[1,0,-1,0],TA_DY=[0,1,0,-1];
+A.add({id:'tapaway',cat:'puzzle',icon:'➡️',name:'Буталата',desc:'Кликни бутало и то излита по стрелката си — изчисти полето, без да се блъснеш',
+  help:'Всяко бутало излита натам, накъдето сочи стрелката му. Кликни/докосни бутало — ако пътят до края е свободен, то излита. Ако нещо го спира, се блъска и губиш ❤. Помисли в какъв ред! С клавиатура: стрелки = избор, Space/Enter = изстреляй. 3 живота, всяко ниво връща 1.',
+  start(g){g.lvl=0;g.lives=3;g.fly=[];g.parts=[];this.level(g);},
+  level(g){g.lvl++;const L=g.lvl;g.n=Math.min(8,3+Math.ceil(L/2));const n=g.n;g.cell=Math.floor(Math.min(36,300/n));
+    g.ox=240-n*g.cell/2;g.oy=206-n*g.cell/2;const dens=Math.min(.95,.7+L*.03);
+    let grid,tries=0;
+    do{grid=[];for(let y=0;y<n;y++){grid.push([]);for(let x=0;x<n;x++)grid[y].push(Math.random()<dens?A.ri(0,3):-1);}
+      // поправяме, докато дъската стане решима
+      for(let k=0;k<400;k++){const st=this.stuck(grid,n);if(!st.length)break;const [x,y]=A.pick(st);grid[y][x]=A.ri(0,3);}
+      tries++;}while(this.stuck(grid,n).length&&tries<20);
+    if(this.stuck(grid,n).length){const d=A.ri(0,3);for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(grid[y][x]>=0)grid[y][x]=d;}
+    g.grid=grid;g.left=grid.flat().filter(v=>v>=0).length;g.cx=Math.floor(n/2);g.cy=Math.floor(n/2);g.bump=null;g.msg='Ниво '+L;g.mt=1.2;g.combo=0;},
+  free(grid,n,x,y){const d=grid[y][x];let i=x+TA_DX[d],j=y+TA_DY[d];while(i>=0&&j>=0&&i<n&&j<n){if(grid[j][i]>=0)return [i,j];i+=TA_DX[d];j+=TA_DY[d];}return null;},
+  // кои бутала остават блокирани, ако махаме всички свободни поред
+  stuck(grid0,n){const grid=grid0.map(r=>r.slice());let ch=true;
+    while(ch){ch=false;for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(grid[y][x]>=0&&!this.free(grid,n,x,y)){grid[y][x]=-1;ch=true;}}
+    const r=[];for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(grid[y][x]>=0)r.push([x,y]);return r;},
+  shoot(g,x,y){if(g.mt>0&&g.left===0)return;const d=g.grid[y][x];if(d<0)return;g.cx=x;g.cy=y;
+    const bl=this.free(g.grid,g.n,x,y);
+    if(bl){const dist=Math.abs(bl[0]-x)+Math.abs(bl[1]-y)-1;g.bump={x,y,d,t:.35,dist};g.lives--;g.combo=0;flash(g,false);
+      if(g.lives<=0)return A.over(g,'Блъсна се! Стигна ниво '+g.lvl);return;}
+    g.grid[y][x]=-1;g.left--;g.combo++;g.score+=1+Math.min(3,Math.floor(g.combo/8));A.beep(500+Math.min(g.combo,12)*40,.07,'triangle');
+    g.fly.push({x:g.ox+x*g.cell,y:g.oy+y*g.cell,d,v:0});
+    if(!g.left){const b=5+g.lvl;g.score+=b;g.lives=Math.min(3,g.lives+1);g.msg='Браво! +'+b;g.mt=1.4;g.next=1.4;A.tune([523,659,784,1047]);}},
+  key(g,k){const n=g.n;if(k==='ArrowLeft')g.cx=(g.cx+n-1)%n;else if(k==='ArrowRight')g.cx=(g.cx+1)%n;else if(k==='ArrowUp')g.cy=(g.cy+n-1)%n;else if(k==='ArrowDown')g.cy=(g.cy+1)%n;
+    else if(k==='Space'||k==='Enter')this.shoot(g,g.cx,g.cy);},
+  click(g,mx,my){const x=Math.floor((mx-g.ox)/g.cell),y=Math.floor((my-g.oy)/g.cell);if(x>=0&&y>=0&&x<g.n&&y<g.n)this.shoot(g,x,y);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.mt>0)g.mt-=dt;if(g.bump){g.bump.t-=dt;if(g.bump.t<=0)g.bump=null;}
+    for(const f of g.fly){f.v+=2400*dt;f.x+=TA_DX[f.d]*f.v*dt;f.y+=TA_DY[f.d]*f.v*dt;}g.fly=g.fly.filter(f=>f.x>-60&&f.x<540&&f.y>-60&&f.y<420);
+    if(g.next>0){g.next-=dt;if(g.next<=0)this.level(g);}},
+  arrow(x,y,s,d){c.save();c.translate(x+s/2,y+s/2);c.rotate(d*Math.PI/2);const u=Math.max(2,Math.round(s/12));c.fillStyle='#fff';
+    c.fillRect(-4*u,-u,6*u,2*u);for(let i=0;i<4;i++)c.fillRect(2*u+i*u,-(3-i)*u-u/2,u,(3-i)*2*u+u);c.restore();},
+  piston(x,y,s,d,sel){A.block(x,y,s,'#9a6a3a');const k=Math.max(3,s*.18);c.fillStyle='#c9a46a';
+    if(d===0)c.fillRect(x+s-k,y+2,k-2,s-4);else if(d===2)c.fillRect(x+2,y+2,k-2,s-4);else if(d===1)c.fillRect(x+2,y+s-k,s-4,k-2);else c.fillRect(x+2,y+2,s-4,k-2);
+    c.fillStyle='#7d7d7d';c.fillRect(x+s*.25,y+s*.25,s*.5,s*.5);this.arrow(x,y,s,d);
+    if(sel){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(x+1,y+1,s-2,s-2);}},
+  draw(g){A.bg('#1d2b3a');const s=g.cell,n=g.n;
+    c.fillStyle='#2a2a2a';c.fillRect(g.ox-6,g.oy-6,n*s+12,n*s+12);
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const px=g.ox+x*s,py=g.oy+y*s;c.fillStyle=(x+y)%2?'#3a4a3a':'#425442';c.fillRect(px,py,s,s);}
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const d=g.grid[y][x];if(d<0)continue;let px=g.ox+x*s,py=g.oy+y*s;
+      if(g.bump&&g.bump.x===x&&g.bump.y===y){const p=Math.sin((1-g.bump.t/.35)*Math.PI)*(g.bump.dist*s+s*.3);px+=TA_DX[d]*p;py+=TA_DY[d]*p;}
+      this.piston(px,py,s,d,x===g.cx&&y===g.cy);}
+    if(g.grid[g.cy]&&g.grid[g.cy][g.cx]<0){c.strokeStyle='rgba(255,213,79,.6)';c.lineWidth=2;c.strokeRect(g.ox+g.cx*s+2,g.oy+g.cy*s+2,s-4,s-4);}
+    for(const f of g.fly)this.piston(f.x,f.y,s,f.d,false);
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('Точки: '+g.score+'  ·  Останали: '+g.left,240,14,14,'#fff','center');A.txt('❤'.repeat(Math.max(0,g.lives)),472,14,14,'#f55','right');
+    if(g.mt>0)A.txt(g.msg,240,44,18,'#c8f7c5','center');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

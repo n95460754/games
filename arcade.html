@@ -265,7 +265,10 @@ const GAMES=[
   {"id": "mindwalk", "cat": "brain", "icon": "🧭", "name": "Мислена разходка", "desc": "Следи наум стрелките и познай къде ще стигне Стив", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "tntchain", "cat": "puzzle", "icon": "💥", "name": "Верижен TNT", "desc": "Взриви TNT така, че веригата да хване всички крийпъри", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "picalgebra", "cat": "brain", "icon": "🧮", "name": "Мобова алгебра", "desc": "Всеки моб е число — разбери колко струва и реши задачата", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "mlgwater", "cat": "skill", "icon": "🪣", "name": "Водна кофа", "desc": "Падаш от небето — сипи водата точно преди земята!", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "mlgwater", "cat": "skill", "icon": "🪣", "name": "Водна кофа", "desc": "Падаш от небето — сипи водата точно преди земята!", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "sumo", "cat": "action", "icon": "🤼", "name": "Блоково сумо", "desc": "Избутай слузите от ледения остров в лавата, без да паднеш ти", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "tapaway", "cat": "puzzle", "icon": "➡️", "name": "Буталата", "desc": "Кликни бутало и то излита по стрелката си — изчисти полето, без да се блъснеш", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "nummachine", "cat": "brain", "icon": "⚙️", "name": "Числова машина", "desc": "Машината прави нещо с всяко число — открий правилото и познай какво ще излезе", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
