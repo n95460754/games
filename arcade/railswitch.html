@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стрелочник</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛤️ Стрелочник</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 247. Стрелочник
+A.add({id:'railswitch',cat:'skill',icon:'🛤️',name:'Стрелочник',desc:'Обръщай стрелките и прати всяка вагонетка до станцията с нейния цвят',
+  help:'Цъкни стрелка (или натисни ↑ = горната, ← = лявата, → = дясната; или 1, 2, 3), за да я обърнеш. Всяка вагонетка трябва да стигне до станцията със същата руда. Грешна станция = −1 живот. Вагонетките се ускоряват!',
+  N:{E:[240,14],S1:[240,96],S2:[120,178],S3:[360,178]},ST:[60,180,300,420],SY:316,
+  COL:[C.gold,C.gem,C.ruby,'#3ccf5a'],
+  start(g){g.sw=[0,0,0];g.carts=[];g.lives=3;g.spawn=1;g.fx=[];g.flash=[0,0,0];},
+  toggle(g,i){g.sw[i]^=1;g.flash[i]=.2;A.beep(420+i*90,.05);},
+  key(g,k){const i={ArrowUp:0,Digit1:0,KeyW:0,ArrowLeft:1,Digit2:1,KeyA:1,ArrowRight:2,Digit3:2,KeyD:2}[k];if(i!==undefined)this.toggle(g,i);},
+  click(g,mx,my){const N=this.N,P=[N.S1,N.S2,N.S3];let b=-1,bd=60*60;
+    P.forEach((p,i)=>{const d=(mx-p[0])**2+(my-p[1])**2;if(d<bd){bd=d;b=i;}});
+    if(b<0)b=my<140?0:mx<240?1:2;this.toggle(g,b);},
+  target(g,name){const N=this.N,s=this.ST,Y=this.SY;
+    if(name==='S1')return g.sw[0]?'S3':'S2';
+    if(name==='S2')return g.sw[1]?1:0;
+    if(name==='S3')return g.sw[2]?3:2;},
+  pt(t){return typeof t==='number'?[this.ST[t],this.SY]:this.N[t];},
+  update(g,dt){
+    for(let i=0;i<3;i++)if(g.flash[i]>0)g.flash[i]-=dt;
+    const sp=Math.min(150,70+g.score*2);
+    g.spawn-=dt;
+    if(g.spawn<=0){const last=g.carts[g.carts.length-1];
+      if(!last||last.next!=='S1'||last.y>this.N.E[1]+34){g.carts.push({x:this.N.E[0],y:this.N.E[1],next:'S1',c:A.ri(0,3)});g.spawn=Math.max(1.05,3-g.score*.06);}
+      else g.spawn=.2;}
+    for(let i=g.carts.length-1;i>=0;i--){const k=g.carts[i],p=this.pt(k.next),dx=p[0]-k.x,dy=p[1]-k.y,d=Math.hypot(dx,dy),m=sp*dt;
+      if(d>m){k.x+=dx/d*m;k.y+=dy/d*m;continue;}
+      k.x=p[0];k.y=p[1];
+      if(typeof k.next==='number'){g.carts.splice(i,1);
+        if(k.next===k.c){g.score++;A.beep(880,.06,'triangle');g.fx.push({x:k.x,y:k.y-30,t:.8,s:'+1',col:'#7f7'});}
+        else{g.lives--;A.beep(140,.25,'sawtooth');g.fx.push({x:k.x,y:k.y-30,t:.8,s:'✗',col:'#f55'});if(g.lives<=0)return A.over(g,'Объркана гара!');}
+      }else k.next=this.target(g,k.next);}
+    g.fx.forEach(f=>{f.t-=dt;f.y-=20*dt;});g.fx=g.fx.filter(f=>f.t>0);
+  },
+  rail(a,b,on){const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
+    c.fillStyle=on?'#8a5a2b':'#4a3420';for(let s=6;s<L;s+=12){const x=a[0]+ux*s,y=a[1]+uy*s;c.fillRect(x-uy*9-2,y+ux*9-2,4,4);c.save();c.translate(x,y);c.rotate(Math.atan2(uy,ux));c.fillRect(-2,-10,5,20);c.restore();}
+    c.strokeStyle=on?'#d8d8d8':'#555';c.lineWidth=2;
+    for(const o of[-6,6]){c.beginPath();c.moveTo(a[0]-uy*o,a[1]+ux*o);c.lineTo(b[0]-uy*o,b[1]+ux*o);c.stroke();}},
+  draw(g){A.bg('#3b2f24');
+    for(let x=0;x<480;x+=24)for(let y=0;y<360;y+=24)if(((x*7+y*3)>>3)%5===0){c.fillStyle='#45372a';c.fillRect(x,y,24,24);}
+    const N=this.N,S=this.ST.map(x=>[x,this.SY]);
+    this.rail(N.E,N.S1,true);
+    this.rail(N.S1,N.S2,!g.sw[0]);this.rail(N.S1,N.S3,!!g.sw[0]);
+    this.rail(N.S2,S[0],!g.sw[1]);this.rail(N.S2,S[1],!!g.sw[1]);
+    this.rail(N.S3,S[2],!g.sw[2]);this.rail(N.S3,S[3],!!g.sw[2]);
+    // станции
+    S.forEach((p,i)=>{A.block(p[0]-34,p[1]-6,68,'#6b6b6b',40);A.block(p[0]-14,p[1]+2,28,this.COL[i]);});
+    // стрелки (лостове)
+    [N.S1,N.S2,N.S3].forEach((p,i)=>{const fl=g.flash[i]>0;A.block(p[0]-15,p[1]-15,30,fl?'#ffe082':'#9a6a3a');
+      const dir=g.sw[i]?1:-1;c.strokeStyle='#000';c.lineWidth=4;c.beginPath();c.moveTo(p[0],p[1]+8);c.lineTo(p[0]+dir*9,p[1]-8);c.stroke();
+      A.block(p[0]+dir*9-4,p[1]-12,8,C.red);A.txt(''+(i+1),p[0]-dir*22,p[1]-14,11,'#ffd54f','center');});
+    // вагонетки
+    g.carts.forEach(k=>{A.block(k.x-13,k.y-11,26,'#555',20);c.fillStyle='#222';c.fillRect(k.x-11,k.y-9,22,6);
+      A.block(k.x-7,k.y-14,14,this.COL[k.c],9);c.fillStyle='#111';c.fillRect(k.x-11,k.y+8,6,4);c.fillRect(k.x+5,k.y+8,6,4);});
+    g.fx.forEach(f=>A.txt(f.s,f.x,f.y,18,f.col,'center'));
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');
+  }
+});
+</script>
+</body>
+</html>

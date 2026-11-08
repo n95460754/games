@@ -229,7 +229,10 @@ const GAMES=[
   {"id": "make24", "cat": "brain", "icon": "🎴", "name": "Направи 24", "desc": "Събирай, изваждай, умножавай и дели 4 числа, за да получиш 24", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "asteroids", "cat": "action", "icon": "☄️", "name": "Космически скали", "desc": "Върти кораба и разбивай летящите скали на все по-малки парчета", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "hashi", "cat": "puzzle", "icon": "🌉", "name": "Мостове", "desc": "Свържи островите с мостове — числото казва колко моста излизат от острова", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "ordernums", "cat": "brain", "icon": "🔢", "name": "Подреди числата", "desc": "Цъкай числата по големина — после идват минуси, десетични дроби, дроби и проценти", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "ordernums", "cat": "brain", "icon": "🔢", "name": "Подреди числата", "desc": "Цъкай числата по големина — после идват минуси, десетични дроби, дроби и проценти", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "railswitch", "cat": "skill", "icon": "🛤️", "name": "Стрелочник", "desc": "Обръщай стрелките и прати всяка вагонетка до станцията с нейния цвят", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "lanterns", "cat": "puzzle", "icon": "🏮", "name": "Фенери в пещерата", "desc": "Сложи фенери така, че да осветят цялата пещера, без два фенера да се виждат", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "rounding", "cat": "brain", "icon": "🔽", "name": "Закръгли числото", "desc": "Насочи падащия блок с число към сандъка с правилно закръгленото число", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

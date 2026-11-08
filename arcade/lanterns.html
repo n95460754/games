@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фенери в пещерата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏮 Фенери в пещерата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 248. Фенери в пещерата
+A.add({id:'lanterns',cat:'puzzle',icon:'🏮',name:'Фенери в пещерата',desc:'Сложи фенери така, че да осветят цялата пещера, без два фенера да се виждат',
+  help:'Фенерът свети по права линия нагоре, надолу, наляво и надясно до камък. Освети всяко празно поле! Два фенера не бива да се виждат. Числото на камъка = колко фенера има точно до него. Цъкни / Space = фенер → точка → празно, десен клик / X = точка. Стрелки = курсор, N = нов пъзел (−20 сек).',
+  start(g){g.time=150;g.lvl=0;g.cx=0;g.cy=0;g.win=0;this.make(g);},
+  make(g){const n=Math.min(9,6+g.lvl);g.n=n;g.cs=Math.floor(320/n);g.ox=Math.floor(240-n*g.cs/2);g.oy=34;
+    let ok=false;
+    while(!ok){
+      g.blk=[];for(let y=0;y<n;y++){g.blk.push([]);for(let x=0;x<n;x++)g.blk[y].push(Math.random()<.2);}
+      // симетрия за по-хубав вид
+      for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(g.blk[y][x])g.blk[n-1-y][n-1-x]=true;
+      const sol=this.grid(n,0),order=[];
+      for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(!g.blk[y][x])order.push([x,y]);
+      A.shuffle(order);
+      for(const [x,y] of order){if(!this.litBy(g,sol,x,y))sol[y][x]=1;}
+      g.num=this.grid(n,-1);let cnt=0;
+      for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(g.blk[y][x]){const k=this.adj(g,sol,x,y);if(Math.random()<.75){g.num[y][x]=k;cnt++;}}
+      ok=order.length>n*n*.6&&cnt>=2;if(ok)var sol0=sol;
+    }
+    g.sol=sol0;g.st=this.grid(n,0);g.cx=Math.min(g.cx,n-1);g.cy=Math.min(g.cy,n-1);this.check(g);},
+  grid(n,v){return Array.from({length:n},()=>Array(n).fill(v));},
+  adj(g,L,x,y){let k=0;for(const [dx,dy] of[[1,0],[-1,0],[0,1],[0,-1]]){const a=x+dx,b=y+dy;if(a>=0&&b>=0&&a<g.n&&b<g.n&&L[b][a]===1)k++;}return k;},
+  // дали някой фенер вижда полето (x,y)
+  litBy(g,L,x,y){for(const [dx,dy] of[[1,0],[-1,0],[0,1],[0,-1]]){let a=x,b=y;
+      while(a>=0&&b>=0&&a<g.n&&b<g.n&&!g.blk[b][a]){if(L[b][a]===1)return true;a+=dx;b+=dy;}}return false;},
+  check(g){const n=g.n;g.lit=this.grid(n,false);g.bad=this.grid(n,false);let dark=0,err=0;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(g.st[y][x]===1){g.lit[y][x]=true;
+      for(const [dx,dy] of[[1,0],[-1,0],[0,1],[0,-1]]){let a=x+dx,b=y+dy;
+        while(a>=0&&b>=0&&a<n&&b<n&&!g.blk[b][a]){g.lit[b][a]=true;if(g.st[b][a]===1){g.bad[y][x]=true;}a+=dx;b+=dy;}}}
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+      if(g.blk[y][x]){if(g.num[y][x]>=0&&this.adj(g,g.st,x,y)!==g.num[y][x])err++;}
+      else{if(!g.lit[y][x])dark++;if(g.bad[y][x])err++;}}
+    g.dark=dark;
+    if(!dark&&!err&&g.win<=0){g.win=1.2;g.score++;g.time+=45;A.tune([660,880,1100,1320]);}},
+  cycle(g,x,y,dot){if(g.win>0||g.blk[y][x])return;const v=g.st[y][x];
+    g.st[y][x]=dot?(v===2?0:2):(v+1)%3;A.beep(g.st[y][x]===1?760:420,.04);this.check(g);},
+  key(g,k){const n=g.n;
+    if(k==='ArrowLeft'||k==='KeyA')g.cx=(g.cx+n-1)%n;else if(k==='ArrowRight'||k==='KeyD')g.cx=(g.cx+1)%n;
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=(g.cy+n-1)%n;else if(k==='ArrowDown'||k==='KeyS')g.cy=(g.cy+1)%n;
+    else if(k==='Space'||k==='Enter')this.cycle(g,g.cx,g.cy,false);
+    else if(k==='KeyX')this.cycle(g,g.cx,g.cy,true);
+    else if(k==='KeyN'&&g.win<=0){g.time-=20;A.beep(200,.1);this.make(g);}},
+  click(g,mx,my,btn){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);
+    if(x<0||y<0||x>=g.n||y>=g.n)return;g.cx=x;g.cy=y;this.cycle(g,x,y,btn===2);},
+  update(g,dt){if(g.win>0){g.win-=dt;if(g.win<=0){g.lvl++;this.make(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Пещерата остана тъмна!');},
+  draw(g){A.bg('#1b1712');const n=g.n,s=g.cs;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const X=g.ox+x*s,Y=g.oy+y*s;
+      if(g.blk[y][x]){A.block(X,Y,s,'#6e6e6e');const v=g.num[y][x];
+        if(v>=0){const k=this.adj(g,g.st,x,y);A.txt(''+v,X+s/2,Y+s/2+1,s*.5,k===v?'#8f8':k>v?'#f66':'#fff','center');}}
+      else{A.block(X,Y,s,g.lit[y][x]?(g.win>0?'#ffe9a0':'#e8c86a'):'#3a2f22');
+        const v=g.st[y][x];
+        if(v===1){const bad=g.bad[y][x],m=s*.22;c.fillStyle='#222';c.fillRect(X+m,Y+m*.6,s-2*m,s*.12);
+          A.block(X+m,Y+m*.6+s*.12,s-2*m,bad?'#e53935':'#ff9800',s-2*m-s*.12);
+          c.fillStyle=bad?'#ffcdd2':'#fff3c4';c.fillRect(X+s*.4,Y+s*.42,s*.2,s*.28);}
+        else if(v===2){c.fillStyle='#000';c.fillRect(X+s/2-3,Y+s/2-3,6,6);}}}
+    c.strokeStyle='#4de8f5';c.lineWidth=3;c.strokeRect(g.ox+g.cx*s+1.5,g.oy+g.cy*s+1.5,s-3,s-3);
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<20?'#f66':'#fff');
+    A.txt('Пъзел '+(g.lvl+1)+' · тъмни полета: '+g.dark,470,14,13,'#ffd54f','right');
+    if(g.win>0)A.txt('Пещерата свети! +45 сек',240,190,26,'#fff','center');
+  }
+});
+</script>
+</body>
+</html>

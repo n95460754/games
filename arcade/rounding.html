@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Закръгли числото</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔽 Закръгли числото</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 249. Закръгли числото
+A.add({id:'rounding',cat:'brain',icon:'🔽',name:'Закръгли числото',desc:'Насочи падащия блок с число към сандъка с правилно закръгленото число',
+  help:'Закръгли числото на падащия блок до десетици, стотици, хиляди или цели и го прати в правилния сандък. ← → (A/D) или цъкни върху сандък = премести, ↓ / Space = пусни бързо. Цифра 5 или повече = закръгляме нагоре! Грешка = −1 живот.',
+  COLS:[80,240,400],
+  start(g){g.lives=3;g.fx=[];g.why='';this.next(g);},
+  fmt(v,d){let s=d?v.toFixed(d):''+Math.round(v);let [a,b]=s.split('.');a=a.replace(/\B(?=(\d{3})+(?!\d))/g,' ');return b?a+','+b:a;},
+  next(g){const L=g.score;let lv;
+    if(L<5)lv=A.pick([0,0,1]);else if(L<10)lv=A.pick([1,1,2]);else if(L<15)lv=A.pick([2,3]);else lv=A.pick([1,2,3,4]);
+    // lv: 0 = десетици (2-3 цифри), 1 = стотици, 2 = хиляди, 3 = цели (десетична), 4 = десети
+    const T=[['десетици',10,0],['стотици',100,0],['хиляди',1000,0],['цели числа',1,1],['десети',.1,2]][lv];
+    const step=T[1],dec=T[2];let v;
+    do{if(lv===0)v=A.ri(11,999);else if(lv===1)v=A.ri(101,9999);else if(lv===2)v=A.ri(1001,99999);
+      else if(lv===3)v=A.ri(10,999)/10;else v=A.ri(101,9999)/100;}
+    while(Math.abs(v/step-Math.round(v/step))<1e-6);
+    const k=v/step+1e-7,lo=Math.floor(k)*step,hi=Math.ceil(k)*step,ans=Math.floor(k+.5)*step;
+    // трети (грешен) избор: закръгляне до друг разред или с още една стъпка
+    const big=step*10,alt=[Math.floor(v/big+.5)*big,ans===hi?hi+step:lo-step,ans===hi?lo-step:hi+step];
+    const R=x=>+x.toFixed(dec);const opts=[R(lo),R(hi)];
+    for(const a of alt){const r=R(a);if(r>=0&&!opts.includes(r)){opts.push(r);break;}}
+    g.v=v;g.vd=dec===0?0:dec;g.place=T[0];g.dec=dec===2?1:0;g.ans=R(ans);g.opts=A.shuffle(opts);
+    g.col=1;g.x=240;g.y=48;g.fast=false;},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')g.col=Math.max(0,g.col-1);
+    else if(k==='ArrowRight'||k==='KeyD')g.col=Math.min(2,g.col+1);
+    else if(k==='ArrowDown'||k==='KeyS'||k==='Space')g.fast=true;},
+  click(g,mx,my){const i=A.clamp(Math.floor(mx/160),0,2);if(i===g.col&&my>200)g.fast=true;g.col=i;},
+  update(g,dt){
+    g.fx.forEach(f=>{f.t-=dt;f.y-=24*dt;});g.fx=g.fx.filter(f=>f.t>0);
+    const tx=this.COLS[g.col];g.x+=(tx-g.x)*Math.min(1,dt*14);
+    g.y+=(g.fast?420:Math.min(120,26+g.score*3))*dt;
+    if(g.y>=262){const pick=g.opts[g.col],ok=Math.abs(pick-g.ans)<1e-9,s=this.fmt(g.ans,g.dec);
+      if(ok){g.score++;A.beep(880,.08,'triangle');g.fx.push({x:this.COLS[g.col],y:250,t:.8,s:'+1',col:'#7f7'});g.why='';}
+      else{g.lives--;A.beep(140,.25,'sawtooth');g.fx.push({x:this.COLS[g.col],y:250,t:.8,s:'✗',col:'#f55'});
+        g.why=this.fmt(g.v,g.vd)+' ≈ '+s;if(g.lives<=0)return A.over(g,g.why);}
+      this.next(g);}
+  },
+  draw(g){A.bg('#5b8fd6');
+    for(let x=0;x<480;x+=24){A.block(x,336,24,C.grass,8);A.block(x,344,24,C.dirt,16);}
+    A.txt('Закръгли до '+g.place,240,22,18,'#fff','center');
+    // колони-водачи
+    this.COLS.forEach((x,i)=>{c.fillStyle=i===g.col?'rgba(255,255,255,.18)':'rgba(255,255,255,.06)';c.fillRect(x-70,40,140,240);});
+    // сандъци
+    g.opts.forEach((v,i)=>{const x=this.COLS[i];A.block(x-62,282,124,'#9a6a3a',54);c.fillStyle='#5a3a1a';c.fillRect(x-62,300,124,4);
+      A.block(x-6,296,12,'#c9c9c9',12);const t=this.fmt(v,g.dec);A.txt(t,x,322,t.length>7?14:18,'#fff','center');});
+    // падащ блок
+    const t=this.fmt(g.v,g.vd),w=Math.max(84,t.length*14+20);
+    A.block(g.x-w/2,g.y-20,w,C.stone,40);A.txt(t,g.x,g.y,22,'#fff','center');
+    g.fx.forEach(f=>A.txt(f.s,f.x,f.y,20,f.col,'center'));
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');
+    if(g.why)A.txt(g.why,470,14,12,'#fff','right');
+  }
+});
+</script>
+</body>
+</html>

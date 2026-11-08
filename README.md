@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**256 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 246 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**259 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 249 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-256-5aa13a)
+![Games](https://img.shields.io/badge/games-259-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 246 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 249 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -391,8 +391,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 244 | ☄️ Space Rocks (Космически скали) | [`asteroids.html`](arcade/asteroids.html) | Spin your ship, thrust and blast drifting rocks that split into smaller pieces |
 | 245 | 🌉 Bridges (Мостове) | [`hashi.html`](arcade/hashi.html) | Connect the islands with 1 or 2 bridges each so every number matches and nothing crosses |
 | 246 | 🔢 Order the Numbers (Подреди числата) | [`ordernums.html`](arcade/ordernums.html) | Tap numbers from smallest to largest (or back): negatives, decimals, fractions and percents |
+| 247 | 🛤️ Switchman (Стрелочник) | [`railswitch.html`](arcade/railswitch.html) | Flip three rail switches to send every colored minecart to the station with the same ore |
+| 248 | 🏮 Cave Lanterns (Фенери в пещерата) | [`lanterns.html`](arcade/lanterns.html) | Light-Up logic puzzle: place lanterns to light the whole cave without two seeing each other |
+| 249 | 🔽 Round It (Закръгли числото) | [`rounding.html`](arcade/rounding.html) | Steer the falling number block into the chest with the correctly rounded number |
 
-All 246 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 249 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -420,8 +423,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–245
-│   └── ordernums.html      # 246. Order the Numbers
+│   ├── ...                 # games 51–248
+│   └── rounding.html       # 249. Round It
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
