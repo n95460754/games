@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { teamFor, runTeamTasks } = require('./teams');
+const janitor = require('./janitor');
 
 const ROOT = path.join(__dirname, '..');
 const DB = path.join(ROOT, 'employees', 'employees.json');
@@ -33,6 +34,7 @@ function participants(staff) {
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
+    janitor.JANITOR,
   ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: 'Head of ' + d, department: d, team: teamFor(d) });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department, team: teamFor(e.department) });
@@ -128,6 +130,7 @@ function converse(group, met, games, post) {
 }
 
 // ---------- Main ----------
+const janitorFixed = janitor.cleanFiles(); // 🧹 първо чистачът оправя счупените данни
 const db = load(DB, { employees: [] });
 const people = participants(db.employees);
 const log = load(LOG, { round: 0, messages: [] });
@@ -180,6 +183,21 @@ if (!log.teamsAnnounced) {
   post(by('DevOps-Master-Bot'), 'Team DevOps също е на линия. ⚙️', th);
   post(by('SecOps-Bot'), 'Периметърът е пазен. 🛡️', th);
   log.teamsAnnounced = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: новият чистач
+if (!log.janitorHired) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Имаме чистач!';
+  post(by('github-actions[bot]'), 'Хора, наехме Janitor-Bot. Работата му: да чисти грешките. Буквално. 🧹', th);
+  post(janitor.JANITOR, 'Здравейте! Чистя бъгове, счупени файлове и разлят кафе върху сървъра. Само не ме карайте да пиша CSS. 😅', th);
+  post(by('QA-Tester-Bot'), 'Най-накрая! Някой, който да чисти след Dev-Bot. 😂', th);
+  post(by('Dev-Bot'), 'Ей! ...Добре, де, прав си. Добре дошъл, Janitor-Bot! 🧽', th);
+  log.janitorHired = new Date(t0).toISOString();
+}
+// 🧹 Обиколката на чистача
+{
+  const by = (k) => people.find((p) => p.key === k);
+  janitor.report({ fixedFiles: janitorFixed, fixedTasks: janitor.cleanTasks(people), sweep: janitor.sweepProject(), post, by });
 }
 // 🛠️ Лидерите раздават задачи, отборите ги изпълняват
 runTeamTasks({ people, games, post, round: log.round });
