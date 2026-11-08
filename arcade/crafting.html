@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рецепти за изработване</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛠️ Рецепти за изработване</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 267. Рецепти за изработване
+const MC={l:'#6b4a2a',p:'#b8864b',s:'#8a5a2b',i:'#d8d8d8',g:'#ffd23f',d:'#4de8f5',c:'#2a2a2a',w:'#d9b23a',r:'#7d7d7d'};
+// рецепта: шарка 3×3 (букви от MC, '.' = празно), резултат
+const RC={
+  pick:{pat:'MMM.s..s.',out:1},sword:{pat:'.M..M..s.',out:1},bucket:{pat:'i.i.i....',out:1},chest:{pat:'pppp.pppp',out:1},
+  bread:{pat:'...www...',out:1},torch:{pat:'.c..s....',out:4},planks:{pat:'....l....',out:4},sticks:{pat:'.p..p....',out:4},
+  ladder:{pat:'s.ssssS.s'.replace('S','s'),out:3},door:{pat:'pp.pp.pp.',out:3}};
+const MATS=[['i','желязо'],['g','злато'],['d','диаманта'],['r','каменни блока']];
+A.add(choiceGame({id:'crafting',cat:'brain',icon:'🛠️',name:'Рецепти за изработване',desc:'Смятай колко материали трябват за кирки, мечове, факли и сандъци',time:90,help:'Гледай рецептата на масата за изработване и смятай: колко материали трябват, колко предмета излизат, колко можеш да направиш. Избери верния отговор с клик или 1–4. След 6 точки задачите стават с две стъпки! 90 секунди.',
+  next(g){const hard=g.score>=6,N=A.ri(2,hard?9:5),t=A.pick(hard?['need','yield','canmake','chain','chain','left']:['need','need','yield','canmake']);g.q2='';g.M='i';
+    const near=()=>Math.max(0,g.ans+A.pick([-3,-2,-1,1,2,3,g.ans]));
+    if(t==='need'){const r=A.pick(['pick','sword','bucket','chest','bread']);g.r=r;
+      if(r==='pick'||r==='sword'){const m=A.pick(MATS);g.M=m[0];const k=r==='pick'?3:2;g.q='1 '+(r==='pick'?'кирка':'меч')+' иска '+k+' '+m[1]+' и '+(r==='pick'?2:1)+(r==='pick'?' пръчки.':' пръчка.');
+        if(Math.random()<.5){g.q2='Колко '+m[1]+(m[0]==='d'||m[0]==='r'?' трябват':' трябва')+' за '+N+(r==='pick'?' кирки?':' меча?');g.ans=k*N;}else{g.q2='Колко пръчки трябват за '+N+(r==='pick'?' кирки?':' меча?');g.ans=(r==='pick'?2:1)*N;}}
+      else{const d={bucket:['1 кофа иска 3 желязо.','желязо трябва',' кофи?',3],chest:['1 сандък иска 8 дъски.','дъски трябват',' сандъка?',8],bread:['1 хляб иска 3 снопа жито.','снопа жито трябват',' хляба?',3]}[r];
+        g.q=d[0];g.q2='Колко '+d[1]+' за '+N+d[2];g.ans=d[3]*N;}}
+    else if(t==='yield'){const r=A.pick(['torch','planks','sticks','ladder','door']);g.r=r;
+      const d={torch:['1 въглен + 1 пръчка = 4 факли.','Колко факли от '+N+' въглена?',4*N],planks:['1 дърво дава 4 дъски.','Колко дъски от '+N+' дървета?',4*N],
+        sticks:['2 дъски дават 4 пръчки.','Колко пръчки от '+2*N+' дъски?',4*N],ladder:['7 пръчки дават 3 стълби.','Колко стълби от '+7*N+' пръчки?',3*N],door:['6 дъски дават 3 врати.','Колко врати от '+6*N+' дъски?',3*N]}[r];
+      g.q=d[0];g.q2=d[1];g.ans=d[2];}
+    else if(t==='canmake'){const r=A.pick(['bucket','chest','bread']),k={bucket:3,chest:8,bread:3}[r],M=k*N+A.ri(0,k-1);g.r=r;
+      const d={bucket:['Имаш '+M+' желязо. 1 кофа иска 3.','Колко кофи можеш да направиш?'],chest:['Имаш '+M+' дъски. 1 сандък иска 8.','Колко сандъка можеш да направиш?'],bread:['Имаш '+M+' снопа жито. 1 хляб иска 3.','Колко хляба можеш да изпечеш?']}[r];
+      g.q=d[0];g.q2=d[1];g.ans=N;}
+    else if(t==='left'){const r=A.pick(['bucket','chest']),k=r==='bucket'?3:8,M=k*N+A.ri(1,k-1);g.r=r;
+      g.q=r==='bucket'?'Имаш '+M+' желязо. Правиш колкото можеш кофи (по 3).':'Имаш '+M+' дъски. Правиш колкото можеш сандъци (по 8).';g.q2=r==='bucket'?'Колко желязо ти остава?':'Колко дъски ти остават?';g.ans=M%k;}
+    else{const r=A.pick(['chest','door','sticks','torchlog']);
+      if(r==='chest'){g.r='chest';g.q='1 дърво = 4 дъски. 1 сандък = 8 дъски.';g.q2='Колко дървета трябват за '+N+' сандъка?';g.ans=2*N;}
+      else if(r==='door'){g.r='door';g.q='1 дърво = 4 дъски. 6 дъски = 3 врати.';const D=3*2*A.ri(1,Math.ceil(N/2));g.q2='Колко дървета трябват за '+D+' врати?';g.ans=D/3*6/4;}
+      else if(r==='sticks'){g.r='sticks';g.q='1 дърво = 4 дъски. 2 дъски = 4 пръчки.';g.q2='Колко пръчки от '+N+' дървета?';g.ans=8*N;}
+      else{g.r='torch';g.q='2 дъски = 4 пръчки. 1 пръчка + 1 въглен = 4 факли.';g.q2='Колко факли от '+(2*N)+' дъски (и много въглища)?';g.ans=16*N;}}
+    if(!Number.isInteger(g.ans)){g.ans=Math.round(g.ans);}
+    g.opts=opts4(g.ans,near);},
+  pic(g){A.txt(g.q,240,24,g.q.length>40?12:g.q.length>32?14:17,'#fff','center');A.txt(g.q2,240,50,g.q2.length>40?12:g.q2.length>32?14:16,'#ffd54f','center');
+    const R=RC[g.r],x0=120,y0=72;A.block(x0-8,y0-8,124,'#9a6a3a',124);
+    for(let i=0;i<9;i++){const x=x0+(i%3)*36,y=y0+Math.floor(i/3)*36,ch=R.pat[i];c.fillStyle='#8b8b8b';c.fillRect(x,y,34,34);c.fillStyle='#6a6a6a';c.fillRect(x,y,34,2);
+      if(ch!=='.'){const col=ch==='M'?MC[g.M]:MC[ch];if(ch==='s'){c.fillStyle=col;c.fillRect(x+14,y+4,7,26);}else A.block(x+5,y+5,24,col);}}
+    c.fillStyle='#fff';c.fillRect(256,124,30,8);c.beginPath();c.moveTo(286,116);c.lineTo(300,128);c.lineTo(286,140);c.fill();
+    this.item(g,g.r,330,104);A.txt('×'+R.out,382,160,16,'#fff','left');},
+  item(g,r,x,y){c.fillStyle='#8b8b8b';c.fillRect(x-6,y-6,60,60);const M=MC[g.M];
+    if(r==='pick'){c.fillStyle=M;c.fillRect(x,y+4,48,9);c.fillStyle=MC.s;c.fillRect(x+20,y+13,8,32);}
+    else if(r==='sword'){c.fillStyle=M;c.fillRect(x+20,y,8,32);c.fillStyle='#555';c.fillRect(x+10,y+30,28,6);c.fillStyle=MC.s;c.fillRect(x+21,y+36,6,12);}
+    else if(r==='bucket'){c.fillStyle=MC.i;c.fillRect(x+6,y+12,36,30);c.fillStyle='#333';c.fillRect(x+12,y+12,24,6);}
+    else if(r==='chest'){A.block(x+2,y+8,44,MC.p,36);c.fillStyle='#333';c.fillRect(x+2,y+22,44,3);c.fillStyle=C.gold;c.fillRect(x+20,y+20,8,8);}
+    else if(r==='bread'){c.fillStyle='#c98a3a';c.fillRect(x+4,y+18,40,16);c.fillStyle='#e0a858';c.fillRect(x+8,y+16,32,6);}
+    else if(r==='torch'){c.fillStyle=MC.s;c.fillRect(x+20,y+16,8,30);c.fillStyle=C.lava;c.fillRect(x+18,y+4,12,12);c.fillStyle=C.gold;c.fillRect(x+21,y+7,6,6);}
+    else if(r==='planks'){A.block(x+4,y+4,40,MC.p);c.fillStyle='#8a6438';c.fillRect(x+4,y+17,40,2);c.fillRect(x+4,y+31,40,2);}
+    else if(r==='sticks'){c.fillStyle=MC.s;c.fillRect(x+12,y+2,7,44);c.fillRect(x+28,y+2,7,44);}
+    else if(r==='ladder'){c.fillStyle=MC.s;c.fillRect(x+8,y,6,48);c.fillRect(x+34,y,6,48);for(let k=0;k<4;k++)c.fillRect(x+8,y+6+k*12,32,4);}
+    else{A.block(x+10,y,28,MC.p,48);c.fillStyle='#8a6438';c.fillRect(x+14,y+6,20,14);c.fillStyle='#333';c.fillRect(x+30,y+26,4,4);}}
+}));
+</script>
+</body>
+</html>

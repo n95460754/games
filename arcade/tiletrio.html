@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Три плочки</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🀄 Три плочки</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 266. Три плочки
+const TT=[['#4de8f5','💎'],['#ff2e55','🍎'],['#ffd23f','⭐'],['#5aa13a','🌲'],['#3b7bd6','🐟'],['#ff6a00','🔥'],['#8e24aa','🧪'],['#e8e8e8','🦴'],['#7a5233','🍪']];
+const TX=40,TY=34,TU=20,TS=38,SLOTS=7;
+A.add({id:'tiletrio',cat:'puzzle',icon:'🀄',name:'Три плочки',desc:'Вади свободните плочки — три еднакви в тавата изчезват',help:'Клик върху свободна (светла) плочка я слага в тавата долу. Три еднакви в тавата изчезват и дават точка. Ако тавата (7 места) се напълни — край! Клавиатура: ← → избор, Space / Enter — вземи. Изчисти дъската за следващо ниво.',
+  start(g){g.lv=1;g.tray=[];g.cur=0;g.pop=0;this.level(g);},
+  over2(a,b){return Math.abs(a.x-b.x)<2&&Math.abs(a.y-b.y)<2;},
+  free(g,t){return !g.tiles.some(o=>o!==t&&o.z>t.z&&this.over2(o,t));},
+  level(g){
+    const n=3*Math.min(8+2*g.lv,18),layers=Math.min(2+Math.floor(g.lv/2),4),tiles=[];
+    for(let z=0;z<layers&&tiles.length<n;z++){const cand=[];
+      for(let x=z%2;x<=18;x+=2)for(let y=z%2;y<=10;y+=2){const p={x,y,z};if(z===0||tiles.some(o=>o.z===z-1&&this.over2(o,p)))cand.push(p);}
+      A.shuffle(cand);const want=z===layers-1?n-tiles.length:Math.ceil((n-tiles.length)*(z===0?.5:.55));
+      for(const p of cand.slice(0,want))tiles.push(p);}
+    while(tiles.length%3)tiles.pop();
+    // типове по реда на възможно махане: така винаги има решение
+    g.tiles=tiles.slice();const order=[];let left=tiles.slice();
+    while(left.length){const fr=left.filter(t=>!left.some(o=>o!==t&&o.z>t.z&&this.over2(o,t)));const t=A.pick(fr);order.push(t);left=left.filter(o=>o!==t);}
+    const types=Math.min(4+g.lv,TT.length);
+    for(let i=0;i<order.length;i+=3){const ty=A.ri(0,types-1);for(let j=0;j<3;j++)order[i+j].k=ty;}
+    // леко разбъркай съседни тройки, за да не е твърде лесно
+    for(let i=0;i+5<order.length;i+=6)if(Math.random()<.5){const a=order[i+2].k;order[i+2].k=order[i+3].k;order[i+3].k=a;}
+    g.cur=0;g.msg=g.lv>1?'Ниво '+g.lv+'!':'';g.msgT=1.5;
+  },
+  frees(g){return g.tiles.filter(t=>this.free(g,t)).sort((a,b)=>a.y-b.y||a.x-b.x);},
+  take(g,t){
+    if(!t||!this.free(g,t))return;
+    g.tiles=g.tiles.filter(o=>o!==t);
+    let i=g.tray.length;for(let j=g.tray.length-1;j>=0;j--)if(g.tray[j]===t.k){i=j+1;break;}
+    g.tray.splice(i,0,t.k);A.beep(600+t.k*40,.05);
+    const cnt=g.tray.filter(k=>k===t.k).length;
+    if(cnt>=3){let r=3;g.tray=g.tray.filter(k=>!(k===t.k&&r-->0));g.score++;g.pop=.3;A.tune([660,880,1100]);}
+    if(g.tray.length>=SLOTS)return A.over(g,'Тавата се напълни!');
+    if(!g.tiles.length){g.score+=g.lv*2;g.lv++;g.tray=[];A.tune([523,659,784,1046]);this.level(g);}
+  },
+  key(g,k){const f=this.frees(g);if(!f.length)return;
+    if(k==='ArrowLeft'||k==='ArrowUp'||k==='KeyA'||k==='KeyW')g.cur=(g.cur-1+f.length)%f.length;
+    else if(k==='ArrowRight'||k==='ArrowDown'||k==='KeyD'||k==='KeyS')g.cur=(g.cur+1)%f.length;
+    else if(k==='Space'||k==='Enter'){this.take(g,f[g.cur%f.length]);const n=this.frees(g).length;if(n)g.cur%=n;}},
+  click(g,mx,my){const hit=g.tiles.filter(t=>{const x=TX+t.x*TU-t.z*2,y=TY+t.y*TU-t.z*3;return mx>=x&&mx<x+TS&&my>=y&&my<y+TS;}).sort((a,b)=>b.z-a.z)[0];
+    if(hit&&this.free(g,hit))this.take(g,hit);else if(hit)A.beep(150,.06);},
+  update(g,dt){if(g.pop>0)g.pop-=dt;if(g.msgT>0)g.msgT-=dt;},
+  draw(g){
+    A.bg('#2d4a2a');for(let x=0;x<480;x+=40)for(let y=0;y<300;y+=40)if((x+y)/40%2){c.fillStyle='#31512e';c.fillRect(x,y,40,40);}
+    const f=this.frees(g),sel=f.length?f[g.cur%f.length]:null;
+    g.tiles.slice().sort((a,b)=>a.z-b.z||a.y-b.y).forEach(t=>{const x=TX+t.x*TU-t.z*2,y=TY+t.y*TU-t.z*3,fr=this.free(g,t);
+      c.fillStyle='rgba(0,0,0,.35)';c.fillRect(x+3,y+4,TS,TS);
+      A.block(x,y,TS,fr?'#f3ead2':'#9d9583');c.fillStyle=TT[t.k][0];c.fillRect(x+4,y+4,TS-8,5);
+      c.globalAlpha=fr?1:.45;A.txt(TT[t.k][1],x+TS/2,y+TS/2+2,20,'#fff','center');c.globalAlpha=1;
+      if(!fr){c.fillStyle='rgba(0,0,0,.28)';c.fillRect(x,y,TS,TS);}
+      if(t===sel){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(x-1,y-1,TS+2,TS+2);}});
+    // тава
+    const w=SLOTS*44,x0=240-w/2;A.block(x0-8,300,w+16,'#7a5233',54);
+    for(let i=0;i<SLOTS;i++){const x=x0+i*44,k=g.tray[i];c.fillStyle='#4a321e';c.fillRect(x+2,306,40,42);
+      if(k!==undefined){A.block(x+3,307,38,'#f3ead2');c.fillStyle=TT[k][0];c.fillRect(x+7,311,30,5);A.txt(TT[k][1],x+22,328,20,'#fff','center');}}
+    if(g.tray.length>=SLOTS-2){c.fillStyle='rgba(255,40,40,'+(.25+.15*Math.sin(g.t*10))+')';c.fillRect(x0-8,300,w+16,54);}
+    if(g.pop>0){c.fillStyle='rgba(255,230,120,'+g.pop+')';c.fillRect(0,0,480,300);}
+    A.txt('Ниво '+g.lv+' · плочки: '+g.tiles.length,10,14,13,'#fff');
+    if(g.msgT>0&&g.msg)A.txt(g.msg,240,150,30,'#ffd54f','center');
+  }
+});
+</script>
+</body>
+</html>

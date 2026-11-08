@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бягство с вагонетка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛤️ Бягство с вагонетка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 265. Бягство с вагонетка
+const LX=[140,240,340],CY=300;
+A.add({id:'minecart',cat:'action',icon:'🛤️',name:'Бягство с вагонетка',desc:'Карай по три релси, скачай огради и събирай злато',help:'Стрелки ← → / A D (или клик вляво/вдясно от вагонетката) — смени релсата. ↑ / W / Space (или клик върху вагонетката) — скок над дървените огради. Камъните и TNT трябва да заобиколиш! Златото дава +5.',
+  start(g){g.lane=1;g.x=LX[1];g.jy=0;g.jt=0;g.sp=220;g.dist=0;g.bonus=0;g.obs=[];g.spawn=1.4;g.scroll=0;g.parts=[];},
+  move2(g,d){const n=A.clamp(g.lane+d,0,2);if(n!==g.lane){g.lane=n;A.beep(520,.03);}},
+  jump(g){if(g.jt<=0){g.jt=.62;A.beep(420,.08,'triangle');}},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')this.move2(g,-1);else if(k==='ArrowRight'||k==='KeyD')this.move2(g,1);
+    else if(k==='ArrowUp'||k==='KeyW'||k==='Space')this.jump(g);},
+  click(g,mx){if(mx<g.x-45)this.move2(g,-1);else if(mx>g.x+45)this.move2(g,1);else this.jump(g);},
+  row(g){const free=A.ri(0,2),y=-50;
+    for(let l=0;l<3;l++){if(l===free){if(Math.random()<.45)g.obs.push({l,y,t:'gold'});continue;}
+      const r=Math.random();if(r<.35)g.obs.push({l,y,t:'fence'});else if(r<.65)g.obs.push({l,y,t:Math.random()<.3?'tnt':'rock'});
+      else if(r<.8)g.obs.push({l,y,t:'gold'});}},
+  update(g,dt){
+    g.sp=Math.min(540,220+g.t*7);const d=g.sp*dt;g.dist+=d;g.scroll=(g.scroll+d)%40;
+    g.x+=(LX[g.lane]-g.x)*Math.min(1,dt*14);
+    if(g.jt>0){g.jt-=dt;g.jy=Math.max(0,Math.sin((1-g.jt/.62)*Math.PI))*34;if(g.jt<=0){g.jt=0;g.jy=0;}}
+    g.spawn-=dt;if(g.spawn<=0){this.row(g);g.spawn=Math.max(.42,1.05-g.t*.012)*A.rnd(.85,1.2);}
+    for(const o of g.obs){o.y+=d;
+      if(o.hit)continue;const ox=LX[o.l];
+      const fz=o.t==='fence';if(Math.abs(ox-g.x)<34&&(fz?o.y+36>CY-10&&o.y+14<CY+12:o.y+40>CY-22&&o.y<CY+22)){
+        if(o.t==='gold'){o.hit=1;g.bonus+=5;A.tune([880,1320]);for(let i=0;i<8;i++)g.parts.push({x:ox,y:CY,vx:A.rnd(-90,90),vy:A.rnd(-160,-40),t:.5});}
+        else if(fz&&g.jy>4){/* прескочи */}
+        else{o.hit=1;A.beep(90,.4,'sawtooth',.08);return A.over(g,o.t==='tnt'?'БУМ! Удари TNT!':o.t==='fence'?'Не прескочи оградата!':'Блъсна се в камък!');}
+      }}
+    g.obs=g.obs.filter(o=>o.y<400&&!(o.hit&&o.t==='gold'));
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=400*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+    g.score=Math.floor(g.dist/40)+g.bonus;
+  },
+  draw(g){
+    A.bg('#3a332c');
+    // стени на пещерата
+    for(let y=-40;y<400;y+=40){const yy=y+g.scroll;for(const x of [0,40,400,440]){A.block(x,yy,40,'#6f6f6f');
+      const k=((Math.floor((y-g.dist+g.scroll)/40)*7+x)%11+11)%11;if(k<2){c.fillStyle=k?C.gold:C.gem;c.fillRect(x+12,yy+14,8,8);c.fillRect(x+22,yy+22,6,6);}}}
+    // релси
+    for(const lx of LX){c.fillStyle='#2b241e';c.fillRect(lx-34,0,68,360);
+      for(let y=-40;y<400;y+=20){c.fillStyle='#7a5233';c.fillRect(lx-30,y+(g.scroll%20),60,8);}
+      c.fillStyle='#b0b0b0';c.fillRect(lx-24,0,5,360);c.fillRect(lx+19,0,5,360);}
+    // препятствия
+    for(const o of g.obs){const x=LX[o.l]-20,y=o.y;
+      if(o.t==='rock'){A.block(x,y,40,C.stone);c.fillStyle='#5a5a5a';c.fillRect(x+8,y+10,8,6);c.fillRect(x+24,y+22,8,8);}
+      else if(o.t==='tnt'){A.block(x,y,40,'#d33a2a');c.fillStyle='#eee';c.fillRect(x,y+14,40,12);A.txt('TNT',x+20,y+20,11,'#000','center');}
+      else if(o.t==='fence'){A.block(x-4,y+12,8,C.wood,26);A.block(x+36,y+12,8,C.wood,26);A.block(x-4,y+16,48,'#b07a44',8);A.block(x-4,y+28,48,'#b07a44',8);}
+      else{const b=Math.sin(g.t*6+o.y*.05)*2;A.block(x+9,y+9+b,22,C.gold);c.fillStyle='#fff6b0';c.fillRect(x+13,y+13+b,5,5);}}
+    // вагонетка
+    const x=g.x,y=CY-g.jy;
+    c.fillStyle='rgba(0,0,0,.35)';c.fillRect(x-20+g.jy*.2,CY+16,40-g.jy*.4,8);
+    A.block(x-24,y-18,48,'#8c8c8c',30);c.fillStyle='#555';c.fillRect(x-18,y-14,36,10);
+    c.fillStyle=C.dirt;c.fillRect(x-14,y-16,10,6);c.fillRect(x+2,y-17,12,7);
+    A.block(x-22,y+10,12,'#333');A.block(x+10,y+10,12,'#333');
+    // герой
+    A.block(x-10,y-38,20,'#d8a07a');c.fillStyle='#2e7dd1';c.fillRect(x-10,y-24,20,8);c.fillStyle='#000';c.fillRect(x-6,y-32,3,3);c.fillRect(x+3,y-32,3,3);
+    g.parts.forEach(p=>{c.fillStyle=C.gold;c.fillRect(p.x,p.y,4,4);});
+    A.txt('🛤️ '+Math.floor(g.dist/40)+' м',90,16,14,'#fff','left');A.txt('✨ злато +'+g.bonus,390,16,14,C.gold,'right');
+    if(g.t<3)A.txt('← → смени релсата · ↑ скок',240,200,16,'#ffd54f','center');
+  }
+});
+</script>
+</body>
+</html>
