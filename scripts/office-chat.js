@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { TEAMS, TEAMS_LEADER, BOTS, teamFor, runTeamTasks } = require('./teams');
 const janitor = require('./janitor');
+const sider = require('./sider');
 
 const ROOT = path.join(__dirname, '..');
 const DB = path.join(ROOT, 'employees', 'employees.json');
@@ -38,6 +39,7 @@ function participants(staff) {
     janitor.JANITOR,
     { key: 'Consensus', name: '🔍 Consensus', role: 'Web Researcher', department: 'Executive' },
     { key: 'Monica', name: '🕊️ Monica', role: 'Peacemaker', department: 'Executive' },
+    sider.SIDER,
   ];
   for (const [h, d] of HEADS) list.push({ key: h, name: h, role: BOTS[h][1], department: d, team: teamFor(d) });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department, team: teamFor(e.department) });
@@ -366,6 +368,18 @@ if (!log.consensusHired) {
 }
 // 🛠️ Лидерите раздават задачи, отборите ги изпълняват
 runTeamTasks({ people, games, post, round: log.round });
+// 📣 Еднократна обява: Sider AI
+if (!log.siderHired) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Sider AI проверява дали всички работят!';
+  post(by('Claude-CEO'), 'Екип, наехме Sider AI. При всяко пускане проверява дали ВСЕКИ има задача. Ако някой няма — вика AI да го оправи. 🕵️', th);
+  post(by('Sider-AI'), 'Здравейте! Никой няма да остане без работа. Броя всички, всеки път. 📋', th);
+  post(by('Dev-Bot'), 'Значи вече не мога да се правя, че пиша код, докато пия кафе? ☕😅', th);
+  post(by('Sider-AI'), 'Не, Dev-Bot. Виждам всичко. 👀', th);
+  log.siderHired = new Date(t0).toISOString();
+}
+// 🕵️ Sider AI проверява дали всеки работи и вика AI да оправи, ако някой не работи
+sider.inspect({ people, games, post, round: log.round });
 // 📣 Еднократна обява: Monica
 if (!log.monicaHired) {
   const by = (k) => people.find((p) => p.key === k);

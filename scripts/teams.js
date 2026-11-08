@@ -118,6 +118,7 @@ const HEAD_DEPT = Object.fromEntries(Object.entries(BOTS).map(([k, [d]]) => [k, 
 const NEW_PER_RUN = 3;   // нови задачи на отбор при всяко пускане
 const MAX_OPEN = 15;     // максимум отворени задачи на отбор
 const KEEP_DONE = 100;
+const DETAIL_PER_TEAM = 5; // колко задачи на отбор описваме подробно в чата (останалите — в едно обобщение)
 const STATUS = { todo: '📝 За правене', doing: '🔨 В процес', review: '🔍 За ревю', done: '✅ Готово' };
 
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
@@ -150,23 +151,28 @@ function runTeamTasks({ people, games, post, round }) {
     }
 
     // 1) Задачите напредват с една стъпка
+    let shown = 0, quiet = 0;
     for (const task of board.tasks.filter((x) => x.team === teamName && x.status !== 'done')) {
       const who = by(task.assignee);
       if (!who) continue;
+      // при много задачи чатът показва само първите DETAIL_PER_TEAM, а останалите напредват тихо
+      const say = shown++ < DETAIL_PER_TEAM ? post : () => {};
+      if (shown > DETAIL_PER_TEAM) quiet++;
       if (task.status === 'todo') {
-        post(who, `${task.id}: Започвам „${task.title}“. 🔨`, th);
+        say(who, `${task.id}: Започвам „${task.title}“. 🔨`, th);
         task.status = 'doing';
       } else if (task.status === 'doing') {
-        post(who, `${task.id}: Готово! ${reviewer.key === who.key ? t.leader : reviewer.name}, прегледай го, моля. 🔍`, th);
+        say(who, `${task.id}: Готово! ${reviewer.key === who.key ? t.leader : reviewer.name}, прегледай го, моля. 🔍`, th);
         task.status = 'review';
       } else if (task.status === 'review') {
-        if (reviewer.key !== leader.key && reviewer.key !== who.key) post(reviewer, `${task.id}: Тествах го — няма бъгове. ✅`, th);
-        post(leader, `${task.id}: Одобрено! Браво, ${who.name}. 🎉`, th);
+        if (reviewer.key !== leader.key && reviewer.key !== who.key) say(reviewer, `${task.id}: Тествах го — няма бъгове. ✅`, th);
+        say(leader, `${task.id}: Одобрено! Браво, ${who.name}. 🎉`, th);
         task.status = 'done';
         task.done_round = round;
       }
       task.updated = now;
     }
+    if (quiet) post(leader, `…и още ${quiet} задачи в ${teamName} напреднаха с една стъпка. 📈`, th);
 
     // 2) Лидерът раздава нови задачи на свободните хора от отбора
     const open = board.tasks.filter((x) => x.team === teamName && x.status !== 'done');
@@ -218,4 +224,33 @@ function renderTeams(board, people) {
   return md;
 }
 
-module.exports = { TEAMS, TEAMS_LEADER, BOTS, teamFor, runTeamTasks };
+// ---------- За Sider AI: кой работи и кой не ----------
+// Работник = всеки нает служител + всеки бот в отбор (лидерите също работят).
+// „Работи“ = има отворена задача (📝 / 🔨 / 🔍).
+function workers(people) {
+  return people.filter((p) => p.key.startsWith('EMP-') || Object.values(TEAMS).some((t) => t.members.includes(p.key) || t.leader === p.key));
+}
+function findIdle(people) {
+  const board = load(TASKS, { next: 1, tasks: [] });
+  const busy = new Set(board.tasks.filter((x) => x.status !== 'done').map((x) => x.assignee));
+  const all = workers(people);
+  return { all, idle: all.filter((p) => !busy.has(p.key)) };
+}
+// AI-ят `fixer` дава задача на всеки, който няма. Връща колко задачи е раздал.
+function giveWork({ people, games, round, idle, fixer }) {
+  const board = load(TASKS, { next: 1, tasks: [] });
+  const now = new Date().toISOString();
+  for (const who of idle) {
+    const teamName = who.team || Object.keys(TEAMS).find((n) => TEAMS[n].members.includes(who.key) || TEAMS[n].leader === who.key);
+    if (!teamName) continue;
+    const dept = who.department || HEAD_DEPT[who.key];
+    const title = pick(TASK_TEMPLATES[dept] || TASK_TEMPLATES.Engineering).replace('{game}', pick(games));
+    const id = `TASK-${String(board.next++).padStart(4, '0')}`;
+    board.tasks.push({ id, team: teamName, title, assignee: who.key, assignee_name: who.name, status: 'todo', created_round: round, created: now, updated: now, assigned_by: fixer });
+  }
+  fs.writeFileSync(TASKS, JSON.stringify(board, null, 1) + '\n');
+  fs.writeFileSync(PAGE, renderTeams(board, people));
+  return idle.length;
+}
+
+module.exports = { TEAMS, TEAMS_LEADER, BOTS, teamFor, runTeamTasks, findIdle, giveWork };
