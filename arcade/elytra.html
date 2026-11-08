@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Полет с елитра</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪽 Полет с елитра</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 268. Полет с елитра
+A.add({id:'elytra',cat:'action',icon:'🪽',name:'Полет с елитра',desc:'Планирай с крила над блоковия свят, минавай през златни кръгове',help:'Задръж ↑ / W / Space (или задръж мишката / пръста) — вдигни носа нагоре. Пусни — гмурни се надолу и набери скорост. Нагоре губиш скорост, надолу печелиш! Минавай през златните кръгове (+10, серия = още повече), хващай фойерверки за ускорение и не се блъскай в земята и кулите.',
+  start(g){g.seed=A.rnd(0,100);g.y=140;g.vy=0;g.sp=200;g.cam=0;g.bonus=0;g.combo=0;g.objs=[];g.next=420;g.parts=[];g.msg='';g.mt=0;},
+  gh(g,wx){const i=Math.floor(wx/20),amp=1+Math.min(1.2,wx/12000);
+    return Math.round((292+30*amp*Math.sin(i*.11+g.seed)+22*amp*Math.sin(i*.031+g.seed*2))/20)*20;},
+  click(g){},
+  spawn(g){const wx=g.next,r=Math.random(),h=this.gh(g,wx);
+    if(r<.55){const y=A.rnd(60,h-70);g.objs.push({t:'ring',x:wx,y});if(Math.random()<.35)g.objs.push({t:'ring',x:wx+110,y:A.clamp(y+A.rnd(-50,50),60,this.gh(g,wx+110)-70)});}
+    else if(r<.82){if(Math.random()<.5){const top=A.rnd(70,h-120);g.objs.push({t:'tower',x:wx,y:top,h:400});}else{const bot=A.rnd(80,h-120);g.objs.push({t:'hang',x:wx,y:0,h:bot});}}
+    else g.objs.push({t:'rocket',x:wx,y:A.rnd(60,h-60)});
+    g.next+=A.rnd(220,330)-Math.min(80,g.cam/400);},
+  update(g,dt){
+    const up=A.keys.ArrowUp||A.keys.KeyW||A.keys.Space||A.mouse.down;
+    g.vy+=230*dt;if(up){g.vy-=560*dt*Math.min(1.4,g.sp/230);g.sp-=45*dt;}
+    g.sp+=(g.vy*.55-10)*dt;g.sp=A.clamp(g.sp,110,460);g.vy=A.clamp(g.vy,-240,320);g.vy*=1-.6*dt;
+    g.y+=g.vy*dt;if(g.y<14){g.y=14;if(g.vy<0)g.vy=0;}
+    g.cam+=g.sp*dt;const px=g.cam+110;
+    while(g.next<g.cam+600)this.spawn(g);
+    if(g.y+8>this.gh(g,px-8)||g.y+8>this.gh(g,px+10)){A.beep(90,.4,'sawtooth',.08);return A.over(g,'Разби се в земята!');}
+    for(const o of g.objs){if(o.done)continue;
+      if(o.t==='ring'&&px>o.x){o.done=1;if(Math.abs(g.y-o.y)<24){g.combo++;const p=10*g.combo;g.bonus+=p;g.msg='+'+p+(g.combo>1?' серия ×'+g.combo:'');g.mt=1;A.tune([660,880,1100].slice(0,Math.min(3,g.combo+1)));
+          for(let i=0;i<10;i++)g.parts.push({x:110,y:o.y,vx:A.rnd(-120,60),vy:A.rnd(-120,120),t:.6,col:C.gold});}
+        else{g.combo=0;A.beep(200,.08);}}
+      else if(o.t==='rocket'&&Math.abs(px-o.x)<22&&Math.abs(g.y-o.y)<22){o.done=1;g.sp=Math.min(460,g.sp+150);g.vy-=60;g.bonus+=5;g.msg='🎆 Ускорение!';g.mt=1;A.beep(300,.25,'sawtooth',.05);
+        for(let i=0;i<14;i++)g.parts.push({x:110,y:g.y,vx:A.rnd(-200,-40),vy:A.rnd(-80,80),t:.5,col:A.pick(['#ff5252','#ffd54f','#69f0ae','#40c4ff'])});}
+      else if((o.t==='tower'||o.t==='hang')&&px+10>o.x&&px-10<o.x+40&&g.y+8>o.y&&g.y-8<o.y+o.h){A.beep(90,.4,'sawtooth',.08);return A.over(g,o.t==='tower'?'Блъсна се в кулата!':'Блъсна се в скалата!');}}
+    g.objs=g.objs.filter(o=>o.x>g.cam-80);
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);g.mt-=dt;
+    g.score=Math.floor(g.cam/50)+g.bonus;},
+  ringHalf(o,sx,front){c.strokeStyle=front?C.gold:'#b8901c';c.lineWidth=6;c.beginPath();c.ellipse(sx,o.y,9,30,0,front?-Math.PI/2:Math.PI/2,front?Math.PI/2:Math.PI*1.5);c.stroke();},
+  draw(g){
+    const gr=c.createLinearGradient(0,0,0,360);gr.addColorStop(0,'#4f8fd8');gr.addColorStop(1,'#bfe3ff');c.fillStyle=gr;c.fillRect(0,0,480,360);
+    for(let i=0;i<6;i++){const x=((i*170-g.cam*.2)%1020+1020)%1020-120;c.fillStyle='rgba(255,255,255,.85)';c.fillRect(x,40+(i*53)%110,90,18);c.fillRect(x+20,28+(i*53)%110,50,14);}
+    const off=g.cam%20;
+    for(let x=-off;x<480;x+=20){const h=this.gh(g,g.cam+x+1);A.block(x,h,20,h<260?C.snow:C.grass);for(let y=h+20;y<360;y+=20)A.block(x,y,20,y>h+60?C.stone:C.dirt);}
+    for(const o of g.objs){const sx=o.x-g.cam;if(sx<-60||sx>540)continue;
+      if(o.t==='ring'&&!o.done)this.ringHalf(o,sx,false);
+      else if(o.t==='tower'){for(let y=o.y;y<360;y+=20){A.block(sx,y,20,'#9a9a9a');A.block(sx+20,y,20,'#8a8a8a');}c.fillStyle='#ff5252';c.fillRect(sx+16,o.y-14,8,14);}
+      else if(o.t==='hang'){for(let y=o.y+o.h-20;y>-20;y-=20){A.block(sx,y,20,'#3a2a4f');A.block(sx+20,y,20,'#2e2140');}}
+      else if(o.t==='rocket'&&!o.done){const b=Math.sin(g.t*6)*3;A.block(sx-6,o.y-12+b,12,'#e53935',22);c.fillStyle='#fff';c.fillRect(sx-6,o.y-4+b,12,4);c.fillStyle='#ffd54f';c.fillRect(sx-2,o.y-18+b,4,6);}}
+    const ang=A.clamp(g.vy/400,-.6,.7),y=g.y,flap=A.mouse.down||A.keys.ArrowUp||A.keys.KeyW||A.keys.Space?-4:4;
+    c.save();c.translate(110,y);c.rotate(ang);
+    c.fillStyle='#7d6a9e';c.beginPath();c.moveTo(-6,-4);c.lineTo(-30,-10+flap);c.lineTo(-26,6);c.closePath();c.fill();
+    c.fillStyle='#9a86bd';c.fillRect(-28,-9+flap,6,4);
+    A.block(-10,-5,16,'#2e7dd1',10);A.block(-14,-3,6,'#3d3d8a',6);A.block(6,-7,12,'#d8a07a');c.fillStyle='#4a2f1a';c.fillRect(6,-7,12,4);c.fillStyle='#000';c.fillRect(14,-2,2,2);
+    c.restore();
+    for(const o of g.objs){const sx=o.x-g.cam;if(o.t==='ring'&&!o.done&&sx>-60&&sx<540)this.ringHalf(o,sx,true);}
+    g.parts.forEach(p=>{c.fillStyle=p.col;c.fillRect(p.x,p.y,4,4);});
+    A.txt('🪽 '+Math.floor(g.cam/50)+' м',10,16,14,'#fff');A.txt('💨 '+Math.round(g.sp/4)+' км/ч',470,16,14,g.sp>300?'#ffd54f':'#fff','right');
+    if(g.mt>0)A.txt(g.msg,240,60,18,'#ffd54f','center');
+    if(g.t<4)A.txt('Задръж ↑ / мишката — нагоре · пусни — надолу',240,110,14,'#fff','center');
+  }
+});
+</script>
+</body>
+</html>

@@ -250,7 +250,10 @@ const GAMES=[
   {"id": "calendar", "cat": "brain", "icon": "📅", "name": "Календарни задачи", "desc": "Дни от седмицата, месеци и високосни години — смятай с календара", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "minecart", "cat": "action", "icon": "🛤️", "name": "Бягство с вагонетка", "desc": "Карай по три релси, скачай огради и събирай злато", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "tiletrio", "cat": "puzzle", "icon": "🀄", "name": "Три плочки", "desc": "Вади свободните плочки — три еднакви в тавата изчезват", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "crafting", "cat": "brain", "icon": "🛠️", "name": "Рецепти за изработване", "desc": "Смятай колко материали трябват за кирки, мечове, факли и сандъци", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "crafting", "cat": "brain", "icon": "🛠️", "name": "Рецепти за изработване", "desc": "Смятай колко материали трябват за кирки, мечове, факли и сандъци", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "elytra", "cat": "action", "icon": "🪽", "name": "Полет с елитра", "desc": "Планирай с крила над блоковия свят, минавай през златни кръгове", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "boxfill", "cat": "puzzle", "icon": "📦", "name": "Попълни кутията", "desc": "Нареди блоковите фигури така, че да запълнят кутията докрай", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "trading", "cat": "brain", "icon": "💎", "name": "Търговия със селяни", "desc": "Пазарувай с изумруди: смятай цени, ресто и най-изгодната сделка", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
