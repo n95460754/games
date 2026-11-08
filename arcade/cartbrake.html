@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спри вагонетката</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛒 Спри вагонетката</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 258. Спри вагонетката
+A.add({id:'cartbrake',cat:'skill',icon:'🛒',name:'Спри вагонетката',desc:'Дръпни спирачката навреме, за да спре вагонетката точно до ръба на пропастта',help:'Space / клик / докосване — дърпаш спирачката (само веднъж за вагонетка!). Вагонетката трябва да спре колкото може по-близо до ръба, без да падне. До 100 точки, а при спиране на косъм от ръба — 150! Сините ледени релси спират по-слабо. Падане или спиране твърде рано = −1 живот.',
+  GY:250,DEC:330,
+  start(g){g.lives=3;g.round=0;g.fx=[];this.round(g);},
+  round(g){g.round++;g.edge=A.ri(15,22)*20;g.x=60;g.v=Math.min(430,A.rnd(150,220)+g.round*12);g.brake=false;g.state='go';g.wait=0;g.msg='';g.sub='';g.rot=0;g.fy=0;
+    g.ice=[];if(g.round>=3){const n=Math.min(3,1+Math.floor(g.round/5));for(let i=0;i<n;i++){const w=A.ri(2,4)*20,s=A.ri(6,Math.max(6,g.edge/20-w/20-1))*20;g.ice.push([s,s+w]);}}},
+  onIce(g){const m=g.x-25;return g.ice.some(([s,e])=>m>=s&&m<e);},
+  pull(g){if(g.state==='go'&&!g.brake){g.brake=true;A.beep(180,.25,'sawtooth',.05);}},
+  key(g,k){if(k==='Space'||k==='Enter'||k==='ArrowDown'||k==='KeyS')this.pull(g);},
+  click(g){this.pull(g);},
+  update(g,dt){g.fx=g.fx.filter(f=>{f.t-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=500*dt;return f.t>0;});
+    if(g.state==='go'){const ice=this.onIce(g);g.v=Math.max(0,g.v-(g.brake?this.DEC*(ice?.3:1):12)*dt);g.x+=g.v*dt;
+      if(g.brake&&g.v>0&&Math.random()<.7)g.fx.push({x:g.x-A.rnd(8,44),y:this.GY,vx:A.rnd(-140,-30),vy:A.rnd(-160,-40),t:.35,c:ice?'#bff4ff':'#ffd23f'});
+      if(g.x>g.edge){g.state='fall';g.wait=1.3;g.lives--;g.msg='Падна в пропастта!';g.sub='';A.beep(150,.5,'sawtooth',.06);}
+      else if(g.v<=0){const d=g.edge-g.x;g.state='done';g.wait=1.4;
+        if(d<3){g.score+=150;g.msg='НА КОСЪМ! +150';A.tune([523,659,784,1047,1319]);}
+        else if(d<100){const p=Math.round(100-d);g.score+=p;g.msg=(p>=80?'Супер! ':p>=50?'Добре! ':'')+'+'+p;A.tune([523,659,784]);}
+        else{g.lives--;g.msg='Твърде рано!';A.beep(200,.3,'triangle');}
+        g.sub=(d/20).toFixed(1)+' блока от ръба';}}
+    else if(g.state==='fall'){g.x+=Math.max(g.v,60)*dt*.6;g.fy+=(g.fy*2+120)*dt;g.rot+=2.5*dt;}
+    if(g.state!=='go'){g.wait-=dt;if(g.wait<=0){if(g.lives<=0)return A.over(g,'Вагонетките свършиха!');this.round(g);}}},
+  draw(g){const GY=this.GY,E=g.edge;A.bg('#1b130e');
+    for(let y=0;y<13;y++)for(let x=0;x<24;x++){if((x*7+y*13)%9<2){c.fillStyle='#2a1f17';c.fillRect(x*20,y*20,20,20);}}
+    c.fillStyle='#0a0705';c.fillRect(E,GY+12,480-E,360);
+    const lv=Math.sin(g.t*3)*3;c.fillStyle=C.lava;c.fillRect(E,330+lv,480-E,40);c.fillStyle='#ffb347';for(let x=E;x<480;x+=24)c.fillRect(x+((g.t*20)%24),332+lv,8,3);
+    for(let x=0;x<E;x+=20)for(let y=GY+12;y<360;y+=20)A.block(x,y,20,y===GY+12?'#8a8a8a':((x+y)/20)%3?'#6b6b6b':'#5a5a5a');
+    c.fillStyle='#ff5252';c.fillRect(E-3,GY-30,3,42);c.fillStyle='#ffffff';c.fillRect(E,GY-30,14,9);c.fillStyle='#ff5252';c.fillRect(E,GY-21,14,9);
+    for(let k=1;k<=5;k++){c.fillStyle='rgba(255,213,79,'+(0.15+k*.05)+')';c.fillRect(E-k*20,GY+14,2,6);}
+    for(let x=0;x<E;x+=20)A.block(x+3,GY+5,14,C.wood,6);
+    c.fillStyle='#9a9a9a';c.fillRect(0,GY+2,E,4);
+    g.ice.forEach(([s,e])=>{c.fillStyle='#9fe3ff';c.fillRect(s,GY+1,e-s,6);c.fillStyle='rgba(159,227,255,.25)';c.fillRect(s,GY-6,e-s,7);});
+    c.save();c.translate(g.x-25,GY-16+g.fy);c.rotate(g.rot);
+    A.block(-25,-14,50,'#7d7d7d',24);c.fillStyle='#4a4a4a';c.fillRect(-21,-10,42,4);
+    A.block(-19,-24,12,C.gold);A.block(-6,-26,12,C.gem);A.block(7,-23,12,C.gold);
+    c.fillStyle='#222';c.fillRect(-20,8,11,11);c.fillRect(9,8,11,11);c.fillStyle='#666';c.fillRect(-17,11,5,5);c.fillRect(12,11,5,5);
+    c.fillStyle=g.brake?'#ff3b3b':'#5a3a20';c.save();c.translate(-25,-8);c.rotate(g.brake?-.9:-.2);c.fillRect(-2,-22,4,22);c.restore();
+    c.restore();
+    g.fx.forEach(f=>{c.fillStyle=f.c;c.fillRect(f.x,f.y,3,3);});
+    A.txt('Вагонетка '+g.round,10,14,14,'#fff');A.txt('❤'.repeat(Math.max(0,g.lives)),470,14,16,'#f55','right');
+    c.fillStyle='#000';c.fillRect(140,8,200,12);c.fillStyle=g.brake?'#ff7043':'#66bb6a';c.fillRect(141,9,198*Math.min(1,g.v/430),10);A.txt('скорост',240,30,11,'#b9c6d6','center');
+    if(g.state==='go'&&!g.brake)A.txt('Space / клик = СПИРАЧКА!',240,90,16,'#ffd54f','center');
+    if(g.msg){A.txt(g.msg,240,110,24,'#ffd54f','center');if(g.sub)A.txt(g.sub,240,140,14,'#fff','center');}}
+});
+</script>
+</body>
+</html>
