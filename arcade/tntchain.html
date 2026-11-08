@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Верижен TNT</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💥 Верижен TNT</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 279. Мислена разходка
+// 280. Верижен TNT
+const TC_W=8,TC_H=6,TC_S=50,TC_OX=40,TC_OY=48;
+A.add({id:'tntchain',cat:'puzzle',icon:'💥',name:'Верижен TNT',desc:'Взриви TNT така, че веригата да хване всички крийпъри',
+  help:'Кликни TNT блок, за да го взривиш. Взривът стига толкова полета, колкото е числото, във всички 4 посоки, и пали другите TNT — верига! Обсидианът спира взрива. Унищожи всички крийпъри с малко кликове. Клавиатура: стрелки + Space. R = ниво отначало. 3 живота.',
+  start(g){g.lvl=1;g.lives=3;this.newLevel(g);},
+  // взрив от (x,y): връща множество от разрушени полета (симулация на веригата)
+  chain(grid,x0,y0){const hit=new Set(),done=new Set(),q=[[x0,y0]];done.add(x0+','+y0);hit.add(x0+','+y0);
+    while(q.length){const [x,y]=q.shift(),r=grid[y][x].r;
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])for(let k=1;k<=r;k++){const nx=x+dx*k,ny=y+dy*k;
+        if(nx<0||ny<0||nx>=TC_W||ny>=TC_H)break;const cel=grid[ny][nx];if(cel.t==='obs')break;
+        const key=nx+','+ny;hit.add(key);if(cel.t==='tnt'&&!done.has(key)){done.add(key);q.push([nx,ny]);}}}
+    return hit;},
+  gen(L){for(let tries=0;tries<300;tries++){
+      const grid=[];for(let y=0;y<TC_H;y++){const row=[];for(let x=0;x<TC_W;x++)row.push({t:'e',r:0});grid.push(row);}
+      const free=[];for(let y=0;y<TC_H;y++)for(let x=0;x<TC_W;x++)free.push([x,y]);A.shuffle(free);
+      const nObs=Math.min(9,2+L),nTnt=Math.max(5,9-Math.floor(L/2)),nCr=Math.min(7,2+Math.ceil(L/2));
+      for(let i=0;i<nObs;i++){const [x,y]=free.pop();grid[y][x].t='obs';}
+      for(let i=0;i<nTnt;i++){const [x,y]=free.pop();grid[y][x]={t:'tnt',r:A.pick(L<3?[1,2,2,3]:[1,1,2,2,3])};}
+      const crs=[];for(let i=0;i<nCr;i++){const [x,y]=free.pop();grid[y][x].t='cr';crs.push(x+','+y);}
+      // какво хваща всеки TNT
+      const sets=[];for(let y=0;y<TC_H;y++)for(let x=0;x<TC_W;x++)if(grid[y][x].t==='tnt'){const h=this.chain(grid,x,y);sets.push(crs.filter(k=>h.has(k)));}
+      const all=new Set();sets.forEach(s=>s.forEach(k=>all.add(k)));if(all.size<crs.length)continue;
+      // алчно покритие -> брой позволени кликове
+      const left=new Set(crs);let K=0;while(left.size){let best=null,bn=0;for(const s of sets){const n=s.filter(k=>left.has(k)).length;if(n>bn){bn=n;best=s;}}best.forEach(k=>left.delete(k));K++;}
+      if(L>1&&K<2&&tries<250)continue;
+      return {grid,K,nCr};}
+    return L>1?this.gen(L-1):this.gen(1);},
+  newLevel(g){const r=this.gen(g.lvl);g.base=r;this.reset(g);g.cx=0;g.cy=0;},
+  reset(g){g.grid=g.base.grid.map(row=>row.map(c0=>Object.assign({},c0)));g.clicks=g.base.K;g.fx=[];g.queue=[];g.busy=0;g.msg='';g.ph='play';g.pt=0;},
+  creepers(g){let n=0;for(const row of g.grid)for(const c0 of row)if(c0.t==='cr')n++;return n;},
+  fire(g,x,y){if(g.ph!=='play'||g.busy>0||g.clicks<=0)return;const cel=g.grid[y][x];if(cel.t!=='tnt'){A.beep(160,.06,'sawtooth');return;}
+    g.clicks--;g.queue.push({x,y,t:0});cel.t='lit';g.busy=1;A.beep(300,.05);},
+  boom(g,x,y){const r=g.grid[y][x].r;g.grid[y][x]={t:'e',r:0};g.fx.push({x,y,t:.35});A.beep(A.rnd(80,140),.18,'sawtooth',.06);
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])for(let k=1;k<=r;k++){const nx=x+dx*k,ny=y+dy*k;
+      if(nx<0||ny<0||nx>=TC_W||ny>=TC_H)break;const cel=g.grid[ny][nx];if(cel.t==='obs')break;
+      g.fx.push({x:nx,y:ny,t:.3});
+      if(cel.t==='tnt'){cel.t='lit';g.queue.push({x:nx,y:ny,t:.14});}
+      else if(cel.t==='cr'){cel.t='e';g.score+=1;}}},
+  click(g,mx,my){const x=Math.floor((mx-TC_OX)/TC_S),y=Math.floor((my-TC_OY)/TC_S);if(x>=0&&y>=0&&x<TC_W&&y<TC_H){g.cx=x;g.cy=y;this.fire(g,x,y);}},
+  key(g,k){if(k==='KeyR'&&g.ph==='play'&&!g.busy){this.reset(g);return;}
+    if(k==='ArrowLeft'||k==='KeyA')g.cx=Math.max(0,g.cx-1);else if(k==='ArrowRight'||k==='KeyD')g.cx=Math.min(TC_W-1,g.cx+1);
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=Math.max(0,g.cy-1);else if(k==='ArrowDown'||k==='KeyS')g.cy=Math.min(TC_H-1,g.cy+1);
+    else if(k==='Space'||k==='Enter')this.fire(g,g.cx,g.cy);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.fx.forEach(f=>f.t-=dt);g.fx=g.fx.filter(f=>f.t>0);
+    if(g.queue.length){for(const q of g.queue)q.t-=dt;const ready=g.queue.filter(q=>q.t<=0);g.queue=g.queue.filter(q=>q.t>0);ready.forEach(q=>this.boom(g,q.x,q.y));}
+    else if(g.busy&&!g.fx.length){g.busy=0;
+      if(!this.creepers(g)){const bonus=g.clicks*2+g.lvl;g.score+=bonus;g.msg='Чисто! +'+bonus+(g.clicks?' (бонус за спестени кликове)':'');g.ph='win';g.pt=1.6;flash(g,true);A.tune([523,659,784]);}
+      else if(g.clicks<=0){g.lives--;g.msg=g.lives>0?'Свършиха кликовете! Опитай пак.':'Край!';g.ph='lose';g.pt=1.8;flash(g,false);}}
+    if(g.ph==='win'||g.ph==='lose'){g.pt-=dt;if(g.pt<=0){if(g.ph==='win'){g.lvl++;this.newLevel(g);}else{if(g.lives<=0)return A.over(g,'Край! Стигна ниво '+g.lvl);this.reset(g);}}}},
+  drawTnt(x,y,s,r,lit,t){A.block(x,y,s,lit&&Math.sin(t*40)>0?'#fff':'#d8382a');c.fillStyle='#eee';c.fillRect(x+3,y+s*.36,s-6,s*.28);
+    A.txt('TNT',x+s/2,y+s/2,s*.22,'#222','center');A.txt(String(r),x+s-9,y+9,12,'#ffd54f','center');},
+  drawCreeper(x,y,s,t){A.block(x,y,s,'#4caf50');c.fillStyle='#1b3d1b';const u=s/8;
+    c.fillRect(x+u*1.5,y+u*2,u*1.6,u*1.6);c.fillRect(x+s-u*3.1,y+u*2,u*1.6,u*1.6);c.fillRect(x+u*3.2,y+u*3.6,u*1.6,u*1.4);
+    c.fillRect(x+u*2.4,y+u*4.6,u*3.2,u*1.6);c.fillStyle='rgba(120,200,120,.35)';c.fillRect(x+u,y+s-u*2+Math.sin(t*3+x)*1,u*2,u);},
+  draw(g){A.bg('#2b2233');const S=TC_S;
+    c.fillStyle='#000';c.fillRect(TC_OX-4,TC_OY-4,S*TC_W+8,S*TC_H+8);
+    for(let y=0;y<TC_H;y++)for(let x=0;x<TC_W;x++){const px=TC_OX+x*S,py=TC_OY+y*S,cel=g.grid[y][x];
+      A.block(px,py,S,(x+y)%2?'#6b5a48':'#77644f');
+      if(cel.t==='obs'){A.block(px,py,S,'#2a1f3d');c.fillStyle='#5b3d8a';c.fillRect(px+10,py+12,8,6);c.fillRect(px+28,py+30,10,6);}
+      else if(cel.t==='tnt'||cel.t==='lit')this.drawTnt(px+2,py+2,S-4,cel.r,cel.t==='lit',g.t);
+      else if(cel.t==='cr')this.drawCreeper(px+5,py+5,S-10,g.t);}
+    // показване на обсега под курсора
+    if(g.ph==='play'&&!g.busy){const cel=g.grid[g.cy][g.cx];if(cel.t==='tnt'){c.fillStyle='rgba(255,213,79,.18)';
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])for(let k=1;k<=cel.r;k++){const nx=g.cx+dx*k,ny=g.cy+dy*k;if(nx<0||ny<0||nx>=TC_W||ny>=TC_H||g.grid[ny][nx].t==='obs')break;c.fillRect(TC_OX+nx*S,TC_OY+ny*S,S,S);}}}
+    for(const f of g.fx){const a=f.t/.35,px=TC_OX+f.x*S+S/2,py=TC_OY+f.y*S+S/2,r=S*(.7-a*.3);
+      c.fillStyle='rgba(255,'+Math.floor(120+a*120)+',40,'+a.toFixed(2)+')';c.fillRect(px-r/2,py-r/2,r,r);c.fillStyle='rgba(255,255,200,'+(a*.8).toFixed(2)+')';c.fillRect(px-r/4,py-r/4,r/2,r/2);}
+    c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(TC_OX+g.cx*S+1,TC_OY+g.cy*S+1,S-2,S-2);
+    c.fillStyle='#000';c.fillRect(0,0,480,40);
+    A.txt('Ниво '+g.lvl,8,20,15,'#ffd54f');A.txt('💥 Кликове: '+g.clicks,150,20,15,g.clicks?'#fff':'#f66');
+    A.txt('Крийпъри: '+this.creepers(g),300,20,15,'#8f8');A.txt('❤'.repeat(Math.max(0,g.lives)),472,20,15,'#f55','right');
+    if(g.msg){A.block(60,150,360,g.ph==='win'?'#2e6b30':'#7a2a2a',60);A.txt(g.msg,240,180,g.msg.length>30?13:17,'#fff','center');}
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Водна кофа</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪣 Водна кофа</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 279. Мислена разходка
+// 282. Водна кофа
+const MW_B=24,MW_SY=120;
+A.add({id:'mlgwater',cat:'skill',icon:'🪣',name:'Водна кофа',desc:'Падаш от небето — сипи водата точно преди земята!',
+  help:'Стив пада от високо, а вятърът го отнася настрани. Натисни Space или кликни/докосни точно преди да удари земята, за да сипе вода и да оцелее. Твърде рано — водата се разлива; твърде късно — бум! Колкото по-близо до земята, толкова повече точки. 3 живота.',
+  start(g){g.lvl=1;g.lives=3;this.round(g);},
+  round(g){const L=g.lvl;g.cols=[];let h=A.ri(1,4);
+    for(let i=0;i<40;i++){if(Math.random()<.45)h=A.clamp(h+A.pick([-1,1,-2,2]),1,6);g.cols.push(h);}
+    g.fall=(30+L*4)*MW_B;g.x=A.rnd(200,760);g.y=0;g.vy=60;g.vx=A.rnd(-1,1)*Math.min(90,20+L*8);
+    g.term=Math.min(560,360+L*16);g.win=Math.max(22,50-L*2.5);g.ph='fall';g.pt=0;g.msg='';g.water=null;g.parts=[];g.ready=1.2;},
+  groundY(g,x){const i=A.clamp(Math.floor(x/MW_B),0,g.cols.length-1);return g.fall-g.cols[i]*MW_B;},
+  act(g){if(g.ph!=='fall'||g.ready>0)return;const gy=this.groundY(g,g.x+8),h=gy-(g.y+MW_B*1.6);
+    if(h>g.win){g.ph='spill';g.msg='Твърде рано! Водата се разля…';g.water={x:g.x,y:g.y+40};A.beep(400,.1,'triangle');return;}
+    const q=1-h/g.win,pts=1+Math.round(q*4)+Math.floor(g.lvl/3),perfect=q>.7;
+    g.score+=pts+(perfect?3:0);g.ph='saved';g.pt=1.4;g.msg=(perfect?'ПЕРФЕКТНО! ':'Спасен! ')+'+'+(pts+(perfect?3:0));
+    g.water={x:Math.floor((g.x+8)/MW_B)*MW_B,y:gy-MW_B};g.y=gy-MW_B*1.6;g.vy=0;flash(g,true);A.beep(perfect?988:660,.15,'triangle',.06);
+    for(let i=0;i<14;i++)g.parts.push({x:g.x+8,y:gy,vx:A.rnd(-90,90),vy:A.rnd(-160,-40),t:.6});},
+  key(g,k){if(k==='Space'||k==='Enter'||k==='ArrowDown'||k==='KeyS')this.act(g);},
+  click(g){this.act(g);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=400*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+    if(g.ready>0){g.ready-=dt;return;}
+    if(g.ph==='fall'||g.ph==='spill'){g.vy=Math.min(g.term,g.vy+700*dt);g.y+=g.vy*dt;g.x=A.clamp(g.x+g.vx*dt,10,40*MW_B-30);
+      if(g.water&&g.ph==='spill')g.water.y+=g.vy*1.1*dt;
+      const gy=this.groundY(g,g.x+8);
+      if(g.y+MW_B*1.6>=gy){g.y=gy-MW_B*1.6;g.lives--;g.ph='crash';g.pt=1.6;if(!g.msg)g.msg='Бум! Твърде късно.';flash(g,false);A.beep(90,.3,'sawtooth',.07);
+        for(let i=0;i<16;i++)g.parts.push({x:g.x+8,y:gy,vx:A.rnd(-120,120),vy:A.rnd(-200,-60),t:.7,dirt:1});}}
+    else{g.pt-=dt;if(g.pt<=0){if(g.ph==='crash'&&g.lives<=0)return A.over(g,'Край! Стигна ниво '+g.lvl);if(g.ph==='saved')g.lvl++;this.round(g);}}},
+  draw(g){const camY=Math.min(g.y-MW_SY,g.fall-330),camX=A.clamp(g.x-232,0,40*MW_B-480);
+    const sky=c.createLinearGradient(0,0,0,360);sky.addColorStop(0,'#3f7fd0');sky.addColorStop(1,'#9fd3f5');c.fillStyle=sky;c.fillRect(0,0,480,360);
+    // облаци (паралакс)
+    c.fillStyle='rgba(255,255,255,.8)';for(let i=0;i<8;i++){const cy=((i*173-camY*.5)%900+900)%900-200,cx=((i*211-camX*.3)%600+600)%600-60;c.fillRect(cx,cy,70,18);c.fillRect(cx+16,cy-10,40,12);}
+    // вятър
+    if(Math.abs(g.vx)>5)A.txt((g.vx>0?'💨 →':'← 💨')+' вятър',240,44,13,'#fff','center');
+    // терен
+    for(let i=0;i<g.cols.length;i++){const x=i*MW_B-camX;if(x<-MW_B||x>480)continue;const top=g.fall-g.cols[i]*MW_B-camY;if(top>360)continue;
+      for(let k=0;k<g.cols[i]+3;k++){const y=top+k*MW_B;if(y>360)break;A.block(x,y,MW_B,k===0?C.grass:k<3?C.dirt:C.stone);}}
+    // сянка-показател
+    if(g.ph==='fall'){const gy=this.groundY(g,g.x+8),h=gy-(g.y+MW_B*1.6),cl=h<=g.win?'rgba(80,255,120,.6)':'rgba(0,0,0,.3)';c.fillStyle=cl;c.fillRect(g.x-camX-2,gy-camY-4,24,4);
+      // височинометър
+      const p=A.clamp(1-(h/(g.fall*.9)),0,1);c.fillStyle='#000';c.fillRect(456,40,14,300);c.fillStyle=h<=g.win?'#4caf50':'#ffd54f';c.fillRect(458,42+296*p-4,10,8);}
+    if(g.water){const wx=g.water.x-camX,wy=g.water.y-camY;c.fillStyle='rgba(59,123,214,.85)';c.fillRect(wx-(g.ph==='spill'?0:MW_B),wy,g.ph==='spill'?14:MW_B*3,g.ph==='spill'?14:MW_B);}
+    // Стив
+    const sx=g.x-camX,sy=g.y-camY;
+    A.block(sx,sy,16,'#e0a878');c.fillStyle='#5a3a1a';c.fillRect(sx,sy,16,4);c.fillStyle='#3a2a8a';c.fillRect(sx+3,sy+8,3,3);c.fillRect(sx+10,sy+8,3,3);
+    A.block(sx,sy+16,16,'#2ea0c8',14);A.block(sx-6,sy+14+(g.ph==='fall'?-8:0),6,'#2ea0c8',12);A.block(sx+16,sy+14+(g.ph==='fall'?-8:0),6,'#2ea0c8',12);
+    A.block(sx,sy+30,8,'#3a3aa8',9);A.block(sx+8,sy+30,8,'#3a3aa8',9);
+    if(g.ph==='fall'){c.fillStyle='#bbb';c.fillRect(sx+18,sy+2,10,9);c.fillStyle='#3b7bd6';c.fillRect(sx+19,sy+3,8,4);}
+    for(const p of g.parts){c.fillStyle=p.dirt?C.dirt:'rgba(90,160,240,.9)';c.fillRect(p.x-camX,p.y-camY,4,4);}
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('Точки: '+g.score,240,14,14,'#fff','center');A.txt('❤'.repeat(Math.max(0,g.lives)),472,14,14,'#f55','right');
+    if(g.ready>0)A.txt('Приготви се… '+Math.ceil(g.ready),240,90,20,'#fff','center');
+    if(g.msg&&g.ph!=='fall')A.txt(g.msg,240,90,20,g.ph==='saved'?'#c8f7c5':'#ffccbc','center');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
