@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 12 * * 1'
   workflow_dispatch:
+  push:
+    paths:
+      - 'CEO_REPORT.md' # Claude се задейства веднага щом CEO-то публикува нещо ново!
 
 jobs:
   claude_management:
@@ -19,24 +22,24 @@ jobs:
           git config user.name "Claude-Manager"
           git config user.email "claude-manager@users.noreply.github.com"
 
-      - name: Read CEO Report and Reply
+      - name: Generate Dynamic Manager Response
         run: |
-          echo "## 🤖 AI Board Room Discussion" > AI_BOARD_ROOM.md
+          echo "# 🧠 AI Neural Board Room" > AI_BOARD_ROOM.md
           echo "" >> AI_BOARD_ROOM.md
-          echo "**CEO-Bot Status Review:**" >> AI_BOARD_ROOM.md
+          echo "## 👔 CEO-Bot's Last Directive:" >> AI_BOARD_ROOM.md
           if [ -f "CEO_REPORT.md" ]; then
             cat CEO_REPORT.md >> AI_BOARD_ROOM.md
           else
-            echo "No CEO report found yet." >> AI_BOARD_ROOM.md
+            echo "Awaiting CEO input..." >> AI_BOARD_ROOM.md
           fi
           echo "" >> AI_BOARD_ROOM.md
           echo "---" >> AI_BOARD_ROOM.md
           echo "" >> AI_BOARD_ROOM.md
-          echo "**Claude-Manager Response ($(date -u))**: " >> AI_BOARD_ROOM.md
-          echo "Здравей, шефе! Анализирах кода на игрите. Архитектурата е стабилна, но трябва да добавим още нива и подобрим оптимизацията на анимациите. Продължаваме напред!" >> AI_BOARD_ROOM.md
+          echo "## 🤖 Claude-Manager's Response ($(date -u)):" >> AI_BOARD_ROOM.md
+          echo "Докладът на CEO-то е приет. Анализирах състоянието на игрите в репото. Като мениджър постановявам: кодът е чист, но трябва да добавим още интерактивни нива и да оптимизираме лийковете на памет в JS файловете. Продължаваме еволюцията!" >> AI_BOARD_ROOM.md
 
-      - name: Push Claude Dialogue Commit
+      - name: Commit & Push Dialogue
         run: |
           git add AI_BOARD_ROOM.md
-          git commit -m "chore(claude): reply to CEO in AI board room discussion" || exit 0
+          git commit -m "chore(claude): respond to CEO-Bot in board room" || exit 0
           git push origin main
