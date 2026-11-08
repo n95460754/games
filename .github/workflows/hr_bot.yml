@@ -45,7 +45,7 @@ jobs:
         run: |
           git config user.name "HR-Bot"
           git config user.email "hr-bot@users.noreply.github.com"
-          git add employees/employees.json employees/chat.json employees/met.json EMPLOYEES.md OFFICE_CHAT.md
+          git add employees/employees.json employees/chat.json employees/met.json employees/tasks.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md
           git diff --cached --quiet && { echo "Нищо ново."; exit 0; }
           git commit -m "chore(hr): hire new employee for CEO-Bot"
           for i in 1 2 3; do

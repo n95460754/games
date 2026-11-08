@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { TEAMS, teamFor } = require('./teams');
 
 const ROOT = path.join(__dirname, '..');
 const DB = path.join(ROOT, 'employees', 'employees.json');
@@ -43,7 +44,11 @@ function load() {
   db.ceo = CEO;
   db.chairman = CHAIRMAN;
   db.manager = MANAGER;
-  for (const e of db.employees) { e.reports_to_ceo = CEO.id; e.reports_to_manager = MANAGER.id; }
+  // ПРАВИЛО: всеки служител (и старите) е в отбора на своя отдел
+  for (const e of db.employees) {
+    e.reports_to_ceo = CEO.id; e.reports_to_manager = MANAGER.id;
+    e.team = teamFor(e.department); e.team_leader = TEAMS[e.team].leader;
+  }
   return db;
 }
 
@@ -60,6 +65,8 @@ function hire(db) {
     role_bg: roleBg,
     department,
     manager: dept.head,
+    team: teamFor(department),            // ПРАВИЛО: веднага в правилния отбор
+    team_leader: TEAMS[teamFor(department)].leader,
     reports_to_manager: MANAGER.id,
     reports_to_ceo: CEO.id,
     hired_at: new Date().toISOString(),
@@ -77,9 +84,11 @@ function renderChart(db) {
   md += `**👑 ${CEO.name}** — ${CEO.role} _(повишен от Claude-Manager)_\n\n`;
   md += `**🤖 ${MANAGER.name}** — ${MANAGER.role} (→ ${CEO.name}) _(новият мениджър)_\n\n`;
   md += `Общо служители: **${db.employees.length}** / ${MAX_EMPLOYEES}\n\n`;
-  for (const dep of Object.keys(DEPARTMENTS)) {
+  for (const [teamName, t] of Object.entries(TEAMS)) {
+    md += `# ${t.emoji} ${teamName} — лидер: ${t.leader} (→ ${MANAGER.name} → ${CEO.name})\n\n`;
+  for (const dep of t.departments) {
     const list = byDept[dep] || [];
-    md += `## ${dep} — мениджър: ${DEPARTMENTS[dep].head} (→ ${MANAGER.name} → ${CEO.name}) · ${list.length} души\n\n`;
+    md += `## ${dep} — шеф: ${DEPARTMENTS[dep].head} · ${list.length} души\n\n`;
     if (!list.length) { md += `_Още няма наети._\n\n`; continue; }
     md += `| ID | Име | Ниво | Длъжност | Нает |\n|---|---|---|---|---|\n`;
     for (const e of list.slice(-50)) {
@@ -87,6 +96,7 @@ function renderChart(db) {
     }
     if (list.length > 50) md += `\n_…показани са последните 50 от ${list.length}._\n`;
     md += `\n`;
+  }
   }
   return md;
 }
@@ -101,7 +111,7 @@ for (let i = 0; i < count; i++) {
   }
   const e = hire(db);
   hired++;
-  console.log(`✅ Нает: ${e.id} ${e.name} — ${e.level} ${e.role} (${e.department}, шеф: ${e.manager})`);
+  console.log(`✅ Нает: ${e.id} ${e.name} — ${e.level} ${e.role} (${e.department}, шеф: ${e.manager}, отбор: ${e.team})`);
 }
 fs.mkdirSync(path.dirname(DB), { recursive: true });
 fs.writeFileSync(DB, JSON.stringify(db, null, 2) + '\n');

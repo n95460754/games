@@ -17,7 +17,9 @@
       "manager": "UX-UI-Bot",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:54:30.831Z",
-      "reports_to_manager": "github-actions[bot]"
+      "reports_to_manager": "github-actions[bot]",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot"
     },
     {
       "id": "EMP-0002",
@@ -29,7 +31,9 @@
       "manager": "Community-Manager-Bot",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:54:30.842Z",
-      "reports_to_manager": "github-actions[bot]"
+      "reports_to_manager": "github-actions[bot]",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot"
     },
     {
       "id": "EMP-0003",
@@ -41,7 +45,9 @@
       "manager": "QA-Tester-Bot",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:54:30.843Z",
-      "reports_to_manager": "github-actions[bot]"
+      "reports_to_manager": "github-actions[bot]",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot"
     },
     {
       "id": "EMP-0004",
@@ -53,7 +59,9 @@
       "manager": "QA-Tester-Bot",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-08T22:58:25.125Z",
-      "reports_to_manager": "github-actions[bot]"
+      "reports_to_manager": "github-actions[bot]",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot"
     },
     {
       "id": "EMP-0005",
@@ -65,7 +73,37 @@
       "manager": "Dev-Bot",
       "reports_to_manager": "github-actions[bot]",
       "reports_to_ceo": "Claude-CEO",
-      "hired_at": "2026-11-08T22:59:18.930Z"
+      "hired_at": "2026-11-08T22:59:18.930Z",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot"
+    },
+    {
+      "id": "EMP-0006",
+      "name": "Nova Storm",
+      "level": "Mid",
+      "role": "UI Animator",
+      "role_bg": "UI аниматор",
+      "department": "Design",
+      "manager": "UX-UI-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T23:06:55.627Z"
+    },
+    {
+      "id": "EMP-0007",
+      "name": "Glitch Forge",
+      "level": "Senior",
+      "role": "Translator",
+      "role_bg": "Преводач",
+      "department": "Community",
+      "manager": "Community-Manager-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-08T23:06:55.636Z"
     }
   ],
   "chairman": {

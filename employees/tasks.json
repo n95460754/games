@@ -1,0 +1,71 @@
+{
+ "next": 7,
+ "tasks": [
+  {
+   "id": "TASK-0001",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Стрелочник",
+   "assignee": "EMP-0001",
+   "assignee_name": "Spark Fox",
+   "status": "todo",
+   "created_round": 3,
+   "created": "2026-11-08T23:07:15.119Z",
+   "updated": "2026-11-08T23:07:15.119Z"
+  },
+  {
+   "id": "TASK-0002",
+   "team": "Team Dev",
+   "title": "Направи regression тест на Скачане на въже",
+   "assignee": "EMP-0004",
+   "assignee_name": "Echo Runner",
+   "status": "todo",
+   "created_round": 3,
+   "created": "2026-11-08T23:07:15.119Z",
+   "updated": "2026-11-08T23:07:15.119Z"
+  },
+  {
+   "id": "TASK-0003",
+   "team": "Team Dev",
+   "title": "Направи regression тест на Блокова змия",
+   "assignee": "EMP-0003",
+   "assignee_name": "Neon Fox",
+   "status": "todo",
+   "created_round": 3,
+   "created": "2026-11-08T23:07:15.119Z",
+   "updated": "2026-11-08T23:07:15.119Z"
+  },
+  {
+   "id": "TASK-0004",
+   "team": "Team DevOps",
+   "title": "Напиши туториал за Дама",
+   "assignee": "EMP-0002",
+   "assignee_name": "Rogue Miner",
+   "status": "todo",
+   "created_round": 3,
+   "created": "2026-11-08T23:07:15.119Z",
+   "updated": "2026-11-08T23:07:15.119Z"
+  },
+  {
+   "id": "TASK-0005",
+   "team": "Team DevOps",
+   "title": "Преведи Оцвети картата на английски",
+   "assignee": "Community-Manager-Bot",
+   "assignee_name": "Community-Manager-Bot",
+   "status": "todo",
+   "created_round": 3,
+   "created": "2026-11-08T23:07:15.119Z",
+   "updated": "2026-11-08T23:07:15.119Z"
+  },
+  {
+   "id": "TASK-0006",
+   "team": "Team DevOps",
+   "title": "Преведи Сребърни рибки на английски",
+   "assignee": "EMP-0007",
+   "assignee_name": "Glitch Forge",
+   "status": "todo",
+   "created_round": 3,
+   "created": "2026-11-08T23:07:15.119Z",
+   "updated": "2026-11-08T23:07:15.119Z"
+  }
+ ]
+}

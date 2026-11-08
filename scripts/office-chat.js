@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { teamFor, runTeamTasks } = require('./teams');
 
 const ROOT = path.join(__dirname, '..');
 const DB = path.join(ROOT, 'employees', 'employees.json');
@@ -33,8 +34,8 @@ function participants(staff) {
     { key: 'CEO-Bot', name: '🏛️ CEO-Bot', role: 'Chairman', department: 'Executive' },
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
   ];
-  for (const [h, d] of HEADS) list.push({ key: h, name: h, role: 'Head of ' + d, department: d });
-  for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department });
+  for (const [h, d] of HEADS) list.push({ key: h, name: h, role: 'Head of ' + d, department: d, team: teamFor(d) });
+  for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department, team: teamFor(e.department) });
   return list;
 }
 
@@ -168,6 +169,20 @@ if (!log.managerAppointed) {
   if (fan2) post(fan2, 'Добре дошъл, шефе! Обещавам да не чупя билда. 🙏', th);
   log.managerAppointed = new Date(t0).toISOString();
 }
+// 📣 Еднократна обява за отборите
+if (!log.teamsAnnounced) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Нови отбори!';
+  post(by('github-actions[bot]'), 'Внимание! От днес работим в два отбора. 🛠️ Team Dev с лидер Dev-Bot: QA-Tester-Bot, UX-UI-Bot и Sound-Engineer-Bot. ⚙️ Team DevOps с лидер DevOps-Master-Bot: Community-Manager-Bot и SecOps-Bot.', th);
+  post(by('github-actions[bot]'), 'Правило: всеки нов служител отива веднага в отбора на своя отдел. Без изключения. 🤖', th);
+  post(by('Dev-Bot'), 'Team Dev, готови ли сте? От мен идват задачите. 📋', th);
+  post(by('QA-Tester-Bot'), 'Готови! Аз ще тествам всичко, преди да го одобриш. 🔍', th);
+  post(by('DevOps-Master-Bot'), 'Team DevOps също е на линия. ⚙️', th);
+  post(by('SecOps-Bot'), 'Периметърът е пазен. 🛡️', th);
+  log.teamsAnnounced = new Date(t0).toISOString();
+}
+// 🛠️ Лидерите раздават задачи, отборите ги изпълняват
+runTeamTasks({ people, games, post, round: log.round });
 const pairs = makePairs(people, met);
 for (const g of pairs) converse(g, met, games, post);
 
