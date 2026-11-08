@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гмуркане за съкровища</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🤿 Гмуркане за съкровища</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 298. Гмуркане за съкровища
+const DD_KELP=[];for(let i=0;i<9;i++)DD_KELP.push([A.ri(10,470),A.ri(3,7)]);
+const DD_T=[{col:C.gold,p:1},{col:'#2fd15a',p:2},{col:C.gem,p:3}];
+A.add({id:'deepdive',cat:'action',icon:'🤿',name:'Гмуркане за съкровища',desc:'Гмурни се за руди под водата, пази въздуха и бягай от рибите балон',
+  help:'Стрелки / WASD или мишка / пръст — плуване. Злато = 1, изумруд = 2, диамант на дъното = 3, сандък = 5 точки. Въздухът намалява под водата — изплувай горе или мини през мехурчетата. Рибите балон вземат сърце. 3 сърца.',
+  start(g){g.x=240;g.y=60;g.tx=null;g.ty=null;g.air=12;g.lives=3;g.inv=0;g.it=[];g.fish=[];g.bub=[];g.parts=[];g.sp=0;g.fs=2;g.face=1;
+    g.vents=[A.ri(40,200),A.ri(280,440)];g.vt=0;g.msg=null;for(let i=0;i<4;i++)this.spawnIt(g);},
+  spawnIt(g){const r=Math.random();let t,y;
+    if(r<.08){t=3;y=314;}else if(r<.45){t=0;y=A.rnd(80,170);}else if(r<.78){t=1;y=A.rnd(170,270);}else{t=2;y=314;}
+    g.it.push({x:A.rnd(20,460),y,t,w:A.rnd(0,6)});},
+  key(g,k){if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyA','KeyD','KeyW','KeyS'].includes(k)){g.tx=null;g.ty=null;}},
+  move(g,x,y){if(A.mouse.down||!('ontouchstart' in window)){g.tx=x;g.ty=y;}},
+  click(g,x,y){g.tx=x;g.ty=y;},
+  update(g,dt){
+    const K=A.keys,sp=150*dt;let dx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),dy=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);
+    if(dx||dy){const l=Math.hypot(dx,dy);g.x+=dx/l*sp;g.y+=dy/l*sp;if(dx)g.face=dx;}
+    else if(g.tx!==null){const ex=g.tx-g.x,ey=g.ty-g.y,l=Math.hypot(ex,ey);if(l>3){const m=Math.min(l,sp);g.x+=ex/l*m;g.y+=ey/l*m;if(Math.abs(ex)>2)g.face=Math.sign(ex);}}
+    g.x=A.clamp(g.x,10,470);g.y=A.clamp(g.y,46,318);g.inv-=dt;
+    // въздух
+    if(g.y<58){if(g.air<12&&Math.floor(g.t*8)%3===0)A.beep(900,.02,'sine',.015);g.air=Math.min(12,g.air+6*dt);}
+    else{g.air-=dt*(1+Math.min(.6,g.t/200));if(g.air<=0)return A.over(g,'Свърши ти въздухът!');}
+    // мехурчета от отворите на дъното
+    g.vt-=dt;if(g.vt<=0){g.vt=.35;for(const v of g.vents)g.bub.push({x:v+A.rnd(-6,6),y:322,s:A.ri(4,7)});}
+    for(const b of g.bub){b.y-=70*dt;b.x+=Math.sin(b.y/12)*.4;if(b.y<52)b.dead=true;
+      if(!b.dead&&Math.abs(b.x-g.x)<12&&Math.abs(b.y-g.y)<12){b.dead=true;g.air=Math.min(12,g.air+.8);A.beep(1200,.03,'sine',.02);}}
+    // съкровища
+    g.sp-=dt;if(g.sp<=0&&g.it.length<7){g.sp=1.1;this.spawnIt(g);}
+    for(const o of g.it){o.w+=dt*3;
+      if(Math.abs(o.x-g.x)<16&&Math.abs(o.y-g.y)<16){o.dead=true;const p=o.t===3?5:DD_T[o.t].p;g.score+=p;g.msg={s:'+'+p,x:o.x,y:o.y,t:.8};
+        A.tune(o.t===3?[660,880,1100,1320]:[700+o.t*200]);for(let i=0;i<8;i++)g.parts.push({x:o.x,y:o.y,vx:A.rnd(-60,60),vy:A.rnd(-60,30),t:.5,col:o.t===3?'#c8902a':DD_T[o.t].col});}}
+    // риби балон
+    g.fs-=dt;if(g.fs<=0){g.fs=Math.max(.6,2.2-g.t*.015)*A.rnd(.7,1.3);const s=Math.random()<.5?-1:1;
+      g.fish.push({x:s<0?-20:500,y:A.rnd(75,310),vx:-s*A.rnd(45,80)*(1+g.t*.004),ph:A.rnd(0,6),wy:A.rnd(0,6)});}
+    for(const f of g.fish){f.x+=f.vx*dt;f.ph+=dt*1.6;f.wy+=dt*2;f.y+=Math.sin(f.wy)*12*dt;f.r=Math.sin(f.ph)>.2?15:8;
+      if(f.x<-40||f.x>520)f.dead=true;
+      if(!f.dead&&g.inv<=0&&Math.hypot(f.x-g.x,f.y-g.y)<f.r+7){g.lives--;g.inv=1.5;A.beep(120,.3,'sawtooth',.06);
+        if(g.lives<=0)return A.over(g,'Риба балон те ужили!');}}
+    for(const q of g.parts){q.x+=q.vx*dt;q.y+=q.vy*dt;q.t-=dt;}
+    if(g.msg){g.msg.t-=dt;g.msg.y-=30*dt;if(g.msg.t<=0)g.msg=null;}
+    g.it=g.it.filter(o=>!o.dead);g.fish=g.fish.filter(f=>!f.dead);g.bub=g.bub.filter(b=>!b.dead);g.parts=g.parts.filter(q=>q.t>0);
+  },
+  draw(g){
+    A.bg('#8fd0f5');c.fillStyle='#fff';c.fillRect(60,16,50,10);c.fillRect(70,10,30,8);c.fillRect(330,22,60,10);
+    // вода с тъмнеене надолу
+    for(let y=52;y<330;y+=14){const k=(y-52)/280;c.fillStyle='rgb('+Math.round(40-25*k)+','+Math.round(110-70*k)+','+Math.round(200-90*k)+')';c.fillRect(0,y,480,14);}
+    c.fillStyle='rgba(255,255,255,.35)';for(let x=0;x<480;x+=24)c.fillRect((x+g.t*20)%480,52,12,3);
+    for(const k of DD_KELP)for(let j=0;j<k[1];j++)A.block(k[0]+Math.round(Math.sin(g.t*1.5+j*.7)*2*j/3),318-j*12,8,'#3f8a24',12);
+    for(let x=0;x<480;x+=20){A.block(x,330,20,C.sand,12);A.block(x,342,20,'#c9a54e',18);}
+    for(const v of g.vents){A.block(v-10,322,20,'#4a5a5a',8);}
+    for(const b of g.bub){c.strokeStyle='rgba(220,245,255,.9)';c.lineWidth=1.5;c.strokeRect(b.x-b.s/2,b.y-b.s/2,b.s,b.s);}
+    for(const o of g.it){const bob=o.t>=2?0:Math.sin(o.w)*3;
+      if(o.t===3){A.block(o.x-10,o.y-8,20,'#9a6a2a',16);c.fillStyle='#5a3a14';c.fillRect(o.x-10,o.y-2,20,2);c.fillStyle=C.gold;c.fillRect(o.x-2,o.y-3,4,5);}
+      else{A.block(o.x-8,o.y-8+bob,16,'#7d7d7d');c.fillStyle=DD_T[o.t].col;c.fillRect(o.x-5,o.y-5+bob,4,4);c.fillRect(o.x+1,o.y-2+bob,4,4);c.fillRect(o.x-3,o.y+2+bob,4,3);}}
+    for(const f of g.fish){const r=f.r,d=Math.sign(f.vx);A.block(f.x-r,f.y-r,r*2,'#e8c23a');
+      if(r>10){c.fillStyle='#f4f0e0';for(let i=-1;i<=1;i++){c.fillRect(f.x+i*9-1,f.y-r-3,2,4);c.fillRect(f.x+i*9-1,f.y+r-1,2,4);c.fillRect(f.x-r-3,f.y+i*9-1,4,2);c.fillRect(f.x+r-1,f.y+i*9-1,4,2);}}
+      c.fillStyle='#000';c.fillRect(f.x+d*(r-6)-2,f.y-r/2,3,3);c.fillStyle='#4aa0a0';c.fillRect(f.x-d*r-d*4-2,f.y-3,5,6);}
+    for(const q of g.parts){c.fillStyle=q.col;c.fillRect(q.x,q.y,3,3);}
+    // гмуркач (хоризонтално плуване)
+    if(g.inv<=0||Math.floor(g.t*12)%2){const x=g.x,y=g.y,f=g.face,kick=Math.sin(g.t*10)*3;
+      A.block(x+f*6-5,y-6,10,'#c99a72');c.fillStyle='#3a2a1a';c.fillRect(x+f*6-5,y-6,10,3);c.fillStyle='#fff';c.fillRect(x+f*9-1,y-2,2,2);
+      c.fillStyle='rgba(180,230,255,.5)';c.fillRect(x+f*6-6,y-7,12,12);
+      A.block(x-f*4-7,y-4,14,'#2f9fb5',8);c.fillStyle='#3b45a8';c.fillRect(x-f*13-4,y-3+kick,9,3);c.fillRect(x-f*13-4,y+1-kick,9,3);}
+    if(g.msg)A.txt(g.msg.s,g.msg.x,g.msg.y,14,'#ffd54f','center');
+    // HUD
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,15,'#f55');
+    for(let i=0;i<12;i++){const full=g.air>i;c.fillStyle=full?'#dff4ff':'rgba(0,0,0,.3)';c.fillRect(150+i*15,8,11,11);if(full){c.fillStyle='#7fc6e8';c.fillRect(153+i*15,11,4,4);}}
+    A.txt('Дълбочина: '+Math.max(0,Math.round((g.y-52)/14))+' м',470,14,12,'#fff','right');
+    if(g.air<4&&g.y>=58&&Math.floor(g.t*4)%2)A.txt('⬆ Изплувай за въздух!',240,38,15,'#ff5a5a','center');
+  }
+});
+</script>
+</body>
+</html>

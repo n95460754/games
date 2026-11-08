@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пирамида за маяк</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔆 Пирамида за маяк</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 300. Пирамида за маяк
+const BC_TOT=[0,9,34,83,164];
+const BC_MAT=[{n:'желязо',col:'#d8d8d8'},{n:'злато',col:C.gold},{n:'изумруд',col:'#2fd15a'},{n:'диамант',col:C.gem}];
+A.add(Object.assign(choiceGame({time:75,bg:'#16213a',
+  next(g){
+    const lv=Math.min(4,Math.floor(g.score/4)),type=A.ri(0,[1,2,3,5,5][lv]);
+    g.type=type;g.mat=A.pick(BC_MAT);g.hl=0;g.N=4;g.grid=0;const m=g.mat.n;
+    if(type===0){const k=A.ri(1,4);g.hl=k;g.q='Колко блока е страната на слой '+k+' (отгоре)?';g.ans=2*k+1;g.opts=opts4(g.ans,()=>A.ri(2,10));}
+    else if(type===1){const k=A.ri(1,lv<1?2:4);g.hl=k;g.grid=lv<1?2*k+1:0;g.q='Колко блока '+m+' има в слой '+k+'?';g.ans=(2*k+1)**2;
+      g.opts=opts4(g.ans,()=>A.pick([(2*k+1)*4,(2*k+1)*2,(2*k-1)**2,(2*k+3)**2,(2*k+1)**2+A.ri(-3,3)||1,(2*k)**2]));}
+    else if(type===2){const N=A.ri(1,4);g.N=N;g.q='Колко блока трябват за пирамида с '+N+(N>1?' нива':' ниво')+'?';g.ans=BC_TOT[N];
+      g.opts=opts4(g.ans,()=>A.pick([BC_TOT[A.ri(1,4)],(2*N+1)**2,BC_TOT[N]+A.pick([-9,-4,5,8,16]),BC_TOT[N]-(2*N+1)**2||4]));}
+    else if(type===3){const X=A.ri(5,200);g.X=X;let L=0;while(L<4&&BC_TOT[L+1]<=X)L++;g.q='Имаш '+X+' блока. Колко пълни нива ще построиш?';g.ans=L;g.opts=A.shuffle([L,...A.shuffle([0,1,2,3,4].filter(v=>v!==L)).slice(0,3)]);}
+    else if(type===4){const N=A.ri(1,4),X=A.ri(1,BC_TOT[N]-1);g.N=N;g.X=X;g.q='Имаш '+X+' блока. Колко още трябват за '+N+(N>1?' нива':' ниво')+'?';g.ans=BC_TOT[N]-X;
+      g.opts=opts4(g.ans,()=>Math.max(1,g.ans+A.pick([-10,-9,-5,-1,1,5,9,10,(2*N+1)])));}
+    else{const N=A.ri(2,4),t=BC_TOT[N];g.N=N;g.q='Пирамида с '+N+' нива ('+t+' бл.). Колко стака по 64?';g.ans=Math.ceil(t/64);
+      g.opts=opts4(g.ans,()=>A.ri(1,5));}
+  },
+  pic(g){A.txt(g.q,240,32,g.q.length>40?13:g.q.length>32?15:17,'#fff','center');
+    const s=18,N=g.N,cx=g.grid?170:240,by=244,top=by-N*s;
+    // лъч и маяк
+    c.fillStyle='rgba(140,240,255,.25)';c.fillRect(cx-6,52,12,top-s-52);c.fillStyle='rgba(220,255,255,.55)';c.fillRect(cx-2,52,4,top-s-52);
+    A.block(cx-s/2,top-s,s,'#9ff6ff');c.fillStyle='#2a6a7a';c.fillRect(cx-3,top-s+5,6,8);
+    for(let r=1;r<=N;r++){const w=2*r+1,y=top+(r-1)*s;for(let i=0;i<w;i++){A.block(cx-w*s/2+i*s,y,s,g.hl===r?g.mat.col:g.hl?'#556070':g.mat.col);}
+      if(g.hl===r){c.strokeStyle='#ffd54f';c.lineWidth=2;c.strokeRect(cx-w*s/2-2,y-1,w*s+4,s+2);}
+      A.txt(String(r),cx-w*s/2-12,y+s/2,11,'#b9c6d6','center');}
+    if(g.grid){const n=g.grid,q=Math.min(14,Math.floor(150/n)),gx=410-n*q/2,gy=150-n*q/2;A.txt('отгоре:',410,gy-12,11,'#b9c6d6','center');
+      for(let i=0;i<n;i++)for(let j=0;j<n;j++)A.block(gx+i*q,gy+j*q,q,g.mat.col);}
+    if(g.type>=3)A.txt('Нива: 9 · 25 · 49 · 81 блока',240,by+10,11,'#b9c6d6','center');
+  }
+}),{id:'beacon',cat:'brain',icon:'🔆',name:'Пирамида за маяк',desc:'Сметни колко блока трябват за пирамидата на маяка — квадрати и сбор',
+  help:'Пирамидата на маяка: слой 1 е 3×3, слой 2 е 5×5, слой 3 е 7×7, слой 4 е 9×9. Избери верния отговор с 1–4 или с клик / докосване. 75 секунди — с всеки верен отговор въпросите стават по-трудни.'}));
+</script>
+</body>
+</html>

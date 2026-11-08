@@ -280,7 +280,10 @@ const GAMES=[
   {"id": "nethercoords", "cat": "brain", "icon": "🟪", "name": "Портал към Недъра", "desc": "1 блок в Недъра = 8 блока в обикновения свят: смятай къде да строиш порталите", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "phantoms", "cat": "action", "icon": "👻", "name": "Фантоми в нощта", "desc": "Стреляй с лъка по фантомите, които пикират към теб през нощта", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "redstone", "cat": "puzzle", "icon": "🔴", "name": "Червен прах", "desc": "Прокарай червен прах от блока до всички лампи — прахът е ограничен, а сигналът отслабва", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "orechance", "cat": "brain", "icon": "🎲", "name": "Шанс за диамант", "desc": "Вероятност с руди и зар: какъв е шансът да изтеглиш диамант от сандъка?", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "orechance", "cat": "brain", "icon": "🎲", "name": "Шанс за диамант", "desc": "Вероятност с руди и зар: какъв е шансът да изтеглиш диамант от сандъка?", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "deepdive", "cat": "action", "icon": "🤿", "name": "Гмуркане за съкровища", "desc": "Гмурни се за руди под водата, пази въздуха и бягай от рибите балон", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "speedbridge", "cat": "skill", "icon": "🌉", "name": "Бърз мост", "desc": "Строй мост над бездната — слагай блок точно когато стигнеш ръба", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "beacon", "cat": "brain", "icon": "🔆", "name": "Пирамида за маяк", "desc": "Сметни колко блока трябват за пирамидата на маяка — квадрати и сбор", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

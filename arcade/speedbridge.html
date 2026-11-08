@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бърз мост</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌉 Бърз мост</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 299. Бърз мост
+const SB_B=30,SB_Y=220,SB_STARS=[];for(let i=0;i<45;i++)SB_STARS.push([A.ri(0,479),A.ri(0,200),A.ri(1,2)]);
+const SB_COL=['#e8e8e8','#d84a3a','#3b7bd6','#5aa13a','#ffd23f','#8e24aa','#ff8a1a'];
+A.add({id:'speedbridge',cat:'skill',icon:'🌉',name:'Бърз мост',desc:'Строй мост над бездната — слагай блок точно когато стигнеш ръба',
+  help:'Героят върви сам. Space / ↓ / клик / докосване — сложи блок пред себе си. Чакай да стигнеш ръба: съвсем на ръба = ПЕРФЕКТНО (2 точки), иначе 1. Твърде рано = грешка (3 грешки = край). Закъснееш ли — падаш! Островите по пътя скъсяват моста.',
+  start(g){g.solid=new Set();for(let i=0;i<6;i++)g.solid.add(i);g.isl=new Set();g.px=2.5*SB_B;g.py=SB_Y;g.v=62;g.strikes=0;g.fall=0;g.msg=null;g.placed=[];g.combo=0;g.n=0;},
+  edge(g){let j=Math.floor(g.px/SB_B);while(g.solid.has(j))j++;return j;},
+  place(g){
+    if(g.fall)return;const j=this.edge(g),d=j*SB_B-g.px;
+    if(d>SB_B*.9){g.strikes++;g.combo=0;g.msg={s:'Рано! ✗',col:'#ff6a5a',t:.7};A.beep(150,.2,'sawtooth',.05);
+      if(g.strikes>=3)A.over(g,'Твърде много грешки!');return;}
+    g.solid.add(j);g.placed.push({j,t:0,col:A.pick(SB_COL)});g.n++;
+    const perfect=d<9;if(perfect){g.combo++;g.score+=2;g.msg={s:g.combo>2?'ПЕРФЕКТНО x'+g.combo+'!':'ПЕРФЕКТНО!',col:'#7cff6a',t:.6};A.beep(660+Math.min(8,g.combo)*60,.07,'triangle');}
+    else{g.combo=0;g.score+=1;g.msg={s:'Добре',col:'#fff',t:.5};A.beep(440,.05,'square',.03);}
+    g.v=Math.min(240,62+g.n*2.6);
+    // понякога напред се появява готов остров
+    if(g.n>4&&Math.random()<.16){let free=true;for(let k=j+1;k<j+10;k++)if(g.solid.has(k))free=false;
+      if(free){const s=j+A.ri(2,4),len=A.ri(2,4);for(let k=s;k<s+len;k++){g.solid.add(k);g.isl.add(k);}}}
+  },
+  key(g,k){if(['Space','ArrowDown','KeyS','Enter','ShiftLeft','ShiftRight'].includes(k))this.place(g);},
+  click(g){this.place(g);},
+  update(g,dt){
+    for(const p of g.placed)p.t+=dt;
+    if(g.msg){g.msg.t-=dt;if(g.msg.t<=0)g.msg=null;}
+    if(g.fall){g.fall+=dt;g.vy+=600*dt;g.py+=g.vy*dt;g.px+=g.v*.4*dt;if(g.fall>1.1)A.over(g,'Падна в бездната!');return;}
+    g.px+=g.v*dt;
+    const j=this.edge(g);if(g.px>j*SB_B+6){g.fall=.001;g.vy=-60;A.beep(300,.5,'sawtooth',.05);setTimeout(()=>A.beep(150,.4,'sawtooth',.05),200);}
+    // махаме старите колони от паметта
+    const old=Math.floor(g.px/SB_B)-12;for(const k of g.solid)if(k<old){g.solid.delete(k);g.isl.delete(k);}
+    if(g.placed.length>30)g.placed=g.placed.slice(-30);
+  },
+  draw(g){
+    A.bg('#120a26');c.fillStyle='#fff';for(const s of SB_STARS){const x=((s[0]-g.px*.1)%480+480)%480;c.fillRect(x,s[1],s[2],s[2]);}
+    for(let y=250;y<360;y+=10){c.fillStyle='rgba(60,20,90,'+((y-250)/220)+')';c.fillRect(0,y,480,10);}
+    const cam=g.px-150,i0=Math.floor(cam/SB_B)-1;
+    for(let i=i0;i<i0+18;i++)if(g.solid.has(i)){const x=i*SB_B-cam;const pl=g.placed.find(p=>p.j===i);
+      if(g.isl.has(i)){A.block(x,SB_Y,SB_B,'#7d7d7d');A.block(x,SB_Y+SB_B,SB_B,'#5f5f5f');if(!g.isl.has(i+1))A.block(x,SB_Y+2*SB_B,SB_B,'#4a4a4a');}
+      else{const pop=pl&&pl.t<.12?(1-pl.t/.12)*6:0;A.block(x+pop/2,SB_Y+pop/2,SB_B-pop,pl?pl.col:C.wood);}}
+    // призрачен блок — къде ще сложиш
+    if(!g.fall){const j=this.edge(g),d=j*SB_B-g.px,x=j*SB_B-cam;
+      c.strokeStyle=d<9?'#7cff6a':d<=SB_B*.9?'rgba(255,255,255,.8)':'rgba(255,255,255,.18)';c.lineWidth=2;c.strokeRect(x+2,SB_Y+2,SB_B-4,SB_B-4);}
+    // играч
+    const x=g.px-cam,y=g.py,st=Math.floor(g.px/9)%2;
+    A.block(x-8,y-40,16,'#c99a72',14);c.fillStyle='#3a2a1a';c.fillRect(x-8,y-40,16,4);c.fillStyle='#fff';c.fillRect(x+3,y-33,3,3);
+    A.block(x-8,y-26,16,'#2f9fb5',14);c.fillStyle='#3b45a8';c.fillRect(x-7+(st?3:0),y-12,6,12);c.fillRect(x+1-(st?3:0),y-12,6,12);
+    A.block(x+6,y-24,8,'#e8e8e8',8);
+    if(g.msg)A.txt(g.msg.s,240,90,22,g.msg.col,'center');
+    A.txt('Мост: '+g.n+' блока',10,14,14);A.txt('✗'.repeat(g.strikes)+'·'.repeat(3-g.strikes),470,14,16,'#ff6a5a','right');
+    A.txt('Скорост '+(g.v/SB_B).toFixed(1)+' бл/с',240,14,12,'#b9c6d6','center');
+  }
+});
+</script>
+</body>
+</html>
