@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пирамидата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔶 Пирамидата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 241. Пирамидата
+const CH_PAL=[['#7d7d7d','#ffd23f','#5aa13a'],['#3b7bd6','#e0c068','#ff6a00'],['#8e24aa','#4de8f5','#ffd23f'],['#7a5233','#d84a3a','#eef4ff']];
+const CH_HW=23,CH_HH=12,CH_D=24,CH_Y0=68;
+const CH_DIR={UL:[-1,-1],UR:[-1,0],DL:[1,0],DR:[1,1]};
+A.add({id:'cubehop',cat:'action',icon:'🔶',name:'Пирамидата',desc:'Скачай по кубчетата, оцвети ги и бягай от слузите',help:'Стрелки: ↑ нагоре-надясно, ← нагоре-наляво, ↓ надолу-наляво, → надолу-надясно (или E Q Z C). Клик/докосване до героя = скок натам. Оцвети всички кубчета в цвета на целта! Не падай от ръба. Червените слузи са опасни, зеленият спира всички за малко, лилавата змия те гони.',
+  start(g){g.lives=3;g.lv=1;g.stars=[];for(let i=0;i<40;i++)g.stars.push([A.ri(0,479),A.ri(0,359)]);this.level(g);},
+  level(g){g.top=[];for(let r=0;r<7;r++)g.top.push(Array(r+1).fill(0));g.need=g.lv<2?1:2;g.revert=g.lv>=4;g.pal=CH_PAL[(g.lv-1)%CH_PAL.length];
+    this.reset(g);g.msg='Ниво '+g.lv+(g.revert?' — внимавай, готовите кубчета се връщат!':'');g.msgT=2;g.win=0;},
+  reset(g){g.p={r:0,i:0,fr:0,fi:0,t:1,fall:0};g.en=[];g.spawn=2.5;g.freeze=0;g.buf=null;g.pause=.6;},
+  ok(r,i){return r>=0&&r<7&&i>=0&&i<=r;},
+  pos(r,i){return [240+(i-r/2)*CH_HW*2,CH_Y0+r*(CH_HH+CH_D)];},
+  epos(e){const a=this.pos(e.fr,e.fi),b=this.pos(e.r,e.i),t=Math.min(1,e.t);
+    let x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t-Math.sin(Math.PI*t)*16-8;
+    if(e.fall)y+=e.fall*e.fall*400;if(e.drop)y-=e.drop*120;return [x,y];},
+  hop(g,dn){const p=g.p;if(p.fall||g.pause>0||g.win>0)return;if(p.t<1){g.buf=dn;return;}
+    const d=CH_DIR[dn];p.fr=p.r;p.fi=p.i;p.r+=d[0];p.i+=d[1];p.t=0;A.beep(520,.04,'square',.03);},
+  land(g){const p=g.p;
+    if(!this.ok(p.r,p.i)){p.fall=.001;A.beep(300,.4,'sawtooth',.05);return;}
+    const v=g.top[p.r][p.i];
+    if(v<g.need){g.top[p.r][p.i]=v+1;g.score+=25;A.beep(700+v*200,.06,'triangle');}
+    else if(g.revert&&v===g.need){g.top[p.r][p.i]=v-1;A.beep(200,.08);}
+    if(g.top.every(row=>row.every(x=>x===g.need))){g.score+=250*g.lv;g.win=1.6;g.en=[];A.tune([523,659,784,1046]);g.msg='Браво! +'+(250*g.lv);g.msgT=1.6;}
+    if(g.buf){const b=g.buf;g.buf=null;this.hop(g,b);}},
+  lose(g,msg){g.lives--;A.beep(150,.35,'sawtooth',.06);if(g.lives<=0)return A.over(g,msg);this.reset(g);g.pause=1.2;g.msg=msg;g.msgT=1.5;},
+  key(g,k){const m={ArrowUp:'UR',KeyW:'UR',KeyE:'UR',Numpad9:'UR',ArrowLeft:'UL',KeyA:'UL',KeyQ:'UL',Numpad7:'UL',
+      ArrowDown:'DL',KeyS:'DL',KeyZ:'DL',Numpad1:'DL',ArrowRight:'DR',KeyD:'DR',KeyC:'DR',Numpad3:'DR'}[k];if(m)this.hop(g,m);},
+  click(g,mx,my){const p=g.p,q=this.pos(p.r,p.i);const up=my<q[1]-8,left=mx<q[0];this.hop(g,up?(left?'UL':'UR'):(left?'DL':'DR'));},
+  update(g,dt){
+    if(g.msgT>0)g.msgT-=dt;
+    if(g.win>0){g.win-=dt;if(g.win<=0){g.lv++;this.level(g);}return;}
+    if(g.pause>0){g.pause-=dt;return;}
+    const p=g.p;
+    if(p.fall){p.fall+=dt;if(p.fall>.9)return this.lose(g,'Падна от пирамидата!');}
+    else if(p.t<1){p.t+=dt/.2;if(p.t>=1){p.t=1;this.land(g);if(g.win>0)return;}}
+    // противници
+    if(g.freeze>0)g.freeze-=dt;
+    g.spawn-=dt;const max=2+Math.floor(g.lv/2);
+    if(g.spawn<=0&&g.en.length<max){g.spawn=Math.max(1.3,3.6-g.lv*.25)+A.rnd(0,1.2);
+      const snake=g.lv>=3&&!g.en.some(e=>e.type==='snake')&&Math.random()<.4;
+      const type=snake?'snake':Math.random()<.15?'green':'red',i=A.ri(0,1);
+      g.en.push({type,r:1,i,fr:1,fi:i,t:1,drop:1,wait:.5,fall:0,hatched:false});}
+    const wt=Math.max(.38,.85-g.lv*.05);
+    for(const e of g.en){
+      if(e.drop>0){e.drop-=dt*2.5;if(e.drop<0)e.drop=0;continue;}
+      if(e.fall){e.fall+=dt;if(e.fall>1)e.gone=1;continue;}
+      if(e.t<1){e.t+=dt/.25;if(e.t>=1){e.t=1;if(!this.ok(e.r,e.i))e.fall=.001;}continue;}
+      if(g.freeze>0)continue;
+      e.wait-=dt;if(e.wait>0)continue;e.wait=wt*(e.type==='snake'?1.15:1);
+      let d;
+      if(e.type==='snake'&&e.hatched){const tp=this.pos(p.r,p.i);let best=1e9;
+        for(const k in CH_DIR){const dd=CH_DIR[k],nr=e.r+dd[0],ni=e.i+dd[1];if(!this.ok(nr,ni))continue;const q=this.pos(nr,ni),s=(q[0]-tp[0])**2+(q[1]-tp[1])**2;if(s<best){best=s;d=dd;}}}
+      else{d=Math.random()<.5?CH_DIR.DL:CH_DIR.DR;if(e.type==='snake'&&e.r===5)e.hatched=true;}
+      if(!d)continue;e.fr=e.r;e.fi=e.i;e.r+=d[0];e.i+=d[1];e.t=0;
+    }
+    g.en=g.en.filter(e=>!e.gone);
+    if(p.fall)return;
+    const pp=this.epos(p);
+    for(const e of g.en){if(e.drop>.3||e.fall)continue;const q=this.epos(e);
+      if(Math.hypot(q[0]-pp[0],q[1]-pp[1])<18){
+        if(e.type==='green'){e.gone=1;g.freeze=4;g.score+=100;A.tune([880,660,880]);g.msg='Всички замръзнаха!';g.msgT=1.2;}
+        else return this.lose(g,e.type==='snake'?'Змията те хвана!':'Слузът те удари!');}}
+    g.en=g.en.filter(e=>!e.gone);
+  },
+  cube(x,y,col){
+    c.fillStyle='#6b4a2e';c.beginPath();c.moveTo(x-CH_HW,y);c.lineTo(x,y+CH_HH);c.lineTo(x,y+CH_HH+CH_D);c.lineTo(x-CH_HW,y+CH_D);c.closePath();c.fill();
+    c.fillStyle='#4a3220';c.beginPath();c.moveTo(x,y+CH_HH);c.lineTo(x+CH_HW,y);c.lineTo(x+CH_HW,y+CH_D);c.lineTo(x,y+CH_HH+CH_D);c.closePath();c.fill();
+    c.fillStyle='rgba(0,0,0,.18)';c.fillRect(x-CH_HW+6,y+10,4,4);c.fillRect(x+8,y+14,4,4);c.fillRect(x-10,y+20,4,4);
+    c.fillStyle=col;c.beginPath();c.moveTo(x,y-CH_HH);c.lineTo(x+CH_HW,y);c.lineTo(x,y+CH_HH);c.lineTo(x-CH_HW,y);c.closePath();c.fill();
+    c.fillStyle='rgba(255,255,255,.25)';c.beginPath();c.moveTo(x,y-CH_HH);c.lineTo(x+CH_HW,y);c.lineTo(x+CH_HW-5,y);c.lineTo(x,y-CH_HH+3);c.lineTo(x-CH_HW+5,y);c.lineTo(x-CH_HW,y);c.closePath();c.fill();
+    c.strokeStyle='#000';c.lineWidth=1;c.beginPath();c.moveTo(x,y-CH_HH);c.lineTo(x+CH_HW,y);c.lineTo(x+CH_HW,y+CH_D);c.lineTo(x,y+CH_HH+CH_D);c.lineTo(x-CH_HW,y+CH_D);c.lineTo(x-CH_HW,y);c.closePath();c.stroke();},
+  draw(g){
+    A.bg('#141a2e');c.fillStyle='#c9d6ff';for(const s of g.stars)c.fillRect(s[0],s[1],2,2);
+    for(let r=0;r<7;r++)for(let i=0;i<=r;i++){const q=this.pos(r,i);this.cube(q[0],q[1],g.pal[g.top[r][i]]);}
+    const ents=g.en.map(e=>({e,q:this.epos(e)}));const pq=this.epos(g.p);
+    const all=ents.concat([{e:g.p,q:pq,me:1}]).sort((a,b)=>a.q[1]-b.q[1]);
+    for(const o of all){const [x,y]=o.q;
+      if(o.me){if(g.pause>0&&Math.floor(g.t*10)%2)continue;
+        A.block(x-9,y-12,18,'#ff8f1f');c.fillStyle='#fff';c.fillRect(x-6,y-8,5,5);c.fillRect(x+1,y-8,5,5);c.fillStyle='#000';c.fillRect(x-4,y-6,2,3);c.fillRect(x+3,y-6,2,3);
+        c.fillStyle='#7a3b00';c.fillRect(x-3,y+1,6,3);c.fillStyle='#ff8f1f';c.fillRect(x-8,y+6,5,4);c.fillRect(x+3,y+6,5,4);}
+      else{const e=o.e,col=e.type==='green'?'#5ee05a':e.type==='snake'?(e.hatched?'#a63fd6':'#c48be0'):'#e8433a';
+        if(e.type==='snake'&&e.hatched){A.block(x-8,y-14,16,col,20);c.fillStyle='#fff';c.fillRect(x-6,y-11,4,4);c.fillRect(x+2,y-11,4,4);c.fillStyle='#000';c.fillRect(x-5,y-10,2,2);c.fillRect(x+3,y-10,2,2);c.fillStyle='#ff4d6d';c.fillRect(x-1,y-2,2,4);}
+        else{A.block(x-7,y-6,14,col);c.fillStyle='rgba(255,255,255,.5)';c.fillRect(x-4,y-3,4,3);
+          if(g.freeze>0&&e.type!=='green'){c.fillStyle='rgba(160,220,255,.5)';c.fillRect(x-8,y-7,16,16);}}}}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,16,16,'#f55');A.txt('Ниво '+g.lv,240,16,16,'#ffd54f','center');
+    A.txt('Цел:',392,16,14,'#fff');const tx=452,ty=16;c.fillStyle=g.pal[g.need];c.beginPath();c.moveTo(tx,ty-8);c.lineTo(tx+14,ty);c.lineTo(tx,ty+8);c.lineTo(tx-14,ty);c.closePath();c.fill();c.strokeStyle='#000';c.stroke();
+    A.txt('↖←  ↑↗',12,330,13,'#b9c6d6');A.txt('↙↓  →↘',12,348,13,'#b9c6d6');
+    if(g.freeze>0)A.txt('❄ '+Math.ceil(g.freeze),468,348,14,'#9fe3ff','right');
+    if(g.msgT>0)A.txt(g.msg,240,40,g.msg.length>30?13:18,'#fff','center');}
+});
+</script>
+</body>
+</html>

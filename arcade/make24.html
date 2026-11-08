@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Направи 24</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎴 Направи 24</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 243. Направи 24
+const M24={
+  gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a||1;},
+  R(n,d){if(d<0){n=-n;d=-d;}const k=M24.gcd(n,d);return {n:n/k,d:d/k};},
+  op(a,o,b){if(o==='+')return M24.R(a.n*b.d+b.n*a.d,a.d*b.d);if(o==='-')return M24.R(a.n*b.d-b.n*a.d,a.d*b.d);
+    if(o==='×')return M24.R(a.n*b.n,a.d*b.d);if(b.n===0)return null;return M24.R(a.n*b.d,a.d*b.n);},
+  str(v){return v.d===1?''+v.n:v.n+'/'+v.d;},
+  solve(list){if(list.length===1)return list[0].v.n===24&&list[0].v.d===1?list[0].e:null;
+    for(let i=0;i<list.length;i++)for(let j=0;j<list.length;j++){if(i===j)continue;const rest=list.filter((x,k)=>k!==i&&k!==j);
+      for(const o of ['+','-','×','÷']){if((o==='+'||o==='×')&&j<i)continue;const v=M24.op(list[i].v,o,list[j].v);if(!v)continue;
+        const r=M24.solve(rest.concat([{v,e:'('+list[i].e+o+list[j].e+')'}]));if(r)return r;}}
+    return null;}
+};
+A.add({id:'make24',cat:'brain',icon:'🎴',name:'Направи 24',desc:'Събирай, изваждай, умножавай и дели 4 числа, за да получиш 24',help:'Избери число, после действие (+ − × ÷), после второ число — двете се сливат в едно. Използвай всичките 4 числа и получи 24! Клавиши: 1-4 = число, + - * / = действие, Backspace = назад, R = отначало, P = пропусни (−10 сек).',
+  start(g){g.time=120;g.solved=0;g.msg='';g.msgT=0;this.next(g);},
+  next(g){const hi=g.solved<4?9:13;let nums,sol;
+    do{nums=[0,0,0,0].map(()=>A.ri(1,hi));sol=M24.solve(nums.map(n=>({v:M24.R(n,1),e:''+n})));}while(!sol);
+    g.sol=sol.slice(1,-1);g.cards=nums.map(n=>({v:M24.R(n,1)}));g.init=g.cards.slice();g.hist=[];g.sel=null;g.op=null;g.wait=0;g.bad=0;},
+  left(g){return g.cards.filter(x=>x).length;},
+  pickCard(g,i){if(g.wait>0||!g.cards[i])return;
+    if(g.sel===null||g.op===null||g.sel===i){g.sel=g.sel===i&&g.op===null?null:i;g.op=null;A.beep(600,.03);return;}
+    const v=M24.op(g.cards[g.sel].v,g.op,g.cards[i].v);
+    if(!v){this.say(g,'Не може да делиш на 0!');A.beep(150,.2,'sawtooth');return;}
+    g.hist.push(g.cards.slice());g.cards[i]={v};g.cards[g.sel]=null;g.sel=i;g.op=null;A.beep(760,.05,'triangle');
+    if(this.left(g)===1){
+      if(v.n===24&&v.d===1){g.solved++;g.score++;g.time+=5;g.wait=.8;g.good=1;this.say(g,'Браво! 24! +5 сек');A.tune([523,659,784,1046]);}
+      else{g.wait=1;g.bad=1;this.say(g,'Получи '+M24.str(v)+', не 24. Опитай пак!');A.beep(180,.3,'sawtooth');}}},
+  pickOp(g,o){if(g.wait>0)return;if(g.sel===null){this.say(g,'Първо избери число');return;}g.op=o;A.beep(900,.03);},
+  undo(g){if(g.wait>0||!g.hist.length)return;g.cards=g.hist.pop();g.sel=null;g.op=null;A.beep(300,.05);},
+  reset(g){if(g.wait>0)return;g.cards=g.init.slice();g.hist=[];g.sel=null;g.op=null;},
+  skip(g){if(g.wait>0)return;g.time-=10;this.say(g,'Решение: '+g.sol+' = 24');g.msgT=3;this.next(g);},
+  say(g,m){g.msg=m;g.msgT=2;},
+  key(g,k,ch){const m=/^(Digit|Numpad)([1-4])$/.exec(k);if(m)return this.pickCard(g,+m[2]-1);
+    const o={'+':'+','-':'-','*':'×','x':'×','X':'×','/':'÷',':':'÷'}[ch];if(o)return this.pickOp(g,o);
+    if(k==='Backspace')this.undo(g);else if(k==='KeyR')this.reset(g);else if(k==='KeyP')this.skip(g);},
+  click(g,mx,my){
+    if(my>=78&&my<=178){const i=Math.floor((mx-24)/112);if(i>=0&&i<4&&mx-24-i*112<=96)this.pickCard(g,i);}
+    else if(my>=200&&my<=256){const i=Math.floor((mx-24)/112);if(i>=0&&i<4&&mx-24-i*112<=96)this.pickOp(g,['+','-','×','÷'][i]);}
+    else if(my>=276&&my<=320){if(mx>=24&&mx<150)this.undo(g);else if(mx>=177&&mx<303)this.reset(g);else if(mx>=330&&mx<456)this.skip(g);}},
+  update(g,dt){if(g.msgT>0)g.msgT-=dt;
+    if(g.wait>0){g.wait-=dt;if(g.wait<=0){if(g.bad){g.bad=0;g.cards=g.init.slice();g.hist=[];g.sel=null;g.op=null;}else{g.good=0;this.next(g);}}}
+    g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Направи 24 '+g.solved+' пъти');}},
+  draw(g){A.bg('#1f3a2a');
+    for(let x=0;x<480;x+=40)for(let y=0;y<360;y+=40)if((x+y)%80===0){c.fillStyle='#22402e';c.fillRect(x,y,40,40);}
+    A.txt('⏱ '+Math.ceil(g.time),10,16,16,g.time<15?'#ff6b6b':'#fff');A.txt('Направи 24!',240,18,22,'#ffd54f','center');A.txt('Решени: '+g.solved,470,16,14,'#fff','right');
+    A.txt('Използвай всичките 4 числа',240,48,13,'#b9d6c2','center');
+    for(let i=0;i<4;i++){const x=24+i*112,y=78,cd=g.cards[i];
+      if(!cd){c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x,y,96,100);continue;}
+      const sel=g.sel===i,last=this.left(g)===1;
+      A.block(x,y-(sel?6:0),96,last&&g.good?'#5aa13a':last&&g.bad?'#d84a3a':sel?'#c9a227':'#8a8a8a',100);
+      c.fillStyle='rgba(0,0,0,.15)';c.fillRect(x+10,y+12-(sel?6:0),8,8);c.fillRect(x+74,y+76-(sel?6:0),8,8);
+      const s=M24.str(cd.v);A.txt(s,x+48,y+50-(sel?6:0),s.length>4?20:s.length>2?28:40,'#fff','center');
+      A.txt(''+(i+1),x+8,y+90-(sel?6:0),11,'rgba(255,255,255,.6)');}
+    ['+','-','×','÷'].forEach((o,i)=>{const x=24+i*112,on=g.op===o;A.block(x,200,96,on?'#ffd23f':'#3b7bd6',56);A.txt(o==='-'?'−':o,x+48,228,30,on?'#000':'#fff','center');});
+    A.block(24,276,126,'#5a6b8c',44);A.txt('↶ Назад',87,298,15,'#fff','center');
+    A.block(177,276,126,'#5a6b8c',44);A.txt('⟲ Отначало',240,298,15,'#fff','center');
+    A.block(330,276,126,'#7a5233',44);A.txt('⏭ Пропусни',393,298,15,'#fff','center');
+    if(g.msgT>0)A.txt(g.msg,240,342,g.msg.length>34?12:15,'#fff','center');
+    else A.txt(g.sel===null?'Избери число':g.op===null?'Избери действие':'Избери второ число',240,342,14,'#b9d6c2','center');}
+});
+</script>
+</body>
+</html>
