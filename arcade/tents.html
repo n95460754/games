@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Палатки</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛺ Палатки</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 240. Палатки
+A.add({id:'tents',cat:'puzzle',icon:'⛺',name:'Палатки',desc:'Сложи по една палатка до всяко дърво според числата',help:'Клик или стрелки + Space: палатка ⛺ → трева ✕ → празно. До всяко дърво — една палатка (ляво, дясно, горе или долу). Палатките не се допират, дори по диагонал. Числата = палатки в реда/колоната.',
+  start(g){g.time=150;g.solved=0;g.cur=[0,0];this.make(g);},
+  make(g){const n=g.solved<2?6:g.solved<5?7:8;g.n=n;g.cell=Math.floor(300/n);g.ox=Math.floor((480-n*g.cell)/2)+14;g.oy=40;
+    let ok=false;
+    while(!ok){g.tree=[];g.sol=[];g.st=[];for(let i=0;i<n;i++){g.tree.push(Array(n).fill(0));g.sol.push(Array(n).fill(0));g.st.push(Array(n).fill(0));}
+      const want=Math.round(n*n/5);let cnt=0,tries=0;
+      while(cnt<want&&tries++<500){const x=A.ri(0,n-1),y=A.ri(0,n-1);
+        if(g.tree[y][x]||g.sol[y][x]||this.near(g.sol,n,x,y))continue;
+        const d=A.shuffle([[1,0],[-1,0],[0,1],[0,-1]]).map(v=>[x+v[0],y+v[1]]).find(p=>p[0]>=0&&p[1]>=0&&p[0]<n&&p[1]<n&&!g.tree[p[1]][p[0]]&&!g.sol[p[1]][p[0]]);
+        if(!d)continue;g.sol[y][x]=1;g.tree[d[1]][d[0]]=1;cnt++;}
+      ok=cnt>=want-1;}
+    g.rows=g.sol.map(r=>r.reduce((a,b)=>a+b,0));g.cols=g.sol[0].map((_,x)=>g.sol.reduce((a,r)=>a+r[x],0));g.done=0;},
+  near(m,n,x,y){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const a=x+dx,b=y+dy;if(a>=0&&b>=0&&a<n&&b<n&&m[b][a]===1)return true;}return false;},
+  key(g,k){const m={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(m){g.cur=[A.clamp(g.cur[0]+m[0],0,g.n-1),A.clamp(g.cur[1]+m[1],0,g.n-1)];g.kb=true;}
+    else if(k==='Space'||k==='Enter')this.tap(g,g.cur[0],g.cur[1]);
+    else if(k==='KeyX')this.tap(g,g.cur[0],g.cur[1],2);},
+  click(g,mx,my){const x=Math.floor((mx-g.ox)/g.cell),y=Math.floor((my-g.oy)/g.cell);if(x>=0&&y>=0&&x<g.n&&y<g.n){g.cur=[x,y];g.kb=false;this.tap(g,x,y);}},
+  tap(g,x,y,force){if(g.done||g.tree[y][x])return;g.st[y][x]=force!==undefined?(g.st[y][x]===force?0:force):(g.st[y][x]+1)%3;
+    A.beep(g.st[y][x]===1?520:g.st[y][x]===2?380:260,.04,'triangle');if(this.check(g))this.win(g);},
+  check(g){const n=g.n,t=g.st.map(r=>r.map(v=>v===1?1:0));
+    for(let y=0;y<n;y++)if(t[y].reduce((a,b)=>a+b,0)!==g.rows[y])return false;
+    for(let x=0;x<n;x++)if(t.reduce((a,r)=>a+r[x],0)!==g.cols[x])return false;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(t[y][x]&&this.near(t,n,x,y))return false;
+    // всяко дърво получава своя палатка (двуделно съчетаване)
+    const trees=[],own={};for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(g.tree[y][x])trees.push([x,y]);
+    const tryT=(i,seen)=>{const[x,y]=trees[i];for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const a=x+dx,b=y+dy,k=a+','+b;
+      if(a<0||b<0||a>=n||b>=n||!t[b][a]||seen[k])continue;seen[k]=1;if(own[k]===undefined||tryT(own[k],seen)){own[k]=i;return true;}}return false;};
+    for(let i=0;i<trees.length;i++)if(!tryT(i,{}))return false;
+    return true;},
+  win(g){g.done=1.4;g.solved++;const p=g.n===6?3:g.n===7?5:8;g.score+=p;g.time+=35;A.tune([523,659,784,1046]);g.msg='Решено! +'+p;},
+  update(g,dt){if(g.done){g.done-=dt;if(g.done<=0)this.make(g);return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  tentAt(x,y,s){c.fillStyle='#000';c.beginPath();c.moveTo(x+s/2,y+s*.12);c.lineTo(x+s*.9,y+s*.86);c.lineTo(x+s*.1,y+s*.86);c.closePath();c.fill();
+    c.fillStyle='#e8673a';c.beginPath();c.moveTo(x+s/2,y+s*.2);c.lineTo(x+s*.82,y+s*.8);c.lineTo(x+s*.18,y+s*.8);c.closePath();c.fill();
+    c.fillStyle='#ffb070';c.beginPath();c.moveTo(x+s/2,y+s*.2);c.lineTo(x+s*.5,y+s*.8);c.lineTo(x+s*.18,y+s*.8);c.closePath();c.fill();
+    c.fillStyle='#3a1a0a';c.fillRect(x+s*.44,y+s*.5,s*.12,s*.3);},
+  treeAt(x,y,s){const u=s/8;c.fillStyle='#000';c.fillRect(x+3*u-1,y+5*u,2*u+2,3*u);c.fillStyle='#7a5233';c.fillRect(x+3*u,y+5*u,2*u,2.6*u);
+    A.block(x+1*u,y+1.6*u,6*u,'#2f7a22',3.6*u);A.block(x+2*u,y+.4*u,4*u,'#3f9a2c',2*u);},
+  draw(g){A.bg('#1d2b3a');const n=g.n,s=g.cell,ox=g.ox,oy=g.oy,t=g.st.map(r=>r.map(v=>v===1?1:0));
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const px=ox+x*s,py=oy+y*s;A.block(px,py,s,(x+y)%2?'#5aa13a':'#62ab40');
+      if(g.tree[y][x])this.treeAt(px+2,py+2,s-4);
+      else if(g.st[y][x]===1){const bad=this.near(t,n,x,y);if(bad){c.fillStyle='rgba(255,40,40,.45)';c.fillRect(px,py,s,s);}this.tentAt(px+3,py+3,s-6);}
+      else if(g.st[y][x]===2){c.fillStyle='rgba(0,0,0,.35)';c.fillRect(px+s*.3,py+s*.45,s*.4,s*.1);c.fillRect(px+s*.45,py+s*.3,s*.1,s*.4);}}
+    c.strokeStyle='#000';c.lineWidth=2;c.strokeRect(ox,oy,n*s,n*s);
+    for(let y=0;y<n;y++){const k=t[y].reduce((a,b)=>a+b,0);A.txt(''+g.rows[y],ox-14,oy+y*s+s/2,18,k===g.rows[y]?'#7dff7a':k>g.rows[y]?'#ff6b6b':'#fff','center');}
+    for(let x=0;x<n;x++){const k=t.reduce((a,r)=>a+r[x],0);A.txt(''+g.cols[x],ox+x*s+s/2,oy-14,18,k===g.cols[x]?'#7dff7a':k>g.cols[x]?'#ff6b6b':'#fff','center');}
+    if(g.kb){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(ox+g.cur[0]*s+2,oy+g.cur[1]*s+2,s-4,s-4);}
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);A.txt('Пъзели: '+g.solved,10,34,13,'#b9c6d6');A.txt(n+'×'+n,470,14,14,'#ffd54f','right');
+    if(g.done){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,150,480,60);A.txt(g.msg,240,180,26,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Раздели слузите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟩 Раздели слузите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 239. Раздели слузите
+A.add({id:'slimesplit',cat:'action',icon:'🟩',name:'Раздели слузите',desc:'Стреляй нагоре и цепи подскачащите слузи на по-малки',help:'← → / A D — движение (или води с мишката / пръста). Space / клик — изстреляй въже нагоре. Голямата слуз се цепи на две по-малки, най-малките изчезват. Не се оставяй да те ударят! 3 живота.',
+  HS:[0,7,11,16,23],JH:[0,80,130,180,225],FL:330,GR:520,
+  start(g){g.x=240;g.lives=3;g.inv=0;g.rope=null;g.lvl=0;g.parts=[];g.tx=null;this.level(g);},
+  level(g){g.lvl++;g.slimes=[];const n=Math.min(4,1+Math.floor(g.lvl/2)),big=Math.min(4,3+Math.floor((g.lvl-1)/2));
+    for(let i=0;i<n;i++){const s=i===0?big:A.ri(Math.max(1,big-2),big);this.spawn(g,n===1?240:60+i*360/(n-1),120,s,i%2?-1:1);}
+    g.msg={s:'Ниво '+g.lvl,t:1.3};g.wait=1;},
+  spawn(g,x,y,s,dir){g.slimes.push({x:A.clamp(x,30,450),y,s,vx:dir*(55+g.lvl*4),vy:-120});},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.shoot(g);},
+  click(g,mx){g.tx=mx;this.shoot(g);},
+  move(g,mx){if(A.mouse.down||!g.kb)g.tx=mx;},
+  shoot(g){if(g.rope||g.wait>0)return;g.rope={x:g.x,y:this.FL-30};A.beep(600,.04,'square');},
+  update(g,dt){
+    if(g.msg){g.msg.t-=dt;if(g.msg.t<=0)g.msg=null;}
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=500*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+    const L=A.keys.ArrowLeft||A.keys.KeyA,R=A.keys.ArrowRight||A.keys.KeyD;
+    if(L||R){g.kb=true;g.tx=null;g.x+=(R?1:-1)*210*dt;}
+    else if(g.tx!==null){const d=g.tx-g.x;g.x+=Math.sign(d)*Math.min(Math.abs(d),240*dt);}
+    if(A.mouse.down)g.kb=false;
+    g.x=A.clamp(g.x,12,468);
+    if(g.inv>0)g.inv-=dt;
+    if(g.wait>0){g.wait-=dt;return;}
+    if(g.rope){g.rope.y-=520*dt;if(g.rope.y<=0)g.rope=null;}
+    const FL=this.FL;
+    for(const s of g.slimes){const h=this.HS[s.s];
+      s.vy+=this.GR*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
+      if(s.x-h<0){s.x=h;s.vx=Math.abs(s.vx);}if(s.x+h>480){s.x=480-h;s.vx=-Math.abs(s.vx);}
+      if(s.y+h>FL){s.y=FL-h;s.vy=-Math.sqrt(2*this.GR*this.JH[s.s]);A.beep(120+s.s*30,.04,'triangle',.02);}
+      if(s.y-h<0){s.y=h;s.vy=Math.abs(s.vy);}
+      if(g.rope&&Math.abs(s.x-g.rope.x)<h+2&&s.y+h>g.rope.y){this.pop(g,s);g.rope=null;}
+      if(!s.dead&&g.inv<=0&&Math.abs(s.x-g.x)<h+9&&s.y+h>FL-28&&s.y-h<FL){g.lives--;g.inv=2;A.beep(140,.3,'sawtooth',.06);
+        if(g.lives<=0)return A.over(g,'Слузите те смачкаха!');}
+    }
+    g.slimes=g.slimes.filter(s=>!s.dead);
+    if(!g.slimes.length){g.score+=10*g.lvl;A.tune([523,659,784,1046]);this.level(g);}
+  },
+  pop(g,s){s.dead=true;g.score+=5-s.s;A.beep(300+s.s*80,.08,'square');
+    for(let i=0;i<8;i++)g.parts.push({x:s.x,y:s.y,vx:A.rnd(-160,160),vy:A.rnd(-220,-40),t:.7,s:A.ri(3,6)});
+    if(s.s>1)for(const d of[-1,1])g.slimes.push({x:s.x+d*this.HS[s.s-1],y:s.y,s:s.s-1,vx:d*(70+g.lvl*4),vy:-260});},
+  draw(g){
+    A.bg(C.sky);c.fillStyle='#8cc6f0';c.fillRect(0,0,480,120);
+    for(let i=0;i<4;i++){const x=(i*140+g.t*8)%620-80;c.fillStyle='#fff';c.fillRect(x,30+i%2*30,60,14);c.fillRect(x+14,22+i%2*30,30,10);}
+    for(let x=0;x<480;x+=30){A.block(x,this.FL,30,C.grass,8);A.block(x,this.FL+8,30,C.dirt,22);}
+    if(g.rope){c.fillStyle='#e8e8e8';for(let y=g.rope.y;y<this.FL-26;y+=8)c.fillRect(g.rope.x-1+(Math.floor(y/8)%2?1:-1),y,3,6);
+      c.fillStyle='#7d7d7d';c.fillRect(g.rope.x-4,g.rope.y-6,8,6);c.fillStyle='#d8d8d8';c.fillRect(g.rope.x-2,g.rope.y-10,4,4);}
+    for(const s of g.slimes){const h=this.HS[s.s],sq=Math.max(0,(s.y+h-(this.FL-6))/6)*h*.3;
+      c.fillStyle='rgba(60,170,60,.55)';c.fillRect(s.x-h-sq,s.y-h+sq,2*h+2*sq,2*h-sq);
+      A.block(s.x-h*.65,s.y-h*.65+sq,h*1.3,'#5fd35a');
+      const e=Math.max(2,h*.28);c.fillStyle='#173d17';c.fillRect(s.x-h*.55,s.y-h*.3+sq,e,e);c.fillRect(s.x+h*.55-e,s.y-h*.3+sq,e,e);c.fillRect(s.x-e*.5,s.y+h*.3+sq,e,e*.6);}
+    g.parts.forEach(p=>A.block(p.x,p.y,p.s,'#5fd35a'));
+    if(!(g.inv>0&&Math.floor(g.t*10)%2)){const x=g.x,y=this.FL;
+      A.block(x-6,y-28,12,'#c68a5a');c.fillStyle='#4a2c12';c.fillRect(x-6,y-28,12,4);c.fillStyle='#fff';c.fillRect(x-4,y-22,3,2);c.fillRect(x+1,y-22,3,2);
+      A.block(x-7,y-16,14,'#2aa6b4',9);A.block(x-6,y-7,12,'#3b3fa8',7);}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');A.txt('Ниво '+g.lvl,470,14,14,'#ffd54f','right');
+    if(g.msg)A.txt(g.msg.s,240,170,26,'#ffd54f','center');
+  }
+});
+</script>
+</body>
+</html>

@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**247 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 237 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**250 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 240 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-247-5aa13a)
+![Games](https://img.shields.io/badge/games-250-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 237 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 240 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -382,8 +382,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 235 | 🔮 Ore Pop (Пукни рудите) | [`orepop.html`](arcade/orepop.html) | Shoot ores and pop groups of 3 matching blocks |
 | 236 | 🧱 Block Blast (Блоков взрив) | [`blockblast.html`](arcade/blockblast.html) | Fit shapes on an 8×8 board and clear full rows and columns |
 | 237 | 🪓 Prime Factors (Прости множители) | [`factors.html`](arcade/factors.html) | Chop numbers into prime factors before time runs out |
+| 238 | ⛏️ Pickaxe Throw (Хвърли кирката) | [`axethrow.html`](arcade/axethrow.html) | Stick pickaxes into a spinning log without hitting the others |
+| 239 | 🟩 Slime Split (Раздели слузите) | [`slimesplit.html`](arcade/slimesplit.html) | Shoot a rope up and split bouncing slimes into smaller ones |
+| 240 | ⛺ Tents (Палатки) | [`tents.html`](arcade/tents.html) | Place one tent next to every tree using the row and column numbers |
 
-All 237 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 240 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -411,8 +414,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–236
-│   └── factors.html        # 237. Prime Factors
+│   ├── ...                 # games 51–239
+│   └── tents.html          # 240. Tents
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
