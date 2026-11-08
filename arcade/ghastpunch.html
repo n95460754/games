@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отбий огнената топка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔥 Отбий огнената топка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 286. Отбий огнената топка
+A.add({id:'ghastpunch',cat:'action',icon:'🔥',name:'Отбий огнената топка',desc:'Гастите стрелят огнени топки — удари ги обратно с меча и ги свали',
+  help:'Стрелки/A,D = движение, Space = замах с меча. С мишка/пръст: Стив следва показалеца, клик/докосване = замах. Удари огнената топка, когато е близо, и тя полита обратно към гаста! Отбита топка = точки, всеки гаст има 2 живота. Можеш и да избягаш от топката. 3 сърца.',
+  start(g){g.px=240;g.lives=3;g.gh=[];g.fb=[];g.parts=[];g.sw=0;g.cd=0;g.inv=0;g.combo=0;g.useM=0;g.msg='';g.mt=0;this.spawn(g);},
+  spawn(g){const x=A.rnd(60,420);g.gh.push({x,y:-40,ty:A.rnd(50,130),vx:A.pick([-1,1])*A.rnd(30,60),hp:2,cd:A.rnd(1.5,3),hurt:0,open:0});},
+  swing(g){if(g.cd>0)return;g.sw=.2;g.cd=.38;A.beep(420,.06,'sawtooth',.03);},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.swing(g);},
+  move(g,x){g.useM=1;},
+  click(g,x){g.useM=1;this.swing(g);},
+  boom(g,x,y,col,n){for(let i=0;i<(n||10);i++)g.parts.push({x,y,vx:A.rnd(-90,90),vy:A.rnd(-120,40),t:A.rnd(.3,.7),col:A.pick(col||['#ff6a00','#ffd23f','#ff2e00'])});},
+  update(g,dt){const K=A.keys;g.cd=Math.max(0,g.cd-dt);g.sw=Math.max(0,g.sw-dt);g.inv=Math.max(0,g.inv-dt);if(g.mt>0)g.mt-=dt;
+    let dir=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0);
+    if(dir){g.useM=0;g.px+=dir*230*dt;}else if(g.useM){const d=A.mouse.x-g.px;g.px+=A.clamp(d,-260*dt,260*dt);}
+    g.px=A.clamp(g.px,16,464);
+    const want=Math.min(4,1+Math.floor(g.score/6));if(g.gh.length<want)this.spawn(g);
+    const fs=100+Math.min(120,g.score*4);
+    for(const h of g.gh){if(h.y<h.ty)h.y+=60*dt;h.x+=h.vx*dt;if(h.x<30||h.x>450){h.vx*=-1;h.x=A.clamp(h.x,30,450);}
+      h.hurt=Math.max(0,h.hurt-dt);h.open=Math.max(0,h.open-dt);h.cd-=dt;
+      if(h.cd<=0&&h.y>=h.ty-2){h.cd=Math.max(1.6,A.rnd(2.6,4.4)-g.score*.04);h.open=.5;
+        const dx=g.px-h.x,dy=312-h.y,L=Math.hypot(dx,dy);g.fb.push({x:h.x,y:h.y+18,vx:dx/L*fs,vy:dy/L*fs,back:0,src:h,r:7});A.beep(160,.15,'sawtooth',.04);}}
+    for(const f of g.fb){f.x+=f.vx*dt;f.y+=f.vy*dt;
+      if(!f.back&&g.sw>0&&Math.hypot(f.x-g.px,f.y-300)<44){
+        let t=g.gh.includes(f.src)?f.src:g.gh[0];const sp=Math.hypot(f.vx,f.vy)*1.5+60;
+        if(t){const dx=t.x-f.x,dy=t.y-f.y,L=Math.hypot(dx,dy);f.vx=dx/L*sp;f.vy=dy/L*sp;f.tgt=t;}else{f.vx=0;f.vy=-sp;}
+        f.back=1;A.beep(880,.08,'square',.05);this.boom(g,f.x,f.y,['#fff','#ffd23f'],6);}
+      if(f.back){if(f.tgt&&g.gh.includes(f.tgt)){const t=f.tgt,dx=t.x-f.x,dy=t.y-f.y,L=Math.hypot(dx,dy)||1,sp=Math.hypot(f.vx,f.vy);f.vx+=(dx/L*sp-f.vx)*Math.min(1,dt*4);f.vy+=(dy/L*sp-f.vy)*Math.min(1,dt*4);}
+        for(const h of g.gh)if(Math.hypot(f.x-h.x,f.y-h.y)<26){f.dead=1;h.hp--;h.hurt=.3;g.combo++;g.score+=1+Math.min(4,g.combo-1);this.boom(g,f.x,f.y);A.beep(300,.12,'triangle',.05);
+          if(h.hp<=0){h.dead=1;g.score+=2;this.boom(g,h.x,h.y,['#fff','#ddd','#aaa'],20);A.tune([523,659,880]);g.msg='+'+(3+Math.min(4,g.combo-1))+' Гастът падна!';g.mt=1;}break;}
+        if(f.y<-20||f.x<-20||f.x>500)f.dead=1;}
+      else if(f.y>=316){f.dead=1;this.boom(g,f.x,322,null,8);
+        if(Math.abs(f.x-g.px)<20&&g.inv<=0){g.lives--;g.inv=1;g.combo=0;A.beep(120,.3,'sawtooth',.06);if(g.lives<=0)return A.over(g,'Изгоря! Отбити топки: '+g.score);}}}
+    g.fb=g.fb.filter(f=>!f.dead);g.gh=g.gh.filter(h=>!h.dead);
+    g.parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt;q.t-=dt;});g.parts=g.parts.filter(q=>q.t>0);},
+  draw(g){A.bg('#2a0d0d');
+    for(let i=0;i<8;i++){c.fillStyle='rgba(255,90,0,'+(.04+.02*(i%3))+')';c.fillRect(i*60,0,60,330);}
+    for(let x=0;x<24;x++){A.block(x*20,330,20,(x%3)?'#6b1f1f':'#7d2626',30);}
+    c.fillStyle='#ff6a00';c.fillRect(0,354,480,6);
+    for(const h of g.gh){const s=36,x=h.x-s/2,y=h.y-s/2;
+      c.fillStyle='#ddd';for(let i=0;i<5;i++)c.fillRect(x+3+i*7,y+s,4,8+((i+Math.floor(g.t*4))%3)*4);
+      A.block(x,y,s,h.hurt>0?'#ff8a80':'#f2f2f2');c.fillStyle='#333';c.fillRect(x+7,y+10,7,h.open>0?3:6);c.fillRect(x+22,y+10,7,h.open>0?3:6);
+      c.fillStyle=h.open>0?'#7a1010':'#555';c.fillRect(x+12,y+22,12,h.open>0?9:3);
+      for(let i=0;i<2;i++){c.fillStyle=i<h.hp?'#e53935':'#444';c.fillRect(x+10+i*10,y-8,8,4);}}
+    for(const f of g.fb){A.block(f.x-7,f.y-7,14,f.back?'#ffd23f':'#ff6a00');c.fillStyle='#ffef8a';c.fillRect(f.x-2,f.y-2,4,4);}
+    const x=g.px,bl=g.inv>0&&Math.floor(g.t*12)%2;
+    if(!bl){A.block(x-8,314,16,'#2e5fb3',16);A.block(x-6,300,12,'#00a4a6',14);A.block(x-7,286,14,'#b97a56',14);c.fillStyle='#3b2410';c.fillRect(x-7,286,14,4);
+      c.fillStyle='#fff';c.fillRect(x-4,292,3,3);c.fillRect(x+1,292,3,3);
+      c.save();c.translate(x+10,304);c.rotate(g.sw>0?-1.9+(.2-g.sw)*12:-.5);c.fillStyle='#5a3a1a';c.fillRect(-2,-4,4,8);c.fillStyle='#4de8f5';c.fillRect(-2,-26,4,22);c.fillStyle='#8a5a2a';c.fillRect(-6,-6,12,3);c.restore();
+      if(g.sw>0){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=4;c.beginPath();c.arc(x,300,40,Math.PI*1.05,Math.PI*1.95);c.stroke();}}
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x-2,q.y-2,4,4);});
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,16,'#f55');if(g.combo>1)A.txt('Комбо x'+g.combo,470,14,14,'#ffd54f','right');
+    if(g.mt>0)A.txt(g.msg,240,170,20,'#ffd54f','center');
+    if(g.t<4)A.txt('Удари огнената топка с меча, когато е близо!',240,200,14,'#fff','center');}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Въртележка от блокове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔄 Въртележка от блокове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 287. Въртележка от блокове
+const LO_COLS=['#d84a3a','#ffd23f','#5aa13a','#3b7bd6','#8e24aa'];
+A.add({id:'loopover',cat:'puzzle',icon:'🔄',name:'Въртележка от блокове',desc:'Плъзгай цели редове и колони, докато всеки ред стане от един цвят',
+  help:'Плъзни с мишката/пръста ред наляво-надясно или колона нагоре-надолу — блоковете излизат от единия край и влизат от другия. Клавиатура: стрелки = избери блок, A/D = мести реда, W/S = мести колоната. Направи всеки ред от един цвят (виж образеца)! По-малко ходове = повече точки, решен пъзел = +20 секунди.',
+  start(g){g.lvl=0;g.time=150;g.cx=0;g.cy=0;g.drag=null;g.anim=0;g.msg='';g.mt=0;this.next(g);},
+  next(g){g.lvl++;g.N=g.lvl<4?4:5;const N=g.N;g.S=N===4?64:54;g.bx=24;g.by=(360-N*g.S)/2+8;
+    g.b=[];for(let y=0;y<N;y++){g.b.push([]);for(let x=0;x<N;x++)g.b[y].push(y);}
+    const n=Math.min(22,2+g.lvl*2);let lastT=-1,lastI=-1;
+    do{for(let i=0;i<n;i++){let t,k;do{t=A.ri(0,1);k=A.ri(0,N-1);}while(t===lastT&&k===lastI);lastT=t;lastI=k;const d=A.pick([-1,1]);t?this.row(g,k,d,1):this.col(g,k,d,1);}}while(this.solved(g));
+    g.moves=0;g.par=n;g.cx=Math.min(g.cx,N-1);g.cy=Math.min(g.cy,N-1);},
+  row(g,r,d,q){const R=g.b[r];if(d>0)R.unshift(R.pop());else R.push(R.shift());if(!q)this.after(g,{t:0,k:r,d});},
+  col(g,cc,d,q){const N=g.N,v=g.b.map(r=>r[cc]);if(d>0)v.unshift(v.pop());else v.push(v.shift());for(let y=0;y<N;y++)g.b[y][cc]=v[y];if(!q)this.after(g,{t:1,k:cc,d});},
+  after(g,a){g.moves++;g.anim={...a,p:1};A.beep(500+a.k*60,.04,'square',.03);
+    if(this.solved(g)){const pts=10+g.lvl*2+Math.max(0,g.par-g.moves)*2;g.score+=pts;g.time+=20;g.msg='Готово! +'+pts;g.mt=1.4;A.tune([523,659,784,1046]);this.next(g);}},
+  solved(g){return g.b.every(r=>r.every(v=>v===r[0]))&&g.b.every((r,i)=>i===0||r[0]!==g.b[i-1][0]);},
+  cell(g,x,y){const cx=Math.floor((x-g.bx)/g.S),cy=Math.floor((y-g.by)/g.S);return cx>=0&&cy>=0&&cx<g.N&&cy<g.N?[cx,cy]:null;},
+  click(g,x,y){const p=this.cell(g,x,y);if(p){g.drag={x,y,cx:p[0],cy:p[1]};g.cx=p[0];g.cy=p[1];}},
+  release(g,x,y){const d=g.drag;g.drag=null;if(!d)return;const dx=x-d.x,dy=y-d.y;if(Math.max(Math.abs(dx),Math.abs(dy))<18)return;
+    if(Math.abs(dx)>Math.abs(dy)){const n=Math.max(1,Math.round(Math.abs(dx)/g.S));for(let i=0;i<n;i++)this.row(g,d.cy,Math.sign(dx));}
+    else{const n=Math.max(1,Math.round(Math.abs(dy)/g.S));for(let i=0;i<n;i++)this.col(g,d.cx,Math.sign(dy));}},
+  key(g,k){const N=g.N;
+    if(k==='ArrowLeft')g.cx=(g.cx+N-1)%N;else if(k==='ArrowRight')g.cx=(g.cx+1)%N;else if(k==='ArrowUp')g.cy=(g.cy+N-1)%N;else if(k==='ArrowDown')g.cy=(g.cy+1)%N;
+    else if(k==='KeyA')this.row(g,g.cy,-1);else if(k==='KeyD')this.row(g,g.cy,1);else if(k==='KeyW')this.col(g,g.cx,-1);else if(k==='KeyS')this.col(g,g.cx,1);},
+  repeat:true,
+  update(g,dt){g.time-=dt;if(g.mt>0)g.mt-=dt;if(g.anim)g.anim.p=Math.max(0,g.anim.p-dt*8);if(g.time<=0)A.over(g,'Времето изтече! Ниво '+g.lvl);},
+  draw(g){A.bg('#3a2a1c');for(let x=0;x<24;x++)for(let y=0;y<18;y++)if((x*7+y*3)%5===0){c.fillStyle='#43301f';c.fillRect(x*20,y*20,20,20);}
+    const N=g.N,S=g.S;c.fillStyle='#000';c.fillRect(g.bx-6,g.by-6,N*S+12,N*S+12);
+    c.save();c.beginPath();c.rect(g.bx,g.by,N*S,N*S);c.clip();
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){let ox=0,oy=0;const a=g.anim;
+      if(a&&a.p>0){if(a.t===0&&a.k===y)ox=-a.d*a.p*S;if(a.t===1&&a.k===x)oy=-a.d*a.p*S;}
+      const v=g.b[y][x],px=g.bx+x*S+ox,py=g.by+y*S+oy;A.block(px+2,py+2,S-4,LO_COLS[v]);
+      c.fillStyle='rgba(0,0,0,.18)';c.fillRect(px+S/2-6,py+S/2-6,12,12);}
+    c.restore();
+    c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=2;c.strokeRect(g.bx,g.by+g.cy*S,N*S,S);c.strokeRect(g.bx+g.cx*S,g.by,S,N*S);
+    c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(g.bx+g.cx*S+1,g.by+g.cy*S+1,S-2,S-2);
+    const px=g.bx+N*S+40;A.txt('Образец:',px,g.by+6,14,'#ffd54f');const m=18;
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++)A.block(px+x*m,g.by+20+y*m,m-2,LO_COLS[y]);
+    A.txt('Ниво '+g.lvl,px,g.by+N*m+50,18,'#fff');A.txt('Ходове: '+g.moves,px,g.by+N*m+76,14,'#ddd');A.txt('Цел: '+g.par+' или по-малко',px,g.by+N*m+98,12,'#b9c6d6');
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<20?'#ff6b6b':'#fff');
+    if(g.mt>0)A.txt(g.msg,g.bx+N*S/2,g.by+N*S/2,26,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

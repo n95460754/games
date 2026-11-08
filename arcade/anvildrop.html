@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Наковалня от небето</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔨 Наковалня от небето</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 288. Наковалня от небето
+A.add({id:'anvildrop',cat:'skill',icon:'🔨',name:'Наковалня от небето',desc:'Кранът се люшка — пусни наковалнята точно върху зомбитата, но не върху селяните',
+  help:'Space / ↓ / клик / докосване = пусни наковалнята. Кранът се движи напред-назад — улучи момента! Зомби = 1 точка, малко зомби = 2, златно зомби = 3. Внимавай: не удряй селяните! Ако зомби стигне до селото вдясно, губиш сърце. 3 сърца.',
+  start(g){g.cx=60;g.cv=1;g.anv={x:0,y:0,vy:0,on:1};g.re=0;g.mobs=[];g.sp=1.2;g.lives=3;g.parts=[];g.pop=[];g.combo=0;},
+  drop(g){if(!g.anv.on||g.re>0)return;g.anv={x:g.cx,y:54,vy:60,on:0,fall:1};A.beep(260,.06,'square',.03);},
+  key(g,k){if(k==='Space'||k==='ArrowDown'||k==='KeyS')this.drop(g);},
+  click(g){this.drop(g);},
+  spawn(g){const r=Math.random(),v=g.score>=4&&r<.2;const t=v?'v':(r<.32&&g.score>=6?'b':(r<.42&&g.score>=10?'gold':'z'));
+    const sp=(t==='b'?70:t==='v'?40:45)+Math.min(55,g.score*1.6)+A.rnd(-8,8);g.mobs.push({t,x:-20,sp,w:t==='b'?14:18,h:t==='b'?22:38,ph:Math.random()*6});},
+  update(g,dt){const spd=120+Math.min(170,g.score*5);g.cx+=g.cv*spd*dt;if(g.cx>420){g.cx=420;g.cv=-1;}if(g.cx<40){g.cx=40;g.cv=1;}
+    g.sp-=dt;if(g.sp<=0){this.spawn(g);g.sp=Math.max(.9,A.rnd(1.8,2.8)-g.score*.04);}
+    if(g.re>0){g.re-=dt;if(g.re<=0)g.anv={x:0,y:0,on:1};}
+    const a=g.anv;
+    if(a.fall){a.vy+=1100*dt;a.y+=a.vy*dt;
+      for(const m of g.mobs){if(m.dead)continue;if(Math.abs(m.x-a.x)<(m.w/2+13)&&a.y+20>=300-m.h){m.dead=1;a.hits=(a.hits||0)+1;
+        for(let i=0;i<12;i++)g.parts.push({x:m.x,y:300-m.h/2,vx:A.rnd(-90,90),vy:A.rnd(-160,-20),t:A.rnd(.3,.7),col:m.t==='v'?'#8d6e63':m.t==='gold'?'#ffd23f':'#3c8a3c'});
+        if(m.t==='v'){g.lives--;g.combo=0;g.pop.push({x:m.x,y:250,s:'Ох! Селянин!',col:'#ff6b6b',t:1});A.beep(140,.35,'sawtooth',.06);if(g.lives<=0)return A.over(g,'Удари селянин! Точки: '+g.score);}
+        else{g.combo++;const p=(m.t==='b'?2:m.t==='gold'?3:1)+(g.combo>1?1:0);g.score+=p;g.pop.push({x:m.x,y:250,s:'+'+p,col:'#ffd54f',t:.8});A.beep(m.t==='gold'?990:520,.1,'triangle',.06);}}}
+      if(a.y>=280){a.y=280;a.fall=0;a.land=1;g.re=.45;if(!a.hits)g.combo=0;A.beep(90,.12,'square',.05);
+        for(let i=0;i<6;i++)g.parts.push({x:a.x,y:300,vx:A.rnd(-70,70),vy:A.rnd(-90,-20),t:.4,col:'#9e9e9e'});}}
+    for(const m of g.mobs){if(m.dead)continue;m.x+=m.sp*dt;m.ph+=dt*8;
+      if(m.x>430){m.dead=1;if(m.t!=='v'){g.lives--;g.combo=0;g.pop.push({x:410,y:240,s:'Зомби в селото!',col:'#ff6b6b',t:1});A.beep(120,.3,'sawtooth',.06);if(g.lives<=0)return A.over(g,'Зомбитата влязоха в селото! Точки: '+g.score);}
+        else{g.score++;g.pop.push({x:410,y:240,s:'+1 Спасен!',col:'#8bc34a',t:.8});}}}
+    g.mobs=g.mobs.filter(m=>!m.dead);
+    g.parts.forEach(q=>{q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=400*dt;q.t-=dt;});g.parts=g.parts.filter(q=>q.t>0);
+    g.pop.forEach(p=>{p.y-=30*dt;p.t-=dt;});g.pop=g.pop.filter(p=>p.t>0);},
+  anvil(x,y){c.fillStyle='#4a4a4a';c.fillRect(x-14,y,28,7);c.fillRect(x-6,y+7,12,7);c.fillRect(x-11,y+14,22,6);c.fillStyle='#6a6a6a';c.fillRect(x-14,y,28,2);},
+  mob(m){const x=m.x,b=300,l=Math.sin(m.ph)*3,sm=m.t==='b';
+    const skin=m.t==='v'?'#c99a72':'#4f9a4f',body=m.t==='v'?'#6d4c41':m.t==='gold'?'#ffd23f':'#2aa0a8',legs=m.t==='v'?'#5d4037':m.t==='gold'?'#e0b020':'#3a3aa8';
+    const hs=sm?12:14,bh=sm?6:12,lh=sm?5:12;
+    c.fillStyle=legs;c.fillRect(x-6,b-lh+(l>0?0:1),5,lh);c.fillRect(x+1,b-lh+(l>0?1:0),5,lh);
+    A.block(x-7,b-lh-bh,14,body,bh);
+    if(m.t!=='v'){c.fillStyle=skin;c.fillRect(x+7,b-lh-bh+1,10,4);}
+    A.block(x-hs/2,b-lh-bh-hs,hs,m.t==='gold'?'#ffd23f':skin);if(m.t==='gold'){c.fillStyle=skin;c.fillRect(x-hs/2+2,b-lh-bh-hs+5,hs-4,hs-6);}
+    c.fillStyle='#111';c.fillRect(x+1,b-lh-bh-hs+5,3,3);c.fillRect(x+hs/2-3,b-lh-bh-hs+5,2,3);
+    if(m.t==='v'){c.fillStyle='#a77a55';c.fillRect(x+hs/2-2,b-lh-bh-hs+7,3,6);}},
+  draw(g){A.bg('#7ec3f0');c.fillStyle='#fff';for(let i=0;i<4;i++){const x=(i*140+g.t*10)%560-60;c.fillRect(x,70+i%2*30,60,12);c.fillRect(x+12,62+i%2*30,34,8);}
+    for(let x=0;x<24;x++){A.block(x*20,300,20,C.grass,6);for(let y=0;y<3;y++)A.block(x*20,306+y*20,20,C.dirt);}
+    // село
+    A.block(436,252,40,'#9a6a3a',48);c.fillStyle='#6d3f1d';c.fillRect(432,244,48,10);c.fillRect(440,236,32,10);c.fillStyle='#3b2410';c.fillRect(450,276,12,24);c.fillStyle='#8fd3ff';c.fillRect(442,262,8,8);
+    // кран
+    c.fillStyle='#5a3a1a';c.fillRect(0,30,480,8);for(let x=0;x<480;x+=24){c.fillStyle='#7a5233';c.fillRect(x,30,12,8);}
+    const cx=g.cx;A.block(cx-14,24,28,'#9e9e9e',18);c.strokeStyle='#333';c.lineWidth=2;c.beginPath();c.moveTo(cx,42);c.lineTo(cx,54);c.stroke();
+    if(g.anv.on)this.anvil(cx,54);else this.anvil(g.anv.x,g.anv.y);
+    if(g.anv.on){c.fillStyle='rgba(0,0,0,.15)';c.fillRect(cx-1,74,2,226);}
+    for(const m of g.mobs)this.mob(m);
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x-2,q.y-2,4,4);});
+    g.pop.forEach(p=>A.txt(p.s,p.x,p.y,14,p.col,'center'));
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,16,'#e53935');if(g.combo>1)A.txt('Комбо x'+g.combo,470,14,14,'#ffd54f','right');
+    if(g.t<4)A.txt('Пусни наковалнята върху зомбитата!',240,150,16,'#fff','center');}
+});
+</script>
+</body>
+</html>

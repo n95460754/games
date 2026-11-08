@@ -268,7 +268,10 @@ const GAMES=[
   {"id": "mlgwater", "cat": "skill", "icon": "🪣", "name": "Водна кофа", "desc": "Падаш от небето — сипи водата точно преди земята!", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "sumo", "cat": "action", "icon": "🤼", "name": "Блоково сумо", "desc": "Избутай слузите от ледения остров в лавата, без да паднеш ти", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "tapaway", "cat": "puzzle", "icon": "➡️", "name": "Буталата", "desc": "Кликни бутало и то излита по стрелката си — изчисти полето, без да се блъснеш", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "nummachine", "cat": "brain", "icon": "⚙️", "name": "Числова машина", "desc": "Машината прави нещо с всяко число — открий правилото и познай какво ще излезе", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "nummachine", "cat": "brain", "icon": "⚙️", "name": "Числова машина", "desc": "Машината прави нещо с всяко число — открий правилото и познай какво ще излезе", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "ghastpunch", "cat": "action", "icon": "🔥", "name": "Отбий огнената топка", "desc": "Гастите стрелят огнени топки — удари ги обратно с меча и ги свали", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "loopover", "cat": "puzzle", "icon": "🔄", "name": "Въртележка от блокове", "desc": "Плъзгай цели редове и колони, докато всеки ред стане от един цвят", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "anvildrop", "cat": "skill", "icon": "🔨", "name": "Наковалня от небето", "desc": "Кранът се люшка — пусни наковалнята точно върху зомбитата, но не върху селяните", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
