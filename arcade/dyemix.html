@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Смеси боите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎨 Смеси боите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 303. Смеси боите
+const DM={red:['червена','#b02e26'],yellow:['жълта','#fed83d'],blue:['синя','#3c44aa'],white:['бяла','#f9fffe'],black:['черна','#1d1d21'],green:['зелена','#5e7c16'],
+  brown:['кафява','#835432'],orange:['оранжева','#f9801d'],pink:['розова','#f38baa'],lblue:['светлосиня','#3ab3da'],purple:['лилава','#8932b8'],
+  cyan:['синьозелена','#169c9c'],lime:['светлозелена','#80c71f'],gray:['сива','#474f52'],lgray:['светлосива','#9d9d97'],magenta:['пурпурна','#c74ebd']};
+const DM_MIX=[['red','yellow','orange'],['red','white','pink'],['blue','white','lblue'],['blue','red','purple'],['blue','green','cyan'],
+  ['green','white','lime'],['black','white','gray'],['gray','white','lgray'],['purple','pink','magenta']];
+const DM_SRC=[['мак','red'],['роза','red'],['глухарче','yellow'],['слънчоглед','yellow'],['лапис лазули','blue'],['метличина','blue'],['костно брашно','white'],
+  ['мастило от калмар','black'],['изпечен кактус','green'],['какаови зърна','brown'],['лале (оранжево)','orange']];
+const DM_NAME={};for(const k in DM)DM_NAME[DM[k][0]]=k;
+function dmOther(ex){return ()=>DM[A.pick(Object.keys(DM).filter(k=>!ex.includes(k)))][0];}
+A.add(Object.assign(choiceGame({time:75,bg:'#2a2033',
+  next(g){
+    const lv=Math.min(3,Math.floor(g.score/3)),type=A.ri(0,[0,1,3,4][lv]);g.type=type;g.sw=null;g.pot=null;
+    if(type===0){const[a,b,r]=A.pick(DM_MIX);g.sw=[a,b,null];g.q='Смесваш '+DM[a][0]+' и '+DM[b][0]+' боя. Какво става?';g.ans=DM[r][0];g.opts=opts4(g.ans,dmOther([r]));}
+    else if(type===1){const[a,b,r]=A.pick(DM_MIX),sw=Math.random()<.5;const x=sw?b:a,y=sw?a:b;g.sw=[x,null,r];g.q=DM[x][0]+' + ??? = '+DM[r][0]+'. Коя боя липсва?';g.ans=DM[y][0];g.opts=opts4(g.ans,dmOther([y,x,r]));}
+    else if(type===2){const[s,k]=A.pick(DM_SRC);g.pot=s;g.sw=[null,null,null];g.q='От '+s+' в работната маса се получава...';g.ans=DM[k][0];g.opts=opts4(g.ans,dmOther([k]));}
+    else if(type===3){const[a,b,r]=A.pick(DM_MIX),n=A.ri(2,9);g.sw=[a,b,r];g.q='1 '+DM[a][0]+' + 1 '+DM[b][0]+' = 2 '+DM[r][0]+'. А от '+n+' двойки?';g.ans=String(2*n);
+      g.opts=opts4(g.ans,()=>String(A.pick([n,n+2,2*n+2,2*n-2,3*n,n*n])));}
+    else{const[a,b,r]=A.pick(DM_MIX),w=8*A.ri(1,6)-A.pick([0,0,3,5]);g.sw=[null,null,r];g.q='1 боя оцветява 8 вълна. Колко '+DM[r][0]+' бои за '+w+' вълна?';g.ans=String(Math.ceil(w/8));
+      g.opts=opts4(g.ans,()=>String(Math.max(1,Math.ceil(w/8)+A.pick([-2,-1,1,2,3]))));}
+  },
+  pic(g){A.txt(g.q,240,28,g.q.length>48?12:g.q.length>38?14:16,'#fff','center');
+    const dye=(k,x,y)=>{if(!k){A.block(x,y,56,'#3a3048');A.txt('?',x+28,y+28,30,'#ffd54f','center');return;}
+      A.block(x+8,y+14,40,DM[k][1],38);A.block(x+18,y+2,20,'#c8c8d8',14);c.fillStyle='rgba(255,255,255,.35)';c.fillRect(x+14,y+20,6,20);A.txt(DM[k][0],x+28,y+66,11,'#ddd','center');};
+    if(g.type===2){A.block(120,72,96,'#9a6a3a',96);c.fillStyle='#5a3a1a';for(let i=1;i<3;i++){c.fillRect(120+i*32,72,2,96);c.fillRect(120,72+i*32,96,2);}
+      A.txt(g.pot,168,186,13,'#fff','center');A.txt('→',260,120,30,'#ffd54f','center');dye(null,300,92);}
+    else{dye(g.sw[0],70,84);A.txt('+',165,112,30,'#ffd54f','center');dye(g.sw[1],195,84);A.txt('=',290,112,30,'#ffd54f','center');dye(g.sw[2],320,84);}
+    // мостри над отговорите
+    g.opts.forEach((v,i)=>{const k=DM_NAME[v];if(k)A.block(i*120+45,224,30,DM[k][1]);});
+  }
+}),{id:'dyemix',cat:'brain',icon:'🎨',name:'Смеси боите',desc:'Смесвай бои като в работната маса: червена + жълта = оранжева, синя + бяла = светлосиня',
+  help:'Смесвай бои като в Minecraft: познай коя боя се получава, коя липсва, от кое цвете или предмет идва и колко бои трябват за вълната. Избирай с 1–4 или с клик / докосване. 75 секунди — въпросите стават по-трудни.'}));
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Снежен голем</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛄ Снежен голем</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 301. Снежен голем
+const SG_SNOW=[];for(let i=0;i<26;i++)SG_SNOW.push([A.ri(0,479),A.ri(24,359),A.ri(8,22)]);
+const SG_MOB={zombie:{hp:1,v:34,pts:1,col:'#3f8a3a',head:'#5fa84f',r:11},spider:{hp:1,v:70,pts:2,col:'#2e2622',head:'#3d3430',r:10},
+  creeper:{hp:2,v:42,pts:3,col:'#4fb848',head:'#6fd860',r:11},enderman:{hp:4,v:26,pts:5,col:'#161616',head:'#202020',r:13}};
+A.add({id:'snowgolem',cat:'action',icon:'⛄',name:'Снежен голем',desc:'Пази селото от мобовете, които идват отвсякъде — замеряй ги със снежни топки',
+  help:'Мишка / пръст — целиш, клик / докосване (или задръж) — хвърляш снежна топка. Или ← → / A D — завърташ, Space — хвърляш. Зомби 1 т., паяк 2, крийпър 3 (2 удара), ендърмен 5 (4 удара). Снежинка = +1 сърце. 5 сърца.',
+  start(g){g.cx=240;g.cy=196;g.ang=-Math.PI/2;g.mobs=[];g.balls=[];g.parts=[];g.items=[];g.lives=5;g.cd=0;g.spawn=1.5;g.inv=0;g.hurt=0;g.wave=1;},
+  throw(g){if(g.cd>0)return;g.cd=.2;g.balls.push({x:g.cx+Math.cos(g.ang)*20,y:g.cy-14+Math.sin(g.ang)*20,vx:Math.cos(g.ang)*380,vy:Math.sin(g.ang)*380});A.beep(640,.04,'triangle',.03);},
+  aim(g,x,y){g.ang=Math.atan2(y-(g.cy-14),x-g.cx);},
+  move(g,x,y){this.aim(g,x,y);},
+  click(g,x,y){this.aim(g,x,y);this.throw(g);},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.throw(g);},
+  update(g,dt){
+    const L=A.keys.ArrowLeft||A.keys.KeyA,R=A.keys.ArrowRight||A.keys.KeyD;
+    if(L)g.ang-=3.6*dt;if(R)g.ang+=3.6*dt;
+    g.cd-=dt;g.inv-=dt;g.hurt-=dt;
+    if(A.keys.Space||A.keys.ArrowUp||A.keys.KeyW)this.throw(g);
+    if(A.mouse.down){this.aim(g,A.mouse.x,A.mouse.y);this.throw(g);}
+    g.wave=1+Math.floor(g.t/25);
+    // нови мобове от ръба
+    g.spawn-=dt;if(g.spawn<=0){g.spawn=Math.max(.42,1.5-g.t*.011)*A.rnd(.7,1.25);
+      const r=Math.random(),t=g.t;let k='zombie';if(t>15&&r<.3)k='spider';if(t>30&&r>.72)k='creeper';if(t>55&&r>.9)k='enderman';
+      const a=A.rnd(0,Math.PI*2),M=SG_MOB[k];g.mobs.push({k,x:g.cx+Math.cos(a)*300,y:g.cy+Math.sin(a)*260,hp:M.hp,hit:0,w:A.rnd(0,6),sp:M.v*(1+t*.006)});}
+    for(const m of g.mobs){const dx=g.cx-m.x,dy=g.cy-m.y,d=Math.hypot(dx,dy),M=SG_MOB[m.k];m.w+=dt*8;m.hit-=dt;
+      let v=m.sp;if(m.k==='enderman'&&Math.sin(m.w*.4)>.85)v*=4;
+      m.x+=dx/d*v*dt;m.y+=dy/d*v*dt;
+      if(d<24){m.dead=true;const dmg=m.k==='creeper'||m.k==='enderman'?2:1;
+        if(m.k==='creeper')for(let i=0;i<14;i++)g.parts.push({x:m.x,y:m.y,vx:A.rnd(-140,140),vy:A.rnd(-140,140),t:.5,col:'#ddd'});
+        if(g.inv<=0){g.lives-=dmg;g.inv=.8;g.hurt=.3;A.beep(110,.3,'sawtooth',.06);if(g.lives<=0)return A.over(g,'Мобовете стопиха голема!');}}}
+    for(const b of g.balls){b.x+=b.vx*dt;b.y+=b.vy*dt;if(b.x<-10||b.x>490||b.y<-10||b.y>370)b.dead=true;
+      for(const m of g.mobs)if(!m.dead&&Math.hypot(b.x-m.x,b.y-m.y)<SG_MOB[m.k].r+5){b.dead=true;m.hp--;m.hit=.15;
+        m.x-=b.vx*.025;m.y-=b.vy*.025;
+        for(let i=0;i<5;i++)g.parts.push({x:b.x,y:b.y,vx:A.rnd(-70,70),vy:A.rnd(-70,70),t:.35,col:'#fff'});
+        if(m.hp<=0){m.dead=true;g.score+=SG_MOB[m.k].pts;A.beep(880,.06,'triangle');
+          if(Math.random()<.05&&g.lives<5)g.items.push({x:m.x,y:m.y,t:6});}else A.beep(420,.04);
+        break;}}
+    for(const it of g.items){it.t-=dt;if(it.t<=0)it.dead=true;
+      for(const b of g.balls)if(!b.dead&&Math.hypot(b.x-it.x,b.y-it.y)<14){b.dead=true;it.dead=true;g.lives=Math.min(5,g.lives+1);A.tune([660,880,1100]);}}
+    for(const q of g.parts){q.x+=q.vx*dt;q.y+=q.vy*dt;q.t-=dt;}
+    g.mobs=g.mobs.filter(m=>!m.dead);g.balls=g.balls.filter(b=>!b.dead);g.items=g.items.filter(i=>!i.dead);g.parts=g.parts.filter(q=>q.t>0);
+  },
+  draw(g){
+    for(let y=0;y<360;y+=24)for(let x=0;x<480;x+=24){c.fillStyle=((x+y)/24)%2?'#5aa13a':'#549a35';c.fillRect(x,y,24,24);}
+    c.fillStyle='rgba(238,244,255,.3)';for(const s of SG_SNOW)c.fillRect(s[0],s[1],s[2],s[2]*.6);
+    // къщички от селото
+    for(const[hx,hy]of[[150,150],[312,150],[150,226],[312,226]]){A.block(hx,hy,20,'#9a6a3a');c.fillStyle='#5a3a1a';c.fillRect(hx+7,hy+10,6,10);A.block(hx-2,hy-6,24,'#7a5233',7);}
+    // мобове
+    for(const m of g.mobs){const M=SG_MOB[m.k],x=m.x,y=m.y,b=Math.sin(m.w)*2,fl=m.hit>0;
+      if(m.k==='spider'){A.block(x-12,y-6,24,fl?'#fff':M.col,12);c.fillStyle='#e22';c.fillRect(x-6,y-3,3,3);c.fillRect(x+3,y-3,3,3);
+        c.fillStyle='#1a1410';for(let i=0;i<4;i++){c.fillRect(x-18,y-6+i*4+b,6,2);c.fillRect(x+12,y-6+i*4-b,6,2);}continue;}
+      const tall=m.k==='enderman'?1.6:1;
+      A.block(x-6,y-6,12,fl?'#fff':M.col,14*tall);A.block(x-7,y-20,14,fl?'#fff':M.head);
+      c.fillStyle=m.k==='enderman'?'#d36ef0':'#111';c.fillRect(x-5,y-16,3,3);c.fillRect(x+2,y-16,3,3);
+      if(m.k==='creeper'){c.fillStyle='#111';c.fillRect(x-2,y-12,4,5);}
+      if(m.k==='zombie'){c.fillStyle='#3b45a8';c.fillRect(x-6,y+4,12,4);}
+      if(m.hp<SG_MOB[m.k].hp){c.fillStyle='#000';c.fillRect(x-8,y-26,16,3);c.fillStyle='#f44';c.fillRect(x-8,y-26,16*m.hp/SG_MOB[m.k].hp,3);}}
+    for(const it of g.items){if(it.t>2||Math.floor(it.t*8)%2){c.fillStyle='#bfefff';c.fillRect(it.x-2,it.y-9,4,18);c.fillRect(it.x-9,it.y-2,18,4);c.fillRect(it.x-6,it.y-6,4,4);c.fillRect(it.x+2,it.y+2,4,4);c.fillRect(it.x+2,it.y-6,4,4);c.fillRect(it.x-6,it.y+2,4,4);}}
+    // мерник
+    c.strokeStyle='rgba(255,255,255,.45)';c.lineWidth=2;c.setLineDash([4,6]);c.beginPath();c.moveTo(g.cx,g.cy-14);c.lineTo(g.cx+Math.cos(g.ang)*70,g.cy-14+Math.sin(g.ang)*70);c.stroke();c.setLineDash([]);
+    // голем
+    if(g.inv<=0||Math.floor(g.t*14)%2){const x=g.cx,y=g.cy;
+      A.block(x-10,y-2,20,g.hurt>0?'#fbb':C.snow,18);A.block(x-9,y-20,18,g.hurt>0?'#fbb':C.snow,18);
+      c.fillStyle='#8a5a2a';const ax=Math.cos(g.ang),ay=Math.sin(g.ang);c.fillRect(x-14,y-14,4,10);c.fillRect(x+10,y-14,4,10);
+      A.block(x-10,y-38,20,'#e07a1a');c.fillStyle='#2a1a00';c.fillRect(x-6+ax*3,y-32+ay*2,4,4);c.fillRect(x+2+ax*3,y-32+ay*2,4,4);c.fillRect(x-4+ax*3,y-25+ay*2,8,3);
+      c.fillStyle='#3a8a1a';c.fillRect(x-2,y-42,4,4);}
+    for(const b of g.balls){c.fillStyle='#fff';c.fillRect(b.x-4,b.y-4,8,8);c.fillStyle='#cfe0ee';c.fillRect(b.x,b.y,4,4);}
+    for(const q of g.parts){c.fillStyle=q.col;c.globalAlpha=Math.max(0,q.t*2.5);c.fillRect(q.x,q.y,4,4);c.globalAlpha=1;}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,15,'#f55');A.txt('Вълна '+g.wave,470,14,13,'#fff','right');
+  }
+});
+</script>
+</body>
+</html>

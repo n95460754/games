@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**310 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 300 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**313 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 303 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-310-5aa13a)
+![Games](https://img.shields.io/badge/games-313-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 300 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 303 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -445,8 +445,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 298 | 🤿 Treasure Dive (Гмуркане за съкровища) | [`deepdive.html`](arcade/deepdive.html) | Underwater action: swim for gold, emeralds, seabed diamonds and chests while your air runs out — surface or swim through bubble vents to breathe, and dodge the puffing pufferfish; 3 hearts |
 | 299 | 🌉 Speed Bridge (Бърз мост) | [`speedbridge.html`](arcade/speedbridge.html) | Timing game: your hero walks on his own over the void — place each block right at the edge for PERFECT (2 points), too early is a strike, too late and you fall; ready-made islands change the rhythm and the speed keeps rising |
 | 300 | 🔆 Beacon Pyramid (Пирамида за маяк) | [`beacon.html`](arcade/beacon.html) | Square-number maths with the beacon pyramid: layers are 3×3, 5×5, 7×7, 9×9 — side lengths, blocks per layer, totals (9, 34, 83, 164), how many levels you can build, blocks still needed and stacks of 64 |
+| 301 | ⛄ Snow Golem (Снежен голем) | [`snowgolem.html`](arcade/snowgolem.html) | 360° defence: aim with the mouse/finger (or turn with ← →) and throw snowballs at zombies, fast spiders, two-hit creepers and teleport-dashing endermen coming from every side of the village; shoot snowflakes for extra hearts, 5 hearts |
+| 302 | 🐑 Wool Paint (Оцвети с вълна) | [`woolpaint.html`](arcade/woolpaint.html) | Sliding puzzle: the sheep slides until it hits a wall and dyes every tile it crosses — paint all the grass with wool; every level is generated to be solvable, finish within the move target for a bonus point |
+| 303 | 🎨 Dye Mixer (Смеси боите) | [`dyemix.html`](arcade/dyemix.html) | Colour quiz with Minecraft dyes: red + yellow = orange, blue + white = light blue — guess the result, the missing dye, which flower or item gives a dye, and how many dyes you need for your wool |
 
-All 300 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 303 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -474,8 +477,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–299
-│   └── beacon.html         # 300. Beacon Pyramid
+│   ├── ...                 # games 51–302
+│   └── dyemix.html         # 303. Dye Mixer
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

@@ -283,7 +283,10 @@ const GAMES=[
   {"id": "orechance", "cat": "brain", "icon": "🎲", "name": "Шанс за диамант", "desc": "Вероятност с руди и зар: какъв е шансът да изтеглиш диамант от сандъка?", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "deepdive", "cat": "action", "icon": "🤿", "name": "Гмуркане за съкровища", "desc": "Гмурни се за руди под водата, пази въздуха и бягай от рибите балон", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "speedbridge", "cat": "skill", "icon": "🌉", "name": "Бърз мост", "desc": "Строй мост над бездната — слагай блок точно когато стигнеш ръба", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "beacon", "cat": "brain", "icon": "🔆", "name": "Пирамида за маяк", "desc": "Сметни колко блока трябват за пирамидата на маяка — квадрати и сбор", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "beacon", "cat": "brain", "icon": "🔆", "name": "Пирамида за маяк", "desc": "Сметни колко блока трябват за пирамидата на маяка — квадрати и сбор", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "snowgolem", "cat": "action", "icon": "⛄", "name": "Снежен голем", "desc": "Пази селото от мобовете, които идват отвсякъде — замеряй ги със снежни топки", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "woolpaint", "cat": "puzzle", "icon": "🐑", "name": "Оцвети с вълна", "desc": "Овцата се плъзга до стената и оцветява пътя с вълна — боядисай всяко поле", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "dyemix", "cat": "brain", "icon": "🎨", "name": "Смеси боите", "desc": "Смесвай бои като в работната маса: червена + жълта = оранжева, синя + бяла = светлосиня", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
