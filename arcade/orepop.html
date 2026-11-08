@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пукни рудите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔮 Пукни рудите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 235. Пукни рудите
+A.add({id:'orepop',cat:'skill',icon:'🔮',name:'Пукни рудите',desc:'Изстрелвай руди и пукай групи от 3 еднакви',help:'Целиш с мишката/пръста или ← →, стреляш с клик или Space. Залепи рудата до 2+ еднакви, за да ги пукнеш — висящите блокове падат за двойни точки. ↓ или клик върху „След“ = смени рудата. След 6 пропуска пада нов ред. Не пускай рудите до червената линия!',
+  CS:32,TOP:24,ROWS:9,SX:240,SY:336,
+  COL:['#ff2e55','#4de8f5','#ffd23f','#5aa13a','#b05cff'],
+  start(g){g.grid=[];for(let r=0;r<=this.ROWS;r++)g.grid.push(new Array(15).fill(-1));
+    g.nc=4;this.fill(g,4);g.ang=-Math.PI/2;g.shot=null;g.miss=0;g.parts=[];g.cur=this.col(g);g.nxt=this.col(g);},
+  fill(g,n){for(let r=0;r<n;r++)for(let x=0;x<15;x++)g.grid[r][x]=A.ri(0,g.nc-1);},
+  col(g){const s=new Set();for(const row of g.grid)for(const v of row)if(v>=0)s.add(v);const a=[...s];return a.length?A.pick(a):A.ri(0,g.nc-1);},
+  aim(g,mx,my){let a=Math.atan2(my-this.SY,mx-this.SX);if(a>0)a=mx<this.SX?-Math.PI:0;g.ang=A.clamp(a,-Math.PI+.15,-.15);},
+  fire(g){if(g.shot)return;g.shot={x:this.SX,y:this.SY,vx:Math.cos(g.ang)*640,vy:Math.sin(g.ang)*640,c:g.cur};g.cur=g.nxt;g.nxt=this.col(g);A.beep(520,.05);},
+  swap(g){if(g.shot)return;[g.cur,g.nxt]=[g.nxt,g.cur];A.beep(330,.04);},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW'||k==='Enter')this.fire(g);else if(k==='ArrowDown'||k==='KeyS'||k==='KeyX')this.swap(g);},
+  move(g,mx,my){this.aim(g,mx,my);},
+  click(g,mx,my){if(mx<80&&my>312){this.swap(g);return;}this.aim(g,mx,my);this.fire(g);},
+  cell(g,r,x){return r>=0&&r<=this.ROWS&&x>=0&&x<15?g.grid[r][x]:-2;},
+  touching(g,s){const c0=Math.floor(s.x/this.CS),r0=Math.floor((s.y-this.TOP)/this.CS);
+    for(let r=r0-1;r<=r0+1;r++)for(let x=c0-1;x<=c0+1;x++)if(this.cell(g,r,x)>=0&&Math.hypot(s.x-x*32-16,s.y-this.TOP-r*32-16)<27)return true;return false;},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.ang=Math.max(-Math.PI+.15,g.ang-2.2*dt);
+    if(A.keys.ArrowRight||A.keys.KeyD)g.ang=Math.min(-.15,g.ang+2.2*dt);
+    for(const p of g.parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=700*dt;p.t-=dt;}g.parts=g.parts.filter(p=>p.t>0);
+    const s=g.shot;if(!s)return;
+    for(let i=0;i<4;i++){s.x+=s.vx*dt/4;s.y+=s.vy*dt/4;
+      if(s.x<16){s.x=16;s.vx=-s.vx;}if(s.x>464){s.x=464;s.vx=-s.vx;}
+      if(s.y<=this.TOP+16||this.touching(g,s)){this.land(g,s);return;}}},
+  land(g,s){g.shot=null;let best=null,bd=1e9;const c0=Math.floor(s.x/32),r0=A.clamp(Math.floor((s.y-this.TOP)/32),0,this.ROWS);
+    for(let r=r0-1;r<=r0+1;r++)for(let x=c0-1;x<=c0+1;x++){if(this.cell(g,r,x)!==-1)continue;
+      const sup=r===0||[[1,0],[-1,0],[0,1],[0,-1]].some(d=>this.cell(g,r+d[0],x+d[1])>=0);
+      const d=Math.hypot(s.x-x*32-16,s.y-this.TOP-r*32-16)+(sup?0:100);if(d<bd){bd=d;best=[r,x];}}
+    if(!best)return;const [r,x]=best;g.grid[r][x]=s.c;
+    const grp=this.flood(g,[[r,x]],v=>v===s.c);
+    if(grp.length>=3){for(const [a,b] of grp)this.pop(g,a,b,false);
+      const keep=this.flood(g,g.grid[0].map((v,i)=>[0,i]).filter(p=>g.grid[0][p[1]]>=0),v=>v>=0),k=new Set(keep.map(p=>p[0]*15+p[1]));
+      let fell=0;for(let a=0;a<=this.ROWS;a++)for(let b=0;b<15;b++)if(g.grid[a][b]>=0&&!k.has(a*15+b)){this.pop(g,a,b,true);fell++;}
+      g.score+=grp.length+fell*2;flash(g,true);if(fell)A.tune([523,659,784]);
+      if(g.grid.every(row=>row.every(v=>v<0))){g.score+=20;g.nc=Math.min(5,g.nc+1);this.fill(g,4);A.tune([660,880,1100,1320]);}
+    }else{g.miss++;A.beep(260,.06);if(g.miss>=6){g.miss=0;this.push(g);}}
+    if(g.score>=60)g.nc=5;
+    if(g.grid[this.ROWS].some(v=>v>=0))A.over(g,'Рудите стигнаха червената линия!');},
+  flood(g,st,ok){const seen=new Set(),out=[],q=[];for(const p of st){const id=p[0]*15+p[1];if(!seen.has(id)&&ok(this.cell(g,p[0],p[1]))){seen.add(id);q.push(p);}}
+    while(q.length){const [r,x]=q.pop();out.push([r,x]);for(const d of [[1,0],[-1,0],[0,1],[0,-1]]){const a=r+d[0],b=x+d[1],id=a*15+b;
+      if(!seen.has(id)&&a>=0&&a<=this.ROWS&&b>=0&&b<15&&ok(g.grid[a][b])){seen.add(id);q.push([a,b]);}}}return out;},
+  pop(g,r,x,fall){const c=this.COL[g.grid[r][x]];g.grid[r][x]=-1;if(g.parts.length<160)for(let i=0;i<3;i++)g.parts.push({x:x*32+16,y:this.TOP+r*32+16,vx:A.rnd(-120,120),vy:fall?A.rnd(0,80):A.rnd(-260,-60),t:.8,c});},
+  push(g){for(let r=this.ROWS;r>0;r--)g.grid[r]=g.grid[r-1];g.grid[0]=[];for(let x=0;x<15;x++)g.grid[0].push(A.ri(0,g.nc-1));A.beep(110,.2,'sawtooth',.05);},
+  gem(x,y,ci,s){s=s||30;A.block(x,y,s,C.stone);c.fillStyle=this.COL[ci];const q=s/30;
+    [[5,5,8],[17,8,7],[9,17,8],[20,19,6]].forEach(p=>c.fillRect(x+p[0]*q,y+p[1]*q,p[2]*q,p[2]*q));},
+  draw(g){A.bg('#1b2433');
+    for(let r=0;r<this.ROWS;r++)for(let x=0;x<15;x++){c.fillStyle=(r+x)%2?'#212c3d':'#1e2838';c.fillRect(x*32,this.TOP+r*32,32,32);}
+    c.fillStyle='#d32f2f';for(let x=0;x<480;x+=16)c.fillRect(x,this.TOP+this.ROWS*32-2,10,3);
+    for(let r=0;r<=this.ROWS;r++)for(let x=0;x<15;x++)if(g.grid[r][x]>=0)this.gem(x*32+1,this.TOP+r*32+1,g.grid[r][x]);
+    if(!g.shot){let x=this.SX,y=this.SY,vx=Math.cos(g.ang),vy=Math.sin(g.ang);c.fillStyle='rgba(255,255,255,.7)';
+      for(let i=0;i<26;i++){x+=vx*14;y+=vy*14;if(x<16||x>464){vx=-vx;x=A.clamp(x,16,464);}if(y<this.TOP||this.touching(g,{x,y}))break;if(i>1)c.fillRect(x-2,y-2,4,4);}}
+    if(g.shot)this.gem(g.shot.x-15,g.shot.y-15,g.shot.c);
+    for(const p of g.parts){c.fillStyle=p.c;c.fillRect(p.x-4,p.y-4,8,8);}
+    A.block(this.SX-24,this.SY-12,48,'#5a3a1a',24);if(!g.shot)this.gem(this.SX-15,this.SY-22,g.cur);
+    A.txt('След:',8,336,12,'#b9c6d6');this.gem(48,324,g.nxt,24);
+    A.txt('Пропуски: '+g.miss+'/6',472,336,12,g.miss>=4?'#ff8a80':'#b9c6d6','right');
+    A.txt('Цели: ← → / мишка · Space / клик',240,12,11,'#8fa3bb','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>

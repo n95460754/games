@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блоков взрив</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧱 Блоков взрив</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 236. Блоков взрив
+A.add({id:'blockblast',cat:'puzzle',icon:'🧱',name:'Блоков взрив',desc:'Нареждай фигури в 8×8 и чисти пълни редове и колони',help:'Избери фигура (1 / 2 / 3 или клик отдясно), мести я със стрелките или мишката и я сложи със Space / Enter / клик. Пълен ред или колона изчезва. Повече линии наведнъж = повече точки. Играта свършва, когато нито една фигура не се побира.',
+  repeat:true,N:8,CS:38,BX:12,BY:36,
+  SH:[[[0,0]],[[0,0],[1,0]],[[0,0],[0,1]],[[0,0],[1,0],[2,0]],[[0,0],[0,1],[0,2]],[[0,0],[1,0],[2,0],[3,0]],[[0,0],[0,1],[0,2],[0,3]],
+    [[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[2,0],[0,1],[1,1],[2,1],[0,2],[1,2],[2,2]],[[0,0],[0,1],[1,1]],[[1,0],[0,1],[1,1]],[[0,0],[1,0],[0,1]],
+    [[0,0],[1,0],[1,1]],[[0,0],[0,1],[0,2],[1,2]],[[1,0],[1,1],[0,2],[1,2]],[[0,0],[1,0],[2,0],[1,1]],[[1,0],[0,1],[1,1],[2,1]],[[0,0],[1,0],[2,0],[0,1]],[[0,0],[1,0],[1,1],[2,1]],[[1,0],[2,0],[0,1],[1,1]]],
+  COLS:[C.grass,C.gem,C.gold,C.ruby,C.iron,C.purple,C.water,C.lava],
+  start(g){g.b=[];for(let y=0;y<8;y++)g.b.push(new Array(8).fill(-1));g.cx=2;g.cy=2;g.boom=[];g.lines=0;this.deal(g);},
+  piece(){const s=A.pick(this.SH);return{s,w:Math.max(...s.map(p=>p[0]))+1,h:Math.max(...s.map(p=>p[1]))+1,col:A.ri(0,this.COLS.length-1)};},
+  deal(g){g.tray=[this.piece(),this.piece(),this.piece()];g.sel=0;this.clampC(g);},
+  cur(g){return g.tray[g.sel];},
+  clampC(g){const p=this.cur(g);if(!p)return;g.cx=A.clamp(g.cx,0,8-p.w);g.cy=A.clamp(g.cy,0,8-p.h);},
+  fits(g,p,ox,oy){return p.s.every(q=>{const x=ox+q[0],y=oy+q[1];return x>=0&&y>=0&&x<8&&y<8&&g.b[y][x]<0;});},
+  canAny(g,p){for(let y=0;y<8;y++)for(let x=0;x<8;x++)if(this.fits(g,p,x,y))return true;return false;},
+  select(g,i){if(g.tray[i]){g.sel=i;this.clampC(g);A.beep(600,.03);}},
+  place(g){const p=this.cur(g);if(!p)return;if(!this.fits(g,p,g.cx,g.cy)){flash(g,false);return;}
+    for(const q of p.s)g.b[g.cy+q[1]][g.cx+q[0]]=p.col;g.score+=p.s.length;A.beep(420,.05,'triangle');
+    const rows=[],cols=[];for(let i=0;i<8;i++){if(g.b[i].every(v=>v>=0))rows.push(i);if(g.b.every(r=>r[i]>=0))cols.push(i);}
+    for(const y of rows)for(let x=0;x<8;x++){g.boom.push({x,y,t:.4,c:g.b[y][x]});}
+    for(const x of cols)for(let y=0;y<8;y++)g.boom.push({x,y,t:.4,c:g.b[y][x]});
+    for(const y of rows)for(let x=0;x<8;x++)g.b[y][x]=-1;for(const x of cols)for(let y=0;y<8;y++)g.b[y][x]=-1;
+    const n=rows.length+cols.length;if(n){g.score+=n*n*10;g.lines+=n;flash(g,true);A.tune(n>1?[523,659,784,1047]:[659,880]);g.msg={t:1.2,s:n>1?'КОМБО ×'+n+'!':'Линия!'};}
+    g.tray[g.sel]=null;if(g.tray.every(t=>!t))this.deal(g);else{for(let i=0;i<3;i++)if(g.tray[i]){g.sel=i;break;}this.clampC(g);}
+    if(!g.tray.some(t=>t&&this.canAny(g,t)))A.over(g,'Няма място за фигурите!');},
+  key(g,k,ch){if(ch==='1'||ch==='2'||ch==='3'){this.select(g,+ch-1);return;}
+    if(k==='KeyQ'||k==='Tab'){for(let i=1;i<=3;i++){const j=(g.sel+i)%3;if(g.tray[j]){this.select(g,j);break;}}return;}
+    const d={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(d){if(A.keys[k]&&g.lastK===k&&g.t-g.kt<.09)return;g.lastK=k;g.kt=g.t;g.cx+=d[0];g.cy+=d[1];this.clampC(g);return;}
+    if(k==='Space'||k==='Enter'||k==='NumpadEnter')this.place(g);},
+  toCell(g,mx,my){const p=this.cur(g);if(!p)return false;const x=Math.floor((mx-this.BX)/this.CS),y=Math.floor((my-this.BY)/this.CS);
+    if(x<0||y<0||x>7||y>7)return false;g.cx=x-Math.floor((p.w-1)/2);g.cy=y-Math.floor((p.h-1)/2);this.clampC(g);return true;},
+  move(g,mx,my){this.toCell(g,mx,my);},
+  click(g,mx,my){if(mx>=330){const i=Math.floor((my-this.BY)/104);if(i>=0&&i<3)this.select(g,i);return;}if(this.toCell(g,mx,my))this.place(g);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;for(const b of g.boom)b.t-=dt;g.boom=g.boom.filter(b=>b.t>0);if(g.msg)g.msg.t-=dt;},
+  draw(g){A.bg('#16202c');const S=this.CS,X=this.BX,Y=this.BY;
+    c.fillStyle='#0c1219';c.fillRect(X-4,Y-4,S*8+8,S*8+8);
+    for(let y=0;y<8;y++)for(let x=0;x<8;x++){const v=g.b[y][x];if(v>=0)A.block(X+x*S+1,Y+y*S+1,S-2,this.COLS[v]);else{c.fillStyle=(x+y)%2?'#26323f':'#222d39';c.fillRect(X+x*S+1,Y+y*S+1,S-2,S-2);}}
+    const p=this.cur(g);if(p&&A.state==='play'){const ok=this.fits(g,p,g.cx,g.cy);c.globalAlpha=.55;
+      for(const q of p.s){const x=g.cx+q[0],y=g.cy+q[1];if(x<8&&y<8){c.fillStyle=ok?this.COLS[p.col]:'#e53935';c.fillRect(X+x*S+3,Y+y*S+3,S-6,S-6);}}c.globalAlpha=1;
+      c.strokeStyle=ok?'#fff':'#e53935';c.lineWidth=2;c.strokeRect(X+g.cx*S,Y+g.cy*S,p.w*S,p.h*S);}
+    for(const b of g.boom){const k=b.t/.4,s=(S-2)*k;c.globalAlpha=k;c.fillStyle='#fff';c.fillRect(X+b.x*S+S/2-s/2,Y+b.y*S+S/2-s/2,s,s);c.globalAlpha=1;}
+    for(let i=0;i<3;i++){const t=g.tray[i],y0=Y+i*104;c.fillStyle=i===g.sel&&t?'#3c5270':'#202b38';c.fillRect(330,y0,140,98);
+      if(i===g.sel&&t){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(331,y0+1,138,96);}
+      A.txt(''+(i+1),338,y0+12,12,'#ffd54f');
+      if(t){const cs=Math.min(20,Math.floor(84/Math.max(t.w,t.h))),ox=400-t.w*cs/2,oy=y0+49-t.h*cs/2,fit=this.canAny(g,t);c.globalAlpha=fit?1:.35;
+        for(const q of t.s)A.block(ox+q[0]*cs,oy+q[1]*cs,cs,this.COLS[t.col]);c.globalAlpha=1;}}
+    A.txt('Линии: '+g.lines,12,16,13,'#b9c6d6');A.txt('1/2/3 избор · стрелки · Space',470,16,11,'#8fa3bb','right');
+    if(g.msg&&g.msg.t>0)A.txt(g.msg.s,X+S*4,Y+S*4,26,'#ffd54f','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>

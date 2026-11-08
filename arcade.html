@@ -217,7 +217,10 @@ const GAMES=[
   {"id": "coords", "cat": "brain", "icon": "📍", "name": "Координати", "desc": "Намери точката по нейните координати (x, y)", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "reversi", "cat": "board", "icon": "⚪", "name": "Реверси", "desc": "Обърни блоковете на робота: злато срещу въглища", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "numpyramid", "cat": "brain", "icon": "🔺", "name": "Числова пирамида", "desc": "Всеки блок е сбор от двата под него — намери липсващия", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "oresort", "cat": "skill", "icon": "📦", "name": "Сортирай рудите", "desc": "Пращай рудите в правилния сандък, а TNT — в лавата", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "oresort", "cat": "skill", "icon": "📦", "name": "Сортирай рудите", "desc": "Пращай рудите в правилния сандък, а TNT — в лавата", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "orepop", "cat": "skill", "icon": "🔮", "name": "Пукни рудите", "desc": "Изстрелвай руди и пукай групи от 3 еднакви", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "blockblast", "cat": "puzzle", "icon": "🧱", "name": "Блоков взрив", "desc": "Нареждай фигури в 8×8 и чисти пълни редове и колони", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "factors", "cat": "brain", "icon": "🪓", "name": "Прости множители", "desc": "Цепи числото на прости множители, преди да изтече времето", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

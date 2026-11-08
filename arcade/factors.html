@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Прости множители</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪓 Прости множители</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 237. Прости множители
+A.add({id:'factors',cat:'brain',icon:'🪓',name:'Прости множители',desc:'Цепи числото на прости множители, преди да изтече времето',help:'Раздели числото на просто число, на което се дели без остатък: клавиши 1–6 или клик върху бутона (2, 3, 5, 7, 11, 13). Всеки верен множител = 1 точка, цяло разложено число = +2 точки и +2 секунди. Грешка = −3 секунди. Имаш 60 секунди.',
+  P:[2,3,5,7,11,13],
+  start(g){g.time=60;g.chips=[];g.done=null;this.next(g);},
+  next(g){const lvl=Math.min(6,2+Math.floor(g.score/10)),n=A.ri(2,lvl),pool=g.score<8?[2,2,3,3,5]:g.score<20?[2,2,3,3,5,5,7]:[2,2,3,3,5,7,11,13];
+    let N=1;const f=[];for(let i=0;i<n;i++){const p=A.pick(pool);if(N*p>2000&&f.length>=2)break;N*=p;f.push(p);}
+    g.N=N;g.orig=N;g.got=[];},
+  choose(g,i){const p=this.P[i];if(p===undefined)return;g.press={i,t:.15};
+    if(g.N%p===0){g.N/=p;g.got.push(p);g.score++;A.beep(440+g.got.length*90,.07,'triangle');g.chop={t:.3};
+      if(g.N===1){g.score+=2;g.time+=2;flash(g,true);A.tune([660,880,1100]);g.done={t:1.6,s:g.orig+' = '+g.got.join(' × ')};this.next(g);}}
+    else{flash(g,false);g.time-=3;g.why=g.N+' не се дели на '+p;}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=6)this.choose(g,n-1);},
+  click(g,mx,my){if(my>=262&&my<=338){const i=Math.floor((mx-6)/79);if(i>=0&&i<6)this.choose(g,i);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.press)g.press.t-=dt;if(g.chop)g.chop.t-=dt;if(g.done)g.done.t-=dt;g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1d2b3a');for(let x=0;x<480;x+=32){A.block(x,236,32,C.grass,8);A.block(x,244,32,C.dirt,14);}
+    A.txt(g.orig+' = '+(g.got.length?g.got.join(' × ')+' × ':'')+'?',240,40,g.orig>999?20:22,'#b9c6d6','center');
+    const sh=g.chop&&g.chop.t>0?Math.sin(g.chop.t*60)*4:0,w=Math.max(120,String(g.N).length*30+40);
+    A.block(240-w/2+sh,78,w,C.stone,90);c.fillStyle='rgba(0,0,0,.15)';for(let i=0;i<4;i++)c.fillRect(240-w/2+12+i*w/4+sh,90+(i%2)*40,14,14);
+    A.txt(''+g.N,240+sh,123,44,'#fff','center');
+    A.txt('Раздели на просто число:',240,190,15,'#ffd54f','center');
+    g.got.forEach((p,i)=>{const x=240-g.got.length*19+i*38;A.block(x+2,206,32,C.gold,24);A.txt(''+p,x+18,218,13,'#3a2a00','center');});
+    this.P.forEach((p,i)=>{const x=i*79+6,dn=g.press&&g.press.t>0&&g.press.i===i;A.block(x,262+(dn?3:0),74,'#5a6b8c',72);
+      A.txt(''+p,x+37,293+(dn?3:0),26,'#fff','center');A.txt('['+(i+1)+']',x+37,322+(dn?3:0),11,'#ffd54f','center');});
+    A.txt('⏱ '+Math.max(0,Math.ceil(g.time)),10,14,14,g.time<10?'#ff8a80':'#fff');if(g.why)A.txt(g.why,470,14,12,'#bbb','right');
+    if(g.done&&g.done.t>0)A.txt('✔ '+g.done.s,240,66,14,'#8bc34a','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>
