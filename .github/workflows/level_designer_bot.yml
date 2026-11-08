@@ -1,0 +1,26 @@
+name: Level Designer Bot
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+
+jobs:
+  level_design:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "Level-Designer-Bot"
+          git config user.email "level-designer-bot@users.noreply.github.com"
+          echo "## 🎮 Level-Designer-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Генерирани са нови процедурни карти и препятствия за следващите нива." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "feat(levels): generate new maze configurations and challenges" || exit 0
+          git push origin main
