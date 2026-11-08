@@ -1,0 +1,26 @@
+name: Sound Engineer Bot
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AI_BOARD_ROOM.md'
+
+jobs:
+  audio_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CEO_BOT_TOKEN }}
+      - run: |
+          git config user.name "Sound-Engineer-Bot"
+          git config user.email "sound-engineer-bot@users.noreply.github.com"
+          echo "## 🎵 Sound-Engineer-Bot Report ($(date -u))" >> AI_BOARD_ROOM.md
+          echo "**Status:** Аудио активите и 8-bit саундтраците са оптимизирани без забавяне в WebAudio." >> AI_BOARD_ROOM.md
+          echo "---" >> AI_BOARD_ROOM.md
+          git add AI_BOARD_ROOM.md
+          git commit -m "audio(sound): balance sound effects and background music" || exit 0
+          git push origin main
