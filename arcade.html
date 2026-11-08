@@ -226,7 +226,10 @@ const GAMES=[
   {"id": "tents", "cat": "puzzle", "icon": "⛺", "name": "Палатки", "desc": "Сложи по една палатка до всяко дърво според числата", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "cubehop", "cat": "action", "icon": "🔶", "name": "Пирамидата", "desc": "Скачай по кубчетата, оцвети ги и бягай от слузите", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "twist", "cat": "puzzle", "icon": "🔄", "name": "Завърти квадратите", "desc": "Върти 2×2 блокове, докато всеки ред стане от един цвят", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "make24", "cat": "brain", "icon": "🎴", "name": "Направи 24", "desc": "Събирай, изваждай, умножавай и дели 4 числа, за да получиш 24", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "make24", "cat": "brain", "icon": "🎴", "name": "Направи 24", "desc": "Събирай, изваждай, умножавай и дели 4 числа, за да получиш 24", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "asteroids", "cat": "action", "icon": "☄️", "name": "Космически скали", "desc": "Върти кораба и разбивай летящите скали на все по-малки парчета", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "hashi", "cat": "puzzle", "icon": "🌉", "name": "Мостове", "desc": "Свържи островите с мостове — числото казва колко моста излизат от острова", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "ordernums", "cat": "brain", "icon": "🔢", "name": "Подреди числата", "desc": "Цъкай числата по големина — после идват минуси, десетични дроби, дроби и проценти", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мостове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌉 Мостове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 245. Мостове
+const HS={D:[[1,0],[0,1],[-1,0],[0,-1]],T:[0,0,0,0,0,0,8,11,14,17],MIN:[0,0,0,0,0,0,7,9,11,13]};
+A.add({id:'hashi',cat:'puzzle',icon:'🌉',name:'Мостове',desc:'Свържи островите с мостове — числото казва колко моста излизат от острова',
+  help:'Цъкни остров, после съседен остров (или плъзни от единия към другия): мостът става 1, после 2, после изчезва. Цъкни върху мост, за да го смениш. Мостовете вървят право, не се пресичат и всички острови трябва да се свържат. Клавиатура: стрелки = избери остров, Space + стрелка = мост, R = наново, N = нов пъзел (−20 сек).',
+  start(g){g.time=180;g.solved=0;g.msg='';g.msgT=0;g.kb=0;this.next(g);},
+  next(g){const N=Math.min(9,6+Math.floor(g.solved/2));g.N=N;g.cs=Math.floor(300/N);g.x0=Math.floor((480-N*g.cs)/2);g.y0=44+Math.floor((300-N*g.cs)/2);
+    let p,n=0;do{p=this.gen(N,HS.T[N]);}while(p.length<HS.MIN[N]&&n++<50);
+    g.isl=p;g.at={};p.forEach((q,i)=>{g.at[q.x+','+q.y]=i;});
+    g.nb=p.map(q=>HS.D.map(([dx,dy])=>{let x=q.x+dx,y=q.y+dy;while(x>=0&&y>=0&&x<N&&y<N){const j=g.at[x+','+y];if(j!==undefined)return j;x+=dx;y+=dy;}return -1;}));
+    g.br={};g.sel=-1;g.cur=0;g.mode=0;g.win=0;g.down=-1;},
+  // прави решим пъзел: расте от един остров с прави мостове, после добавя няколко кръга
+  gen(N,T){const cell=new Array(N*N).fill(0),I=(x,y)=>y*N+x,inb=(x,y)=>x>=0&&y>=0&&x<N&&y<N,isl=[],brs=[];
+    const f={x:A.ri(0,N-1),y:A.ri(0,N-1)};isl.push(f);cell[I(f.x,f.y)]=1;
+    for(let t=0;t<800&&isl.length<T;t++){const a=A.pick(isl),[dx,dy]=HS.D[A.ri(0,3)],L=A.ri(2,Math.max(2,Math.floor(N*.7)));
+      let ok=true;for(let k=1;k<=L;k++){const x=a.x+dx*k,y=a.y+dy*k;if(!inb(x,y)||cell[I(x,y)]){ok=false;break;}}
+      if(!ok)continue;const ex=a.x+dx*L,ey=a.y+dy*L;
+      if(HS.D.some(([ox,oy])=>inb(ex+ox,ey+oy)&&cell[I(ex+ox,ey+oy)]===1))continue;
+      for(let k=1;k<L;k++)cell[I(a.x+dx*k,a.y+dy*k)]=dx?2:3;
+      const b={x:ex,y:ey};isl.push(b);cell[I(ex,ey)]=1;brs.push({a,b,n:A.ri(1,2)});}
+    for(const a of isl)for(const [dx,dy] of [[1,0],[0,1]]){let x=a.x+dx,y=a.y+dy,k=1;
+      while(inb(x,y)&&cell[I(x,y)]===0){x+=dx;y+=dy;k++;}
+      if(k>1&&inb(x,y)&&cell[I(x,y)]===1&&Math.random()<.3){const b=isl.find(q=>q.x===x&&q.y===y);
+        for(let m=1;m<k;m++)cell[I(a.x+dx*m,a.y+dy*m)]=dx?2:3;brs.push({a,b,n:A.ri(1,2)});}}
+    isl.forEach(q=>{q.n=0;});brs.forEach(b=>{b.a.n+=b.n;b.b.n+=b.n;});return isl;},
+  k2(i,j){return i<j?i+'-'+j:j+'-'+i;},
+  pairs(g){return Object.keys(g.br).map(k=>{const [p,q]=k.split('-').map(Number);return [p,q,g.br[k]];});},
+  cells(g,i,j){const a=g.isl[i],b=g.isl[j],dx=Math.sign(b.x-a.x),dy=Math.sign(b.y-a.y),r=[];let x=a.x+dx,y=a.y+dy;
+    while(x!==b.x||y!==b.y){r.push(x+','+y);x+=dx;y+=dy;}return {r,h:dy===0};},
+  crosses(g,i,j){const m=this.cells(g,i,j);
+    return this.pairs(g).some(([p,q])=>{if((p===i&&q===j)||(p===j&&q===i))return false;const o=this.cells(g,p,q);return o.h!==m.h&&m.r.some(z=>o.r.includes(z));});},
+  deg(g,i){let s=0;for(const [p,q,n] of this.pairs(g))if(p===i||q===i)s+=n;return s;},
+  say(g,m){g.msg=m;g.msgT=2.2;},
+  tog(g,i,j){if(i<0||j<0||i===j||g.win)return;
+    if(!g.nb[i].includes(j)){this.say(g,'Тези острови не се виждат по права линия');A.beep(160,.15,'sawtooth');return;}
+    const k=this.k2(i,j),n=g.br[k]||0;
+    if(n===0&&this.crosses(g,i,j)){this.say(g,'Мостовете не могат да се пресичат!');A.beep(160,.15,'sawtooth');return;}
+    if(n>=2)delete g.br[k];else g.br[k]=n+1;A.beep(n>=2?300:520+n*200,.05,'triangle');this.check(g);},
+  check(g){if(g.isl.some((q,i)=>this.deg(g,i)!==q.n))return;
+    const P=this.pairs(g),seen=new Set([0]),st=[0];
+    while(st.length){const i=st.pop();for(const [p,q] of P){const o=p===i?q:q===i?p:-1;if(o>=0&&!seen.has(o)){seen.add(o);st.push(o);}}}
+    if(seen.size!==g.isl.length){this.say(g,'Числата са верни, но не всички острови са свързани!');return;}
+    g.solved++;g.score+=g.isl.length;g.time+=30;g.win=1.3;this.say(g,'Браво! Пъзелът е решен! +30 сек');A.tune([523,659,784,1046]);},
+  reset(g){if(g.win)return;g.br={};g.sel=-1;g.mode=0;A.beep(300,.05);},
+  skip(g){if(g.win)return;g.time-=20;this.say(g,'Нов пъзел (−20 сек)');this.next(g);},
+  cellAt(g,mx,my){return Math.floor((mx-g.x0)/g.cs)+','+Math.floor((my-g.y0)/g.cs);},
+  click(g,mx,my){if(g.win)return;
+    if(mx>=396&&mx<=474){if(my>=150&&my<=196)return this.reset(g);if(my>=214&&my<=260)return this.skip(g);}
+    const z=this.cellAt(g,mx,my),i=g.at[z]===undefined?-1:g.at[z];
+    if(i<0){g.down=-1;const b=this.pairs(g).find(([p,q])=>this.cells(g,p,q).r.includes(z));g.sel=-1;if(b)this.tog(g,b[0],b[1]);return;}
+    g.cur=i;g.dx=mx;g.dy=my;
+    if(g.sel>=0&&g.sel!==i){const s=g.sel;g.sel=-1;g.down=-1;this.tog(g,s,i);return;}
+    g.down=i;g.sel=g.sel===i?-1:i;A.beep(650,.02);},
+  release(g,mx,my){const i=g.down;g.down=-1;if(i<0||g.win)return;const dx=mx-g.dx,dy=my-g.dy;if(Math.hypot(dx,dy)<g.cs*.6)return;
+    const d=Math.abs(dx)>Math.abs(dy)?(dx>0?0:2):(dy>0?1:3);g.sel=-1;this.tog(g,i,g.nb[i][d]);},
+  move(g,d){let j=g.nb[g.cur][d];
+    if(j<0){const [dx,dy]=HS.D[d],a=g.isl[g.cur];let bs=1e9;
+      g.isl.forEach((q,i)=>{const ux=q.x-a.x,uy=q.y-a.y,al=ux*dx+uy*dy,sd=Math.abs(ux*dy-uy*dx);if(al>0&&al+sd*2<bs){bs=al+sd*2;j=i;}});}
+    if(j>=0){g.cur=j;A.beep(600,.02);}},
+  key(g,k){g.kb=1;const d={ArrowRight:0,KeyD:0,ArrowDown:1,KeyS:1,ArrowLeft:2,KeyA:2,ArrowUp:3,KeyW:3}[k];
+    if(d!==undefined){if(g.mode){g.mode=0;const j=g.nb[g.cur][d];if(j<0){this.say(g,'Натам няма остров');A.beep(160,.1,'sawtooth');}else this.tog(g,g.cur,j);}else this.move(g,d);return;}
+    if(k==='Space'||k==='Enter'){g.mode=g.mode?0:1;A.beep(760,.03);}else if(k==='KeyR')this.reset(g);else if(k==='KeyN')this.skip(g);},
+  update(g,dt){if(g.msgT>0)g.msgT-=dt;
+    if(g.win>0){g.win-=dt;if(g.win<=0){g.win=0;this.next(g);}return;}
+    g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Решени пъзели: '+g.solved);}},
+  draw(g){A.bg('#1d5fa8');
+    for(let x=0;x<480;x+=24)for(let y=0;y<360;y+=24)if(((x+y)/24)%2){c.fillStyle='#2266b3';c.fillRect(x,y,24,24);}
+    const cs=g.cs,X=i=>g.x0+g.isl[i].x*cs+cs/2,Y=i=>g.y0+g.isl[i].y*cs+cs/2;
+    c.fillStyle='rgba(255,255,255,.15)';for(let x=0;x<g.N;x++)for(let y=0;y<g.N;y++)c.fillRect(g.x0+x*cs+cs/2-1,g.y0+y*cs+cs/2-1,2,2);
+    for(const [p,q,n] of this.pairs(g)){const h=g.isl[p].y===g.isl[q].y,offs=n===1?[0]:[-cs*.15,cs*.15];
+      for(const o of offs){if(h){const a=Math.min(X(p),X(q)),b=Math.max(X(p),X(q)),y=Y(p)+o;
+          c.fillStyle='#5a3a20';c.fillRect(a,y-4,b-a,8);c.fillStyle=C.wood;for(let x=a;x<b-1;x+=8)c.fillRect(x+1,y-3,6,6);}
+        else{const a=Math.min(Y(p),Y(q)),b=Math.max(Y(p),Y(q)),x=X(p)+o;
+          c.fillStyle='#5a3a20';c.fillRect(x-4,a,8,b-a);c.fillStyle=C.wood;for(let y=a;y<b-1;y+=8)c.fillRect(x-3,y+1,6,6);}}}
+    if(g.mode&&!g.win){c.strokeStyle='#ffd54f';c.lineWidth=2;c.setLineDash([4,4]);
+      for(const j of g.nb[g.cur])if(j>=0){c.beginPath();c.moveTo(X(g.cur),Y(g.cur));c.lineTo(X(j),Y(j));c.stroke();}c.setLineDash([]);}
+    g.isl.forEach((q,i)=>{const d=this.deg(g,i),s=Math.floor(cs*.8),x=Math.round(X(i)-s/2),y=Math.round(Y(i)-s/2);
+      A.block(x,y,s,d===q.n?C.grass:d>q.n?C.red:C.sand);if(d<q.n){c.fillStyle=C.grass;c.fillRect(x,y,s,Math.max(3,Math.floor(s/6)));}
+      A.txt(''+q.n,X(i),Y(i)+2,Math.floor(s*.55),'#fff','center');
+      if(i===g.sel){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(x-3,y-3,s+6,s+6);}
+      if(g.kb&&i===g.cur){c.strokeStyle=g.mode?'#ffd54f':'#fff';c.lineWidth=2;c.setLineDash([3,3]);c.strokeRect(x-6,y-6,s+12,s+12);c.setLineDash([]);}});
+    A.txt('⏱ '+Math.ceil(g.time),10,16,16,g.time<20?'#ff6b6b':'#fff');A.txt('Мостове',240,16,20,'#ffd54f','center');A.txt('Решени: '+g.solved,470,16,14,'#fff','right');
+    A.block(396,150,78,'#5a6b8c',46);A.txt('⟲ Наново',435,173,12,'#fff','center');
+    A.block(396,214,78,'#7a5233',46);A.txt('⏭ Нов',435,231,13,'#fff','center');A.txt('−20 сек',435,247,10,'#ddd','center');
+    A.txt(g.N+'×'+g.N,45,173,16,'#fff','center');A.txt(g.isl.length+' острова',45,195,11,'#cfe','center');
+    const m=g.msgT>0?g.msg:g.mode?'Натисни стрелка — накъде да е мостът?':'';if(m)A.txt(m,240,36,m.length>40?11:13,'#fff','center');
+    if(g.win){c.fillStyle='rgba(90,161,58,.25)';c.fillRect(0,0,480,360);A.txt('Браво!',240,190,36,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

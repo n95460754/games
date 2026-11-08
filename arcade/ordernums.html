@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Подреди числата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔢 Подреди числата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 246. Подреди числата
+A.add({id:'ordernums',cat:'brain',icon:'🔢',name:'Подреди числата',desc:'Цъкай числата по големина — после идват минуси, десетични дроби, дроби и проценти',
+  help:'Цъкни (или натисни 1-6) числата в правилния ред. Гледай стрелката: понякога редът е от най-голямото към най-малкото! Грешка = −3 сек. Всяка подредена редица = 1 точка и +4 сек (3 поред = +6 сек).',
+  KIND:['Двуцифрени','Трицифрени','С минуси','Десетични','Дроби и проценти'],
+  start(g){g.time=60;g.streak=0;g.msg='';g.msgT=0;g.bad=null;this.next(g);},
+  dec(v){return (''+(+v.toFixed(2))).replace('.',',');},
+  next(g){const L=g.score,n=L<4?4:L<10?5:6,out=[],kind=L<3?0:L<6?1:L<9?2:L<12?3:4;g.kind=kind;
+    const add=(v,s)=>{if(out.length<n&&!out.some(o=>Math.abs(o.v-v)<1e-9))out.push({v,s});};
+    if(kind===1){let ds;do{ds=[A.ri(1,9),A.ri(0,9),A.ri(0,9)];}while(new Set(ds).size<3);
+      A.shuffle([[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]]).forEach(p=>{const d=p.map(i=>ds[i]);if(d[0]>0)add(d[0]*100+d[1]*10+d[2],''+(d[0]*100+d[1]*10+d[2]));});}
+    for(let t=0;t<500&&out.length<n;t++){
+      if(kind===0){const v=A.ri(1,99);add(v,''+v);}
+      else if(kind===1){const v=A.ri(100,999);add(v,''+v);}
+      else if(kind===2){const v=A.ri(-50,50);add(v,v<0?'−'+(-v):''+v);}
+      else if(kind===3){let v=A.ri(1,300)/100;if(Math.random()<.4)v=Math.round(v*10)/10||0.1;add(v,this.dec(v));}
+      else{const r=A.ri(0,2);
+        if(r===0){const b=A.pick([2,3,4,5,8,10]),a=A.ri(1,Math.random()<.3?2*b-1:b-1);if(a%b)add(a/b,a+'/'+b);}
+        else if(r===1){const p=A.ri(1,19)*5;add(p/100,p+'%');}
+        else{const v=A.ri(1,15)/10;add(v,this.dec(v));}}}
+    g.desc=L>=2&&Math.random()<.35;
+    g.items=A.shuffle(out).map(o=>({v:o.v,s:o.s,done:false,slot:-1}));
+    g.order=g.items.slice().sort((a,b)=>g.desc?b.v-a.v:a.v-b.v);g.pos=0;g.wait=0;},
+  geo(g,i){const n=g.items.length,w=64,gap=(480-n*w)/(n+1);return gap+i*(w+gap);},
+  pick(g,i){if(g.wait>0)return;const it=g.items[i];if(!it||it.done)return;
+    if(it===g.order[g.pos]){it.done=true;it.slot=g.pos;g.pos++;A.beep(560+g.pos*90,.06,'triangle');
+      if(g.pos===g.items.length){g.score++;g.streak++;const b=g.streak>=3?6:4;g.time+=b;g.wait=.8;g.fl={ok:true,t:.35};
+        g.msg='Браво! +'+b+' сек'+(g.streak>=3?' 🔥':'');g.msgT=1;A.tune([523,659,784]);}}
+    else{g.time-=3;g.streak=0;g.bad={i,t:.45};flash(g,false);g.msg=it.s+' не е следващото! −3 сек';g.msgT=1.5;}},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=g.items.length)this.pick(g,n-1);},
+  click(g,mx,my){if(my<84||my>160)return;for(let i=0;i<g.items.length;i++){const x=this.geo(g,i);if(mx>=x&&mx<=x+64)return this.pick(g,i);}},
+  update(g,dt){if(g.msgT>0)g.msgT-=dt;if(g.bad&&(g.bad.t-=dt)<=0)g.bad=null;
+    if(g.wait>0){g.wait-=dt;if(g.wait<=0)this.next(g);}
+    tick(g,dt);},
+  draw(g){A.bg('#1d2b3a');
+    for(let x=0;x<480;x+=40)for(let y=0;y<360;y+=40)if((x+y)%80===0){c.fillStyle='#213244';c.fillRect(x,y,40,40);}
+    A.txt('⏱ '+Math.ceil(g.time),10,16,16,g.time<10?'#ff6b6b':'#fff');A.txt('Редици: '+g.score,470,16,14,'#fff','right');
+    if(g.streak>=2)A.txt('🔥 '+g.streak+' поред',240,16,13,'#ffb74d','center');
+    A.txt(g.desc?'От НАЙ-ГОЛЯМОТО към най-малкото':'От най-малкото към най-голямото',240,46,g.desc?16:15,g.desc?'#ff9e40':'#9fe08a','center');
+    // стълбичка показва посоката
+    for(let i=0;i<4;i++){const h=6+(g.desc?3-i:i)*5;c.fillStyle=g.desc?'#ff9e40':'#9fe08a';c.fillRect(30+i*7,66-h,6,h);c.fillRect(424+i*7,66-h,6,h);}
+    const n=g.items.length;
+    g.items.forEach((it,i)=>{const x=this.geo(g,i);
+      if(it.done){c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x,90,64,64);return;}
+      const sh=g.bad&&g.bad.i===i?Math.sin(g.t*60)*3:0;
+      A.block(x+sh,90,64,g.bad&&g.bad.i===i?C.red:C.stone,64);c.fillStyle='rgba(0,0,0,.15)';c.fillRect(x+sh+8,98,6,6);c.fillRect(x+sh+50,140,6,6);
+      A.txt(it.s,x+32+sh,122,it.s.length>4?15:it.s.length>3?19:24,'#fff','center');A.txt(''+(i+1),x+5+sh,146,10,'rgba(255,255,255,.65)');});
+    A.txt('↓',240,186,18,'#b9c6d6','center');
+    for(let i=0;i<n;i++){const x=this.geo(g,i),it=g.order[i];
+      if(i<n-1)A.txt(g.desc?'>':'<',x+64+(this.geo(g,1)-this.geo(g,0)-64)/2,262,20,'#ffd54f','center');
+      if(it.done)A.block(x,230,64,C.grass,64);else{c.strokeStyle=i===g.pos?'#ffd54f':'rgba(255,255,255,.3)';c.lineWidth=3;c.strokeRect(x+2,232,60,60);}
+      if(it.done)A.txt(it.s,x+32,262,it.s.length>4?15:it.s.length>3?19:24,'#fff','center');}
+    A.txt('Ниво: '+this.KIND[g.kind],240,314,13,'#b9c6d6','center');
+    if(g.msgT>0)A.txt(g.msg,240,340,15,'#fff','center');
+    drawFlash(g);
+  }
+});
+</script>
+</body>
+</html>

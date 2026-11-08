@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Космически скали</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">☄️ Космически скали</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 244. Космически скали
+A.add({id:'asteroids',cat:'action',icon:'☄️',name:'Космически скали',desc:'Върти кораба и разбивай летящите скали на все по-малки парчета',
+  help:'← → / A D — завъртане, ↑ / W — газ, Space — стрелба. С мишка или пръст: задръж върху екрана — корабът се обръща натам, лети и стреля. Големите скали се цепят на по-малки, златните дават тройно!',
+  start(g){g.sh={x:240,y:180,vx:0,vy:0,a:-Math.PI/2};g.lives=3;g.wave=0;g.b=[];g.r=[];g.p=[];g.cd=0;g.inv=2;g.dead=0;g.msg='';g.msgT=0;g.thr=false;
+    g.stars=[];for(let i=0;i<60;i++)g.stars.push([A.ri(0,479),A.ri(0,359),A.ri(1,2),Math.random()*6]);this.wave(g);},
+  wave(g){g.wave++;const cols=[C.stone,C.coal,C.iron,C.dirt,C.purple,'#4a8a8a'];g.col=cols[(g.wave-1)%cols.length];
+    for(let i=0;i<2+g.wave;i++){let x,y;do{x=A.rnd(0,480);y=A.rnd(0,360);}while(Math.hypot(x-g.sh.x,y-g.sh.y)<130);this.rock(g,x,y,3);}
+    g.msg='Вълна '+g.wave;g.msgT=1.6;},
+  rock(g,x,y,sz){const sp=A.rnd(22,42)+Math.min(g.wave,10)*4+(3-sz)*22,an=A.rnd(0,6.283);
+    g.r.push({x,y,vx:Math.cos(an)*sp,vy:Math.sin(an)*sp,s:[0,12,22,36][sz],sz,a:A.rnd(0,6),va:A.rnd(-2,2),gold:Math.random()<.12});},
+  fire(g){if(g.cd>0||g.dead>0||g.b.length>=7)return;g.cd=.2;const s=g.sh,ca=Math.cos(s.a),sa=Math.sin(s.a);
+    g.b.push({x:s.x+ca*12,y:s.y+sa*12,vx:ca*330+s.vx,vy:sa*330+s.vy,t:1});A.beep(920,.04,'square',.025);},
+  boom(g,x,y,col,n){for(let i=0;i<n&&g.p.length<160;i++){const an=A.rnd(0,6.283),v=A.rnd(30,130);g.p.push({x,y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,t:A.rnd(.3,.7),col});}},
+  key(g,k){if(k==='Space')this.fire(g);},
+  click(g){this.fire(g);},
+  wrap(o,m){if(o.x<-m)o.x+=480+2*m;else if(o.x>480+m)o.x-=480+2*m;if(o.y<-m)o.y+=360+2*m;else if(o.y>360+m)o.y-=360+2*m;},
+  update(g,dt){const s=g.sh,K=A.keys;g.cd-=dt;if(g.msgT>0)g.msgT-=dt;
+    if(g.dead>0){g.dead-=dt;if(g.dead<=0){if(g.lives<=0)return A.over(g,'Корабът е разбит! Стигна до вълна '+g.wave);
+      s.x=240;s.y=180;s.vx=s.vy=0;s.a=-Math.PI/2;g.inv=2.5;}}
+    else{let th=!!(K.ArrowUp||K.KeyW);
+      if(K.ArrowLeft||K.KeyA)s.a-=4.2*dt;if(K.ArrowRight||K.KeyD)s.a+=4.2*dt;
+      if(A.mouse.down){const dx=A.mouse.x-s.x,dy=A.mouse.y-s.y;let d=Math.atan2(dy,dx)-s.a;d=Math.atan2(Math.sin(d),Math.cos(d));
+        s.a+=A.clamp(d,-5*dt,5*dt);if(Math.hypot(dx,dy)>70)th=true;if(Math.abs(d)<.35)this.fire(g);}
+      if(K.Space)this.fire(g);
+      g.thr=th;if(th){s.vx+=Math.cos(s.a)*230*dt;s.vy+=Math.sin(s.a)*230*dt;}
+      const f=Math.pow(.55,dt);s.vx*=f;s.vy*=f;const v=Math.hypot(s.vx,s.vy);if(v>250){s.vx*=250/v;s.vy*=250/v;}
+      s.x+=s.vx*dt;s.y+=s.vy*dt;this.wrap(s,8);if(g.inv>0)g.inv-=dt;}
+    for(const b of g.b){b.x+=b.vx*dt;b.y+=b.vy*dt;b.t-=dt;this.wrap(b,2);}
+    for(const r of g.r){r.x+=r.vx*dt;r.y+=r.vy*dt;r.a+=r.va*dt;this.wrap(r,r.s/2);}
+    for(const p of g.p){p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt;}
+    g.p=g.p.filter(p=>p.t>0);
+    // куршуми срещу скали
+    for(const b of g.b){if(b.t<=0)continue;
+      for(const r of g.r){if(r.dead)continue;if(Math.hypot(b.x-r.x,b.y-r.y)<r.s*.6+3){b.t=0;r.dead=1;
+        g.score+=[0,5,3,2][r.sz]*(r.gold?3:1);this.boom(g,r.x,r.y,r.gold?C.gold:g.col,6+r.sz*3);
+        A.beep(r.gold?1100:200+r.sz*-40+200,.08,r.gold?'triangle':'square',.04);
+        if(r.sz>1)for(let k=0;k<2;k++)this.rock(g,r.x+A.rnd(-4,4),r.y+A.rnd(-4,4),r.sz-1);break;}}}
+    g.b=g.b.filter(b=>b.t>0);
+    // кораб срещу скали
+    if(g.dead<=0&&g.inv<=0)for(const r of g.r){if(r.dead)continue;if(Math.hypot(s.x-r.x,s.y-r.y)<r.s*.55+7){
+      g.lives--;g.dead=1.4;this.boom(g,s.x,s.y,'#ff6a00',26);A.beep(110,.4,'sawtooth',.06);break;}}
+    g.r=g.r.filter(r=>!r.dead);
+    if(!g.r.length&&g.dead<=0){g.score+=g.wave*5;A.tune([523,659,784]);this.wave(g);}
+  },
+  draw(g){A.bg('#05070f');
+    for(const st of g.stars){c.fillStyle='rgba(255,255,255,'+(.35+.3*Math.sin(g.t*2+st[3]))+')';c.fillRect(st[0],st[1],st[2],st[2]);}
+    for(const r of g.r){c.save();c.translate(r.x,r.y);c.rotate(r.a);const h=r.s/2;A.block(-h,-h,r.s,r.gold?C.stone:g.col);
+      if(r.gold){c.fillStyle=C.gold;c.fillRect(-h/2,-h/2,h/2,h/2);c.fillRect(h/4,h/6,h/2,h/2);c.fillRect(-h/2,h/3,h/3,h/3);}
+      else if(r.s>15){c.fillStyle='rgba(0,0,0,.25)';c.fillRect(-h/2,-h/3,r.s/5,r.s/5);c.fillRect(h/5,h/5,r.s/6,r.s/6);}
+      c.restore();}
+    c.fillStyle='#ffd54f';for(const b of g.b)c.fillRect(b.x-2,b.y-2,4,4);
+    for(const p of g.p){c.fillStyle=p.col;c.fillRect(p.x-1.5,p.y-1.5,3,3);}
+    const s=g.sh;
+    if(g.dead<=0&&!(g.inv>0&&Math.floor(g.t*10)%2)){c.save();c.translate(s.x,s.y);c.rotate(s.a);
+      if(g.thr){c.fillStyle=Math.floor(g.t*20)%2?'#ff6a00':'#ffd23f';c.fillRect(-17,-3,7,6);}
+      A.block(-10,-11,7,'#d84a3a');A.block(-10,4,7,'#d84a3a');A.block(-9,-6,14,'#cfd8dc',12);A.block(4,-3,7,C.gem,6);
+      c.restore();}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');A.txt('Вълна '+g.wave,470,14,14,'#fff','right');
+    if(g.msgT>0)A.txt(g.msg,240,150,30,'#ffd54f','center');
+    if(g.t<4)A.txt('← → завърти · ↑ газ · Space стреляй · или задръж с мишката',240,340,11,'#b9c6d6','center');
+  }
+});
+</script>
+</body>
+</html>
