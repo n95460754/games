@@ -8,7 +8,6 @@ on:
       - 'AI_BOARD_ROOM.md'
 jobs:
   animation:
-    runs-on-latest: ubuntu-latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
