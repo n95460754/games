@@ -260,7 +260,7 @@ if (!log.copilotAppointed) {
     const dir = path.join(__dirname, '..', 'arcade');
     file = pick(fs.readdirSync(dir).filter((f) => f.endsWith('.html')));
     const src = fs.readFileSync(path.join(dir, file), 'utf8');
-    lines = src.split('\n').length; kb = (Buffer.byteLength(src) / 1024).toFixed(1);
+    lines = src.trimEnd().split('\n').length; kb = (Buffer.byteLength(src) / 1024).toFixed(1);
   } catch {}
   if (file) {
     const tips = ['кеширай ctx настройките извън draw()', 'ползвай requestAnimationFrame, не setInterval', 'не създавай нови обекти във всеки кадър', 'пази рекордите през интерфейса на engine.js', 'изнеси магическите числа в константи'];
