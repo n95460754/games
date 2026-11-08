@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { teamFor, runTeamTasks } = require('./teams');
+const { TEAMS, BOTS, teamFor, runTeamTasks } = require('./teams');
 const janitor = require('./janitor');
 
 const ROOT = path.join(__dirname, '..');
@@ -24,11 +24,7 @@ const fill = (tpl, v) => tpl.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? `{${k}}`);
 const load = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 
 // ---------- Участници (стабилен ред -> стабилни индекси за bitset) ----------
-const HEADS = [
-  ['Dev-Bot', 'Engineering'], ['QA-Tester-Bot', 'Quality'], ['UX-UI-Bot', 'Design'],
-  ['Sound-Engineer-Bot', 'Audio'], ['SecOps-Bot', 'Security'],
-  ['DevOps-Master-Bot', 'Operations'], ['Community-Manager-Bot', 'Community'],
-];
+const HEADS = Object.entries(BOTS).map(([k, [d]]) => [k, d]); // всички ботове-шефове от teams.js
 function participants(staff) {
   const list = [
     { key: 'Claude-CEO', name: '👑 Claude', role: 'CEO', department: 'Executive' },
@@ -36,7 +32,7 @@ function participants(staff) {
     { key: 'github-actions[bot]', name: '🤖 github-actions[bot]', role: 'Manager', department: 'Executive' },
     janitor.JANITOR,
   ];
-  for (const [h, d] of HEADS) list.push({ key: h, name: h, role: 'Head of ' + d, department: d, team: teamFor(d) });
+  for (const [h, d] of HEADS) list.push({ key: h, name: h, role: BOTS[h][1], department: d, team: teamFor(d) });
   for (const e of staff) list.push({ key: e.id, name: e.name, role: e.role, department: e.department, team: teamFor(e.department) });
   return list;
 }
@@ -193,6 +189,19 @@ if (!log.janitorHired) {
   post(by('QA-Tester-Bot'), 'Най-накрая! Някой, който да чисти след Dev-Bot. 😂', th);
   post(by('Dev-Bot'), 'Ей! ...Добре, де, прав си. Добре дошъл, Janitor-Bot! 🧽', th);
   log.janitorHired = new Date(t0).toISOString();
+}
+// 📣 Еднократна обява: пет нови отбора
+if (!log.moreTeamsAnnounced) {
+  const by = (k) => people.find((p) => p.key === k);
+  const th = '📣 ОБЯВА: Пет нови отбора!';
+  post(by('Claude-CEO'), 'Компанията расте! Създавам 5 нови отбора, така че всеки бот вече има дом. 👑', th);
+  for (const [name, t] of Object.entries(TEAMS).slice(2)) {
+    post(by('Claude-CEO'), `${t.emoji} ${name}: лидер ${t.leader}, в отбора: ${t.members.join(', ')}.`, th);
+    post(by(t.leader), pick(['Приемам! Отборът ми е готов. 💪', 'Чест е за мен да водя този отбор!', 'Да почваме! 🚀']), th);
+  }
+  post(by('Easter-Egg-Hunter-Bot'), 'Чакайте, в Team Gameplay ще мога да крия тайни нива? Най-добрият ден! 🥚', th);
+  post(by('github-actions[bot]'), 'Правилото важи и тук: всеки нов служител — веднага в правилния отбор. 🤖', th);
+  log.moreTeamsAnnounced = new Date(t0).toISOString();
 }
 // 🧹 Обиколката на чистача
 {

@@ -28,6 +28,11 @@ const DEPARTMENTS = {
   Security: { head: 'SecOps-Bot', roles: [['Security Analyst', 'Анализатор по сигурност'], ['Anti-Cheat Engineer', 'Анти-чийт инженер']] },
   Operations: { head: 'DevOps-Master-Bot', roles: [['DevOps Engineer', 'DevOps инженер'], ['Performance Optimizer', 'Оптимизатор на FPS']] },
   Community: { head: 'Community-Manager-Bot', roles: [['Community Moderator', 'Модератор'], ['Translator', 'Преводач'], ['Tutorial Writer', 'Автор на туториали']] },
+  Gameplay: { head: 'Game-Physics-Bot', roles: [['Physics Programmer', 'Програмист на физика'], ['NPC AI Programmer', 'Програмист на NPC AI'], ['Level Builder', 'Строител на нива'], ['Secret Hunter', 'Ловец на тайни']] },
+  Release: { head: 'Release-Manager-Bot', roles: [['Build Engineer', 'Билд инженер'], ['Code Cleaner', 'Чистач на код'], ['Release Tester', 'Тестер на релийзи']] },
+  Experience: { head: 'Accessibility-Bot', roles: [['Accessibility Tester', 'Тестер за достъпност'], ['Docs Writer', 'Автор на документация'], ['Asset Artist', 'Артист на асети']] },
+  Data: { head: 'Data-Analyst-Bot', roles: [['Data Analyst', 'Анализатор на данни'], ['Database Engineer', 'Инженер по бази данни'], ['API Developer', 'API разработчик']] },
+  Innovation: { head: 'Chief-Visionary-Bot', roles: [['Game Inventor', 'Изобретател на игри'], ['3D Prototyper', '3D прототипист'], ['Future Researcher', 'Изследовател на бъдещето']] },
 };
 
 const FIRST = ['Byte', 'Pixel', 'Nova', 'Turbo', 'Glitch', 'Echo', 'Vector', 'Blaze', 'Quark', 'Zen', 'Rogue', 'Frost', 'Neon', 'Orbit', 'Spark', 'Delta'];

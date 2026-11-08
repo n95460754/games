@@ -1,5 +1,5 @@
 {
- "next": 11,
+ "next": 31,
  "tasks": [
   {
    "id": "TASK-0001",
@@ -7,10 +7,10 @@
    "title": "Нарисувай нови спрайтове за Стрелочник",
    "assignee": "EMP-0001",
    "assignee_name": "Spark Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 3,
    "created": "2026-11-08T23:07:15.119Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0002",
@@ -18,10 +18,10 @@
    "title": "Направи regression тест на Скачане на въже",
    "assignee": "EMP-0004",
    "assignee_name": "Echo Runner",
-   "status": "doing",
+   "status": "review",
    "created_round": 3,
    "created": "2026-11-08T23:07:15.119Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0003",
@@ -29,10 +29,10 @@
    "title": "Направи regression тест на Блокова змия",
    "assignee": "EMP-0003",
    "assignee_name": "Neon Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 3,
    "created": "2026-11-08T23:07:15.119Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0004",
@@ -40,10 +40,10 @@
    "title": "Напиши туториал за Дама",
    "assignee": "EMP-0002",
    "assignee_name": "Rogue Miner",
-   "status": "doing",
+   "status": "review",
    "created_round": 3,
    "created": "2026-11-08T23:07:15.119Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0005",
@@ -51,10 +51,10 @@
    "title": "Преведи Оцвети картата на английски",
    "assignee": "Community-Manager-Bot",
    "assignee_name": "Community-Manager-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 3,
    "created": "2026-11-08T23:07:15.119Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0006",
@@ -62,10 +62,10 @@
    "title": "Преведи Сребърни рибки на английски",
    "assignee": "EMP-0007",
    "assignee_name": "Glitch Forge",
-   "status": "doing",
+   "status": "review",
    "created_round": 3,
    "created": "2026-11-08T23:07:15.119Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0007",
@@ -73,10 +73,10 @@
    "title": "Добави фонова мелодия в Червен прах",
    "assignee": "Sound-Engineer-Bot",
    "assignee_name": "Sound-Engineer-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 4,
    "created": "2026-11-08T23:09:30.517Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0008",
@@ -84,10 +84,10 @@
    "title": "Подобри менюто на Строй числото",
    "assignee": "UX-UI-Bot",
    "assignee_name": "UX-UI-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 4,
    "created": "2026-11-08T23:09:30.517Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0009",
@@ -95,10 +95,10 @@
    "title": "Оправи колизиите в Оцвети картата",
    "assignee": "EMP-0005",
    "assignee_name": "Blaze Hawk",
-   "status": "todo",
+   "status": "doing",
    "created_round": 4,
    "created": "2026-11-08T23:09:30.517Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
   },
   {
    "id": "TASK-0010",
@@ -106,10 +106,230 @@
    "title": "Добави анти-чийт за рекордите в Битка с дракона",
    "assignee": "SecOps-Bot",
    "assignee_name": "SecOps-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 4,
    "created": "2026-11-08T23:09:30.517Z",
-   "updated": "2026-11-08T23:09:30.517Z"
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0011",
+   "team": "Team Dev",
+   "title": "Добави бонус ниво в Въртележка от блокове",
+   "assignee": "EMP-0015",
+   "assignee_name": "Pixel Smith",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0012",
+   "team": "Team Dev",
+   "title": "Добави бонус ниво в Завъртяна фигура",
+   "assignee": "EMP-0017",
+   "assignee_name": "Quark Fox",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0013",
+   "team": "Team Dev",
+   "title": "Провери дали рекордът в Битка с дракона се пази",
+   "assignee": "QA-Tester-Bot",
+   "assignee_name": "QA-Tester-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0014",
+   "team": "Team DevOps",
+   "title": "Събери отзиви от играчите за Защита на замъка",
+   "assignee": "EMP-0009",
+   "assignee_name": "Vector Fox",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0015",
+   "team": "Team DevOps",
+   "title": "Ускори зареждането на Не пипай жицата",
+   "assignee": "EMP-0014",
+   "assignee_name": "Spark Miner",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0016",
+   "team": "Team DevOps",
+   "title": "Намали размера на Пукни рудите",
+   "assignee": "EMP-0018",
+   "assignee_name": "Orbit Coder",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0017",
+   "team": "Team Gameplay",
+   "title": "Направи ново трудно ниво за Раздели слузите",
+   "assignee": "Level-Designer-Bot",
+   "assignee_name": "Level-Designer-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0018",
+   "team": "Team Gameplay",
+   "title": "Скрий тайно ниво в Ханойски кули 🥚",
+   "assignee": "AI-Trainer-Bot",
+   "assignee_name": "AI-Trainer-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0019",
+   "team": "Team Gameplay",
+   "title": "Добави по-умни врагове в Завъртяна фигура",
+   "assignee": "Easter-Egg-Hunter-Bot",
+   "assignee_name": "Easter-Egg-Hunter-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0020",
+   "team": "Team Release",
+   "title": "Направи Шанс за диамант да зарежда под 1 секунда",
+   "assignee": "Refactoring-Bot",
+   "assignee_name": "Refactoring-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0021",
+   "team": "Team Release",
+   "title": "Почисти стария код в Пирамидата",
+   "assignee": "Bug-Hunter-Bot",
+   "assignee_name": "Bug-Hunter-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0022",
+   "team": "Team Release",
+   "title": "Хвани последните бъгове в Къде беше?",
+   "assignee": "Performance-Optimizer-Bot",
+   "assignee_name": "Performance-Optimizer-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0023",
+   "team": "Team Experience",
+   "title": "Добави управление само с клавиатура в Ледена пързалка",
+   "assignee": "UI-Animation-Bot",
+   "assignee_name": "UI-Animation-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0024",
+   "team": "Team Experience",
+   "title": "Напиши инструкции за Орбитална защита",
+   "assignee": "Asset-Manager-Bot",
+   "assignee_name": "Asset-Manager-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0025",
+   "team": "Team Experience",
+   "title": "Добави плавни анимации в менюто на Звезден кораб",
+   "assignee": "Localization-Bot",
+   "assignee_name": "Localization-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0026",
+   "team": "Team Data",
+   "title": "Подреди рекордите на Шанс за диамант в класация",
+   "assignee": "Growth-Hacker-Bot",
+   "assignee_name": "Growth-Hacker-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0027",
+   "team": "Team Data",
+   "title": "Подреди рекордите на Въздушен хокей в класация",
+   "assignee": "EMP-0010",
+   "assignee_name": "Rogue Runner",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0028",
+   "team": "Team Data",
+   "title": "Преброй колко пъти се играе Защита на замъка",
+   "assignee": "API-Integration-Bot",
+   "assignee_name": "API-Integration-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0029",
+   "team": "Team Future Lab",
+   "title": "Измисли 3D версия на Шанс за диамант",
+   "assignee": "Crypto-Tokenomics-Bot",
+   "assignee_name": "Crypto-Tokenomics-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
+  },
+  {
+   "id": "TASK-0030",
+   "team": "Team Future Lab",
+   "title": "Измисли система от значки за Колко време мина 🏅",
+   "assignee": "Metaverse-Architect-Bot",
+   "assignee_name": "Metaverse-Architect-Bot",
+   "status": "todo",
+   "created_round": 5,
+   "created": "2026-11-08T23:11:05.878Z",
+   "updated": "2026-11-08T23:11:05.878Z"
   }
  ]
 }

@@ -1,6 +1,11 @@
 // Отбори и задачи.
-// 🛠️ Team Dev    — лидер Dev-Bot; в отбора: QA-Tester-Bot, UX-UI-Bot, Sound-Engineer-Bot
-// ⚙️ Team DevOps — лидер DevOps-Master-Bot; в отбора: Community-Manager-Bot, SecOps-Bot
+// 🛠️ Team Dev        — Dev-Bot: QA-Tester-Bot, UX-UI-Bot, Sound-Engineer-Bot
+// ⚙️ Team DevOps     — DevOps-Master-Bot: Community-Manager-Bot, SecOps-Bot
+// 🎮 Team Gameplay   — Game-Physics-Bot: Level-Designer-Bot, AI-Trainer-Bot, Easter-Egg-Hunter-Bot
+// 🚀 Team Release    — Release-Manager-Bot: Build-Master-Bot, Performance-Optimizer-Bot, Refactoring-Bot, Bug-Hunter-Bot
+// 🌍 Team Experience — Accessibility-Bot: Localization-Bot, Documentation-Bot, UI-Animation-Bot, Asset-Manager-Bot
+// 📊 Team Data       — Data-Analyst-Bot: Database-Admin-Bot, API-Integration-Bot, Growth-Hacker-Bot
+// 🔮 Team Future Lab — Chief-Visionary-Bot: Metaverse-Architect-Bot, Crypto-Tokenomics-Bot
 // ПРАВИЛО: всеки нов служител влиза в отбора на своя отдел (teamFor).
 // Ако някой ден се добави отдел без отбор, teamFor хвърля грешка и HR-Bot спира,
 // вместо да наеме служител без отбор.
@@ -27,6 +32,62 @@ const TEAMS = {
     departments: ['Operations', 'Community', 'Security'],
     reviewer: 'DevOps-Master-Bot',
   },
+  // ---- Нови отбори (лидерите и членовете са избрани от Claude) ----
+  'Team Gameplay': {
+    emoji: '🎮',
+    leader: 'Game-Physics-Bot',          // физиката е сърцето на всяка игра
+    members: ['Level-Designer-Bot', 'AI-Trainer-Bot', 'Easter-Egg-Hunter-Bot'],
+    departments: ['Gameplay'],
+    reviewer: 'Level-Designer-Bot',      // пробва всяко ниво преди одобрение
+  },
+  'Team Release': {
+    emoji: '🚀',
+    leader: 'Release-Manager-Bot',       // решава кога нещо е готово за играчите
+    members: ['Build-Master-Bot', 'Performance-Optimizer-Bot', 'Refactoring-Bot', 'Bug-Hunter-Bot'],
+    departments: ['Release'],
+    reviewer: 'Bug-Hunter-Bot',          // нищо не излиза без лов на бъгове
+  },
+  'Team Experience': {
+    emoji: '🌍',
+    leader: 'Accessibility-Bot',         // игрите трябва да са за ВСИЧКИ
+    members: ['Localization-Bot', 'Documentation-Bot', 'UI-Animation-Bot', 'Asset-Manager-Bot'],
+    departments: ['Experience'],
+    reviewer: 'Accessibility-Bot',
+  },
+  'Team Data': {
+    emoji: '📊',
+    leader: 'Data-Analyst-Bot',          // знае кои игри се играят най-много
+    members: ['Database-Admin-Bot', 'API-Integration-Bot', 'Growth-Hacker-Bot'],
+    departments: ['Data'],
+    reviewer: 'Database-Admin-Bot',
+  },
+  'Team Future Lab': {
+    emoji: '🔮',
+    leader: 'Chief-Visionary-Bot',       // мечтае за следващата голяма игра
+    members: ['Metaverse-Architect-Bot', 'Crypto-Tokenomics-Bot'],
+    departments: ['Innovation'],
+    reviewer: 'Chief-Visionary-Bot',
+  },
+};
+
+// Всички ботове-шефове: отдел + длъжност (за чата и задачите)
+const BOTS = {
+  'Dev-Bot': ['Engineering', 'Head of Engineering'], 'QA-Tester-Bot': ['Quality', 'Head of Quality'],
+  'UX-UI-Bot': ['Design', 'Head of Design'], 'Sound-Engineer-Bot': ['Audio', 'Head of Audio'],
+  'SecOps-Bot': ['Security', 'Head of Security'], 'DevOps-Master-Bot': ['Operations', 'Head of Operations'],
+  'Community-Manager-Bot': ['Community', 'Head of Community'],
+  'Game-Physics-Bot': ['Gameplay', 'Physics Lead'], 'Level-Designer-Bot': ['Gameplay', 'Level Designer'],
+  'AI-Trainer-Bot': ['Gameplay', 'NPC AI Trainer'], 'Easter-Egg-Hunter-Bot': ['Gameplay', 'Secrets Designer'],
+  'Release-Manager-Bot': ['Release', 'Release Manager'], 'Build-Master-Bot': ['Release', 'Build Master'],
+  'Performance-Optimizer-Bot': ['Release', 'Performance Optimizer'], 'Refactoring-Bot': ['Release', 'Refactoring Expert'],
+  'Bug-Hunter-Bot': ['Release', 'Bug Hunter'],
+  'Accessibility-Bot': ['Experience', 'Accessibility Lead'], 'Localization-Bot': ['Experience', 'Localization Expert'],
+  'Documentation-Bot': ['Experience', 'Docs Writer'], 'UI-Animation-Bot': ['Experience', 'UI Animator'],
+  'Asset-Manager-Bot': ['Experience', 'Asset Manager'],
+  'Data-Analyst-Bot': ['Data', 'Data Analyst'], 'Database-Admin-Bot': ['Data', 'Database Admin'],
+  'API-Integration-Bot': ['Data', 'API Engineer'], 'Growth-Hacker-Bot': ['Data', 'Growth Hacker'],
+  'Chief-Visionary-Bot': ['Innovation', 'Chief Visionary'], 'Metaverse-Architect-Bot': ['Innovation', 'Metaverse Architect'],
+  'Crypto-Tokenomics-Bot': ['Innovation', 'Tokenomics Designer'],
 };
 
 function teamFor(department) {
@@ -42,12 +103,14 @@ const TASK_TEMPLATES = {
   Audio: ['Направи 8-bit звук за скок в {game}', 'Добави фонова мелодия в {game}', 'Направи звук при game over в {game}'],
   Operations: ['Ускори зареждането на {game}', 'Провери пътищата на {game} в GitHub Pages', 'Намали размера на {game}'],
   Community: ['Преведи {game} на английски', 'Напиши туториал за {game}', 'Събери отзиви от играчите за {game}'],
+  Gameplay: ['Направи гравитацията в {game} по-реалистична', 'Добави по-умни врагове в {game}', 'Скрий тайно ниво в {game} 🥚', 'Направи ново трудно ниво за {game}'],
+  Release: ['Подготви {game} за пускане', 'Направи {game} да зарежда под 1 секунда', 'Почисти стария код в {game}', 'Хвани последните бъгове в {game}'],
+  Experience: ['Направи {game} удобна за далтонисти', 'Добави управление само с клавиатура в {game}', 'Напиши инструкции за {game}', 'Добави плавни анимации в менюто на {game}'],
+  Data: ['Преброй колко пъти се играе {game}', 'Провери кои нива в {game} са най-трудни', 'Подреди рекордите на {game} в класация'],
+  Innovation: ['Измисли 3D версия на {game}', 'Измисли мултиплейър режим за {game}', 'Измисли система от значки за {game} 🏅'],
   Security: ['Провери {game} за XSS', 'Добави анти-чийт за рекордите в {game}', 'Провери дали {game} не зарежда външни скриптове'],
 };
-const HEAD_DEPT = {
-  'Dev-Bot': 'Engineering', 'QA-Tester-Bot': 'Quality', 'UX-UI-Bot': 'Design', 'Sound-Engineer-Bot': 'Audio',
-  'DevOps-Master-Bot': 'Operations', 'Community-Manager-Bot': 'Community', 'SecOps-Bot': 'Security',
-};
+const HEAD_DEPT = Object.fromEntries(Object.entries(BOTS).map(([k, [d]]) => [k, d]));
 
 const NEW_PER_RUN = 3;   // нови задачи на отбор при всяко пускане
 const MAX_OPEN = 15;     // максимум отворени задачи на отбор
@@ -143,4 +206,4 @@ function renderTeams(board, people) {
   return md;
 }
 
-module.exports = { TEAMS, teamFor, runTeamTasks };
+module.exports = { TEAMS, BOTS, teamFor, runTeamTasks };
