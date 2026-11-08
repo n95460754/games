@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Факли срещу мобове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔥 Факли срещу мобове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 293. Факли срещу мобове
+A.add({id:'torchlight',cat:'puzzle',icon:'🔥',name:'Факли срещу мобове',desc:'Освети цялата пещера с малко факли, за да не се появяват мобове в тъмното',
+  help:'Факлата свети 3 блока във всяка посока (светлината заобикаля камъните, но не минава през тях). Освети всяко поле, за да не се появят мобове! Клик или стрелки + Space — слагаш/махаш факла. R — изчисти. Имаш ограничен брой факли; ако ти останат — бонус. Времето расте с всяко решено ниво.',
+  R:3,
+  start(g){g.lvl=0;g.time=90;g.msg='';g.mt=0;this.next(g);},
+  next(g){g.lvl++;const L=g.lvl;g.W=Math.min(11,5+L);g.H=Math.min(8,4+Math.ceil(L/2));
+    let tries=0;do{g.wall=[];for(let i=0;i<g.W*g.H;i++)g.wall.push(Math.random()<.2);tries++;}while(this.floorN(g)<g.W*g.H*.6&&tries<50);
+    g.tor=[];g.cx=0;g.cy=0;g.budget=this.solve(g);
+    g.cs=Math.min(Math.floor(440/g.W),Math.floor(262/g.H),48);g.ox=Math.floor((480-g.cs*g.W)/2);g.oy=36+Math.floor((262-g.cs*g.H)/2);this.light(g);},
+  floorN(g){return g.wall.filter(w=>!w).length;},
+  // разстояния от поле (BFS, без да минава през камък)
+  reach(g,s){const W=g.W,H=g.H,d=new Array(W*H).fill(99);d[s]=0;const q=[s];
+    while(q.length){const i=q.shift();if(d[i]>=this.R-1)continue;const x=i%W,y=(i/W)|0;
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy,j=ny*W+nx;if(nx<0||ny<0||nx>=W||ny>=H||g.wall[j]||d[j]<=d[i]+1)continue;d[j]=d[i]+1;q.push(j);}}
+    return d;},
+  solve(g){const N=g.W*g.H,cov=[];for(let i=0;i<N;i++)cov.push(g.wall[i]?[]:this.reach(g,i).map((v,j)=>v<99?j:-1).filter(j=>j>=0));
+    let best=99;for(let t=0;t<25;t++){const lit=new Array(N).fill(false);let left=this.floorN(g),n=0;
+      while(left>0){let bi=-1,bv=-1;for(let i=0;i<N;i++){if(g.wall[i])continue;let v=0;for(const j of cov[i])if(!lit[j])v++;v+=Math.random()*(t?0.9:0);if(v>bv){bv=v;bi=i;}}
+        for(const j of cov[bi])if(!lit[j]){lit[j]=true;left--;}n++;}
+      best=Math.min(best,n);}
+    return best;},
+  light(g){const N=g.W*g.H;g.lv=new Array(N).fill(0);for(const t of g.tor){const d=this.reach(g,t);for(let j=0;j<N;j++)if(d[j]<99)g.lv[j]=Math.max(g.lv[j],this.R-d[j]);}
+    g.dark=0;for(let j=0;j<N;j++)if(!g.wall[j]&&!g.lv[j])g.dark++;},
+  toggle(g,i){if(g.mt>0||g.wall[i])return;const k=g.tor.indexOf(i);
+    if(k>=0){g.tor.splice(k,1);A.beep(300,.05);}else{if(g.tor.length>=g.budget){g.msg='Нямаш повече факли!';g.mt=0;g.mt2=1.2;A.beep(120,.15,'sawtooth');return;}g.tor.push(i);A.beep(660,.05,'triangle');}
+    this.light(g);if(!g.dark){const spare=g.budget-g.tor.length,pts=2+g.lvl+spare*3;g.score+=pts;g.time+=20;g.msg='Пещерата е светла! +'+pts;g.mt=1.4;A.tune([523,659,784]);}},
+  key(g,k){if(g.mt>0)return;if(k==='ArrowLeft')g.cx=Math.max(0,g.cx-1);if(k==='ArrowRight')g.cx=Math.min(g.W-1,g.cx+1);
+    if(k==='ArrowUp')g.cy=Math.max(0,g.cy-1);if(k==='ArrowDown')g.cy=Math.min(g.H-1,g.cy+1);
+    if(k==='Space'||k==='Enter')this.toggle(g,g.cy*g.W+g.cx);if(k==='KeyR'){g.tor=[];this.light(g);}},
+  click(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x<0||y<0||x>=g.W||y>=g.H)return;g.cx=x;g.cy=y;this.toggle(g,y*g.W+x);},
+  update(g,dt){if(g.mt2>0){g.mt2-=dt;if(g.mt2<=0)g.msg='';}
+    if(g.mt>0){g.mt-=dt;if(g.mt<=0){g.msg='';this.next(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Ниво '+g.lvl);},
+  draw(g){A.bg('#14110f');const cs=g.cs,W=g.W;
+    for(let y=0;y<g.H;y++)for(let x=0;x<W;x++){const i=y*W+x,px=g.ox+x*cs,py=g.oy+y*cs;
+      if(g.wall[i]){A.block(px,py,cs,'#6f6f6f');c.fillStyle='#5a5a5a';c.fillRect(px+cs*.2,py+cs*.3,cs*.25,cs*.2);c.fillRect(px+cs*.55,py+cs*.6,cs*.25,cs*.18);continue;}
+      const l=g.lv[i];A.block(px,py,cs,l?['#3a2f26','#6b5236','#8f6e45','#b88d55'][l]:'#1f1a16');
+      if(!l){const m=cs*.28;c.fillStyle='#2e7d32';c.fillRect(px+m,py+m,cs-2*m,cs-2*m);c.fillStyle='#000';c.fillRect(px+m+2,py+m+3,4,4);c.fillRect(px+cs-m-6,py+m+3,4,4);}
+      if(g.tor.includes(i)){const tx=px+cs/2;c.fillStyle='#6d4c2f';c.fillRect(tx-2,py+cs*.35,4,cs*.5);c.fillStyle=Math.sin(g.t*14+i)>0?'#ffeb3b':'#ff9800';c.fillRect(tx-4,py+cs*.2,8,cs*.18);}}
+    if(g.mt<=0){c.strokeStyle='#4dd0e1';c.lineWidth=3;c.strokeRect(g.ox+g.cx*cs+1,g.oy+g.cy*cs+1,cs-2,cs-2);}
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('Ниво '+g.lvl,8,14,14,'#ffd54f');A.txt('🔥 '+g.tor.length+'/'+g.budget,120,14,14,'#ffb74d');A.txt('Тъмни: '+g.dark,210,14,14,g.dark?'#81c784':'#fff');
+    A.txt('⏱ '+Math.ceil(Math.max(0,g.time)),330,14,14,g.time<15?'#f55':'#fff');A.txt('Точки: '+g.score,472,14,14,'#fff','right');
+    c.fillStyle='#000';c.fillRect(0,330,480,30);A.txt(g.msg||'Зелените лица = тук ще се появи моб. Освети ги!',240,345,g.msg?15:12,g.msg?'#ffd54f':'#b9c6d6','center');}
+});
+</script>
+</body>
+</html>

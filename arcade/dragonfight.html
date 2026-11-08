@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Битка с дракона</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐉 Битка с дракона</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 292. Битка с дракона
+A.add({id:'dragonfight',cat:'action',icon:'🐉',name:'Битка с дракона',desc:'В Края: разбий кристалите на стълбовете и свали Ендър дракона с лъка',
+  help:'← → или A / D (или мишка/пръст) — тичаш. Space или клик — стреляш с лъка. Кристалите на стълбовете лекуват дракона — разбий ги първо (+3)! Всеки удар в дракона = +1, победа = +10. Пази се от лилавите огнени топки. 3 живота.',
+  start(g){g.round=0;g.lives=3;g.px=240;g.tx=null;g.arrows=[];g.balls=[];g.parts=[];g.cd=0;g.inv=0;g.msg='';g.mt=0;
+    g.stars=[];for(let i=0;i<40;i++)g.stars.push([A.ri(0,479),A.ri(30,250)]);this.newRound(g);},
+  newRound(g){g.round++;const n=Math.min(6,2+g.round);g.cr=[];
+    for(let i=0;i<n;i++){const x=Math.round(40+i*(400/(n-1||1)));g.cr.push({x,y:A.ri(150,215),alive:true});}
+    g.dhp=g.dmax=8+g.round*2;g.dx=240;g.dy=80;g.dph=0;g.heal=0;g.fire=1.5;g.hitT=0;
+    g.msg='Рунд '+g.round+'!';g.mt=1.6;},
+  shoot(g){if(g.cd>0||A.state!=='play')return;g.cd=.32;g.arrows.push({x:g.px,y:300});A.beep(520,.05,'triangle');},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.shoot(g);},
+  click(g,mx){g.tx=mx;this.shoot(g);},
+  move(g,mx){if(A.mouse.down||g.tx!==null)g.tx=mx;},
+  boom(g,x,y,col,n){for(let i=0;i<n;i++)g.parts.push({x,y,vx:A.rnd(-90,90),vy:A.rnd(-120,40),t:A.rnd(.4,.8),col});},
+  update(g,dt){const K=A.keys,R=g.round;
+    if(g.mt>0)g.mt-=dt;g.cd-=dt;g.inv-=dt;g.hitT-=dt;
+    let mv=0;if(K.ArrowLeft||K.KeyA)mv=-1;if(K.ArrowRight||K.KeyD)mv=1;
+    if(mv){g.tx=null;g.px+=mv*230*dt;}else if(g.tx!==null){const d=g.tx-g.px;g.px+=Math.sign(d)*Math.min(Math.abs(d),230*dt);}
+    g.px=A.clamp(g.px,14,466);
+    // дракон
+    g.dph+=dt*(0.7+R*0.08);g.dx=240+Math.sin(g.dph)*190;g.dy=78+Math.sin(g.dph*2.3)*34;
+    const alive=g.cr.filter(c=>c.alive).length;
+    if(alive){g.heal+=dt;if(g.heal>2.5){g.heal=0;g.dhp=Math.min(g.dmax,g.dhp+alive);}}
+    g.fire-=dt;if(g.fire<=0&&g.mt<=0){g.fire=Math.max(.55,2-R*0.18)*A.rnd(.7,1.2);
+      const ang=Math.atan2(312-g.dy,g.px-g.dx)+A.rnd(-.15,.15),sp=110+R*14;g.balls.push({x:g.dx,y:g.dy+10,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp});A.beep(140,.12,'sawtooth',.03);}
+    // стрели
+    for(const a of g.arrows){a.y-=420*dt;
+      for(const c of g.cr)if(c.alive&&Math.abs(a.x-c.x)<12&&Math.abs(a.y-c.y)<12){c.alive=false;a.dead=1;g.score+=3;this.boom(g,c.x,c.y,'#e070ff',14);A.beep(900,.15,'square',.05);}
+      if(!a.dead&&Math.abs(a.x-g.dx)<34&&Math.abs(a.y-g.dy)<14){a.dead=1;g.dhp--;g.score++;g.hitT=.15;A.beep(300,.06);
+        if(g.dhp<=0){g.score+=10;this.boom(g,g.dx,g.dy,'#b388ff',30);A.tune([523,659,784,1047]);g.balls=[];g.arrows=[];this.newRound(g);return;}}}
+    g.arrows=g.arrows.filter(a=>!a.dead&&a.y>20);
+    // огнени топки
+    for(const b of g.balls){b.x+=b.vx*dt;b.y+=b.vy*dt;
+      if(g.inv<=0&&Math.abs(b.x-g.px)<13&&b.y>292&&b.y<326){b.dead=1;g.lives--;g.inv=1.3;this.boom(g,g.px,310,'#ce93d8',12);A.beep(110,.3,'sawtooth');
+        if(g.lives<=0)return A.over(g,'Драконът победи! Рунд '+g.round);}
+      if(b.y>322){b.dead=1;this.boom(g,b.x,322,'#9c27b0',5);}}
+    g.balls=g.balls.filter(b=>!b.dead&&b.x>-20&&b.x<500);
+    for(const p of g.parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=200*dt;p.t-=dt;}g.parts=g.parts.filter(p=>p.t>0);},
+  draw(g){A.bg('#0b0714');c.fillStyle='#fff';for(const s of g.stars)c.fillRect(s[0],s[1],2,2);
+    // земя от ендър камък
+    for(let x=0;x<480;x+=24){A.block(x,326,24,'#dcd89a');A.block(x,350,24,'#cfca88',10);}
+    // стълбове и кристали
+    for(const k of g.cr){for(let y=k.y+12;y<326;y+=16)A.block(k.x-10,y,20,'#1b1030',16);
+      if(k.alive){const s=8+Math.sin(g.t*5+k.x)*2;c.strokeStyle='#bbb';c.lineWidth=2;c.strokeRect(k.x-11,k.y-11,22,22);A.block(k.x-s,k.y-s,s*2,'#e070ff');
+        c.strokeStyle='rgba(224,112,255,.35)';c.beginPath();c.moveTo(k.x,k.y);c.lineTo(g.dx,g.dy);c.stroke();}
+      else{c.fillStyle='#ff9800';c.fillRect(k.x-4,k.y+6,8,6);}}
+    // дракон
+    const fl=Math.sin(g.t*9)*10,x=g.dx,y=g.dy,body=g.hitT>0?'#fff':'#1d1d1d';
+    c.fillStyle='#2b2b2b';c.beginPath();c.moveTo(x-10,y-4);c.lineTo(x-46,y-14+fl);c.lineTo(x-30,y+4);c.fill();c.beginPath();c.moveTo(x+10,y-4);c.lineTo(x+46,y-14+fl);c.lineTo(x+30,y+4);c.fill();
+    A.block(x-24,y-7,48,body,14);A.block(x-8,y+5,16,body,12);c.fillStyle='#e040fb';c.fillRect(x-6,y+9,4,3);c.fillRect(x+2,y+9,4,3);
+    for(let i=-20;i<=16;i+=9){c.fillStyle='#555';c.fillRect(x+i,y-11,4,4);}
+    // стрели, топки, частици
+    c.fillStyle='#ddd';for(const a of g.arrows){c.fillRect(a.x-1,a.y,2,14);c.fillStyle='#fff';c.fillRect(a.x-2,a.y,4,3);c.fillStyle='#ddd';}
+    for(const b of g.balls){A.block(b.x-6,b.y-6,12,'#9c27b0');c.fillStyle='#ea80fc';c.fillRect(b.x-2,b.y-2,4,4);}
+    for(const p of g.parts){c.fillStyle=p.col;c.fillRect(p.x,p.y,4,4);}
+    // играч
+    if(g.inv<=0||Math.floor(g.t*12)%2){const px=g.px;A.block(px-7,288,14,'#c8a27a',12);A.block(px-8,300,16,'#2e86c1',14);A.block(px-8,314,16,'#283593',12);
+      c.fillStyle='#000';c.fillRect(px-4,293,2,2);c.fillRect(px+2,293,2,2);c.strokeStyle='#8d6e63';c.lineWidth=2;c.beginPath();c.arc(px+10,302,8,-1.3,1.3);c.stroke();}
+    // HUD
+    c.fillStyle='#000';c.fillRect(0,0,480,28);A.txt('Рунд '+g.round,8,14,14,'#ffd54f');A.txt('Точки: '+g.score,150,14,14,'#fff');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),472,14,14,'#f55','right');
+    c.fillStyle='#400';c.fillRect(260,8,140,12);c.fillStyle='#e040fb';c.fillRect(260,8,140*Math.max(0,g.dhp)/g.dmax,12);c.strokeStyle='#fff';c.lineWidth=1;c.strokeRect(260,8,140,12);
+    if(g.mt>0)A.txt(g.msg,240,180,26,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

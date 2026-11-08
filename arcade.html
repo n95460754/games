@@ -274,7 +274,10 @@ const GAMES=[
   {"id": "anvildrop", "cat": "skill", "icon": "🔨", "name": "Наковалня от небето", "desc": "Кранът се люшка — пусни наковалнята точно върху зомбитата, но не върху селяните", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "silverfish", "cat": "action", "icon": "🐛", "name": "Сребърни рибки", "desc": "Събирай очи на Ендър в крепостта, докато рояк сребърни рибки те гони", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "numpath", "cat": "puzzle", "icon": "🔢", "name": "Пътеката на числата", "desc": "Свържи числата от 1 до края с една пътека през всички блокове", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "stacks", "cat": "brain", "icon": "📦", "name": "Стакове по 64", "desc": "Сметки с инвентара: колко са стаковете, колко блока остават и колко слота трябват", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "stacks", "cat": "brain", "icon": "📦", "name": "Стакове по 64", "desc": "Сметки с инвентара: колко са стаковете, колко блока остават и колко слота трябват", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "dragonfight", "cat": "action", "icon": "🐉", "name": "Битка с дракона", "desc": "В Края: разбий кристалите на стълбовете и свали Ендър дракона с лъка", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "torchlight", "cat": "puzzle", "icon": "🔥", "name": "Факли срещу мобове", "desc": "Освети цялата пещера с малко факли, за да не се появяват мобове в тъмното", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "nethercoords", "cat": "brain", "icon": "🟪", "name": "Портал към Недъра", "desc": "1 блок в Недъра = 8 блока в обикновения свят: смятай къде да строиш порталите", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
