@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **191** / 500
+Общо служители: **192** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -93,7 +93,7 @@
 | EMP-0151 | Frost Stone | Senior | Level Designer / Дизайнер на нива | 2026-11-09 10:46 UTC |
 | EMP-0163 | Quark Fox | Lead | UI Animator / UI аниматор | 2026-11-09 11:47 UTC |
 
-## Audio — шеф: Sound-Engineer-Bot · 15 души
+## Audio — шеф: Sound-Engineer-Bot · 16 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -112,6 +112,7 @@
 | EMP-0146 | Nova Stone | Senior | Sound Designer / Звуков дизайнер | 2026-11-09 10:21 UTC |
 | EMP-0167 | Quark Fox | Senior | Chiptune Composer / Чиптюн композитор | 2026-11-09 12:07 UTC |
 | EMP-0170 | Blaze Hawk | Senior | Chiptune Composer / Чиптюн композитор | 2026-11-09 12:22 UTC |
+| EMP-0192 | Rogue Runner | Lead | Sound Designer / Звуков дизайнер | 2026-11-09 14:13 UTC |
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
