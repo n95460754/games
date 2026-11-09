@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **182** / 500
+Общо служители: **183** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -44,7 +44,7 @@
 | EMP-0153 | Glitch Runner | Mid | Game Developer / Разработчик на игри | 2026-11-09 10:57 UTC |
 | EMP-0155 | Neon Volt | Intern | Engine Programmer / Програмист на енджина | 2026-11-09 11:07 UTC |
 
-## Quality — шеф: QA-Tester-Bot · 12 души
+## Quality — шеф: QA-Tester-Bot · 13 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -60,6 +60,7 @@
 | EMP-0177 | Vector Hawk | Senior | QA Tester / Тестер | 2026-11-09 12:58 UTC |
 | EMP-0178 | Blaze Miner | Mid | QA Tester / Тестер | 2026-11-09 13:03 UTC |
 | EMP-0182 | Zen Volt | Junior | QA Tester / Тестер | 2026-11-09 13:23 UTC |
+| EMP-0183 | Quark Stone | Lead | Speedrun Tester / Спийдрън тестер | 2026-11-09 13:28 UTC |
 
 ## Design — шеф: UX-UI-Bot · 23 души
 
