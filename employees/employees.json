@@ -5592,6 +5592,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T22:47:36.262Z"
+    },
+    {
+      "id": "EMP-0295",
+      "name": "Glitch Knight",
+      "level": "Senior",
+      "role": "3D Prototyper",
+      "role_bg": "3D прототипист",
+      "department": "Innovation",
+      "manager": "Chief-Visionary-Bot",
+      "team": "Team Future Lab",
+      "team_leader": "Chief-Visionary-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T22:52:38.171Z"
     }
   ],
   "chairman": {
