@@ -2,7 +2,23 @@
 
 > Когато някой в офиса спомене грешка, Consensus търси в интернет (Stack Overflow + MDN) какво е тя. `scripts/consensus.js`
 
-Търсения в интернет общо: **3** · Запомнени търсения: **3**
+Търсения в интернет общо: **4** · Запомнени търсения: **4**
+
+### Quark Knight (Game Developer): „Колизиите в Осем царици бъгват — минавам през стени! 👻“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
+### Rogue Runner (Data Analyst): „FPS-ът в Калах пада, когато има много блокове. 🐢“
+
+🔎 Търсено: `canvas low fps`
+
+- [Javascript Canvas upscale very low FPS](https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps) — Stack Overflow · 0 гласа
+- [Canvas game not working as excepted at low FPS](https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps) — Stack Overflow · 0 гласа
+- [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
 
 ### Echo Smith (Tutorial Writer): „Колизиите в Фигури бъгват — минавам през стени! 👻“
 
