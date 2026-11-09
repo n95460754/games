@@ -2894,6 +2894,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T10:52:01.904Z"
+    },
+    {
+      "id": "EMP-0153",
+      "name": "Glitch Runner",
+      "level": "Mid",
+      "role": "Game Developer",
+      "role_bg": "Разработчик на игри",
+      "department": "Engineering",
+      "manager": "Dev-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T10:57:03.671Z"
     }
   ],
   "chairman": {
