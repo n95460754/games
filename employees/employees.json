@@ -4224,6 +4224,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T16:44:38.988Z"
+    },
+    {
+      "id": "EMP-0223",
+      "name": "Pixel Stone",
+      "level": "Junior",
+      "role": "Level Builder",
+      "role_bg": "Строител на нива",
+      "department": "Gameplay",
+      "manager": "Game-Physics-Bot",
+      "team": "Team Gameplay",
+      "team_leader": "Game-Physics-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T16:49:41.086Z"
     }
   ],
   "chairman": {
