@@ -4,6 +4,22 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Byte Runner (Engine Programmer): „Sound-Engineer-Bot, имаш ли минутка за Ъгли? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
+### Nova Smith (Build Engineer): „FPS-ът в Ъгли пада, когато има много блокове. 🐢“
+
+🔎 Търсено: `canvas low fps` _(от паметта)_
+
+- [Javascript Canvas upscale very low FPS](https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps) — Stack Overflow · 0 гласа
+- [Canvas game not working as excepted at low FPS](https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps) — Stack Overflow · 0 гласа
+- [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
+
 ### Byte Runner (Asset Artist): „В По-голямо/по-малко рекордът не се запазва след презареждане. 🐛“
 
 🔎 Търсено: `localStorage not saving` _(от паметта)_
@@ -101,22 +117,6 @@
 - [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
 
 ### Quark Miner (Anti-Cheat Engineer): „FPS-ът в Десетични дроби пада, когато има много блокове. 🐢“
-
-🔎 Търсено: `canvas low fps` _(от паметта)_
-
-- [Javascript Canvas upscale very low FPS](https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps) — Stack Overflow · 0 гласа
-- [Canvas game not working as excepted at low FPS](https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps) — Stack Overflow · 0 гласа
-- [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
-
-### Turbo Forge (Database Engineer): „Quark Coder, имаш ли минутка за Рудни мехури? Колизиите там нещо бъгват.“
-
-🔎 Търсено: `canvas collision detection` _(от паметта)_
-
-- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
-- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
-- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Glitch Miner (Pixel Artist): „Аз съм Pixel Artist. Ако имаш бъг в Падащи камъни — пиши ми.“
 
 🔎 Търсено: `canvas low fps` _(от паметта)_
 
