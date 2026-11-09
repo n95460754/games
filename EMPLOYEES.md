@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **237** / 500
+Общо служители: **238** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -111,7 +111,7 @@
 | EMP-0228 | Frost Smith | Mid | UI Animator / UI аниматор | 2026-11-09 17:15 UTC |
 | EMP-0236 | Byte Volt | Mid | Pixel Artist / Пиксел артист | 2026-11-09 17:55 UTC |
 
-## Audio — шеф: Sound-Engineer-Bot · 19 души
+## Audio — шеф: Sound-Engineer-Bot · 20 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -134,6 +134,7 @@
 | EMP-0201 | Orbit Volt | Junior | Sound Designer / Звуков дизайнер | 2026-11-09 14:58 UTC |
 | EMP-0213 | Pixel Smith | Lead | Sound Designer / Звуков дизайнер | 2026-11-09 15:59 UTC |
 | EMP-0222 | Vector Stone | Senior | Sound Designer / Звуков дизайнер | 2026-11-09 16:44 UTC |
+| EMP-0238 | Pixel Forge | Junior | Sound Designer / Звуков дизайнер | 2026-11-09 18:05 UTC |
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
