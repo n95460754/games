@@ -18,11 +18,11 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **79** / 500
+Общо служители: **80** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Engineering — шеф: Dev-Bot · 10 души
+## Engineering — шеф: Dev-Bot · 11 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -36,6 +36,7 @@
 | EMP-0052 | Echo Hawk | Junior | Game Developer / Разработчик на игри | 2026-11-09 02:27 UTC |
 | EMP-0059 | Zen Stone | Junior | Engine Programmer / Програмист на енджина | 2026-11-09 03:03 UTC |
 | EMP-0071 | Byte Knight | Mid | Engine Programmer / Програмист на енджина | 2026-11-09 04:03 UTC |
+| EMP-0080 | Byte Runner | Junior | Engine Programmer / Програмист на енджина | 2026-11-09 04:48 UTC |
 
 ## Quality — шеф: QA-Tester-Bot · 7 души
 
