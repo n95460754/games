@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Изгледи на постройката</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏘️ Изгледи на постройката</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 345. Изгледи на постройката
+// Пространствено мислене: виждаш постройка от кубчета и избираш как изглежда
+// отпред, отдясно или отгоре. 60 секунди — колкото повече верни, толкова по-добре.
+const VA=22,VB=11,VH=22,VOX=240,VOY=96;
+const VTOP='#5aa13a',VFR='#7a5233',VRI='#a8743f';
+const vp=(x,y,z)=>[VOX+(x-y)*VA,VOY+(x+y)*VB-z*VH];
+function vpoly(pts,col){c.beginPath();pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath();c.fillStyle=col;c.fill();c.strokeStyle='rgba(0,0,0,.55)';c.lineWidth=1;c.stroke();}
+A.add({id:'views',cat:'brain',icon:'🏘️',name:'Изгледи на постройката',desc:'Как изглежда постройката от кубчета отпред, отдясно и отгоре?',
+  help:'Виж постройката от кубчета и избери верния изглед: ОТПРЕД (кафявата страна), ОТДЯСНО (светлата страна) или ОТГОРЕ (числото казва колко кубчета има в стълбчето). Клавиши 1, 2, 3 или цъкни/докосни отговора. Имаш 60 секунди — всеки верен отговор е точка!',
+  start(g){g.time=60;g.prev='';this.next(g);},
+  next(g){let h,tot,key;
+    do{h=[];tot=0;for(let x=0;x<3;x++){h[x]=[];for(let y=0;y<3;y++){const cap=Math.min(x?h[x-1][y]:3,y?h[x][y-1]:3);h[x][y]=x+y===0?A.ri(2,3):A.ri(Math.max(0,cap-2),cap);tot+=h[x][y];}}key=JSON.stringify(h);}
+    while(tot<5||tot>18||key===g.prev);
+    g.prev=key;g.h=h;g.mode=A.pick(['front','right','top','front','right']);
+    const cl=v=>Math.max(0,Math.min(3,v));
+    let ans,alts=[];
+    if(g.mode==='front'){ans=[0,1,2].map(x=>Math.max(...h[x]));}
+    else if(g.mode==='right'){ans=[2,1,0].map(y=>Math.max(h[0][y],h[1][y],h[2][y]));}
+    if(g.mode!=='top'){alts.push(ans.slice().reverse());
+      if(g.mode==='front')alts.push([2,1,0].map(y=>Math.max(h[0][y],h[1][y],h[2][y])));else alts.push([0,1,2].map(x=>Math.max(...h[x])));
+      for(let k=0;k<30;k++){const a=ans.slice(),i=A.ri(0,2);a[i]=cl(a[i]+A.pick([-1,1]));alts.push(a);}
+      for(let k=0;k<30;k++)alts.push([A.ri(1,3),A.ri(0,3),A.ri(0,3)]);}
+    else{ans=h.map(r=>r.slice());alts.push([0,1,2].map(x=>[0,1,2].map(y=>h[y][x])));
+      for(let k=0;k<40;k++){const a=h.map(r=>r.slice()),x=A.ri(0,2),y=A.ri(0,2);
+        if(Math.random()<.5){const x2=A.ri(0,2),y2=A.ri(0,2);[a[x][y],a[x2][y2]]=[a[x2][y2],a[x][y]];}else a[x][y]=cl(a[x][y]+A.pick([-1,1]));alts.push(a);}}
+    const S=new Set([JSON.stringify(ans)]),opts=[ans];
+    for(const a of alts){const s=JSON.stringify(a);if(!S.has(s)&&a.flat().some(v=>v>0)){S.add(s);opts.push(a);}if(opts.length===3)break;}
+    g.opts=A.shuffle(opts);g.ans=g.opts.indexOf(ans);},
+  pick2(g,i){if(i<0||i>=g.opts.length)return;const ok=i===g.ans;flash(g,ok);if(ok){g.score++;g.why='';}else g.why='Верният беше '+(g.ans+1);this.next(g);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=3)this.pick2(g,n-1);},
+  click(g,mx,my){if(my>236)this.pick2(g,Math.floor((mx-6)/156));},
+  update(g,dt){tick(g,dt);},
+  cube(x,y,z,col){
+    vpoly([vp(x,y,z+1),vp(x+1,y,z+1),vp(x+1,y+1,z+1),vp(x,y+1,z+1)],col||VTOP);
+    vpoly([vp(x,y+1,z+1),vp(x+1,y+1,z+1),vp(x+1,y+1,z),vp(x,y+1,z)],VFR);
+    vpoly([vp(x+1,y,z+1),vp(x+1,y+1,z+1),vp(x+1,y+1,z),vp(x+1,y,z)],VRI);},
+  draw(g){A.bg('#1d2b3a');const h=g.h;
+    // под
+    for(let x=0;x<3;x++)for(let y=0;y<3;y++)vpoly([vp(x,y,0),vp(x+1,y,0),vp(x+1,y+1,0),vp(x,y+1,0)],'#2c3e50');
+    const cells=[];for(let x=0;x<3;x++)for(let y=0;y<3;y++)cells.push([x,y]);cells.sort((a,b)=>a[0]+a[1]-b[0]-b[1]);
+    for(const [x,y] of cells)for(let z=0;z<h[x][y];z++)this.cube(x,y,z);
+    // стрелки откъде гледаме
+    const fr=g.mode==='front',ri=g.mode==='right';
+    A.txt('👁 ОТПРЕД',VOX-150,VOY+86,fr?16:12,fr?'#ffd54f':'#8899aa','left');A.txt('↗',VOX-72,VOY+66,fr?24:16,fr?'#ffd54f':'#8899aa','center');
+    A.txt('ОТДЯСНО 👁',VOX+150,VOY+86,ri?16:12,ri?'#ffd54f':'#8899aa','right');A.txt('↖',VOX+72,VOY+66,ri?24:16,ri?'#ffd54f':'#8899aa','center');
+    const q={front:'Как изглежда ОТПРЕД?',right:'Как изглежда ОТДЯСНО?',top:'Как изглежда ОТГОРЕ? (числото = височината)'}[g.mode];
+    A.txt(q,240,216,q.length>24?15:18,'#fff','center');
+    g.opts.forEach((o,i)=>{const x0=6+i*156,y0=238;c.fillStyle='#2a3b52';c.fillRect(x0,y0,148,116);c.strokeStyle='#000';c.lineWidth=3;c.strokeRect(x0,y0,148,116);
+      A.txt((i+1)+')',x0+8,y0+12,14,'#ffd54f');
+      if(g.mode!=='top'){const s=20,bx=x0+74-30,by=y0+104,col=g.mode==='front'?VFR:VRI;
+        c.strokeStyle='rgba(255,255,255,.12)';c.lineWidth=1;for(let cx=0;cx<3;cx++)for(let z=0;z<3;z++)c.strokeRect(bx+cx*s,by-(z+1)*s,s,s);
+        for(let cx=0;cx<3;cx++)for(let z=0;z<o[cx];z++)A.block(bx+cx*s,by-(z+1)*s,s,col);
+        c.fillStyle='#000';c.fillRect(bx-4,by,68,3);}
+      else{const a=20,b=10,X=x0+74,Y=y0+30;
+        for(let x=0;x<3;x++)for(let y=0;y<3;y++){const v=o[x][y],px=X+(x-y)*a,py=Y+(x+y)*b;
+          c.beginPath();c.moveTo(px,py);c.lineTo(px+a,py+b);c.lineTo(px,py+2*b);c.lineTo(px-a,py+b);c.closePath();
+          c.fillStyle=v?['','#7cc35a','#5aa13a','#3f7a28'][v]:'#2c3e50';c.fill();c.strokeStyle='#000';c.lineWidth=1;c.stroke();
+          if(v)A.txt(''+v,px,py+b+1,11,'#fff','center');}}});
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);if(g.why)A.txt(g.why,470,14,12,'#bbb','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

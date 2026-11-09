@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**352 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 342 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**355 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 345 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-352-5aa13a)
+![Games](https://img.shields.io/badge/games-355-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 342 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 345 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -487,8 +487,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 340 | 🦘 Charge Jump (Скок със засилка) | [`chargejump.html`](arcade/chargejump.html) | Hold Space or the mouse/finger to charge, release to jump to the next pillar of blocks; landing on the pillar = 1 point, right on the yellow center tile = 2 points and a growing combo, emeralds give +3; pillars get narrower and farther apart — fall in the water and it's over |
 | 341 | 🔐 Diamond Vault (Диамантен трезор) | [`kakurasu.html`](arcade/kakurasu.html) | A "Kakurasu" logic puzzle: columns and rows have weights 1, 2, 3…; place diamonds so each row's number equals the sum of the column weights it uses (and the same for columns); green = exact, red = too much, grids grow from 4×4 to 7×7, each vault gives points and +40 seconds |
 | 342 | ⛰️ Crumbling Island (Рушащият се остров) | [`isolation.html`](arcade/isolation.html) | The "Isolation" board game against a Creeper: step to a neighbouring block (diagonals too) and the block you leave falls into the lava; whoever has no move on their turn loses; every win gives points and the Creeper thinks more moves ahead |
+| 343 | 🐢 Turtle Rescue (Спаси костенурките) | [`turtles.html`](arcade/turtles.html) | Baby turtles hatch on the beach and crawl to the sea; run around as Steve and swing your sword at the zombies and phantoms that try to eat them. Keyboard or click/tap to move. |
+| 344 | 🟨 Block Regions (Блокови участъци) | [`fillomino.html`](arcade/fillomino.html) | A "Fillomino" logic puzzle: fill in numbers so every group of equal touching numbers N has exactly N blocks, and equal groups never touch. 4 puzzles, faster = more points. |
+| 345 | 🏘️ Building Views (Изгледи на постройката) | [`views.html`](arcade/views.html) | Spatial thinking: look at a building made of cubes and pick how it looks from the front, from the right or from above. 60 seconds. |
 
-All 342 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 345 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -516,8 +519,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–341
-│   └── isolation.html      # 342. Crumbling Island
+│   ├── ...                 # games 51–344
+│   └── views.html          # 345. Building Views
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спаси костенурките</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐢 Спаси костенурките</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 343. Спаси костенурките
+// Малки костенурки се излюпват на плажа и пълзят към океана. Зомбита идват отстрани,
+// а след малко и фантоми отгоре. Тичай със Стив и ги удряй с меча, за да спасиш бебетата!
+const TNX=[60,150,240,330,420],TSEA=62;
+const TSAND=[];for(let i=0;i<24*18;i++)TSAND.push(['#e0c068','#d9b85e','#e8cc78','#dcbc64'][(i*7+(i>>3)*13)%4]);
+A.add({id:'turtles',cat:'action',icon:'🐢',name:'Спаси костенурките',desc:'Пази малките костенурки по пътя им към морето — удряй зомбитата и фантомите с меча!',
+  help:'Малки костенурки се излюпват долу и пълзят към морето. Зомбита и фантоми искат да ги изядат! Стрелки/WASD = тичай, Space = удар с меча (Стив удря и сам, когато враг е близо). Мишка/пръст: цъкни където да тича Стив. Спасена костенурка = 5 точки, победен враг = 1 точка. Ако изядат 5 костенурки — край.',
+  start(g){g.p={x:240,y:240,tx:null,ty:null,cd:0,sw:0,face:1,walk:0};g.tu=[];g.en=[];g.fx=[];g.lost=0;g.saved=0;g.ht=.6;g.et=3;g.want=false;},
+  key(g,k){if(k==='Space')g.want=true;},
+  click(g,mx,my){g.p.tx=A.clamp(mx,12,468);g.p.ty=A.clamp(my,TSEA+16,346);},
+  swing(g){const p=g.p;p.cd=.42;p.sw=.2;A.beep(520,.05,'square',.03);let n=0;
+    g.en=g.en.filter(e=>{if(Math.hypot(e.x-p.x,e.y-p.y)<44){n++;g.fx.push({x:e.x,y:e.y-8,t:.4,c:e.k==='p'?'#9fa8da':'#6fbf4a'});return false;}return true;});
+    if(n){g.score+=n;A.beep(260,.08,'sawtooth',.04);}},
+  update(g,dt){const p=g.p,K=A.keys;
+    let dx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),dy=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);
+    if(dx||dy){p.tx=null;}else if(p.tx!==null){const ddx=p.tx-p.x,ddy=p.ty-p.y,d=Math.hypot(ddx,ddy);if(d<4)p.tx=null;else{dx=ddx/d;dy=ddy/d;}}
+    if(dx||dy){const d=Math.hypot(dx,dy)||1;p.x=A.clamp(p.x+dx/d*160*dt,12,468);p.y=A.clamp(p.y+dy/d*160*dt,TSEA+16,346);p.walk+=dt*10;if(dx)p.face=dx>0?1:-1;}
+    p.cd-=dt;p.sw-=dt;
+    if(p.cd<=0&&(g.want||g.en.some(e=>Math.hypot(e.x-p.x,e.y-p.y)<34)))this.swing(g);g.want=false;
+    // излюпване
+    g.ht-=dt;if(g.ht<=0){g.ht=Math.max(.8,1.8-g.t/90);g.tu.push({x:A.pick(TNX)+A.rnd(-12,12),y:328,v:A.rnd(16,24),w:Math.random()*6});A.beep(900,.03,'triangle',.02);}
+    // врагове
+    g.et-=dt;if(g.et<=0){g.et=Math.max(.7,2.8-g.t*.03);const side=Math.random()<.5;
+      if(g.t>25&&Math.random()<.35)g.en.push({k:'p',x:A.rnd(40,440),y:-20,v:60+Math.min(50,g.t*.4),f:0});
+      else g.en.push({k:'z',x:side?-12:492,y:A.rnd(110,320),v:28+Math.min(36,g.t*.35),f:0});}
+    for(const t of g.tu){t.y-=t.v*dt;t.w+=dt*6;t.x+=Math.sin(t.w)*6*dt;}
+    for(const e of g.en){e.f+=dt*8;let tg=null,bd=1e9;for(const t of g.tu){const d=Math.hypot(t.x-e.x,t.y-e.y);if(d<bd){bd=d;tg=t;}}
+      let ax=tg?tg.x:240,ay=tg?tg.y:220;const d=Math.hypot(ax-e.x,ay-e.y)||1;e.x+=(ax-e.x)/d*e.v*dt;e.y+=(ay-e.y)/d*e.v*dt;
+      if(e.k==='z')e.y=Math.max(e.y,TSEA+30);
+      if(tg&&bd<11){tg.dead=1;g.lost++;g.fx.push({x:tg.x,y:tg.y,t:.6,c:'#ff2e55'});A.beep(140,.25,'sawtooth',.05);}}
+    g.tu=g.tu.filter(t=>{if(t.dead)return false;if(t.y<TSEA){g.saved++;g.score+=5;g.fx.push({x:t.x,y:TSEA,t:.5,c:'#bfe8ff'});A.beep(780,.06,'triangle');A.beep(1040,.06,'triangle');return false;}return true;});
+    g.fx=g.fx.filter(f=>(f.t-=dt)>0);
+    if(g.lost>=5)A.over(g,'Изядоха 5 костенурки! Спаси: '+g.saved);},
+  draw(g){const T=g.t,p=g.p;
+    for(let y=0;y<18;y++)for(let x=0;x<24;x++){c.fillStyle=TSAND[y*24+x];c.fillRect(x*20,y*20,20,20);}
+    // море
+    for(let y=0;y<TSEA;y+=6){c.fillStyle=y<TSEA-12?(Math.sin(y*.5+T*2)>0?'#3b7bd6':'#3471c8'):'#4a8ae0';c.fillRect(0,y,480,6);}
+    for(let x=0;x<480;x+=16){const o=Math.sin(x*.05+T*3)*3;c.fillStyle='#eef4ff';c.fillRect(x,TSEA-3+o,12,4);}
+    // гнезда с яйца
+    for(const nx of TNX){c.fillStyle='#c9a650';c.fillRect(nx-18,326,36,16);for(let i=0;i<4;i++){const ex=nx-12+i*7,ey=330+(i%2)*3;c.fillStyle='#f4f0d8';c.fillRect(ex,ey,6,8);c.fillStyle='#5aa13a';c.fillRect(ex+2,ey+2,2,2);}}
+    if(p.tx!==null){c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=2;c.strokeRect(p.tx-6,p.ty-6,12,12);}
+    // костенурки
+    for(const t of g.tu){const x=Math.round(t.x),y=Math.round(t.y),fl=Math.sin(t.w*2)>0?1:-1;
+      c.fillStyle='#6fbf4a';c.fillRect(x-8,y-3+fl,3,3);c.fillRect(x+5,y-3-fl,3,3);c.fillRect(x-7,y+4-fl,3,3);c.fillRect(x+4,y+4+fl,3,3);c.fillRect(x-2,y-9,4,4);
+      A.block(x-5,y-5,10,'#3f8a24',11);c.fillStyle='#2a6a18';c.fillRect(x-2,y-2,4,4);}
+    // врагове
+    for(const e of g.en){const x=Math.round(e.x),y=Math.round(e.y);
+      if(e.k==='z'){const l=Math.sin(e.f)*3;c.fillStyle='#3a3aa0';c.fillRect(x-5,y-8,4,8+l);c.fillRect(x+1,y-8,4,8-l);A.block(x-6,y-18,12,'#2f8fb8',11);A.block(x-6,y-30,12,'#4f9a3a',12);
+        c.fillStyle='#102010';c.fillRect(x-4,y-26,3,3);c.fillRect(x+1,y-26,3,3);c.fillStyle='#4f9a3a';c.fillRect(x-10,y-17,4,4);c.fillRect(x+6,y-17,4,4);}
+      else{const w=Math.sin(e.f*1.5)*5;c.fillStyle='#3a4580';c.fillRect(x-18,y-6+w,10,4);c.fillRect(x+8,y-6+w,10,4);A.block(x-9,y-8,18,'#4a5a9a',9);c.fillStyle='#9f9';c.fillRect(x-6,y-6,3,2);c.fillRect(x+3,y-6,3,2);}}
+    // Стив
+    {const x=Math.round(p.x),y=Math.round(p.y),l=Math.sin(p.walk)*3;
+      c.fillStyle='rgba(0,0,0,.2)';c.fillRect(x-8,y-2,16,4);c.fillStyle='#3b4ed8';c.fillRect(x-5,y-10,4,10+l);c.fillRect(x+1,y-10,4,10-l);
+      A.block(x-6,y-22,12,'#2fb8b8',12);A.block(x-6,y-34,12,'#d8a07a',12);c.fillStyle='#4a2f1a';c.fillRect(x-6,y-34,12,4);
+      c.fillStyle='#fff';c.fillRect(x-4+p.face,y-28,3,2);c.fillRect(x+1+p.face,y-28,3,2);
+      const sx=x+p.face*10;c.fillStyle='#e8e8e8';c.fillRect(sx-1,y-30,3,14);c.fillStyle='#9a6a3a';c.fillRect(sx-3,y-17,7,3);
+      if(p.sw>0){c.strokeStyle='rgba(255,255,255,'+(p.sw*4)+')';c.lineWidth=4;c.beginPath();c.arc(x,y-14,40,0,Math.PI*2);c.stroke();}}
+    for(const f of g.fx){c.globalAlpha=Math.min(1,f.t*2);c.fillStyle=f.c;for(let i=0;i<6;i++){const a=i*1.05,r=(0.6-f.t)*40;c.fillRect(f.x+Math.cos(a)*r-2,f.y+Math.sin(a)*r-2,4,4);}c.globalAlpha=1;}
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,22);
+    A.txt('🐢 Спасени: '+g.saved,8,11,13,'#bfe8ff');A.txt('Животи: '+'❤'.repeat(Math.max(0,5-g.lost)),472,11,13,'#ff8a8a','right');}
+});
+</script>
+</body>
+</html>
