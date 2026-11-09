@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Rogue Runner (Data Analyst): „FPS-ът в Прости множители пада, когато има много блокове. 🐢“
+
+🔎 Търсено: `canvas low fps` _(от паметта)_
+
+- [Javascript Canvas upscale very low FPS](https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps) — Stack Overflow · 0 гласа
+- [Canvas game not working as excepted at low FPS](https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps) — Stack Overflow · 0 гласа
+- [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
+
 ### Quark Knight (Game Developer): „В Ъгли в триъгълник рекордът не се запазва след презареждане. 🐛“
 
 🔎 Търсено: `localStorage not saving`

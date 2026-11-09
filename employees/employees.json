@@ -595,6 +595,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T00:42:10.497Z"
+    },
+    {
+      "id": "EMP-0032",
+      "name": "Delta Volt",
+      "level": "Senior",
+      "role": "Sound Designer",
+      "role_bg": "Звуков дизайнер",
+      "department": "Audio",
+      "manager": "Sound-Engineer-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T00:47:12.448Z"
     }
   ],
   "chairman": {
