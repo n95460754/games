@@ -2305,6 +2305,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T08:16:05.663Z"
+    },
+    {
+      "id": "EMP-0122",
+      "name": "Neon Walker",
+      "level": "Senior",
+      "role": "API Developer",
+      "role_bg": "API разработчик",
+      "department": "Data",
+      "manager": "Data-Analyst-Bot",
+      "team": "Team Data",
+      "team_leader": "Data-Analyst-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T08:21:07.478Z"
     }
   ],
   "chairman": {
