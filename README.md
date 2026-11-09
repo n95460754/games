@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**373 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 363 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**376 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 366 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-373-5aa13a)
+![Games](https://img.shields.io/badge/games-376-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 363 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 366 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -508,8 +508,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 361 | 🐬 Dolphin Dash (Делфинът скачач) | [`dolphin.html`](arcade/dolphin.html) | Hold to dive deep, let go and the water throws the blocky dolphin high above the waves. Catch fish under water and in the air, dive under boats and dodge jellyfish and seagulls. A very high jump gives +2. 3 hearts. |
 | 362 | ⛵ Hidden Fleet (Скритата флотилия) | [`bimaru.html`](arcade/bimaru.html) | A logic puzzle like Bimaru (battleship solitaire): the numbers say how many boat squares are in each row and column. Boats are straight and never touch, not even diagonally. Boards grow from 6×6 to 8×8; each solved fleet gives +45 seconds. |
 | 363 | 🔪 Fair Half (Раздели наравно) | [`halfcut.html`](arcade/halfcut.html) | Cut a blocky cake, cheese, melon or loaf into two equal halves with one straight line (drag with the mouse or finger, or turn the knife with the arrows). The area is measured exactly: 50/50 ±1% = 10 points. Shapes get bigger and stranger, and time is short. 3 hearts. |
+| 364 | 🪨 Color Driller (Цветният сондаж) | [`driller.html`](arcade/driller.html) | Dig down through a shaft of colored blocks like Mr. Driller: one pickaxe hit removes the whole group of touching same-color blocks. Unsupported groups wobble and fall — don't stand under them! Grab O₂ bottles before your air runs out; brown blocks need 5 hits and steal air. Score = depth + blocks. |
+| 365 | 🧊 Golem Ricochet (Рикошет на големите) | [`ricochet.html`](arcade/ricochet.html) | A Ricochet Robots-style puzzle: three blocky golems slide on ice until they hit a wall or another golem. Get the golem of the diamond's color onto the diamond, using the other golems as stoppers. Every puzzle is checked with a BFS search, so it shows the fewest moves possible. Undo, timer, harder puzzles as you go. |
+| 366 | 🎲 Ludo (Не се сърди, човече) | [`ludo.html`](arcade/ludo.html) | The classic race game for four: you (red) vs three robots. Roll a 6 to leave home, roll 6 again for a bonus throw, knock opponents back to their yard (except on the star start squares) and bring all 4 pieces home first. Click a glowing piece or press 1–4. |
 
-All 363 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 366 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -537,8 +540,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–362
-│   └── halfcut.html        # 363. Fair Half
+│   ├── ...                 # games 51–365
+│   └── ludo.html           # 366. Ludo
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

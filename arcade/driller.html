@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цветният сондаж</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪨 Цветният сондаж</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 364. Цветният сондаж
+// Копаеш надолу през шарени блокове. Ударът с кирката маха цялата група от еднакви
+// съседни блокове. Блоковете без опора се разклащат и падат — пази си главата!
+// Въздухът намалява: събирай бутилките с въздух. Кафявите блокове са твърди и крадат въздух.
+const DR_COLS=9,DR_S=36,DR_X0=(480-DR_COLS*DR_S)/2,DR_TOP=4;
+const DR_COL=['','#e53935','#43a047','#1e88e5','#fdd835'];
+const DR_WALL={c:9};
+A.add({id:'driller',cat:'action',icon:'🪨',name:'Цветният сондаж',desc:'Копай надолу през шарени блокове — еднаквите изчезват заедно! Пази се от падащите блокове и не оставай без въздух.',
+  help:'← → = върви или копай настрани, ↓ = копай надолу, ↑ = копай нагоре / качи се на стъпало (A D S W също). Мишка / пръст: кликни до миньора в посоката, накъдето искаш. Еднаквите долепени блокове изчезват заедно, а блоковете без опора падат след малко клатене — не стой под тях! Кафявите блокове искат 5 удара и вземат въздух. Събирай бутилките O₂. 3 сърца.',
+  start(g){g.rows=[];g.caps=new Set();g.px=4;g.py=DR_TOP-1;g.cam=0;g.face=1;g.air=100;g.lives=3;g.inv=0;
+    g.cd=0;g.tk=0;g.pf=0;g.maxd=0;g.parts=[];g.msg='';g.msgT=0;this.ensure(g,DR_TOP+16);},
+  genRow(g){const y=g.rows.length,row=[];
+    for(let x=0;x<DR_COLS;x++){
+      if(y<DR_TOP){row.push(null);continue;}
+      const d=y-DR_TOP,r=Math.random();
+      if(y>DR_TOP+3&&r<Math.min(.03+d*.0007,.13)){row.push({c:5,hp:5,sh:0,fl:false});continue;}
+      if(y>DR_TOP+4&&r>.965){row.push(null);continue;}
+      let c=A.ri(1,4);
+      if(x>0&&row[x-1]&&row[x-1].c<5&&Math.random()<.38)c=row[x-1].c;
+      else if(y>DR_TOP){const up=g.rows[y-1][x];if(up&&up.c<5&&Math.random()<.32)c=up.c;}
+      row.push({c,sh:0,fl:false});}
+    if(y>=DR_TOP+6&&(y-DR_TOP)%9===4){const x=A.ri(0,DR_COLS-1);row[x]=null;g.caps.add(x+','+y);}
+    g.rows.push(row);},
+  ensure(g,y){while(g.rows.length<=y)this.genRow(g);},
+  cell(g,x,y){if(x<0||x>=DR_COLS)return DR_WALL;if(y<0)return null;this.ensure(g,y);return g.rows[y][x];},
+  say(g,m){g.msg=m;g.msgT=1.6;},
+  burst(g,x,y,col,n){for(let i=0;i<(n||6)&&g.parts.length<160;i++)g.parts.push({x:x*DR_S+DR_S/2,y:y*DR_S+DR_S/2,vx:A.rnd(-90,90),vy:A.rnd(-140,20),t:.6,col});},
+  // маха цялата група еднакви долепени блокове
+  dig(g,x,y){const b=this.cell(g,x,y);if(!b||b===DR_WALL)return;
+    if(b.c===5){b.hp--;A.beep(140,.06,'square');this.burst(g,x,y,'#5d4037',3);
+      if(b.hp<=0){g.rows[y][x]=null;g.air=Math.max(0,g.air-15);g.score+=5;this.say(g,'−15 въздух!');this.burst(g,x,y,'#8d6e63',8);}return;}
+    const st=[[x,y]],seen=new Set([x+','+y]);let n=0;
+    while(st.length){const [cx,cy]=st.pop();const cb=g.rows[cy][cx];if(!cb||cb.c!==b.c)continue;
+      g.rows[cy][cx]=null;n++;this.burst(g,cx,cy,DR_COL[b.c],3);
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=cx+dx,ny=cy+dy;
+        if(nx<0||nx>=DR_COLS||ny<0||ny>=g.rows.length||seen.has(nx+','+ny))continue;seen.add(nx+','+ny);st.push([nx,ny]);}}
+    g.score+=n;A.beep(300+Math.min(n,10)*40,.07,'triangle');},
+  act(g,d){const px=g.px,py=g.py;
+    if(d==='L'||d==='R'){const dx=d==='L'?-1:1;g.face=dx;const b=this.cell(g,px+dx,py);
+      if(!b)g.px+=dx;else if(b!==DR_WALL)this.dig(g,px+dx,py);}
+    else if(d==='D'){const b=this.cell(g,px,py+1);if(b&&b!==DR_WALL)this.dig(g,px,py+1);}
+    else if(d==='U'){const b=this.cell(g,px,py-1);
+      if(b&&b!==DR_WALL)this.dig(g,px,py-1);
+      else{const s=this.cell(g,px+g.face,py);if(s&&s!==DR_WALL&&!this.cell(g,px+g.face,py-1)){g.px+=g.face;g.py--;A.beep(500,.04);}}}
+    this.grab(g);},
+  grab(g){const k=g.px+','+g.py;if(g.caps.has(k)){g.caps.delete(k);g.air=Math.min(100,g.air+30);g.score+=10;this.say(g,'+30 въздух');A.tune([660,880,990]);}},
+  hurt(g,why){if(g.inv>0)return;g.lives--;g.inv=2;this.say(g,why);A.beep(110,.35,'sawtooth',.07);
+    if(g.lives<=0)A.over(g,'Сондажът спря на '+g.maxd+' м');},
+  KEYS:{ArrowLeft:'L',KeyA:'L',ArrowRight:'R',KeyD:'R',ArrowDown:'D',KeyS:'D',ArrowUp:'U',KeyW:'U',Space:'D'},
+  key(g,k){const d=this.KEYS[k];if(d){this.act(g,d);g.cd=.24;}},
+  click(g,mx,my){if(mx<DR_X0-10||mx>DR_X0+DR_COLS*DR_S+10){this.act(g,mx<240?'L':'R');return;}
+    const sx=DR_X0+g.px*DR_S+DR_S/2,sy=(g.py-g.cam)*DR_S+DR_S/2,dx=mx-sx,dy=my-sy;
+    if(Math.abs(dx)<DR_S/2&&Math.abs(dy)<DR_S/2)return;
+    this.act(g,Math.abs(dx)>Math.abs(dy)?(dx<0?'L':'R'):(dy<0?'U':'D'));},
+  // гравитация на групите блокове
+  step(g){const y0=Math.max(0,g.py-9),y1=g.py+12;this.ensure(g,y1+2);
+    const W=DR_COLS,H=y1-y0+1,gid=new Int32Array(W*H).fill(-1),groups=[];
+    for(let y=y0;y<=y1;y++)for(let x=0;x<W;x++){const b=g.rows[y][x];if(!b||gid[(y-y0)*W+x]>=0)continue;
+      const id=groups.length,cells=[],st=[[x,y]];gid[(y-y0)*W+x]=id;
+      while(st.length){const [cx,cy]=st.pop();cells.push([cx,cy]);if(b.c===5)continue;
+        for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=cx+dx,ny=cy+dy;if(nx<0||nx>=W||ny<y0||ny>y1)continue;
+          const nb=g.rows[ny][nx],i=(ny-y0)*W+nx;if(nb&&nb.c===b.c&&gid[i]<0){gid[i]=id;st.push([nx,ny]);}}}
+      groups.push({c:b.c,cells,my:Math.max(...cells.map(p=>p[1]))});}
+    groups.sort((a,b)=>b.my-a.my);
+    for(const gr of groups){const id=gid[(gr.cells[0][1]-y0)*W+gr.cells[0][0]];let sup=false;
+      for(const [x,y] of gr.cells){if(y+1>y1){sup=true;break;}const nb=g.rows[y+1][x];
+        if(nb&&gid[(y+1-y0)*W+x]!==id&&!nb.fl){sup=true;break;}}
+      const objs=gr.cells.map(([x,y])=>g.rows[y][x]);
+      if(sup){if(objs.some(o=>o.fl)){objs.forEach(o=>{o.fl=false;o.sh=0;});
+          if(gr.c<5&&gr.cells.length>=4){gr.cells.forEach(([x,y])=>{g.rows[y][x]=null;this.burst(g,x,y,DR_COL[gr.c],2);});g.score+=gr.cells.length*2;A.tune([520,780]);this.say(g,'Комбо +'+gr.cells.length*2);}}
+        else objs.forEach(o=>o.sh=0);continue;}
+      if(!objs.some(o=>o.fl)){let sh=Math.max(...objs.map(o=>o.sh));if(sh<=0)sh=.55;else sh-=.08;objs.forEach(o=>o.sh=sh);if(sh>0)continue;objs.forEach(o=>o.fl=true);}
+      // пада с една клетка, ако има място
+      let can=true;for(const [x,y] of gr.cells){const nb=g.rows[y+1][x];if(nb&&gid[(y+1-y0)*W+x]!==id){can=false;break;}}
+      if(!can)continue;
+      const crush=gr.cells.some(([x,y])=>x===g.px&&y+1===g.py);
+      if(crush){gr.cells.forEach(([x,y])=>{g.rows[y][x]=null;this.burst(g,x,y,'#bbb',2);});this.hurt(g,'Блок падна върху теб!');continue;}
+      gr.cells.sort((a,b)=>b[1]-a[1]).forEach(([x,y])=>{g.rows[y+1][x]=g.rows[y][x];g.rows[y][x]=null;g.caps.delete(x+','+(y+1));
+        gid[(y+1-y0)*W+x]=id;gid[(y-y0)*W+x]=-1;});}},
+  update(g,dt){g.cd-=dt;g.inv-=dt;g.msgT-=dt;
+    if(g.cd<=0){for(const k in this.KEYS)if(A.keys[k]&&k!=='Space'){this.act(g,this.KEYS[k]);g.cd=.14;break;}}
+    g.tk+=dt;while(g.tk>=.08){g.tk-=.08;this.step(g);if(A.state!=='play')return;}
+    // миньорът пада, ако под него е празно
+    g.pf-=dt;if(g.pf<=0&&!this.cell(g,g.px,g.py+1)){g.py++;g.pf=.09;this.grab(g);}
+    if(this.cell(g,g.px,g.py)){g.rows[g.py][g.px]=null;this.hurt(g,'Затрупа те!');}
+    const d=Math.max(0,g.py-DR_TOP+1);if(d>g.maxd){g.score+=10*(d-g.maxd);g.maxd=d;if(d%50===0){A.tune([523,659,784,1046]);this.say(g,d+' метра!');}}
+    g.air-=dt*(2.4+g.maxd/160);if(g.air<=0){g.air=100;this.hurt(g,'Свърши въздухът!');}
+    g.cam+=(g.py-3-g.cam)*Math.min(1,dt*7);
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=400*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);},
+  draw(g){A.bg('#1b120c');const S=DR_S,cy=g.cam*S,r0=Math.max(0,Math.floor(g.cam)),r1=Math.floor(g.cam)+11;
+    c.save();c.beginPath();c.rect(DR_X0,0,DR_COLS*S,360);c.clip();
+    for(let y=r0;y<=r1;y++){const sy=y*S-cy;
+      if(y<DR_TOP){c.fillStyle='#6fb3e8';c.fillRect(DR_X0,sy,DR_COLS*S,S+1);}
+      else{c.fillStyle=y%2?'#2a1d14':'#2f2117';c.fillRect(DR_X0,sy,DR_COLS*S,S+1);}
+      if(y===DR_TOP){c.fillStyle='#5aa13a';c.fillRect(DR_X0,sy-5,DR_COLS*S,5);}
+      if(y>=DR_TOP&&(y-DR_TOP)%10===0&&y>DR_TOP){c.fillStyle='rgba(255,255,255,.08)';c.fillRect(DR_X0,sy,DR_COLS*S,2);}
+      this.ensure(g,y);
+      for(let x=0;x<DR_COLS;x++){const b=g.rows[y][x],sx=DR_X0+x*S;
+        if(g.caps.has(x+','+y)){const bob=Math.sin(g.t*4+x)*2;c.fillStyle='#e3f2fd';c.fillRect(sx+11,sy+8+bob,14,22);c.fillStyle='#42a5f5';c.fillRect(sx+11,sy+18+bob,14,12);
+          c.fillStyle='#90a4ae';c.fillRect(sx+14,sy+4+bob,8,5);A.txt('O₂',sx+18,sy+24+bob,9,'#fff','center');}
+        if(!b)continue;const wob=b.sh>0||b.fl?Math.sin(g.t*70+x)*2:0;
+        if(b.c===5){A.block(sx+wob,sy,S,'#6d4c41');c.strokeStyle='#3e2723';c.lineWidth=3;c.beginPath();c.moveTo(sx+wob+8,sy+8);c.lineTo(sx+wob+S-8,sy+S-8);c.moveTo(sx+wob+S-8,sy+8);c.lineTo(sx+wob+8,sy+S-8);c.stroke();
+          if(b.hp<5){c.fillStyle='#000';for(let i=0;i<5-b.hp;i++)c.fillRect(sx+wob+5+i*6,sy+S-9,4,4);}}
+        else{A.block(sx+wob,sy,S,DR_COL[b.c]);c.fillStyle='rgba(0,0,0,.15)';c.fillRect(sx+wob+8,sy+8,8,8);c.fillRect(sx+wob+20,sy+20,8,8);}}}
+    // миньорът
+    if(g.inv<=0||Math.floor(g.t*10)%2){const sx=DR_X0+g.px*S,sy=g.py*S-cy;
+      c.fillStyle='#f1c27d';c.fillRect(sx+10,sy+2,16,12);c.fillStyle='#4a2f1b';c.fillRect(sx+10,sy+2,16,4);
+      c.fillStyle='#fff';c.fillRect(sx+(g.face>0?19:12),sy+8,4,3);c.fillStyle='#ffd23f';c.fillRect(sx+9,sy,18,3);
+      c.fillStyle='#29b6f6';c.fillRect(sx+9,sy+14,18,11);c.fillStyle='#3949ab';c.fillRect(sx+10,sy+25,7,10);c.fillRect(sx+19,sy+25,7,10);
+      const hx=g.face>0?sx+27:sx+3;c.fillStyle='#8d6e63';c.fillRect(hx,sy+12,4,16);c.fillStyle='#b0bec5';c.fillRect(hx-4,sy+10,12,4);}
+    g.parts.forEach(p=>{c.fillStyle=p.col;c.fillRect(DR_X0+p.x-3,p.y-cy-3,6,6);});
+    c.restore();
+    // странични табла
+    c.fillStyle='#120c08';c.fillRect(0,0,DR_X0,360);c.fillRect(DR_X0+DR_COLS*DR_S,0,DR_X0,360);
+    A.txt('Дълбочина',DR_X0/2,24,11,'#b9c6d6','center');A.txt(g.maxd+' м',DR_X0/2,46,18,'#ffd54f','center');
+    A.txt('Сърца',DR_X0/2,84,11,'#b9c6d6','center');A.txt('❤'.repeat(Math.max(0,g.lives)),DR_X0/2,104,14,'#f55','center');
+    const rx=DR_X0+DR_COLS*DR_S+DR_X0/2;A.txt('Въздух',rx,24,11,'#b9c6d6','center');
+    c.fillStyle='#000';c.fillRect(rx-14,40,28,240);const h=Math.max(0,g.air)/100*236;c.fillStyle=g.air<25?(Math.floor(g.t*6)%2?'#ff5252':'#b71c1c'):'#4fc3f7';c.fillRect(rx-12,278-h,24,h);
+    A.txt(Math.ceil(Math.max(0,g.air))+'%',rx,300,13,'#fff','center');
+    if(g.msgT>0)A.txt(g.msg,240,340,15,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

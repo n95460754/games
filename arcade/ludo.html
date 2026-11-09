@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Не се сърди, човече</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎲 Не се сърди, човече</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 366. Не се сърди, човече
+// Класическата игра с пулове за четирима: ти (червените) срещу три робота.
+// Хвърляш зар, излизаш с 6, обикаляш дъската и прибираш 4-те пула в къщичката.
+// Стъпиш ли върху чужд пул, той се връща у дома (освен на звездите-старт).
+// Шестица = още едно хвърляне. Докато нямаш пул на дъската, имаш 3 опита за 6.
+const LU_T=[[1,6],[2,6],[3,6],[4,6],[5,6],[6,5],[6,4],[6,3],[6,2],[6,1],[6,0],[7,0],[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],
+  [9,6],[10,6],[11,6],[12,6],[13,6],[14,6],[14,7],[14,8],[13,8],[12,8],[11,8],[10,8],[9,8],[8,9],[8,10],[8,11],[8,12],[8,13],[8,14],
+  [7,14],[6,14],[6,13],[6,12],[6,11],[6,10],[6,9],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8],[0,7],[0,6]];
+const LU_H=[[[1,7],[2,7],[3,7],[4,7],[5,7]],[[7,1],[7,2],[7,3],[7,4],[7,5]],[[13,7],[12,7],[11,7],[10,7],[9,7]],[[7,13],[7,12],[7,11],[7,10],[7,9]]];
+const LU_ST=[0,13,26,39],LU_Y=[[0,0],[9,0],[9,9],[0,9]],LU_FIN=[[6.4,7],[7,6.4],[7.6,7],[7,7.6]];
+const LU_C=['#e53935','#43a047','#fdd835','#1e88e5'],LU_N=['Ти','Зеленият','Жълтият','Синият'];
+const LU_CS=22,LU_BX=8,LU_BY=14;
+A.add({id:'ludo',cat:'board',icon:'🎲',name:'Не се сърди, човече',desc:'Хвърляй зара и прибери четирите си пула у дома преди трите робота — и ги връщай в началото!',
+  help:'Space / Enter / клик = хвърли зара. Излизаш от къщи само с 6, а 6 дава още едно хвърляне. Избери пул: кликни върху светещ пул или натисни 1–4 (← → сменят, Space мести). Стъпиш ли върху чужд пул, той се връща у дома — освен на цветните стартови полета със звезда. Влизаш в последното поле само с точно число. Точки: колкото по-напред са пуловете ти, + 15 за всеки ударен пул, + 200 за победа.',
+  start(g){g.tk=[0,1,2,3].map(()=>[-1,-1,-1,-1]);g.cur=0;g.ph='roll';g.dice=0;g.rollT=0;g.tries=0;g.caps=0;g.sel=0;g.mov=[];g.anim=null;g.wait=null;
+    g.msg='Твой ред — хвърли зара!';this.calc(g);},
+  abs(pl,p){return (LU_ST[pl]+p)%52;},
+  xy(g,pl,k){const p=g.tk[pl][k];
+    if(p<0){const [ox,oy]=LU_Y[pl];return [ox+1.5+(k%2)*3,oy+1.5+((k/2)|0)*3];}
+    if(p<=50){const t=LU_T[this.abs(pl,p)];return [t[0]+.5,t[1]+.5];}
+    if(p<=55){const t=LU_H[pl][p-51];return [t[0]+.5,t[1]+.5];}
+    const f=LU_FIN[pl];return [f[0]+.5+(k-1.5)*.22*(pl%2),f[1]+.5+(k-1.5)*.22*(1-pl%2)];},
+  can(g,pl,k,d){const p=g.tk[pl][k];let np;
+    if(p<0){if(d!==6)return false;np=0;}else{if(p>=56)return false;np=p+d;if(np>56)return false;}
+    if(np<56&&g.tk[pl].some((q,j)=>j!==k&&q===np))return false;return true;},
+  calc(g){let s=0;g.tk[0].forEach(p=>{if(p>=0)s+=p+1;});g.score=s+g.caps*15+(g.won?200:0);},
+  later(g,t,fn){g.wait={t,fn};},
+  roll(g){if(g.ph!=='roll')return;g.ph='rolling';g.rollT=.45;A.beep(500,.04);},
+  afterRoll(g){const pl=g.cur,d=g.dice;g.mov=[0,1,2,3].filter(k=>this.can(g,pl,k,d));
+    if(!g.mov.length){const none=g.tk[pl].every(p=>p<0||p>=56);
+      if(none&&d!==6&&g.tries<2){g.tries++;g.msg=(pl?LU_N[pl]+': ':'')+'няма 6 — опит '+(g.tries+1)+' от 3';this.later(g,pl?.5:.6,()=>{g.ph='roll';if(pl)this.roll(g);});return;}
+      g.msg=(pl?LU_N[pl]+' не може да мести':'Няма ход с '+d);this.later(g,.7,()=>this.next(g,false));return;}
+    if(pl===0){if(g.mov.length===1){g.ph='wait';this.later(g,.35,()=>this.go(g,g.mov[0]));}
+      else{g.ph='pick';g.sel=g.mov[0];g.msg='Избери пул (1–4 или клик)';}}
+    else{g.ph='wait';this.later(g,.4,()=>this.go(g,this.ai(g,pl,d)));}},
+  danger(g,pl,a){if(LU_ST.includes(a))return false;
+    for(let q=0;q<4;q++)if(q!==pl)for(const p of g.tk[q])if(p>=0&&p<=50){const b=this.abs(q,p),dd=(a-b+52)%52;if(dd>=1&&dd<=6&&p+dd<=50)return true;}return false;},
+  ai(g,pl,d){let best=g.mov[0],bs=-1e9;
+    for(const k of g.mov){const p=g.tk[pl][k],np=p<0?0:p+d;let s=np*.3+Math.random();
+      if(np===56)s+=50;if(p<0)s+=30;if(np>50&&p<=50)s+=20;
+      if(np<=50){const a=this.abs(pl,np);if(!LU_ST.includes(a))for(let q=0;q<4;q++)if(q!==pl&&g.tk[q].some(x=>x>=0&&x<=50&&this.abs(q,x)===a))s+=40;
+        if(this.danger(g,pl,a))s-=12;}
+      if(p>=0&&p<=50&&this.danger(g,pl,this.abs(pl,p)))s+=15;
+      if(s>bs){bs=s;best=k;}}
+    return best;},
+  go(g,k){const pl=g.cur,p=g.tk[pl][k],d=g.dice,steps=[];
+    if(p<0)steps.push(0);else for(let i=1;i<=d;i++)steps.push(p+i);
+    g.ph='anim';g.anim={pl,k,steps,t:0};},
+  land(g,pl,k){const np=g.tk[pl][k];
+    if(np<=50){const a=this.abs(pl,np);if(!LU_ST.includes(a))for(let q=0;q<4;q++)if(q!==pl)g.tk[q].forEach((x,j)=>{if(x>=0&&x<=50&&this.abs(q,x)===a){g.tk[q][j]=-1;
+        if(pl===0){g.caps++;g.msg='Удари '+LU_N[q]+' пул! +15';A.tune([784,988,1175]);}else{g.msg=LU_N[pl]+(q===0?' удари твой пул!':' удари '+LU_N[q].toLowerCase()+' пул');A.beep(q===0?140:260,.3,'sawtooth',.06);}}});}
+    if(np===56)A.tune(pl?[392,330]:[523,659,784]);
+    this.calc(g);
+    if(g.tk[pl].every(x=>x>=56)){if(pl===0){g.won=true;this.calc(g);A.over(g,'🏆 Победа! Всички пулове са у дома!');}
+      else A.over(g,LU_N[pl]+' робот прибра всички пулове първи…');return;}
+    this.next(g,g.dice===6);},
+  next(g,again){g.tries=again?g.tries:0;if(!again){g.cur=(g.cur+1)%4;g.tries=0;}
+    g.ph='roll';g.mov=[];
+    if(g.cur===0){g.msg=again?'Шестица! Хвърли пак':'Твой ред — хвърли зара!';}
+    else{g.msg=LU_N[g.cur]+(again?' хвърля пак':' е на ход');this.later(g,.45,()=>this.roll(g));}},
+  key(g,k,ch){if(g.cur!==0)return;
+    if(g.ph==='roll'&&(k==='Space'||k==='Enter'||k==='NumpadEnter'))this.roll(g);
+    else if(g.ph==='pick'){const n=+ch;
+      if(n>=1&&n<=4&&g.mov.includes(n-1))this.go(g,n-1);
+      else if(k==='ArrowLeft'||k==='ArrowRight'||k==='ArrowUp'||k==='ArrowDown'){const i=g.mov.indexOf(g.sel),s=(k==='ArrowLeft'||k==='ArrowUp')?-1:1;g.sel=g.mov[(i+s+g.mov.length)%g.mov.length];A.beep(600,.03);}
+      else if(k==='Space'||k==='Enter'||k==='NumpadEnter')this.go(g,g.sel);}},
+  click(g,mx,my){if(g.cur!==0)return;
+    if(g.ph==='roll'){this.roll(g);return;}
+    if(g.ph==='pick'){let best=-1,bd=1e9;for(const k of g.mov){const [x,y]=this.xy(g,0,k),dx=LU_BX+x*LU_CS-mx,dy=LU_BY+y*LU_CS-my,dd=dx*dx+dy*dy;if(dd<bd){bd=dd;best=k;}}
+      if(bd<(LU_CS*1.3)**2)this.go(g,best);}},
+  update(g,dt){
+    if(g.ph==='rolling'){g.rollT-=dt;g.dice=A.ri(1,6);if(g.rollT<=0){g.dice=A.ri(1,6);g.ph='wait';A.beep(700,.06,'triangle');this.afterRoll(g);}return;}
+    if(g.wait){g.wait.t-=dt;if(g.wait.t<=0){const f=g.wait.fn;g.wait=null;f();}return;}
+    if(g.anim){const a=g.anim;a.t-=dt;if(a.t<=0){a.t=g.cur?.09:.12;const s=a.steps.shift();g.tk[a.pl][a.k]=s;A.beep(380+s*6,.03);
+        if(!a.steps.length){g.anim=null;this.land(g,a.pl,a.k);}}}},
+  cellR(x,y,col){A.block(LU_BX+x*LU_CS,LU_BY+y*LU_CS,LU_CS,col);},
+  draw(g){A.bg('#2b1d14');const S=LU_CS;
+    c.fillStyle='#4e342e';c.fillRect(LU_BX-4,LU_BY-4,15*S+8,15*S+8);
+    LU_T.forEach(([x,y])=>this.cellR(x,y,'#e0d6c8'));
+    for(let p=0;p<4;p++){const [ox,oy]=LU_Y[p];c.fillStyle=LU_C[p];c.fillRect(LU_BX+ox*S,LU_BY+oy*S,6*S,6*S);
+      c.fillStyle='rgba(255,255,255,.75)';c.fillRect(LU_BX+(ox+.7)*S,LU_BY+(oy+.7)*S,4.6*S,4.6*S);
+      for(let k=0;k<4;k++){c.fillStyle='rgba(0,0,0,.18)';c.fillRect(LU_BX+(ox+1+(k%2)*3)*S,LU_BY+(oy+1+((k/2)|0)*3)*S,S,S);}
+      LU_H[p].forEach(([x,y])=>this.cellR(x,y,LU_C[p]));
+      const st=LU_T[LU_ST[p]];this.cellR(st[0],st[1],LU_C[p]);A.txt('★',LU_BX+st[0]*S+S/2,LU_BY+st[1]*S+S/2,14,'#fff','center');}
+    // център
+    const cx=LU_BX+7.5*S,cyy=LU_BY+7.5*S,tri=[[[6,6],[6,9]],[[6,6],[9,6]],[[9,6],[9,9]],[[6,9],[9,9]]];
+    tri.forEach((t,p)=>{c.fillStyle=LU_C[p];c.beginPath();c.moveTo(LU_BX+t[0][0]*S,LU_BY+t[0][1]*S);c.lineTo(LU_BX+t[1][0]*S,LU_BY+t[1][1]*S);c.lineTo(cx,cyy);c.fill();});
+    // пулове
+    const blink=Math.floor(g.t*4)%2;
+    for(let pl=0;pl<4;pl++)for(let k=0;k<4;k++){const [x,y]=this.xy(g,pl,k),sx=LU_BX+x*S,sy=LU_BY+y*S,r=g.tk[pl][k]>=56?6:8;
+      let ox=0;for(let q=0;q<pl;q++)if(g.tk[q].some(p=>p>=0&&p<=50&&g.tk[pl][k]>=0&&g.tk[pl][k]<=50&&this.abs(q,p)===this.abs(pl,g.tk[pl][k])))ox+=4;
+      const can=pl===0&&g.ph==='pick'&&g.mov.includes(k);
+      if(can){c.fillStyle=blink||k===g.sel?'#ffd54f':'#fff59d';c.fillRect(sx-r-3+ox,sy-r-3,2*r+6,2*r+6);}
+      A.block(sx-r+ox,sy-r,2*r,LU_C[pl]);c.strokeStyle='#000';c.lineWidth=1.5;c.strokeRect(sx-r+ox,sy-r,2*r,2*r);
+      if(pl===0&&g.tk[0][k]<56)A.txt(''+(k+1),sx+ox,sy+1,10,'#fff','center');}
+    // табло
+    const px=350,mid=415;c.fillStyle='#1a120e';c.fillRect(px,0,130,360);
+    A.txt('На ход:',mid,22,12,'#b9c6d6','center');A.block(mid-45,34,90,LU_C[g.cur],24);A.txt(g.cur?LU_N[g.cur]+' 🤖':'ТИ',mid,46,11,g.cur===2?'#000':'#fff','center');
+    // зар
+    const dx=mid-30,dy=78,ds=60;A.block(dx,dy,ds,'#f5f5f5');c.strokeStyle='#000';c.lineWidth=2;c.strokeRect(dx,dy,ds,ds);
+    const pip={1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],4:[[0,0],[2,0],[0,2],[2,2]],5:[[0,0],[2,0],[1,1],[0,2],[2,2]],6:[[0,0],[2,0],[0,1],[2,1],[0,2],[2,2]]}[g.dice]||[];
+    c.fillStyle=g.dice===6?'#d32f2f':'#212121';pip.forEach(([a,b])=>c.fillRect(dx+10+a*16,dy+10+b*16,10,10));
+    if(g.cur===0&&g.ph==='roll'&&blink)A.txt('Space / клик',mid,152,11,'#ffd54f','center');
+    // съобщение на два реда
+    const words=g.msg.split(' ');let l1='',l2='';for(const w of words){if((l1+' '+w).length<=17&&!l2)l1=(l1?l1+' ':'')+w;else l2=(l2?l2+' ':'')+w;}
+    A.txt(l1,mid,180,11,'#fff','center');A.txt(l2,mid,196,11,'#fff','center');
+    A.txt('У дома:',mid,228,12,'#b9c6d6','center');
+    for(let p=0;p<4;p++){const n=g.tk[p].filter(x=>x>=56).length;A.block(px+12,244+p*22,14,LU_C[p]);A.txt(LU_N[p]+': '+n+'/4',px+34,251+p*22,11,'#fff');}
+    A.txt('Ударени: '+g.caps,mid,342,12,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

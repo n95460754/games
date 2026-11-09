@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рикошет на големите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧊 Рикошет на големите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 365. Рикошет на големите
+// Пъзел като „Ricochet Robots“: три блокови голема се плъзгат по леда, докато не
+// ударят стена или друг голем. Закарай голема с цвета на диаманта до диаманта.
+// Другите големи са твои помощници — сложи ги като спирачки! Всеки пъзел е проверен
+// с търсене в ширина (BFS), така че знаем най-малкия брой ходове.
+const RC_N=8;
+const RC_COL=['#e53935','#1e88e5','#43a047'],RC_NAME=['Червения','Синия','Зеления'];
+const RC_D=[[0,-1],[1,0],[0,1],[-1,0]];// горе, дясно, долу, ляво
+A.add({id:'ricochet',cat:'puzzle',icon:'🧊',name:'Рикошет на големите',desc:'Големите се плъзгат по леда до стената — закарай правилния голем до диаманта с малко ходове!',
+  help:'Кликни / докосни голем, за да го избереш, после кликни встрани от него (горе, долу, ляво или дясно) и той се плъзга, докато не удари стена или друг голем. Клавиатура: 1 2 3 или Tab избира голем, стрелките го плъзгат, U = върни ход, N = нов пъзел (−20 сек). Закарай голема с цвета на диаманта до диаманта. С най-малко ходове = 10 точки и +40 сек.',
+  start(g){g.time=240;g.lvl=0;g.solved=0;g.fl=null;this.newPuz(g);},
+  // стени: wr[i] = стена отдясно на клетка i, wd[i] = стена отдолу
+  blocked(p,d,wr,wd){const x=p%RC_N,y=(p/RC_N)|0;
+    if(d===0)return y===0||wd[p-RC_N];if(d===2)return y===RC_N-1||wd[p];
+    if(d===1)return x===RC_N-1||wr[p];return x===0||wr[p-1];},
+  slide(pos,i,d,wr,wd){let p=pos[i];const step=RC_D[d][0]+RC_D[d][1]*RC_N;
+    while(!this.blocked(p,d,wr,wd)&&!pos.includes(p+step))p+=step;return p;},
+  newPuz(g){const want=Math.min(3+Math.floor(g.lvl/2),7);let best=null;
+    for(let tries=0;tries<60;tries++){const M=RC_N*RC_N,wr=new Uint8Array(M),wd=new Uint8Array(M);
+      // L-образни ъгли из полето
+      const nw=A.ri(9,13);for(let k=0;k<nw;k++){const p=A.ri(0,M-1);if(Math.random()<.5)wr[p]=1;else wr[Math.max(0,p-1)]=1;if(Math.random()<.5)wd[p]=1;else wd[Math.max(0,p-RC_N)]=1;}
+      const pos=[];while(pos.length<3){const p=A.ri(0,M-1);if(!pos.includes(p))pos.push(p);}
+      // BFS по всички състояния (3 голема × 64 клетки)
+      const enc=s=>s[0]*4096+s[1]*64+s[2],dist=new Int8Array(262144).fill(-1),q=[pos.slice()];dist[enc(pos)]=0;
+      const reach=[new Int8Array(M).fill(-1),new Int8Array(M).fill(-1),new Int8Array(M).fill(-1)];
+      for(let h=0;h<q.length;h++){const s=q[h],ds=dist[enc(s)];for(let i=0;i<3;i++)if(reach[i][s[i]]<0)reach[i][s[i]]=ds;
+        if(ds>=want)continue;
+        for(let i=0;i<3;i++)for(let d=0;d<4;d++){const np=this.slide(s,i,d,wr,wd);if(np===s[i])continue;const t=s.slice();t[i]=np;const e=enc(t);if(dist[e]<0){dist[e]=ds+1;q.push(t);}}}
+      const opts=[];for(let i=0;i<3;i++)for(let p=0;p<M;p++)if(reach[i][p]===want)opts.push([i,p]);
+      if(opts.length){const [ti,tp]=A.pick(opts);best={wr,wd,pos,ti,tp,par:want};break;}
+      if(!best){for(let w=want-1;w>=2&&!best;w--){const o=[];for(let i=0;i<3;i++)for(let p=0;p<M;p++)if(reach[i][p]===w)o.push([i,p]);
+        if(o.length){const [ti,tp]=A.pick(o);best={wr,wd,pos,ti,tp,par:w,low:1};}}}}
+    Object.assign(g,best);g.start0=g.pos.slice();g.hist=[];g.moves=0;g.sel=g.ti;g.anim=null;g.done=0;},
+  move(g,d){if(g.anim||g.done)return;const i=g.sel,np=this.slide(g.pos,i,d,g.wr,g.wd);if(np===g.pos[i]){A.beep(160,.05);return;}
+    g.hist.push(g.pos.slice());g.anim={i,from:g.pos[i],to:np,t:0,len:Math.abs((np-g.pos[i]))/(d%2?1:RC_N)};g.pos[i]=np;g.moves++;A.beep(420,.05,'triangle');},
+  win(g){const pts=g.moves<=g.par?10:Math.max(2,10-2*(g.moves-g.par));g.score+=pts;g.solved++;g.lvl++;g.time+=40;
+    g.done=1.6;g.msg=(g.moves<=g.par?'Перфектно! ':'Браво! ')+'+'+pts;A.tune([523,659,784,1046]);},
+  key(g,k,ch){if(g.done)return;
+    if(ch==='1'||ch==='2'||ch==='3'){g.sel=+ch-1;A.beep(600,.03);}
+    else if(k==='Tab'){g.sel=(g.sel+1)%3;}
+    else if(k==='KeyU'||k==='Backspace'){if(g.hist.length&&!g.anim){g.pos=g.hist.pop();g.moves--;A.beep(300,.04);}}
+    else if(k==='KeyN'){g.time-=20;g.lvl=Math.max(0,g.lvl-1);this.newPuz(g);}
+    else{const d={ArrowUp:0,KeyW:0,ArrowRight:1,KeyD:1,ArrowDown:2,KeyS:2,ArrowLeft:3,KeyA:3}[k];if(d!==undefined)this.move(g,d);}},
+  geo(){return {cs:38,ox:26,oy:36};},
+  click(g,mx,my){if(g.done)return;const {cs,ox,oy}=this.geo();
+    if(mx>360){if(my>250&&my<290){if(g.hist.length&&!g.anim){g.pos=g.hist.pop();g.moves--;}}else if(my>300&&my<340){g.time-=20;g.lvl=Math.max(0,g.lvl-1);this.newPuz(g);}return;}
+    const qx=Math.floor((mx-ox)/cs),qy=Math.floor((my-oy)/cs);
+    if(qx>=0&&qy>=0&&qx<RC_N&&qy<RC_N){const p=qy*RC_N+qx,k=g.pos.indexOf(p);if(k>=0){g.sel=k;A.beep(600,.03);return;}}
+    const p=g.pos[g.sel],sx=ox+(p%RC_N+.5)*cs,sy=oy+(((p/RC_N)|0)+.5)*cs,dx=mx-sx,dy=my-sy;
+    this.move(g,Math.abs(dx)>Math.abs(dy)?(dx>0?1:3):(dy>0?2:0));},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(g.anim){g.anim.t+=dt*14/Math.max(1,g.anim.len);if(g.anim.t>=1){g.anim=null;if(g.pos[g.ti]===g.tp)this.win(g);}}
+    if(g.done){g.done-=dt;if(g.done<=0){g.done=0;this.newPuz(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени пъзели: '+g.solved);},
+  draw(g){A.bg('#0f2233');const {cs,ox,oy}=this.geo(),N=RC_N;
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){const sx=ox+x*cs,sy=oy+y*cs;c.fillStyle=(x+y)%2?'#b3e5fc':'#a7dcf5';c.fillRect(sx,sy,cs,cs);
+      c.fillStyle='rgba(255,255,255,.35)';c.fillRect(sx+4,sy+4,8,3);}
+    // диамант
+    {const sx=ox+(g.tp%N)*cs+cs/2,sy=oy+((g.tp/N)|0)*cs+cs/2,r=11+Math.sin(g.t*5)*2;c.fillStyle=RC_COL[g.ti];c.beginPath();c.moveTo(sx,sy-r);c.lineTo(sx+r,sy);c.lineTo(sx,sy+r);c.lineTo(sx-r,sy);c.fill();
+      c.strokeStyle='#fff';c.lineWidth=2;c.stroke();}
+    // стени (камък)
+    c.fillStyle='#5d5d5d';for(let p=0;p<N*N;p++){const x=p%N,y=(p/N)|0;if(g.wr[p]&&x<N-1)c.fillRect(ox+(x+1)*cs-3,oy+y*cs-2,6,cs+4);if(g.wd[p]&&y<N-1)c.fillRect(ox+x*cs-2,oy+(y+1)*cs-3,cs+4,6);}
+    c.strokeStyle='#4a4a4a';c.lineWidth=6;c.strokeRect(ox-3,oy-3,N*cs+6,N*cs+6);
+    // големи
+    for(let i=0;i<3;i++){let px=g.pos[i]%N,py=(g.pos[i]/N)|0;
+      if(g.anim&&g.anim.i===i){const f=Math.min(1,g.anim.t),ax=g.anim.from%N,ay=(g.anim.from/N)|0;px=ax+(px-ax)*f;py=ay+(py-ay)*f;}
+      const sx=ox+px*cs+4,sy=oy+py*cs+4,s=cs-8;
+      if(i===g.sel){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(sx-3,sy-3,s+6,s+6);}
+      A.block(sx,sy,s,RC_COL[i]);c.fillStyle='#d7ccc8';c.fillRect(sx+5,sy+5,s-10,10);c.fillStyle='#000';c.fillRect(sx+8,sy+8,5,5);c.fillRect(sx+s-13,sy+8,5,5);
+      c.fillStyle='#8d6e63';c.fillRect(sx+s/2-3,sy+14,6,6);A.txt(''+(i+1),sx+s/2,sy+s-8,11,'#fff','center');}
+    // табло вдясно
+    const rx=420;A.txt('⏱ '+Math.max(0,Math.ceil(g.time)),rx,40,16,g.time<20?'#ff6b6b':'#fff','center');
+    A.txt('Пъзел '+(g.solved+1),rx,70,13,'#b9c6d6','center');
+    A.txt('Ходове: '+g.moves,rx,100,14,'#fff','center');A.txt('Най-малко: '+g.par,rx,122,13,'#ffd54f','center');
+    A.txt('Целта:',rx,152,12,'#b9c6d6','center');A.block(rx-14,164,28,RC_COL[g.ti]);A.txt(RC_NAME[g.ti],rx,206,12,'#fff','center');A.txt('голем → ◆',rx,222,12,'#fff','center');
+    A.block(368,252,104,'#5a6b8c',34);A.txt('↶ Назад (U)',rx,269,12,'#fff','center');
+    A.block(368,302,104,'#6d4c41',34);A.txt('Нов (N) −20с',rx,319,12,'#fff','center');
+    if(g.done){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(ox,oy+N*cs/2-30,N*cs,60);A.txt(g.msg,ox+N*cs/2,oy+N*cs/2,22,'#ffd54f','center');}}
+});
+</script>
+</body>
+</html>

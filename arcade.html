@@ -346,7 +346,10 @@ const GAMES=[
    {"id": "yahtzee", "cat": "board", "icon": "🎲", "name": "Генерал със зарове", "desc": "Хвърли 5 зара до 3 пъти и попълни таблицата: фул, кента, каре и генерал!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "dolphin", "cat": "action", "icon": "🐬", "name": "Делфинът скачач", "desc": "Гмурни се дълбоко, изскочи високо над вълните и събирай рибки, без да удряш лодките!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "bimaru", "cat": "puzzle", "icon": "⛵", "name": "Скритата флотилия", "desc": "Намери скритите лодки по числата в редовете и колоните — лодките никога не се допират!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "halfcut", "cat": "skill", "icon": "🔪", "name": "Раздели наравно", "desc": "Един прав разрез — две еднакви половини! Колкото по-близо до 50/50, толкова повече точки.", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "halfcut", "cat": "skill", "icon": "🔪", "name": "Раздели наравно", "desc": "Един прав разрез — две еднакви половини! Колкото по-близо до 50/50, толкова повече точки.", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "driller", "cat": "action", "icon": "🪨", "name": "Цветният сондаж", "desc": "Копай надолу през шарени блокове — еднаквите изчезват заедно! Пази се от падащите блокове и не оставай без въздух.", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "ricochet", "cat": "puzzle", "icon": "🧊", "name": "Рикошет на големите", "desc": "Големите се плъзгат по леда до стената — закарай правилния голем до диаманта с малко ходове!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "ludo", "cat": "board", "icon": "🎲", "name": "Не се сърди, човече", "desc": "Хвърляй зара и прибери четирите си пула у дома преди трите робота — и ги връщай в началото!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
