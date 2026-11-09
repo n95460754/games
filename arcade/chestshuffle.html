@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Следи сандъка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧰 Следи сандъка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 357. Следи сандъка
+// Като играта „с трите чаши“: диамантът влиза в един сандък, сандъците се разбъркват
+// все по-бързо, а ти трябва да проследиш с поглед къде е. После идват 4 и 5 сандъка
+// и двойни размени наведнъж.
+A.add({id:'chestshuffle',cat:'skill',icon:'🧰',name:'Следи сандъка',desc:'Диамантът се скрива в сандък, сандъците се разбъркват — проследи го с поглед!',
+  help:'Гледай в кой сандък влиза диамантът. Сандъците се разменят все по-бързо — следи го с очи! После избери сандъка с цифрите 1–5, със стрелки + Space или с клик / докосване. 3 сърца.',
+  start(g){g.lives=3;g.round=0;g.sel=0;this.round(g);},
+  round(g){g.round++;const R=g.round,n=R<4?3:R<8?4:5;g.n=n;g.slot=[...Array(n).keys()];g.gem=A.ri(0,n-1);
+    g.phase='show';g.pt=1.4;g.left=Math.min(16,2+R);g.dur=Math.max(.17,.52-R*.025);g.mv=null;g.pick=-1;g.sel=Math.min(g.sel,n-1);},
+  sx(g,s){const sp=g.n===3?130:g.n===4?105:88;return 240+(s-(g.n-1)/2)*sp;},
+  at(g,s){return g.slot.indexOf(s);},
+  nextSwap(g){const n=g.n,sl=A.shuffle([...Array(n).keys()]),mv=[];const pair=(a,b,up)=>{mv.push({ch:this.at(g,a),from:a,to:b,up},{ch:this.at(g,b),from:b,to:a,up:-up});};
+    pair(sl[0],sl[1],Math.random()<.5?1:-1);if(n>=4&&g.round>=6&&Math.random()<.45)pair(sl[2],sl[3],Math.random()<.5?1:-1);
+    g.mv={list:mv,u:0};A.beep(300+Math.random()*200,.04,'triangle',.03);},
+  choose(g,s){if(g.phase!=='pick'||s<0||s>=g.n)return;g.pick=s;g.sel=s;g.phase='reveal';g.pt=1.3;
+    const ok=this.at(g,s)===g.gem;if(ok){g.score++;flash(g,true);A.tune([660,880,1100]);}else{g.lives--;flash(g,false);}},
+  key(g,k,ch){const d=+ch;if(d>=1&&d<=g.n)return this.choose(g,d-1);
+    if(k==='ArrowLeft')g.sel=(g.sel+g.n-1)%g.n;else if(k==='ArrowRight')g.sel=(g.sel+1)%g.n;else if(k==='Space'||k==='Enter')this.choose(g,g.sel);},
+  click(g,mx,my){if(my<120||my>320)return;let b=-1,bd=50;for(let s=0;s<g.n;s++){const d=Math.abs(mx-this.sx(g,s));if(d<bd){bd=d;b=s;}}if(b>=0)this.choose(g,b);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(g.phase==='show'){g.pt-=dt;if(g.pt<=0){g.phase='shuffle';this.nextSwap(g);}}
+    else if(g.phase==='shuffle'){g.mv.u+=dt/g.dur;if(g.mv.u>=1){for(const m of g.mv.list)g.slot[m.ch]=m.to;g.left--;
+        if(g.left>0)this.nextSwap(g);else{g.mv=null;g.phase='pick';}}}
+    else if(g.phase==='reveal'){g.pt-=dt;if(g.pt<=0){if(g.lives<=0)return A.over(g,'Диамантът ти избяга! 💎');this.round(g);}}},
+  chest(x,y,open,num,hl){if(hl){c.fillStyle='rgba(255,213,79,.35)';c.fillRect(x-38,y-26,76,76);}
+    A.block(x-30,y,60,'#9a6a3a',38);c.fillStyle='#5d3b1f';c.fillRect(x-30,y+14,60,3);
+    const ly=y-14-open*20;A.block(x-30,ly,60,'#8a5a2a',16);c.fillStyle='#5d3b1f';c.fillRect(x-30,ly+13,60,3);
+    if(!open)A.block(x-5,y-4,10,'#ffd23f',10);A.txt(num,x,y+58,14,'#b9c6d6','center');},
+  gemAt(x,y){c.fillStyle='#000';c.beginPath();c.moveTo(x,y-13);c.lineTo(x+13,y);c.lineTo(x,y+13);c.lineTo(x-13,y);c.fill();
+    c.fillStyle='#4de8f5';c.beginPath();c.moveTo(x,y-10);c.lineTo(x+10,y);c.lineTo(x,y+10);c.lineTo(x-10,y);c.fill();c.fillStyle='#fff';c.fillRect(x-3,y-5,4,4);},
+  draw(g){A.bg('#2b2f3a');for(let x=0;x<480;x+=24)for(let y=0;y<96;y+=24)A.block(x,y,24,(x*7+y*3)%5?'#3a3f4a':'#454b57');
+    for(let x=0;x<480;x+=32)A.block(x,234,32,(x/32)%2?'#7d7d7d':'#737373',126);
+    const pos={};for(let ch=0;ch<g.n;ch++){let x=this.sx(g,g.slot[ch]),y=196;
+      if(g.mv){const m=g.mv.list.find(q=>q.ch===ch);if(m){const u=Math.min(1,g.mv.u),e=u*u*(3-2*u);x=this.sx(g,m.from)+(this.sx(g,m.to)-this.sx(g,m.from))*e;y-=Math.sin(Math.PI*u)*34*m.up;}}pos[ch]=[x,y];}
+    for(let ch=0;ch<g.n;ch++){const [x,y]=pos[ch],s=g.slot[ch],has=ch===g.gem;
+      const open=g.phase==='show'||(g.phase==='reveal'&&(s===g.pick||has));
+      if(open&&has)this.gemAt(x,y-22-(g.phase==='show'?Math.max(0,g.pt-1)*60:0));
+      this.chest(x,y,open?1:0,g.mv?'':String(s+1),g.phase==='pick'&&s===g.sel);}
+    const msg={show:'Гледай диаманта! 👀',shuffle:'Разбъркване… '+g.left,pick:'Къде е диамантът?',reveal:g.pick>=0&&this.at(g,g.pick)===g.gem?'Позна! ✔':'Не е там! ✖'}[g.phase];
+    A.txt(msg,240,120,22,g.phase==='reveal'?(msg[0]==='П'?'#9cff8a':'#ff6b6b'):'#ffd54f','center');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');A.txt('Рунд '+g.round+' · '+g.n+' сандъка',470,14,13,'#fff','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

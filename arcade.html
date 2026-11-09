@@ -337,7 +337,10 @@ const GAMES=[
    {"id": "volume", "cat": "brain", "icon": "📦", "name": "Обем в блокове", "desc": "Дължина × ширина × височина — сметни колко блока има в постройката, кухата кула или басейна", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "wolfsheep", "cat": "board", "icon": "🐺", "name": "Вълкът и овцете", "desc": "4 овце срещу хитър вълк: обградете го, преди да се промъкне зад вас!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "sweepline", "cat": "action", "icon": "🟩", "name": "Метящата линия", "desc": "Падащи 2×2 блока трева и тухли: събери квадрати от един цвят, а линията ги изтрива!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "mapscale", "cat": "brain", "icon": "🗺️", "name": "Мащаб на картата", "desc": "Преброй блоковете на пътя и сметни истинското разстояние по мащаба на картата", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "mapscale", "cat": "brain", "icon": "🗺️", "name": "Мащаб на картата", "desc": "Преброй блоковете на пътя и сметни истинското разстояние по мащаба на картата", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "airdrop", "cat": "action", "icon": "📦", "name": "Доставка от въздуха", "desc": "Пускай сандъци от дирижабъла точно върху саловете на селяните. Внимавай за вятъра!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "gemcaves", "cat": "puzzle", "icon": "💎", "name": "Диаманти в пещерите", "desc": "По един диамант във всеки ред, колона и пещера — и никога два един до друг!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "chestshuffle", "cat": "skill", "icon": "🧰", "name": "Следи сандъка", "desc": "Диамантът се скрива в сандък, сандъците се разбъркват — проследи го с поглед!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

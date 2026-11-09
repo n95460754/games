@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Диаманти в пещерите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💎 Диаманти в пещерите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 356. Диаманти в пещерите
+// Логически пъзел (като „Star Battle“): във всеки ред, всяка колона и всяка цветна пещера
+// има точно един диамант, а два диаманта никога не се допират — дори по диагонал.
+// Дъската се генерира: първо случайно решение, после пещерите израстват около диамантите.
+const GEM_COL=['#7d7d7d','#7a5233','#e0c068','#5aa13a','#eef4ff','#d8a07a','#8e24aa','#3b7bd6'];
+A.add({id:'gemcaves',cat:'puzzle',icon:'💎',name:'Диаманти в пещерите',desc:'По един диамант във всеки ред, колона и пещера — и никога два един до друг!',
+  help:'Сложи по ЕДИН диамант във всеки ред, всяка колона и всяка цветна пещера. Диамантите не бива да се допират, дори по диагонал. Клик / докосване: диамант → точка → празно (десен бутон = точка). Клавиатура: стрелки + Space, X = точка, H = подсказка (−15 с), C = изчисти. Всяка решена пещера дава +30 секунди.',
+  start(g){g.time=180;g.lv=0;g.cur=[0,0];g.kb=0;g.solved=0;this.board(g);},
+  perm(N){const p=[],used=[];const go=i=>{if(i===N)return true;for(const v of A.shuffle([...Array(N).keys()])){if(used[v]||(i&&Math.abs(v-p[i-1])<2))continue;used[v]=1;p[i]=v;if(go(i+1))return true;used[v]=0;}return false;};go(0);return p;},
+  board(g){const N=[5,6,6,7,7,8][Math.min(g.lv,5)];g.N=N;g.sol=this.perm(N);
+    const R=[...Array(N)].map(()=>Array(N).fill(-1));g.sol.forEach((c0,r)=>R[r][c0]=r);let left=N*N-N;
+    while(left>0){const cand=[];for(let r=0;r<N;r++)for(let q=0;q<N;q++)if(R[r][q]<0)for(const [dr,dq] of [[1,0],[-1,0],[0,1],[0,-1]]){const a=r+dr,b=q+dq;if(a>=0&&b>=0&&a<N&&b<N&&R[a][b]>=0)cand.push([r,q,R[a][b]]);}
+      const sz=[];for(const row of R)for(const v of row)if(v>=0)sz[v]=(sz[v]||0)+1;const mn=Math.min(...cand.map(x=>sz[x[2]])),small=cand.filter(x=>sz[x[2]]<=mn+1);
+      const [r,q,k]=A.pick(Math.random()<.7?small:cand);R[r][q]=k;left--;}
+    g.R=R;g.st=[...Array(N)].map(()=>Array(N).fill(0));g.bad=new Set();g.cnt=0;
+    g.cs=Math.floor(320/N);g.ox=16+Math.floor((320-g.cs*N)/2);g.oy=28+Math.floor((320-g.cs*N)/2);g.cur=[0,0];},
+  check(g){const G=[];for(let r=0;r<g.N;r++)for(let q=0;q<g.N;q++)if(g.st[r][q]===2)G.push([r,q]);g.bad=new Set();g.cnt=G.length;
+    for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++){const [a,b]=G[i],[d,e]=G[j];
+      if(a===d||b===e||g.R[a][b]===g.R[d][e]||(Math.abs(a-d)<2&&Math.abs(b-e)<2)){g.bad.add(a*10+b);g.bad.add(d*10+e);}}
+    if(G.length===g.N&&!g.bad.size){g.score++;g.time+=30;g.solved=1.4;flash(g,true);A.tune([523,659,784,1047]);}},
+  set(g,r,q,v){if(g.solved>0)return;g.st[r][q]=v;A.beep(v===2?760:420,.04,'triangle');this.check(g);},
+  cycle(g,r,q){this.set(g,r,q,[2,0,1][g.st[r][q]]);},
+  mark(g,r,q){this.set(g,r,q,g.st[r][q]===1?0:1);},
+  hint(g){if(g.solved>0)return;for(let r=0;r<g.N;r++){const q=g.sol[r];if(g.st[r][q]!==2){for(let i=0;i<g.N;i++){if(g.st[r][i]===2)g.st[r][i]=0;if(g.st[i][q]===2)g.st[i][q]=0;}
+      g.time-=15;g.hintAt=[r,q,1];this.set(g,r,q,2);return;}}},
+  clear(g){if(g.solved>0)return;for(const row of g.st)row.fill(0);this.check(g);A.beep(200,.08);},
+  key(g,k){const cu=g.cur,N=g.N;
+    if(k==='ArrowLeft')cu[1]=(cu[1]+N-1)%N;else if(k==='ArrowRight')cu[1]=(cu[1]+1)%N;else if(k==='ArrowUp')cu[0]=(cu[0]+N-1)%N;else if(k==='ArrowDown')cu[0]=(cu[0]+1)%N;
+    else if(k==='Space'||k==='Enter')this.cycle(g,cu[0],cu[1]);else if(k==='KeyX')this.mark(g,cu[0],cu[1]);else if(k==='KeyH')this.hint(g);else if(k==='KeyC')this.clear(g);else return;g.kb=1;},
+  click(g,mx,my,btn){g.kb=0;const q=Math.floor((mx-g.ox)/g.cs),r=Math.floor((my-g.oy)/g.cs);
+    if(q>=0&&r>=0&&q<g.N&&r<g.N){g.cur=[r,q];if(btn===2)this.mark(g,r,q);else this.cycle(g,r,q);return;}
+    if(mx>352&&mx<470){if(my>210&&my<250)this.hint(g);else if(my>260&&my<300)this.clear(g);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.hintAt)g.hintAt[2]-=dt;
+    if(g.solved>0){g.solved-=dt;if(g.solved<=0){g.lv++;this.board(g);}return;}
+    g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Решени пещери: '+g.score);}},
+  draw(g){A.bg('#1b1f2a');const N=g.N,s=g.cs,ox=g.ox,oy=g.oy;
+    A.txt('Пещера '+(g.lv+1)+' · '+N+'×'+N,16,14,14,'#ffd54f');
+    for(let r=0;r<N;r++)for(let q=0;q<N;q++){const x=ox+q*s,y=oy+r*s,col=GEM_COL[g.R[r][q]];A.block(x,y,s,col);
+      const v=g.st[r][q];if(v===1){c.fillStyle='rgba(0,0,0,.55)';c.fillRect(x+s/2-3,y+s/2-3,6,6);}
+      else if(v===2){const bad=g.bad.has(r*10+q),m=s/2,h=s*.32;c.fillStyle='#000';c.beginPath();c.moveTo(x+m,y+m-h-3);c.lineTo(x+m+h+3,y+m);c.lineTo(x+m,y+m+h+3);c.lineTo(x+m-h-3,y+m);c.fill();
+        c.fillStyle=bad?'#ff2e55':'#4de8f5';c.beginPath();c.moveTo(x+m,y+m-h);c.lineTo(x+m+h,y+m);c.lineTo(x+m,y+m+h);c.lineTo(x+m-h,y+m);c.fill();
+        c.fillStyle='rgba(255,255,255,.7)';c.fillRect(x+m-h/3,y+m-h/2,h/3,h/3);}}
+    c.strokeStyle='rgba(0,0,0,.35)';c.lineWidth=1;for(let i=1;i<N;i++){c.beginPath();c.moveTo(ox+i*s,oy);c.lineTo(ox+i*s,oy+N*s);c.moveTo(ox,oy+i*s);c.lineTo(ox+N*s,oy+i*s);c.stroke();}
+    c.strokeStyle='#000';c.lineWidth=4;c.beginPath();
+    for(let r=0;r<N;r++)for(let q=0;q<N;q++){if(q<N-1&&g.R[r][q]!==g.R[r][q+1]){c.moveTo(ox+(q+1)*s,oy+r*s);c.lineTo(ox+(q+1)*s,oy+(r+1)*s);}
+      if(r<N-1&&g.R[r][q]!==g.R[r+1][q]){c.moveTo(ox+q*s,oy+(r+1)*s);c.lineTo(ox+(q+1)*s,oy+(r+1)*s);}}
+    c.stroke();c.strokeRect(ox,oy,N*s,N*s);
+    if(g.kb){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(ox+g.cur[1]*s+2,oy+g.cur[0]*s+2,s-4,s-4);}
+    if(g.hintAt&&g.hintAt[2]>0){c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(ox+g.hintAt[1]*s+4,oy+g.hintAt[0]*s+4,s-8,s-8);}
+    // панел
+    A.txt('⏱ '+Math.ceil(g.time)+' с',356,44,18,g.time<20?'#ff6b6b':'#fff');
+    A.txt('💎 '+g.cnt+' / '+N,356,76,18,'#4de8f5');A.txt('Решени: '+g.score,356,106,14,'#ffd54f');
+    ['1 във всеки ред','1 във всяка колона','1 във всяка пещера','не се допират!'].forEach((t,i)=>A.txt(t,356,134+i*17,11,'#b9c6d6'));
+    A.block(356,210,114,'#5a6b8c',40);A.txt('💡 Подсказка',413,230,12,'#fff','center');
+    A.block(356,260,114,'#6d4c41',40);A.txt('🧹 Изчисти',413,280,12,'#fff','center');
+    if(g.solved>0)A.txt('Браво! +30 с',ox+N*s/2,oy+N*s/2,28,'#ffd54f','center');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

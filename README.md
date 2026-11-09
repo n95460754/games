@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**364 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 354 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**367 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 357 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-364-5aa13a)
+![Games](https://img.shields.io/badge/games-367-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 354 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 357 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -499,8 +499,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 352 | 🐺 Wolf and Sheep (Вълкът и овцете) | [`wolfsheep.html`](arcade/wolfsheep.html) | The old board game on a checkerboard: your 4 sheep step only forward diagonally, the wolf goes any diagonal way. Trap the wolf so it can't move before it sneaks behind your line. Every win makes the wolf think further ahead. |
 | 353 | 🟩 Sweep Line (Метящата линия) | [`sweepline.html`](arcade/sweepline.html) | 2×2 blocks of grass and brick fall and split as they land. Make 2×2 squares of one colour — they light up and the sweep line moving across the board erases them. 16+ blocks in one sweep = combo. Keyboard, mouse drag or touch. |
 | 354 | 🗺️ Map Scale (Мащаб на картата) | [`mapscale.html`](arcade/mapscale.html) | Count the gravel blocks on a blocky map and use the scale (1 block = 50 m) to find the real distance. Then reverse questions, scales like 1 : 1000, walking time and kilometres. 4 answers, 90 seconds. |
+| 355 | 📦 Air Drop (Доставка от въздуха) | [`airdrop.html`](arcade/airdrop.html) | Fly a blocky airship over the sea and drop food crates onto the villagers' rafts before they float away. The wind pushes the crates and later seagulls knock them aside. Land in the middle of a raft for +2. Keyboard, mouse or touch drag. |
+| 356 | 💎 Gem Caves (Диаманти в пещерите) | [`gemcaves.html`](arcade/gemcaves.html) | A logic puzzle like Star Battle: put exactly one diamond in every row, every column and every coloured cave, and two diamonds may never touch, not even diagonally. Boards grow from 5×5 to 8×8; each solved cave gives +30 seconds. |
+| 357 | 🧰 Chest Shuffle (Следи сандъка) | [`chestshuffle.html`](arcade/chestshuffle.html) | The cups-and-ball game with chests: a diamond goes into one chest, then the chests swap places faster and faster. Follow it with your eyes and pick the right one. Later come 4 and 5 chests and double swaps. 3 hearts. |
 
-All 354 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 357 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -528,8 +531,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–353
-│   └── mapscale.html       # 354. Map Scale
+│   ├── ...                 # games 51–356
+│   └── chestshuffle.html   # 357. Chest Shuffle
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

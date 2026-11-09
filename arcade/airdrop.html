@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Доставка от въздуха</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📦 Доставка от въздуха</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 355. Доставка от въздуха
+// Летиш с блоков дирижабъл над морето и пускаш сандъци с храна на селяните по салове.
+// Вятърът отнася сандъците, а по-късно чайки ги избутват встрани. Всеки пропуснат сал
+// или сандък във водата струва едно сърце.
+const SEA=312,RAFT_Y=298;
+A.add({id:'airdrop',cat:'action',icon:'📦',name:'Доставка от въздуха',desc:'Пускай сандъци от дирижабъла точно върху саловете на селяните. Внимавай за вятъра!',
+  help:'← → (или A / D), мишка или плъзгане с пръст местят дирижабъла. Space / ↓ / клик / пускане на пръста хвърля сандък. Улучи всеки сал, преди да излезе от екрана — в средата на сала = +2. Гледай флагчето за вятъра! 5 сърца.',
+  start(g){g.px=240;g.cr=[];g.rafts=[];g.birds=[];g.fx=[];g.lives=5;g.wind=0;g.windTo=0;g.windT=4;g.cd=0;g.spawn=.8;g.bspawn=6;g.clouds=[0,1,2,3].map(i=>[i*130+A.ri(0,60),A.ri(80,190),A.ri(30,60)]);},
+  lvl(g){return 1+Math.floor(g.score/6);},
+  drop(g){if(g.cd>0||g.t<.3||g.cr.length>=2)return;g.cd=.45;g.cr.push({x:g.px,y:62,vx:0,vy:20});A.beep(300,.06,'triangle');},
+  hurt(g,x,y,msg){g.lives--;g.fx.push({x,y,s:msg,t:1.2,col:'#ff6b6b'});A.beep(140,.2,'sawtooth');if(g.lives<=0)A.over(g,'Селяните останаха гладни! 🍞');},
+  key(g,k){if(k==='Space'||k==='ArrowDown'||k==='KeyS')this.drop(g);},
+  move(g,x){g.px=A.clamp(x,30,450);},
+  click(g,x){g.px=A.clamp(x,30,450);},
+  release(g){if(A.state==='play')this.drop(g);},
+  update(g,dt){const L=this.lvl(g);
+    let mv=0;if(A.keys.ArrowLeft||A.keys.KeyA)mv-=1;if(A.keys.ArrowRight||A.keys.KeyD)mv+=1;g.px=A.clamp(g.px+mv*270*dt,30,450);
+    g.cd-=dt;g.windT-=dt;if(g.windT<=0){g.windT=A.rnd(3,6);const m=Math.min(90,15+L*12);g.windTo=Math.round(A.rnd(-m,m)/5)*5;}
+    g.wind+=(g.windTo-g.wind)*Math.min(1,dt*1.5);
+    for(const cl of g.clouds){cl[0]+=g.wind*.25*dt+6*dt;if(cl[0]>500)cl[0]=-80;if(cl[0]<-90)cl[0]=490;}
+    // салове
+    g.spawn-=dt;if(g.spawn<=0){const dir=Math.random()<.5?1:-1,w=Math.max(42,86-L*5),v=(A.rnd(38,62)+L*7)*dir;
+      g.rafts.push({x:dir>0?-w:480,w,v,done:0,bob:A.rnd(0,6)});g.spawn=A.rnd(1.7,2.8)/(1+L*.07);}
+    for(const r of g.rafts){r.x+=r.v*dt;r.bob+=dt*3;}
+    g.rafts=g.rafts.filter(r=>{const out=r.v>0?r.x>480:r.x+r.w<0;if(out&&!r.done)this.hurt(g,A.clamp(r.x+r.w/2,40,440),270,'Пропусна сал!');return !out;});
+    // чайки от ниво 2
+    if(L>=2){g.bspawn-=dt;if(g.bspawn<=0){const dir=Math.random()<.5?1:-1;g.birds.push({x:dir>0?-20:500,y:A.rnd(130,230),v:A.rnd(70,110)*dir,f:0});g.bspawn=A.rnd(3,6)/(1+L*.1);}}
+    for(const b of g.birds){b.x+=b.v*dt;b.f+=dt*10;}
+    g.birds=g.birds.filter(b=>b.x>-30&&b.x<510);
+    // сандъци
+    for(const k of g.cr){k.vy+=320*dt;k.vx+=(g.wind-k.vx)*dt*1.2;k.x+=k.vx*dt;k.y+=k.vy*dt;
+      for(const b of g.birds)if(!b.hit&&Math.abs(b.x-k.x)<18&&Math.abs(b.y-k.y)<14){b.hit=1;k.vx+=b.v>0?140:-140;k.vy*=.4;A.beep(900,.05);g.fx.push({x:b.x,y:b.y-14,s:'Кар!',t:.8,col:'#fff'});}
+      if(!k.land&&k.y+7>=RAFT_Y&&k.y-k.vy*dt+7<RAFT_Y+4){for(const r of g.rafts)if(!r.done&&k.x>r.x-4&&k.x<r.x+r.w+4){
+          r.done=1;k.gone=1;const mid=Math.abs(k.x-(r.x+r.w/2))<r.w*.22,p=mid?2:1;g.score+=p;
+          g.fx.push({x:r.x+r.w/2,y:RAFT_Y-30,s:mid?'Точно! +2':'+1',t:1,col:mid?'#ffd54f':'#9cff8a'});A.beep(mid?880:660,.1,'triangle');break;}}
+      if(!k.gone&&k.y>SEA+6){k.gone=1;g.fx.push({x:k.x,y:SEA-10,s:'Пльок!',t:1,col:'#8fd3ff'});this.hurt(g,k.x,SEA-28,'');}}
+    g.cr=g.cr.filter(k=>!k.gone&&k.x>-40&&k.x<520);
+    for(const f of g.fx){f.t-=dt;f.y-=20*dt;}g.fx=g.fx.filter(f=>f.t>0);
+  },
+  crate(x,y,s){A.block(x-s/2,y-s/2,s,'#9a6a3a');c.fillStyle='#6b4423';c.fillRect(x-s/2+2,y-1,s-4,3);c.fillRect(x-1,y-s/2+2,3,s-4);},
+  draw(g){
+    for(let i=0;i<6;i++){c.fillStyle=['#6fb3e8','#79bbec','#84c3ef','#8fcbf2','#9ad3f5','#a6dbf8'][i];c.fillRect(0,i*52,480,52);}
+    for(const [x,y,w] of g.clouds){c.fillStyle='rgba(255,255,255,.85)';c.fillRect(x,y,w,14);c.fillRect(x+10,y-10,w-24,12);}
+    // море
+    for(let x=0;x<480;x+=16){const o=Math.sin(g.t*2+x*.05)*2;A.block(x,SEA+o,16,(x/16)%2?'#3b7bd6':'#3573c9',48);}
+    // салове и селяни
+    for(const r of g.rafts){const y=RAFT_Y+Math.sin(r.bob)*1.5;for(let x=0;x<r.w;x+=10)A.block(r.x+x,y,Math.min(10,r.w-x),'#9a6a3a',12);
+      const vx=r.x+r.w/2-7;A.block(vx,y-26,14,'#6d4c41',18);A.block(vx+1,y-38,12,'#e0ac7e');c.fillStyle='#4a2f1f';c.fillRect(vx+3,y-33,6,2);c.fillStyle='#000';c.fillRect(vx+3,y-35,2,2);c.fillRect(vx+8,y-35,2,2);
+      if(r.done){this.crate(r.x+r.w/2+14,y-6,12);A.txt('✔',r.x+r.w/2,y-50,14,'#9cff8a','center');}
+      else A.txt(Math.sin(g.t*6)>0?'!':'¡',r.x+r.w/2,y-50,16,'#ffd54f','center');}
+    // чайки
+    for(const b of g.birds){const u=Math.sin(b.f)>0?-5:3;c.fillStyle='#fff';c.fillRect(b.x-6,b.y-3,12,6);c.fillStyle='#e8e8e8';c.fillRect(b.x-14,b.y+u,9,3);c.fillRect(b.x+5,b.y+u,9,3);
+      c.fillStyle='#ffb300';c.fillRect(b.x+(b.v>0?6:-9),b.y-1,3,2);}
+    // сандъци
+    for(const k of g.cr)this.crate(k.x,k.y,14);
+    // дирижабъл
+    const px=g.px,py=40+Math.sin(g.t*2)*2;A.block(px-34,py-12,68,'#b0bec5',22);c.fillStyle='#d84a3a';c.fillRect(px-34,py-3,68,4);
+    A.block(px-40,py-10,8,'#d84a3a',18);A.block(px-12,py+10,24,'#7a5233',10);c.fillStyle='#222';c.fillRect(px+34,py-6+(Math.floor(g.t*20)%2?0:6),3,8);
+    if(g.cd<=0&&g.cr.length<2)this.crate(px,py+24,10);
+    // вятър
+    const wx=420,wy=24;c.fillStyle='#5d4037';c.fillRect(wx,wy-10,3,40);const fl=A.clamp(g.wind/90,-1,1),fw=6+Math.abs(fl)*30;
+    c.fillStyle='#ff7043';c.fillRect(fl>=0?wx+3:wx-fw,wy-10,fw,10);
+    A.txt('Вятър '+(g.wind>3?'→':g.wind<-3?'←':'·')+(Math.abs(g.wind)>45?(g.wind>0?'→':'←'):''),wx-8,wy+40,12,'#fff','right');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');A.txt('Ниво '+this.lvl(g),10,32,12,'#fff');
+    for(const f of g.fx)if(f.s)A.txt(f.s,f.x,f.y,14,f.col,'center');
+  }
+});
+</script>
+</body>
+</html>
