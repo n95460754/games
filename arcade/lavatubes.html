@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лавови тръби</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌋 Лавови тръби</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 338. Лавови тръби
+// Логически пъзел „Термометри“: всяка стъклена тръба се пълни с лава от котела
+// нагоре, без празни дупки. Числата казват колко клетки с лава има във всеки ред и колона.
+A.add({id:'lavatubes',cat:'puzzle',icon:'🌋',name:'Лавови тръби',desc:'Напълни стъклените тръби с лава от котела — числата казват колко лава има във всеки ред и колона',
+  help:'Лавата тръгва от котела (тъмното кръгче) и пълни тръбата без дупки. Цъкни клетка — тръбата се пълни до нея; цъкни най-горната лава — тя изтича. Стрелки + Space правят същото. Числата отгоре и отляво = колко клетки с лава трябва да има в колоната/реда (зелено = точно). Решен пъзел = точки и +40 сек.',
+  start(g){g.time=150;g.lvl=0;g.cx=0;g.cy=0;g.win=0;this.make(g);},
+  make(g){const N=g.lvl<2?5:g.lvl<4?6:7;g.N=N;const own=Array(N*N).fill(-1),tubes=[];
+    const order=A.shuffle([...Array(N*N).keys()]);
+    for(const s of order){if(own[s]>=0)continue;const x0=s%N,y0=(s/N)|0;let best=[s];
+      for(const d of A.shuffle([[1,0],[0,1],[-1,0],[0,-1]])){const cells=[s],L=A.ri(2,4);
+        for(let k=1;k<L;k++){const x=x0+d[0]*k,y=y0+d[1]*k;if(x<0||y<0||x>=N||y>=N||own[y*N+x]>=0)break;cells.push(y*N+x);}
+        if(cells.length>best.length)best=cells;if(best.length>=L)break;}
+      if(Math.random()<.5)best.reverse();best.forEach(i=>own[i]=tubes.length);tubes.push(best);}
+    g.own=own;g.tubes=tubes;g.fill=tubes.map(()=>0);
+    const sol=tubes.map(t=>A.ri(0,t.length)),on=Array(N*N).fill(0);tubes.forEach((t,i)=>{for(let k=0;k<sol[i];k++)on[t[k]]=1;});
+    g.rows=[];g.cols=[];for(let i=0;i<N;i++){let r=0,q=0;for(let j=0;j<N;j++){r+=on[i*N+j];q+=on[j*N+i];}g.rows.push(r);g.cols.push(q);}
+    g.cs=Math.floor(280/N);g.ox=Math.floor(240-N*g.cs/2+18);g.oy=50;g.cx=Math.min(g.cx,N-1);g.cy=Math.min(g.cy,N-1);},
+  lit(g,i){const t=g.own[i];return g.tubes[t].indexOf(i)<g.fill[t];},
+  act(g,i){if(g.win>0)return;const t=g.own[i],k=g.tubes[t].indexOf(i);g.fill[t]=g.fill[t]===k+1?k:k+1;A.beep(g.fill[t]>k?420+k*80:300,.05,'triangle');this.check(g);},
+  count(g){const N=g.N,r=Array(N).fill(0),q=Array(N).fill(0);for(let i=0;i<N*N;i++)if(this.lit(g,i)){r[(i/N)|0]++;q[i%N]++;}return [r,q];},
+  check(g){const [r,q]=this.count(g);if(r.every((v,i)=>v===g.rows[i])&&q.every((v,i)=>v===g.cols[i])){g.score+=g.N-2;g.time+=40;g.win=1.4;A.tune([523,659,784,1046]);}},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')g.cx=(g.cx+g.N-1)%g.N;else if(k==='ArrowRight'||k==='KeyD')g.cx=(g.cx+1)%g.N;
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=(g.cy+g.N-1)%g.N;else if(k==='ArrowDown'||k==='KeyS')g.cy=(g.cy+1)%g.N;
+    else if(k==='Space'||k==='Enter')this.act(g,g.cy*g.N+g.cx);},
+  click(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x>=0&&y>=0&&x<g.N&&y<g.N){g.cx=x;g.cy=y;this.act(g,y*g.N+x);}},
+  update(g,dt){if(g.win>0){g.win-=dt;if(g.win<=0){g.lvl++;this.make(g);}return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  draw(g){A.bg('#1b1420');const N=g.N,s=g.cs,ox=g.ox,oy=g.oy,[r,q]=this.count(g),T=performance.now()/300;
+    for(let i=0;i<N*N;i++){const x=ox+(i%N)*s,y=oy+((i/N)|0)*s;A.block(x,y,s,(i%N+((i/N)|0))%2?'#3a3540':'#332e39');}
+    g.tubes.forEach((t,ti)=>{
+      t.forEach((ci,k)=>{const x=ox+(ci%N)*s,y=oy+((ci/N)|0)*s,p=Math.round(s*.2);
+        // соединение към следващата клетка
+        const nx=t[k+1];if(nx!==undefined){const x2=ox+(nx%N)*s,y2=oy+((nx/N)|0)*s;c.fillStyle='#a9c4d6';c.fillRect(Math.min(x,x2)+p,Math.min(y,y2)+p,Math.abs(x2-x)+s-2*p,Math.abs(y2-y)+s-2*p);}
+        if(k===0){c.fillStyle='#a9c4d6';c.fillRect(x+p-4,y+p-4,s-2*p+8,s-2*p+8);}else{c.fillStyle='#a9c4d6';c.fillRect(x+p,y+p,s-2*p,s-2*p);}});
+      t.forEach((ci,k)=>{const x=ox+(ci%N)*s,y=oy+((ci/N)|0)*s,p=Math.round(s*.2)+3,on=k<g.fill[ti];
+        const nx=t[k+1];
+        c.fillStyle=on?'#ff6a00':'#24323d';
+        if(k===0)c.fillRect(x+p-4,y+p-4,s-2*p+8,s-2*p+8);else c.fillRect(x+p,y+p,s-2*p,s-2*p);
+        if(nx!==undefined){const x2=ox+(nx%N)*s,y2=oy+((nx/N)|0)*s,on2=k+1<g.fill[ti];c.fillStyle=on&&on2?'#ff6a00':'#24323d';
+          if(x2!==x)c.fillRect(Math.min(x,x2)+s-p,y+p,2*p,s-2*p);else c.fillRect(x+p,Math.min(y,y2)+s-p,s-2*p,2*p);}
+        if(on){c.fillStyle='#ffd23f';c.fillRect(x+p+((Math.sin(T+ci)*0.5+0.5)*(s-2*p-5)|0),y+p+2,4,4);}
+        if(k===0){c.fillStyle='#111';c.fillRect(x+p-4,y+s-p,s-2*p+8,5);A.txt('●',x+s/2,y+s/2,Math.round(s*.28),on?'#7a1a00':'#556','center');}});
+    });
+    for(let i=0;i<N;i++){const cc=q[i]===g.cols[i]?'#7dff7a':q[i]>g.cols[i]?'#ff6a6a':'#fff',rc=r[i]===g.rows[i]?'#7dff7a':r[i]>g.rows[i]?'#ff6a6a':'#fff';
+      A.txt(''+g.cols[i],ox+i*s+s/2,oy-14,18,cc,'center');A.txt(''+g.rows[i],ox-16,oy+i*s+s/2,18,rc,'center');}
+    c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(ox+g.cx*s+1.5,oy+g.cy*s+1.5,s-3,s-3);
+    A.txt('⏱ '+Math.ceil(g.time),10,14,15,g.time<20?'#ff7a7a':'#fff');A.txt('Пъзел '+(g.lvl+1)+' · '+N+'×'+N,470,14,14,'#ffd54f','right');
+    A.txt('🔥 Котел',14,330,13,'#b9c6d6');A.txt('● = начало на тръбата',14,346,11,'#889');
+    if(g.win>0){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,150,480,60);A.txt('Решено! +'+(N-2)+' точки, +40 сек',240,180,22,'#ffd54f','center');}}
+});
+</script>
+</body>
+</html>

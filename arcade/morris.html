@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мелница</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚪ Мелница</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 339. Мелница
+// Класическата игра „Мелница“ (Nine Men's Morris) срещу робот с блокове.
+// Три твои блока в линия = мелница и махаш блок на робота. Всяка победа = точки и по-умен робот.
+const OX=102,OY=36;
+const MP=[[0,0],[3,0],[6,0],[6,3],[6,6],[3,6],[0,6],[0,3],[1,1],[3,1],[5,1],[5,3],[5,5],[3,5],[1,5],[1,3],[2,2],[3,2],[4,2],[4,3],[4,4],[3,4],[2,4],[2,3]];
+const MADJ=MP.map((p,i)=>{const r=(i/8)|0,k=i%8,a=[r*8+(k+1)%8,r*8+(k+7)%8];if(k%2){if(r>0)a.push(i-8);if(r<2)a.push(i+8);}return a;});
+const MILLS=[];for(let r=0;r<3;r++)for(let k=0;k<8;k+=2)MILLS.push([r*8+k,r*8+k+1,r*8+(k+2)%8]);for(let k=1;k<8;k+=2)MILLS.push([k,k+8,k+16]);
+A.add({id:'morris',cat:'board',icon:'⚪',name:'Мелница',desc:'Класическата „Мелница“ срещу робота: нареди 3 блока в линия и махни негов блок',
+  help:'Всеки има 9 блока. Първо ги слагате един по един, после ги местите по линиите до съседна празна точка. 3 твои в линия = мелница → цъкни блок на робота, за да го махнеш. С 3 блока можеш да „летиш“ където искаш. Победа: роботът остане с 2 блока или без ход. Мишка/пръст — цъкни точка; стрелки + Space също работят.',
+  start(g){g.round=1;g.cur=0;this.reset(g);},
+  reset(g){g.b=Array(24).fill(0);g.hand=[0,9,9];g.turn=1;g.sel=-1;g.rem=false;g.wait=0;g.msg='Твой ред: сложи блок';g.end=0;g.last=-1;g.lastRem=-1;},
+  on(g,w){return g.b.filter(v=>v===w).length;},
+  inMill(b,i,w){return MILLS.some(m=>m.includes(i)&&m.every(j=>b[j]===w));},
+  removable(g,i,w){if(g.b[i]!==w)return false;if(!this.inMill(g.b,i,w))return true;return g.b.every((v,j)=>v!==w||this.inMill(g.b,j,w));},
+  moves(g,w){const b=g.b,res=[];if(g.hand[w]>0){b.forEach((v,i)=>{if(!v)res.push([-1,i]);});return res;}
+    const fly=this.on(g,w)===3;b.forEach((v,i)=>{if(v!==w)return;(fly?[...Array(24).keys()]:MADJ[i]).forEach(j=>{if(!b[j])res.push([i,j]);});});return res;},
+  apply(g,w,m){if(m[0]<0){g.hand[w]--;}else g.b[m[0]]=0;g.b[m[1]]=w;g.last=m[1];A.beep(w===1?520:330,.05,'triangle');return this.inMill(g.b,m[1],w);},
+  lost(g,w){return (g.hand[w]===0&&this.on(g,w)<3)||!this.moves(g,w).length;},
+  next(g){const o=3-g.turn;if(this.lost(g,o)){this.finish(g,g.turn===1);return;}g.turn=o;g.sel=-1;
+    if(o===2){g.wait=.7;g.msg='Роботът мисли…';}else g.msg=g.hand[1]>0?'Твой ред: сложи блок ('+g.hand[1]+' остават)':this.on(g,1)===3?'Можеш да летиш! Избери блок':'Избери свой блок и го премести';},
+  finish(g,win){g.end=2;if(win){const p=10+this.on(g,1)+g.hand[1];g.score+=p;g.msg='ПОБЕДА! +'+p+' точки';A.tune([523,659,784,1046]);g.won=true;}else{g.msg='Роботът победи!';g.won=false;}},
+  // оценка на ход за робота
+  threat(b,w){let n=0;for(const m of MILLS){const c2=m.filter(j=>b[j]===w).length,e=m.filter(j=>!b[j]).length;if(c2===2&&e===1)n++;}return n;},
+  ai(g){const ms=this.moves(g,2),err=Math.max(0,.4-g.round*.12);let best=null,bs=-1e9;
+    for(const m of ms){const b=g.b.slice();if(m[0]>=0)b[m[0]]=0;b[m[1]]=2;let s=Math.random()*6;
+      if(this.inMill(b,m[1],2))s+=100;
+      const b2=g.b.slice();if(m[0]>=0)b2[m[0]]=0;b2[m[1]]=1;if(this.inMill(b2,m[1],1)&&g.b[m[1]]===0)s+=60;
+      s+=this.threat(b,2)*12-this.threat(b,1)*30;if(MADJ[m[1]].length===4)s+=3;
+      if(s>bs){bs=s;best=m;}}
+    if(Math.random()<err)best=A.pick(ms);
+    let milled=false;if(this.apply(g,2,best)){milled=true;const cand=g.b.map((v,i)=>i).filter(i=>this.removable(g,i,1));
+      let r=cand[0],rs=-1e9;for(const i of cand){const b=g.b.slice();b[i]=0;const s=-this.threat(b,1)*20+Math.random()*5+(this.threat(g.b,1)>this.threat(b,1)?20:0);if(s>rs){rs=s;r=i;}}
+      if(r!==undefined){g.b[r]=0;g.lastRem=r;A.beep(160,.2,'sawtooth');}}
+    this.next(g);if(milled&&!g.end)g.msg='Роботът направи мелница! '+g.msg;},
+  act(g,i){if(g.end||g.turn!==1||g.wait>0)return;const b=g.b;
+    if(g.rem){if(this.removable(g,i,2)){b[i]=0;g.rem=false;A.beep(200,.15,'sawtooth');this.next(g);}else A.beep(120,.05);return;}
+    if(g.hand[1]>0){if(!b[i]){if(this.apply(g,1,[-1,i]))this.mill(g);else this.next(g);}return;}
+    if(b[i]===1){g.sel=i;A.beep(600,.03);return;}
+    if(g.sel>=0&&!b[i]&&(this.on(g,1)===3||MADJ[g.sel].includes(i))){if(this.apply(g,1,[g.sel,i]))this.mill(g);else this.next(g);}},
+  mill(g){g.rem=true;g.sel=-1;g.msg='МЕЛНИЦА! Цъкни блок на робота, за да го махнеш';A.tune([660,880,990]);},
+  key(g,k){const d={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(d){const p=MP[g.cur];let best=-1,bd=1e9;MP.forEach((q,j)=>{const dx=q[0]-p[0],dy=q[1]-p[1];const along=dx*d[0]+dy*d[1];if(along<=0)return;const side=Math.abs(dx*d[1])+Math.abs(dy*d[0]);const sc=along+side*2.5;if(sc<bd){bd=sc;best=j;}});if(best>=0)g.cur=best;}
+    else if(k==='Space'||k==='Enter')this.act(g,g.cur);},
+  click(g,mx,my){let best=-1,bd=24*24;MP.forEach((p,j)=>{const dx=OX+p[0]*46-mx,dy=OY+p[1]*46-my,d=dx*dx+dy*dy;if(d<bd){bd=d;best=j;}});if(best>=0){g.cur=best;this.act(g,best);}},
+  update(g,dt){if(g.end){g.end-=dt;if(g.end<=0){if(g.won){g.round++;this.reset(g);g.msg='Рунд '+g.round+' — роботът е по-умен!';}else A.over(g,'Роботът спечели рунд '+g.round);}return;}
+    if(g.wait>0){g.wait-=dt;if(g.wait<=0&&g.turn===2)this.ai(g);}},
+  draw(g){A.bg('#2a1d12');c.fillStyle='#9a6a3a';c.fillRect(80,14,320,316);c.fillStyle='#8a5c30';for(let y=14;y<330;y+=20)c.fillRect(80,y,320,2);for(let y=14;y<330;y+=40)c.fillRect(80+((y-14)%80?160:0),y,2,20);
+    c.strokeStyle='#3a2210';c.lineWidth=5;const P=i=>[OX+MP[i][0]*46,OY+MP[i][1]*46];
+    for(let r=0;r<3;r++){const a=P(r*8),z=P(r*8+4);c.strokeRect(a[0],a[1],z[0]-a[0],z[1]-a[1]);}
+    for(let k=1;k<8;k+=2){const a=P(k),z=P(k+16);c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(z[0],z[1]);c.stroke();}
+    const fly=g.hand[1]===0&&this.on(g,1)===3,T=performance.now()/200;
+    MP.forEach((p,i)=>{const [x,y]=P(i),v=g.b[i];
+      if(!v){A.block(x-6,y-6,12,'#5a5a5a');if(g.turn===1&&!g.rem&&!g.end&&(g.hand[1]>0?false:g.sel>=0&&(fly||MADJ[g.sel].includes(i)))){c.fillStyle='rgba(90,255,90,.8)';c.fillRect(x-5,y-5,10,10);}}
+      else{const col=v===1?C.gold:'#3b2a5c';A.block(x-15,y-15,30,col);if(v===1){c.fillStyle='#e0a800';c.fillRect(x-7,y-7,5,5);c.fillRect(x+3,y+2,5,5);}else{c.fillStyle='#8e24aa';c.fillRect(x-7,y-7,5,5);c.fillRect(x+3,y+2,5,5);}
+        if(g.rem&&v===2&&this.removable(g,i,2)){c.strokeStyle='rgba(255,60,60,'+(.5+.5*Math.sin(T))+')';c.lineWidth=3;c.strokeRect(x-17,y-17,34,34);}
+        if(i===g.sel){c.strokeStyle='#7dff7a';c.lineWidth=3;c.strokeRect(x-18,y-18,36,36);}
+        if(i===g.last&&v===2&&g.turn===1){c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=2;c.strokeRect(x-17,y-17,34,34);}}
+      if(i===g.cur){c.strokeStyle='#4de8f5';c.lineWidth=2;c.strokeRect(x-20,y-20,40,40);}});
+    A.txt('Ти',35,24,14,'#ffd54f','center');for(let i=0;i<g.hand[1];i++)A.block(23,38+i*29,24,C.gold);
+    A.txt('Робот',445,24,14,'#c9a8ff','center');for(let i=0;i<g.hand[2];i++)A.block(433,38+i*29,24,'#3b2a5c');
+    A.txt('Рунд '+g.round,35,316,12,'#fff','center');A.txt('🟨'+this.on(g,1)+' 🟪'+this.on(g,2),445,316,12,'#fff','center');
+    const m=g.msg;c.fillStyle='rgba(0,0,0,.65)';c.fillRect(0,333,480,27);A.txt(m,240,346,m.length>52?12:m.length>40?13:15,g.rem?'#ff8a8a':'#fff','center');}
+});
+</script>
+</body>
+</html>

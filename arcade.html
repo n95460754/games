@@ -319,7 +319,10 @@ const GAMES=[
    {"id": "cubenets", "cat": "brain", "icon": "🎲", "name": "Мрежа на куба", "desc": "Сгъва ли се мрежата от 6 блока на куб и коя страна ще е срещу кийпъра?", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "wardensneak", "cat": "action", "icon": "👂", "name": "Тихо покрай Уордъна", "desc": "Промъквай се из тъмната пещера и събирай ехо-кристали — ако вдигаш шум, Уордънът идва!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "nurikabe", "cat": "puzzle", "icon": "🏝️", "name": "Острови в океана", "desc": "Залей морето около пясъчните острови — числото казва колко блока е островът, а водата трябва да е цяла", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "cartspeed", "cat": "brain", "icon": "🚃", "name": "Скорост, време, път", "desc": "Път = скорост × време! Колко блока ще измине вагонетката, за колко секунди и колко бързо?", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "cartspeed", "cat": "brain", "icon": "🚃", "name": "Скорост, време, път", "desc": "Път = скорост × време! Колко блока ще измине вагонетката, за колко секунди и колко бързо?", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "breadrun", "cat": "action", "icon": "🍞", "name": "Хлебният куриер", "desc": "Язди коня през селото и хвърляй хляб на гладните селяни — пази се от зомбитата!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "lavatubes", "cat": "puzzle", "icon": "🌋", "name": "Лавови тръби", "desc": "Напълни стъклените тръби с лава от котела — числата казват колко лава има във всеки ред и колона", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "morris", "cat": "board", "icon": "⚪", "name": "Мелница", "desc": "Класическата „Мелница“ срещу робота: нареди 3 блока в линия и махни негов блок", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

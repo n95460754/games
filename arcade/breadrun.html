@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Хлебният куриер</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🍞 Хлебният куриер</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 337. Хлебният куриер
+// Яздиш кон по селския път и хвърляш хляб на гладните селяни отляво и отдясно.
+// Пазиш се от камъни и зомбита, събираш снопи жито за още хляб.
+A.add({id:'breadrun',cat:'action',icon:'🍞',name:'Хлебният куриер',desc:'Язди коня през селото и хвърляй хляб на гладните селяни — пази се от зомбитата!',
+  help:'← → / A D — язди наляво и надясно. Q / Z — хвърли хляб наляво, E / X — надясно, Space — към най-близкия гладен селянин. С мишка/пръст: влачи по пътя, цъкни върху къща — хвърляш натам. Къщите с 🍞 чакат хляб: пропусната = −1 сърце. Сноп жито = +5 хляба.',
+  start(g){g.x=240;g.tx=null;g.sp=90;g.houses=[];g.obs=[];g.wheat=[];g.bread=[];g.fx=[];g.lives=3;g.inv=0;g.ammo=12;g.off=0;g.hy=[-80,-200];g.ot=1.5;g.streak=0;g.msg='';g.mt=0;},
+  key(g,k){if(k==='KeyQ'||k==='KeyZ')this.throw(g,-1);else if(k==='KeyE'||k==='KeyX')this.throw(g,1);
+    else if(k==='Space'||k==='Enter'){const h=this.nearest(g);this.throw(g,h?(h.side?1:-1):(g.x<240?-1:1));}},
+  nearest(g){let best=null,bd=1e9;for(const h of g.houses)if(h.want&&!h.done&&h.y+h.h>40){const d=Math.abs(h.y+h.h/2-290);if(d<bd){bd=d;best=h;}}return best;},
+  throw(g,dir){if(g.ammo<=0){g.msg='Няма хляб! Събери жито 🌾';g.mt=1.2;A.beep(140,.1,'sawtooth');return;}
+    g.ammo--;g.bread.push({x:g.x+dir*12,y:290,vx:dir*430,r:0});A.beep(520,.04,'triangle');},
+  move(g,mx,my){if(A.mouse.down||(mx>130&&mx<350))g.tx=A.clamp(mx,168,312);},
+  click(g,mx,my){if(mx<130)this.throw(g,-1);else if(mx>350)this.throw(g,1);else g.tx=A.clamp(mx,168,312);},
+  hurt(g,why){if(g.inv>0)return;g.lives--;g.inv=1.3;g.streak=0;A.beep(160,.25,'sawtooth',.06);g.msg=why;g.mt=1.5;if(g.lives<=0)A.over(g,why);},
+  update(g,dt){
+    g.sp=Math.min(230,90+g.t*2.2);const dy=g.sp*dt;g.off=(g.off+dy)%40;g.inv-=dt;g.mt-=dt;
+    // управление
+    let ax=(A.keys.ArrowRight||A.keys.KeyD?1:0)-(A.keys.ArrowLeft||A.keys.KeyA?1:0);
+    if(ax){g.x+=ax*190*dt;g.tx=null;}else if(g.tx!==null){const d=g.tx-g.x;g.x+=Math.sign(d)*Math.min(Math.abs(d),220*dt);}
+    g.x=A.clamp(g.x,168,312);
+    // къщи
+    for(let s=0;s<2;s++){g.hy[s]+=dy;if(g.hy[s]>-10){const h=A.ri(56,74);g.houses.push({side:s,y:g.hy[s]-h,h,want:Math.random()<.5,done:false,col:A.pick(['#9a6a3a','#b07a45','#8a5a30','#c8a070'])});g.hy[s]-=h+A.ri(30,70);}}
+    for(const h of g.houses){h.y+=dy;if(h.want&&!h.done&&h.y>360){h.done=true;this.hurt(g,'Селянинът остана гладен!');}}
+    g.houses=g.houses.filter(h=>h.y<380);
+    // препятствия и жито
+    g.ot-=dt;if(g.ot<=0){g.ot=Math.max(.55,1.6-g.t*.012)*A.rnd(.7,1.3);
+      if(Math.random()<.22)g.wheat.push({x:A.ri(176,304),y:-20});
+      else if(Math.random()<.45)g.obs.push({t:'z',x:Math.random()<.5?160:320,y:-30,vx:0,w:18,h:26});
+      else g.obs.push({t:'r',x:A.ri(170,300),y:-24,w:22,h:22});}
+    for(const o of g.obs){o.y+=dy;if(o.t==='z'){if(!o.vx)o.vx=o.x<240?40+g.t*.3:-40-g.t*.3;o.x+=o.vx*dt;if(o.x<160||o.x>320)o.vx*=-1;}
+      if(Math.abs(o.x-g.x)<(o.w/2+11)&&o.y+o.h>276&&o.y<320)this.hurt(g,o.t==='z'?'Зомби те събори!':'Блъсна се в камък!');}
+    g.obs=g.obs.filter(o=>o.y<380);
+    for(const w of g.wheat){w.y+=dy;if(!w.got&&Math.abs(w.x-g.x)<22&&w.y>270&&w.y<322){w.got=true;g.ammo+=5;A.tune([660,880]);g.fx.push({x:w.x,y:w.y,s:'+5 🍞',t:.8});}}
+    g.wheat=g.wheat.filter(w=>!w.got&&w.y<380);
+    // хляб
+    for(const b of g.bread){b.x+=b.vx*dt;b.y+=dy;b.r+=dt*12;
+      if(!b.hit&&(b.x<120||b.x>360)){const side=b.x<120?0:1;
+        for(const h of g.houses)if(h.side===side&&b.y>h.y-4&&b.y<h.y+h.h+4){b.hit=true;
+          if(h.want&&!h.done){h.done=true;g.streak++;const p=1+(g.streak>=5?1:0);g.score+=p;A.beep(880,.08,'triangle');g.fx.push({x:side?420:60,y:h.y+h.h/2,s:'+'+p,t:.8});}
+          else{g.fx.push({x:side?420:60,y:h.y+h.h/2,s:'пльок',t:.6});A.beep(220,.05);}
+          break;}}}
+    g.bread=g.bread.filter(b=>!b.hit&&b.x>-10&&b.x<490);
+    for(const f of g.fx){f.t-=dt;f.y-=30*dt;}g.fx=g.fx.filter(f=>f.t>0);
+  },
+  house(h){const x=h.side?366:8,w=106,y=h.y;
+    A.block(x,y+14,w,h.col,h.h-14);c.fillStyle='#5a3a22';for(let i=0;i<w;i+=12)c.fillRect(x+i,y+14,1,h.h-14);
+    c.fillStyle='#6b2f24';c.fillRect(x-4,y,w+8,16);c.fillStyle='#4e2018';c.fillRect(x-4,y+12,w+8,4);
+    const dx=h.side?x+8:x+w-26;c.fillStyle='#4a2c16';c.fillRect(dx,y+h.h-26,18,26);
+    const wx=h.side?x+w-34:x+12;c.fillStyle=h.want&&!h.done?'#ffd54f':'#2b3a4a';c.fillRect(wx,y+24,22,18);c.fillStyle='#000';c.fillRect(wx+10,y+24,2,18);c.fillRect(wx,y+32,22,2);
+    if(h.want&&!h.done){const vx=h.side?x-2:x+w-16;A.block(vx,y+h.h-30,16,'#c89a74');c.fillStyle='#3a2a1a';c.fillRect(vx,y+h.h-30,16,4);c.fillStyle='#5a3a8a';c.fillRect(vx+6,y+h.h-20,4,6);
+      const by=y+h.h/2-30+Math.sin(performance.now()/180)*2,bx=h.side?x+30:x+40;c.fillStyle='#fff';c.fillRect(bx,by,36,22);c.fillRect(bx+14,by+22,6,5);A.txt('🍞',bx+18,by+11,14,'#fff','center');}
+    if(h.done&&h.want)A.txt('😊',h.side?x+60:x+46,y+h.h/2,16,'#fff','center');},
+  draw(g){
+    A.bg(C.grass);c.fillStyle='#4f9233';for(let y=-40+g.off;y<360;y+=40)for(let x=0;x<480;x+=40)if(((x/40)|0)%2)c.fillRect(x,y,40,20);
+    c.fillStyle='#8a8a8a';c.fillRect(150,0,180,360);c.fillStyle='#777';for(let y=-40+g.off;y<360;y+=40){c.fillRect(150,y,90,20);c.fillRect(240,y+20,90,20);}
+    c.fillStyle='#5f5f5f';c.fillRect(146,0,4,360);c.fillRect(330,0,4,360);c.fillStyle='#e8e8e8';for(let y=-40+g.off;y<360;y+=40)c.fillRect(238,y,4,20);
+    for(const h of g.houses)this.house(h);
+    for(const w of g.wheat){A.block(w.x-10,w.y,20,'#e0c068',18);c.fillStyle='#b8902e';c.fillRect(w.x-10,w.y+8,20,3);}
+    for(const o of g.obs){if(o.t==='r'){A.block(o.x-11,o.y,22,C.stone);c.fillStyle='#666';c.fillRect(o.x-6,o.y+6,5,4);c.fillRect(o.x+2,o.y+12,6,4);}
+      else{A.block(o.x-9,o.y+10,18,'#2e8b8b',16);A.block(o.x-8,o.y-2,16,'#4f9a4a',13);c.fillStyle='#000';c.fillRect(o.x-5,o.y+3,3,3);c.fillRect(o.x+2,o.y+3,3,3);c.fillStyle='#4f9a4a';c.fillRect(o.x+(o.vx>0?8:-16),o.y+12,8,4);}}
+    for(const b of g.bread){c.save();c.translate(b.x,b.y);c.rotate(b.r);c.fillStyle='#c8862e';c.fillRect(-8,-4,16,8);c.fillStyle='#e8b050';c.fillRect(-6,-4,12,3);c.restore();}
+    // кон и ездач
+    if(g.inv<=0||Math.floor(g.inv*12)%2){const x=g.x,y=280;A.block(x-11,y+8,22,'#7a4a24',30);A.block(x-8,y-6,16,'#8a5a2c',16);c.fillStyle='#3a2210';c.fillRect(x-3,y-6,6,24);
+      c.fillStyle='#000';c.fillRect(x-6,y-2,3,3);c.fillRect(x+3,y-2,3,3);const l=Math.sin(g.t*14)*3;c.fillStyle='#4a2c16';c.fillRect(x-11,y+36+l,5,6);c.fillRect(x+6,y+36-l,5,6);
+      A.block(x-7,y+12,14,'#3b6fd6',12);A.block(x-6,y+2,12,'#c89a74',10);c.fillStyle='#4a2c16';c.fillRect(x-6,y+2,12,3);}
+    for(const f of g.fx)A.txt(f.s,f.x,f.y,15,'#ffd54f','center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,26);
+    A.txt('❤'.repeat(Math.max(0,g.lives))+'♡'.repeat(Math.max(0,3-g.lives)),8,13,15,'#ff5a5a');A.txt('🍞 × '+g.ammo,240,13,15,g.ammo?'#ffd54f':'#ff7a7a','center');
+    A.txt((g.streak>=5?'🔥 x2 ':'')+'Серия: '+g.streak,472,13,13,'#fff','right');
+    if(g.mt>0)A.txt(g.msg,240,48,16,'#fff','center');
+    if(g.t<4)A.txt('Хвърляй хляб към къщите с 🍞!',240,180,17,'#fff','center');}
+});
+</script>
+</body>
+</html>
