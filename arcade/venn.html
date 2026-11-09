@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кръговете на Вен</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⭕ Кръговете на Вен</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 324. Кръговете на Вен
+// Две правила, два кръга. Сложи числото в правилната част: само в левия, в двата, само в десния или извън тях.
+const VN_R=[
+  ['четно',n=>n%2===0],['нечетно',n=>n%2===1],['кратно на 3',n=>n%3===0],['кратно на 4',n=>n%4===0],['кратно на 5',n=>n%5===0],
+  ['по-голямо от 50',n=>n>50],['по-малко от 30',n=>n<30],['има цифра 7',n=>(''+n).includes('7')],['двуцифрено',n=>n>=10&&n<=99],
+  ['точен квадрат',n=>Math.round(Math.sqrt(n))**2===n],['сбор цифри > 9',n=>(''+n).split('').reduce((a,d)=>a+ +d,0)>9]];
+const VN_ZN=['само ляв','и в двата','само десен','извън'];
+A.add({id:'venn',cat:'brain',icon:'⭕',name:'Кръговете на Вен',desc:'Две правила, два кръга — сложи числото в левия, десния, общата част или извън кръговете',
+  time:60,
+  help:'Всеки кръг има правило (напр. „четно“ и „кратно на 3“). Числото отива там, където важат правилата му: само в левия, в общата част (и двете), само в десния или извън кръговете (нито едно). Клик върху частта на картинката или бутоните, или клавиши 1–4. Серия от 5 = +5 секунди. Правилата се сменят на всеки 6 числа. 60 секунди.',
+  start(g){g.time=60;g.cnt=0;g.streak=0;g.why='';this.rules(g);this.next(g);},
+  rules(g){let a,b;do{a=A.ri(0,VN_R.length-1);b=A.ri(0,VN_R.length-1);}while(a===b||(a<2&&b<2));g.ra=a;g.rb=b;g.flip=.6;},
+  zone(g,n){const a=VN_R[g.ra][1](n),b=VN_R[g.rb][1](n);return a&&b?1:a?0:b?2:3;},
+  next(g){if(g.cnt>0&&g.cnt%6===0)this.rules(g);g.cnt++;const max=g.score<10?100:200,want=A.ri(0,3);let n=A.ri(1,max);
+    for(let k=0;k<300;k++){const t=A.ri(1,max);if(this.zone(g,t)===want&&t!==g.n){n=t;break;}}g.n=n;g.ans=this.zone(g,n);},
+  pick2(g,i){const ok=i===g.ans;flash(g,ok);
+    if(ok){g.score++;g.streak++;if(g.streak%5===0){g.time+=5;g.why='Серия '+g.streak+'! +5 сек';}else g.why='';}
+    else{g.streak=0;g.why=g.n+' е: '+VN_ZN[g.ans];}this.next(g);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=4)this.pick2(g,n-1);},
+  click(g,mx,my){if(my>300){const i=Math.floor(mx/120);if(i>=0&&i<4)this.pick2(g,i);return;}
+    if(my<70||my>290)return;const a=Math.hypot(mx-190,my-180)<95,b=Math.hypot(mx-290,my-180)<95;
+    this.pick2(g,a&&b?1:a?0:b?2:3);},
+  update(g,dt){tick(g,dt);g.flip=Math.max(0,(g.flip||0)-dt);},
+  draw(g){A.bg('#3a5a2a');for(let y=0;y<360;y+=30)for(let x=(y/30%2)*30;x<480;x+=60){c.fillStyle='#355226';c.fillRect(x,y,30,30);}
+    // рамка-кошара = „извън“
+    c.fillStyle='rgba(0,0,0,.25)';c.fillRect(20,72,440,220);for(let x=20;x<460;x+=20){A.block(x,66,20,'#9a6a3a',8);A.block(x,288,20,'#9a6a3a',8);}
+    c.lineWidth=5;c.globalAlpha=.85;
+    c.fillStyle='rgba(66,135,245,.35)';c.beginPath();c.arc(190,180,95,0,7);c.fill();c.strokeStyle='#4287f5';c.stroke();
+    c.fillStyle='rgba(245,170,40,.35)';c.beginPath();c.arc(290,180,95,0,7);c.fill();c.strokeStyle='#f5aa28';c.stroke();c.globalAlpha=1;
+    const fl=g.flip>0&&Math.floor(g.flip*10)%2;
+    A.txt(VN_R[g.ra][0],120,92,14,fl?'#fff':'#9cc4ff','center');A.txt(VN_R[g.rb][0],360,92,14,fl?'#fff':'#ffd38a','center');
+    A.txt('1',130,180,14,'#cfe0ff','center');A.txt('2',240,250,14,'#fff','center');A.txt('3',350,180,14,'#ffe3b0','center');A.txt('4',440,280,12,'#ddd','right');
+    // числото върху блок
+    A.block(212,4,56,'#7d7d7d',54);A.txt(''+g.n,240,31,g.n>99?20:24,'#ffd54f','center');
+    A.txt('Къде отива?',12,22,14,'#fff');A.txt('⏱ '+Math.ceil(g.time),468,22,15,'#ffd54f','right');A.txt('🔥 '+g.streak,468,46,13,'#ffb3a0','right');
+    if(g.why)A.txt(g.why,12,46,12,'#ffe0b2');
+    VN_ZN.forEach((s,i)=>{A.block(i*120+6,304,108,['#2f5fb0','#3c8a3c','#b07a20','#666'][i],46);A.txt((i+1)+') '+s,i*120+60,327,13,'#fff','center');});
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

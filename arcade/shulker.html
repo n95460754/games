@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Шулкерски куршуми</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟪 Шулкерски куршуми</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 322. Шулкерски куршуми
+// Шулкерите в Края стрелят по теб с насочващи се куршуми. Бягай, събирай изумруди и блъскай куршумите един в друг!
+const SH_POS=[[20,20],[440,20],[20,320],[440,320],[230,20],[230,320]];
+A.add({id:'shulker',cat:'action',icon:'🟪',name:'Шулкерски куршуми',desc:'Шулкерите стрелят по теб с насочващи се куршуми — бягай, събирай изумруди и блъскай куршумите един в друг!',
+  help:'Стрелки или WASD — тичай. С мишка/пръст: задръж и Стийв тича към пръста. Изумруд = +1. Ако два куршума се ударят един в друг — пукват се и получаваш +2! Куршумите се гонят около 6 секунди. Удар = губиш сърце. 3 сърца.',
+  start(g){g.p={x:230,y:170};g.lives=3;g.inv=0;g.b=[];g.fx=[];g.em=[];g.emT=0;
+    g.sh=SH_POS.map((p,i)=>({x:p[0],y:p[1],cd:A.rnd(1.5,3)+i*.8,open:0}));for(let i=0;i<3;i++)this.gem(g);},
+  gem(g){g.em.push({x:A.ri(60,410),y:A.ri(60,290),t:0});},
+  pop(g,x,y,col){for(let i=0;i<8;i++)g.fx.push({x,y,vx:A.rnd(-80,80),vy:A.rnd(-80,80),t:.5,col});},
+  update(g,dt){const p=g.p,lvl=1+g.t/30,sp=150;let dx=0,dy=0;
+    if(A.keys.ArrowLeft||A.keys.KeyA)dx--;if(A.keys.ArrowRight||A.keys.KeyD)dx++;if(A.keys.ArrowUp||A.keys.KeyW)dy--;if(A.keys.ArrowDown||A.keys.KeyS)dy++;
+    if(A.mouse.down&&!dx&&!dy){const ax=A.mouse.x-p.x-10,ay=A.mouse.y-p.y-10,d=Math.hypot(ax,ay);if(d>6){dx=ax/d;dy=ay/d;}}
+    const n=Math.hypot(dx,dy)||1;p.x=A.clamp(p.x+dx/n*sp*dt,44,416);p.y=A.clamp(p.y+dy/n*sp*dt,44,296);g.inv-=dt;
+    // шулкери
+    const act=Math.min(6,2+Math.floor(g.t/15));
+    g.sh.forEach((s,i)=>{s.open=Math.max(0,s.open-dt);if(i>=act)return;s.cd-=dt;
+      if(s.cd<=0){s.cd=A.rnd(2.6,4)/Math.min(2.2,.8+lvl*.25);s.open=.6;
+        const a=Math.atan2(p.y+10-s.y-10,p.x+10-s.x-10);g.b.push({x:s.x+10,y:s.y+10,a,life:6,sp:62+Math.min(50,g.t*.8)});A.beep(300,.08,'triangle');}});
+    // куршуми — завиват бавно към играча
+    const px=p.x+10,py=p.y+10;
+    for(const b of g.b){const want=Math.atan2(py-b.y,px-b.x);let d=want-b.a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+      b.a+=A.clamp(d,-1.7*dt,1.7*dt);b.x+=Math.cos(b.a)*b.sp*dt;b.y+=Math.sin(b.a)*b.sp*dt;b.life-=dt;
+      if(b.life<=0){b.dead=true;this.pop(g,b.x,b.y,'#ddd');}
+      else if(g.inv<=0&&Math.hypot(b.x-px,b.y-py)<14){b.dead=true;this.pop(g,b.x,b.y,'#fff');g.lives--;g.inv=1.3;A.beep(140,.25,'sawtooth');
+        if(g.lives<=0)return A.over(g,'Шулкерски куршум те улучи! 🟪');}}
+    for(let i=0;i<g.b.length;i++)for(let j=i+1;j<g.b.length;j++){const a=g.b[i],c2=g.b[j];
+      if(!a.dead&&!c2.dead&&Math.hypot(a.x-c2.x,a.y-c2.y)<10){a.dead=c2.dead=true;g.score+=2;this.pop(g,a.x,a.y,'#ffd54f');
+        g.fx.push({x:a.x,y:a.y,s:'+2',t:.8,vx:0,vy:-30});A.beep(900,.08,'triangle');}}
+    g.b=g.b.filter(b=>!b.dead);
+    // изумруди
+    for(const e of g.em){e.t+=dt;if(Math.abs(e.x+7-px)<16&&Math.abs(e.y+7-py)<16){e.dead=true;g.score++;A.beep(1100,.05,'square');}}
+    g.em=g.em.filter(e=>!e.dead);g.emT-=dt;if(g.em.length<3&&g.emT<=0){this.gem(g);g.emT=.8;}
+    for(const f of g.fx){f.t-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;}g.fx=g.fx.filter(f=>f.t>0);},
+  draw(g){// под от пурпурни блокове
+    for(let y=0;y<360;y+=40)for(let x=0;x<480;x+=40)A.block(x,y,40,(x+y)/40%2?'#a77aa7':'#9b6e9b');
+    c.fillStyle='rgba(20,10,30,.35)';c.fillRect(40,40,400,280);
+    g.sh.forEach((s,i)=>{const on=i<Math.min(6,2+Math.floor(g.t/15));
+      A.block(s.x,s.y,20,on?'#8e5a9e':'#5a3a64');const o=s.open>0?6:0;A.block(s.x,s.y-o,20,on?'#a874b8':'#6a4874',10);
+      if(o){c.fillStyle='#e8e36a';c.fillRect(s.x+6,s.y+4,8,6);}});
+    for(const e of g.em){const y=e.y+Math.sin(e.t*4)*2;c.fillStyle='#17a34a';c.fillRect(e.x+3,y,8,14);c.fillRect(e.x,y+3,14,8);c.fillStyle='#6ef29a';c.fillRect(e.x+4,y+3,3,4);}
+    for(const b of g.b){const fl=b.life<1.5&&Math.floor(b.life*8)%2;c.fillStyle=fl?'#888':'#eee';c.fillRect(b.x-5,b.y-5,10,10);c.fillStyle='#ffd54f';c.fillRect(b.x-2,b.y-2,4,4);}
+    const p=g.p;if(!(g.inv>0&&Math.floor(g.inv*10)%2)){A.block(p.x,p.y+8,20,'#2f7fd0',12);A.block(p.x+2,p.y-4,16,'#d9a066',13);
+      c.fillStyle='#4a2a10';c.fillRect(p.x+2,p.y-4,16,4);c.fillStyle='#fff';c.fillRect(p.x+5,p.y+2,3,3);c.fillRect(p.x+12,p.y+2,3,3);}
+    for(const f of g.fx){if(f.s)A.txt(f.s,f.x,f.y,15,'#ffd54f','center');else{c.fillStyle=f.col;c.fillRect(f.x,f.y,4,4);}}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),48,52,16,'#f55');A.txt('Края',432,52,13,'#e8d7ff','right');}
+});
+</script>
+</body>
+</html>

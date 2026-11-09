@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Размяната на овцете</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐑 Размяната на овцете</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 323. Размяната на овцете
+// Белите овце вървят само надясно, черните — само наляво. Овца пристъпва в празното място или прескача една овца.
+// Размени двете стада!
+const SW_LV=[[1,1],[2,1],[2,2],[3,2],[3,3],[4,3],[4,4],[5,4],[5,5],[6,5],[6,6],[7,6],[7,7]];
+A.add({id:'sheepswap',cat:'puzzle',icon:'🐑',name:'Размяната на овцете',desc:'Белите овце вървят само надясно, черните — само наляво. Прескачай и размени двете стада!',
+  help:'Белите овце вървят само надясно, черните — само наляво. Овца може да стъпи в празното място или да прескочи ЕДНА овца до него. Клик върху овца = ход. Клавиатура: ←/→ избери овца, Space/Enter = ход. Ако никоя овца не може да мръдне — губиш сърце и нивото почва отново. 3 сърца.',
+  start(g){g.lv=0;g.lives=3;this.load(g);},
+  load(g){const [m,n]=SW_LV[Math.min(g.lv,SW_LV.length-1)];g.m=m;g.n=n;g.row=[];
+    for(let i=0;i<m;i++)g.row.push(1);g.row.push(0);for(let i=0;i<n;i++)g.row.push(2);
+    g.sel=m-1;g.moves=0;g.wait=0;g.msg='';g.anim=null;},
+  tgt(g,i){const r=g.row,v=r[i];if(!v)return -1;const d=v===1?1:-1;
+    if(r[i+d]===0)return i+d;if(r[i+d]&&r[i+2*d]===0)return i+2*d;return -1;},
+  move(g,i){if(g.wait>0||i<0||i>=g.row.length)return;const t=this.tgt(g,i);
+    if(t<0){if(g.row[i])A.beep(160,.08,'sawtooth');return;}
+    g.anim={from:i,to:t,v:g.row[i],k:0};g.row[t]=g.row[i];g.row[i]=0;g.moves++;g.sel=t;A.beep(Math.abs(t-i)>1?660:520,.05,'triangle');
+    const L=g.row.length,done=g.row.every((v,k)=>k<g.n?v===2:k===g.n?v===0:v===1);
+    if(done){g.score+=g.m+g.n;g.wait=1.2;g.msg='Браво! +'+(g.m+g.n);g.next=true;A.tune([523,659,784,1047]);return;}
+    if(!g.row.some((v,k)=>this.tgt(g,k)>=0)){g.lives--;g.wait=1.4;g.next=false;A.beep(130,.3,'sawtooth');
+      g.msg='Заклещени! Пробвай пак';if(g.lives<=0){g.wait=0;A.over(g,'Овцете се заклещиха! 🐑');}}},
+  key(g,k){const L=g.row.length;
+    if(k==='ArrowLeft'||k==='KeyA'){for(let i=g.sel-1;i>=0;i--)if(g.row[i]){g.sel=i;break;}}
+    else if(k==='ArrowRight'||k==='KeyD'){for(let i=g.sel+1;i<L;i++)if(g.row[i]){g.sel=i;break;}}
+    else if(k==='Space'||k==='Enter'||k==='ArrowUp'||k==='KeyW')this.move(g,g.sel);},
+  geo(g){const L=g.row.length,s=Math.min(52,Math.floor(456/L));return {s,x0:Math.floor((480-s*L)/2),y:190};},
+  click(g,mx,my){const q=this.geo(g),i=Math.floor((mx-q.x0)/q.s);if(my>q.y-q.s*1.4&&my<q.y+q.s+10&&i>=0&&i<g.row.length){g.sel=i;this.move(g,i);}},
+  update(g,dt){if(g.anim){g.anim.k+=dt*7;if(g.anim.k>=1)g.anim=null;}
+    if(g.wait>0){g.wait-=dt;if(g.wait<=0){if(g.next)g.lv++;this.load(g);}}},
+  sheep(x,y,s,v,sel){const w=s-4;A.block(x+2,y+w*.25,w,v===1?'#eeeeee':'#2a2a2a',w*.55);
+    const hx=v===1?x+2+w*.7:x+2,hy=y+w*.12;A.block(hx,hy,w*.32,v===1?'#d8b896':'#1a1a1a',w*.32);
+    c.fillStyle=v===1?'#000':'#fff';c.fillRect(hx+(v===1?w*.2:w*.04),hy+w*.08,Math.max(2,w*.07),Math.max(2,w*.07));
+    c.fillStyle=v===1?'#d8b896':'#111';c.fillRect(x+w*.2,y+w*.8,w*.12,w*.2);c.fillRect(x+w*.75,y+w*.8,w*.12,w*.2);
+    if(sel){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(x,y-2,s,s+2);}},
+  draw(g){A.bg('#7ec0ee');for(let x=0;x<480;x+=60){c.fillStyle='#fff';c.fillRect((x*1.7+g.t*8)%560-60,40+(x%3)*18,50,12);}
+    for(let x=0;x<480;x+=24){A.block(x,250,24,'#5aa13a',8);for(let y=258;y<360;y+=24)A.block(x,y,24,'#7a5233');}
+    const q=this.geo(g),{s,x0,y}=q;
+    for(let i=0;i<g.row.length;i++){A.block(x0+i*s,y+s,s,i===g.m?'#9a6a3a':'#6aa84a',Math.max(6,s*.3));}
+    // огради отстрани
+    c.fillStyle='#8a5a2a';for(const fx of [x0-10,x0+s*g.row.length+4]){c.fillRect(fx,y-6,6,s+12);}
+    g.row.forEach((v,i)=>{if(!v)return;let x=x0+i*s,yy=y;
+      if(g.anim&&g.anim.to===i){const t=Math.min(1,g.anim.k);x=x0+(g.anim.from+(i-g.anim.from)*t)*s;yy=y-Math.sin(t*Math.PI)*s*(Math.abs(i-g.anim.from)>1?.9:.3);}
+      this.sheep(x,yy,s,v,i===g.sel&&g.wait<=0);});
+    const [m,n]=[g.m,g.n];A.txt('Ниво '+(g.lv+1)+'  ·  Ходове: '+g.moves+' / '+(m*n+m+n),240,24,16,'#fff','center');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,24,16,'#f55');
+    A.txt('⬜ → надясно      ⬛ ← наляво',240,100,14,'#1d3557','center');
+    if(g.msg&&g.wait>0)A.txt(g.msg,240,140,22,g.next?'#ffd54f':'#ff8a80','center');
+    else if(g.wait<=0&&this.tgt(g,g.sel)<0&&g.row[g.sel])A.txt('Тази овца не може да мръдне',240,140,13,'#ffe0b2','center');
+    A.txt('Съвет: не пускай две еднакви овце една до друга пред дупката!',240,330,11,'#ffe0b2','center');}
+});
+</script>
+</body>
+</html>
