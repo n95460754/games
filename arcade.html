@@ -352,7 +352,10 @@ const GAMES=[
    {"id": "ludo", "cat": "board", "icon": "🎲", "name": "Не се сърди, човече", "desc": "Хвърляй зара и прибери четирите си пула у дома преди трите робота — и ги връщай в началото!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "jockey", "cat": "action", "icon": "🐔", "name": "Пилешки рицари", "desc": "Летиш на кокошка и се бориш с копие — който е по-високо при удара, печели! Събирай яйцата, преди да се излюпят.", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "orechambers", "cat": "puzzle", "icon": "⛏️", "name": "Рудни камери", "desc": "Пъзел Сугуру: всяка камера с N блока съдържа числата от 1 до N, а еднаквите числа никога не се допират!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "mobstats", "cat": "brain", "icon": "📊", "name": "Статистика с мобове", "desc": "Мода, медиана, обхват и средно — пресметни ги от броя на мобовете всяка нощ!", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "mobstats", "cat": "brain", "icon": "📊", "name": "Статистика с мобове", "desc": "Мода, медиана, обхват и средно — пресметни ги от броя на мобовете всяка нощ!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "windarena", "cat": "action", "icon": "🌪️", "name": "Вятърна арена", "desc": "Вихрушките стрелят с вятърни заряди и те бутат към ръба — събирай ключове и не падай от острова!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "stickfix", "cat": "brain", "icon": "🪵", "name": "Поправи с една клечка", "desc": "Сметката от дървени пръчки е грешна — премести само една пръчка, за да стане вярна!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "oreprobe", "cat": "puzzle", "icon": "🔦", "name": "Сонда за руди", "desc": "Пускай лъчи в тъмната пещера и по това къде излизат познай къде са скрити диамантите!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

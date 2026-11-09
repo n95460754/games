@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**379 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 369 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**382 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 372 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-379-5aa13a)
+![Games](https://img.shields.io/badge/games-382-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 369 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 372 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -514,8 +514,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 367 | 🐔 Chicken Jockeys (Пилешки рицари) | [`jockey.html`](arcade/jockey.html) | Joust-style air duel: ride a flapping chicken over a lava lake and charge zombie, skeleton and wither-skeleton jockeys — whoever is higher when you collide wins. Beaten riders drop eggs: grab them (mid-air catches score triple) before they hatch into faster foes; waves keep growing, 3 lives |
 | 368 | ⛏️ Ore Chambers (Рудни камери) | [`orechambers.html`](arcade/orechambers.html) | A "Suguru" logic puzzle: a chamber of N blocks holds the numbers 1…N once each, and equal numbers may never touch, not even diagonally. Puzzles are generated in the browser with a unique solution, from 5×5 to 7×7; every solved cave gives points and +60 seconds, hints cost points |
 | 369 | 📊 Mob Statistics (Статистика с мобове) | [`mobstats.html`](arcade/mobstats.html) | Data-handling maths: block columns show how many mobs came each night — find the mode, the median, the range and the mean. Starts with mode and range, adds median and mean as you score; 90 seconds |
+| 370 | 🌪️ Wind Arena (Вятърна арена) | [`windarena.html`](arcade/windarena.html) | Survive on a floating grass island while Breezes circle around and fire wind charges that shove you toward the edge. Collect golden trial keys (+10), watch out for cracking edge blocks that fall into the void; more Breezes join as you score. Keyboard or hold the mouse/finger to run, 3 lives |
+| 371 | 🪵 One Stick Fix (Поправи с една клечка) | [`stickfix.html`](arcade/stickfix.html) | Matchstick maths: an equation built from wooden sticks (like digital-clock digits) is wrong — pick up exactly one stick and put it somewhere else to make it true. Sticks can move inside digits or turn + into − and back; any correct fix counts. Puzzles are generated in the browser and grow to two-digit numbers; 120 seconds, +8 per fix |
+| 372 | 🔦 Ore Probe (Сонда за руди) | [`oreprobe.html`](arcade/oreprobe.html) | A "Black Box" deduction puzzle: diamonds hide in a dark 8×8 cave. Shine beams in from the edge — H means the beam hit a diamond, R means it bounced back, matching numbers show where it came out (diamonds diagonally ahead bend the beam). Mark the diamonds and check; fewer beams and correct guesses score more, 5 caves |
 
-All 369 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 372 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -543,8 +546,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–368
-│   └── mobstats.html       # 369. Mob Statistics
+│   ├── ...                 # games 51–371
+│   └── oreprobe.html       # 372. Ore Probe
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

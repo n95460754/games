@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сонда за руди</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔦 Сонда за руди</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 372. Сонда за руди
+// Логическа игра като "Черната кутия": в тъмна пещера 8×8 са скрити диаманти.
+// Пускай лъчи от фенерчето от ръба и гледай къде излизат:
+//  H — лъчът удари диамант и изчезна; R — лъчът се върна обратно;
+//  еднакви числа — лъчът влезе от едното място и излезе от другото.
+// Диамант точно пред лъча го поглъща, диамант по диагонал отпред го завива настрани,
+// два диаманта по диагонал го връщат назад.
+const OP_N=8,OP_CS=32,OP_OX=12,OP_OY=12,OP_COL=['#ff5252','#ffd23f','#4de8f5','#7cff7c','#ff8af0','#ffa64d','#a58bff','#ffffff','#4d9bff','#c0ff4d','#ff4da6','#4dffc3'];
+A.add({id:'oreprobe',cat:'puzzle',icon:'🔦',name:'Сонда за руди',desc:'Пускай лъчи в тъмната пещера и по това къде излизат познай къде са скрити диамантите!',
+  help:'Клик на поле от ръба = пусни лъч. H = лъчът удари диамант, R = върна се назад, еднакви числа = влезе тук и излезе там. Диамант по диагонал отпред завива лъча. Клик в пещерата = сложи/махни значе ◆. Сложи толкова знача, колкото са диамантите, и натисни „Провери“. Клавиатура: стрелки, Space, Enter = провери. 5 пещери.',
+  start(g){g.cave=0;g.cur={x:-1,y:0};this.newCave(g);},
+  newCave(g){g.cave++;g.K=[3,3,4,4,5][g.cave-1]||5;g.ore=new Set();while(g.ore.size<g.K)g.ore.add(A.ri(0,OP_N-1)+','+A.ri(0,OP_N-1));
+    g.res={};g.mark=new Set();g.pair=0;g.cost=0;g.show=0;g.path=null;g.pathT=0;g.msg='';},
+  has(g,x,y){return g.ore.has(x+','+y);},
+  inside(x,y){return x>=0&&y>=0&&x<OP_N&&y<OP_N;},
+  // проследява лъч от поле на ръба; връща {type:'H'|'R'|'X', ex,ey, path}
+  trace(g,sx,sy){let dx=0,dy=0;if(sy<0)dy=1;else if(sy>=OP_N)dy=-1;else if(sx<0)dx=1;else dx=-1;
+    let x=sx,y=sy;const path=[[x,y]];
+    if(this.has(g,x+dx,y+dy))return{type:'H',path:path.concat([[x+dx,y+dy]])};
+    if(this.has(g,x+dx-dy,y+dy+dx)||this.has(g,x+dx+dy,y+dy-dx))return{type:'R',path};
+    for(let step=0;step<300;step++){
+      const fx=x+dx,fy=y+dy;
+      if(this.has(g,fx,fy)){path.push([fx,fy]);return{type:'H',path};}
+      const L=this.has(g,fx+dy,fy-dx),R=this.has(g,fx-dy,fy+dx); // ляво и дясно спрямо посоката
+      if(L&&R){dx=-dx;dy=-dy;continue;}
+      if(L){const t=dx;dx=-dy;dy=t;continue;}   // завива надясно (далеч от диаманта)
+      if(R){const t=dx;dx=dy;dy=-t;continue;}   // завива наляво
+      x=fx;y=fy;path.push([x,y]);
+      if(!this.inside(x,y)){if(x===sx&&y===sy)return{type:'R',path};return{type:'X',ex:x,ey:y,path};}}
+    return{type:'R',path};},
+  edge(x,y){return(x===-1||x===OP_N)!==(y===-1||y===OP_N);},
+  fire(g,x,y){const k=x+','+y;if(g.res[k]){g.path=g.res[k].path;g.pathT=1.2;return;}
+    const r=this.trace(g,x,y);
+    if(r.type==='H'){g.res[k]={t:'H',path:r.path};g.cost+=1;A.beep(180,.15,'sawtooth');}
+    else if(r.type==='R'){g.res[k]={t:'R',path:r.path};g.cost+=1;A.beep(600,.1,'triangle');}
+    else{g.pair++;const m={t:''+g.pair,col:OP_COL[(g.pair-1)%OP_COL.length],path:r.path};g.res[k]=m;g.res[r.ex+','+r.ey]=m;g.cost+=2;A.beep(880,.08,'triangle');}
+    g.path=r.path;g.pathT=1.2;},
+  toggle(g,x,y){const k=x+','+y;if(g.mark.has(k))g.mark.delete(k);else{if(g.mark.size>=g.K){g.msg='Махни някое значе — диамантите са '+g.K;return;}g.mark.add(k);}A.beep(450,.04);g.msg='';},
+  check(g){if(g.show)return;if(g.mark.size!==g.K){g.msg='Сложи точно '+g.K+' знача ◆';A.beep(150,.12);return;}
+    let ok=0;for(const k of g.mark)if(g.ore.has(k))ok++;const wrong=g.K-ok;
+    const pts=Math.max(5,25+g.K*5-g.cost-wrong*12);g.score+=pts;g.show=3;
+    g.msg=(wrong?'Познати '+ok+' от '+g.K:'Всички диаманти намерени!')+'  +'+pts+' т.';
+    if(wrong)A.beep(200,.3,'sawtooth');else A.tune([523,659,784,1047]);},
+  act(g,x,y){if(g.show)return;if(this.inside(x,y))this.toggle(g,x,y);else if(this.edge(x,y))this.fire(g,x,y);},
+  key(g,k){if(g.show)return;const p=g.cur;let nx=p.x,ny=p.y;
+    if(k==='ArrowLeft')nx--;if(k==='ArrowRight')nx++;if(k==='ArrowUp')ny--;if(k==='ArrowDown')ny++;
+    if(nx!==p.x||ny!==p.y){nx=A.clamp(nx,-1,OP_N);ny=A.clamp(ny,-1,OP_N);if(this.inside(nx,ny)||this.edge(nx,ny)){p.x=nx;p.y=ny;}
+      else{// ъгъл — прескочи го
+        if(k==='ArrowLeft'||k==='ArrowRight'){p.x=nx;p.y=ny<0?0:OP_N-1;}else{p.y=ny;p.x=nx<0?0:OP_N-1;}}return;}
+    if(k==='Space')this.act(g,p.x,p.y);
+    if(k==='Enter'||k==='NumpadEnter')this.check(g);},
+  click(g,mx,my){if(mx>=340&&mx<=472&&my>=288&&my<=332)return this.check(g);
+    const x=Math.floor((mx-OP_OX)/OP_CS)-1,y=Math.floor((my-OP_OY)/OP_CS)-1;
+    if(x>=-1&&y>=-1&&x<=OP_N&&y<=OP_N){g.cur={x,y};this.act(g,x,y);}},
+  update(g,dt){if(g.pathT>0)g.pathT-=dt;
+    if(g.show>0){g.show-=dt;if(g.show<=0){g.show=0;if(g.cave>=5)return A.over(g,'Всички 5 пещери са проучени!');this.newCave(g);}}},
+  px(v){return OP_OX+(v+1)*OP_CS;},
+  draw(g){A.bg('#14110e');
+    // ръб
+    for(let y=-1;y<=OP_N;y++)for(let x=-1;x<=OP_N;x++){const X=this.px(x),Y=this.px(y)-OP_OX+OP_OY;
+      if(this.inside(x,y)){A.block(X,Y,OP_CS,(x+y)%2?'#2b2b30':'#252529');
+        if(g.show&&this.has(g,x,y)){c.fillStyle=C.gem;c.fillRect(X+9,Y+9,14,14);c.fillStyle='#fff';c.fillRect(X+11,Y+11,4,4);}
+        if(g.mark.has(x+','+y)){const ok=g.show?this.has(g,x,y):null;A.txt('◆',X+16,Y+17,20,ok===null?'#ffd54f':ok?'#7cff7c':'#ff5252','center');}}
+      else if(this.edge(x,y)){A.block(X,Y,OP_CS,'#6b6b6b');const r=g.res[x+','+y];
+        if(r){const col=r.t==='H'?'#ff5252':r.t==='R'?'#ffffff':r.col;c.fillStyle='rgba(0,0,0,.45)';c.fillRect(X+4,Y+4,24,24);A.txt(r.t,X+16,Y+17,r.t.length>1?13:16,col,'center');}
+        else{c.fillStyle='#ffe27a';const cx=X+16,cy=Y+16;c.fillRect(cx-3,cy-3,6,6);}}}
+    // показан лъч
+    if(g.path&&g.pathT>0){c.strokeStyle='rgba(255,240,150,'+Math.min(1,g.pathT)+')';c.lineWidth=4;c.beginPath();
+      g.path.forEach(([x,y],i)=>{const X=this.px(x)+16,Y=this.px(y)-OP_OX+OP_OY+16;if(i)c.lineTo(X,Y);else c.moveTo(X,Y);});c.stroke();}
+    // курсор
+    const cu=g.cur;c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(this.px(cu.x)+2,this.px(cu.y)-OP_OX+OP_OY+2,OP_CS-4,OP_CS-4);
+    // панел
+    const px=406;A.txt('Пещера '+g.cave+'/5',px,24,16,'#ffd54f','center');
+    A.txt('Диаманти: '+g.K,px,52,14,C.gem,'center');A.txt('Знача: '+g.mark.size+'/'+g.K,px,74,14,'#fff','center');
+    A.txt('Лъчи: '+g.cost+' т.',px,96,14,'#ffab91','center');
+    A.txt('H удар',px,134,12,'#ff5252','center');A.txt('R назад',px,152,12,'#fff','center');A.txt('1 влиза/излиза',px,170,12,'#7cff7c','center');
+    A.txt('H, R = 1 т.',px,196,11,'#b9c6d6','center');A.txt('двойка = 2 т.',px,212,11,'#b9c6d6','center');A.txt('грешен ◆ = −12',px,228,11,'#b9c6d6','center');
+    A.block(340,288,132,g.mark.size===g.K?'#3f8a24':'#5a6b8c',44);A.txt('Провери ✔',406,310,15,'#fff','center');
+    if(g.msg){c.fillStyle='rgba(0,0,0,.8)';c.fillRect(0,336,480,24);A.txt(g.msg,240,348,13,g.show?'#7cff7c':'#ffd54f','center');}}
+});
+</script>
+</body>
+</html>

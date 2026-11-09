@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вятърна арена</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌪️ Вятърна арена</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 370. Вятърна арена
+// Стоиш на летящ остров от блокове. Вихрушките (Breeze) кръжат около него и
+// стрелят с вятърни заряди, които те избутват. Събирай ключовете от изпитанията,
+// но не падай в пропастта! Островът бавно се руши.
+const WA_CS=20,WA_COLS=24,WA_ROWS=17,WA_OY=16;
+A.add({id:'windarena',cat:'action',icon:'🌪️',name:'Вятърна арена',desc:'Вихрушките стрелят с вятърни заряди и те бутат към ръба — събирай ключове и не падай от острова!',
+  help:'Стрелки/WASD — движение. С мишка или пръст: задръж върху полето и Стив тича натам. Събирай златните ключове 🔑 (+10). Вятърните заряди те избутват — не падай от острова! Блоковете с пукнатини скоро ще паднат. 3 живота.',
+  start(g){g.lives=3;g.keysN=0;g.inv=1.5;g.fall=0;g.br=[];g.wc=[];g.fx=[];g.crack=[];g.crackT=14;g.pts=0;g.survive=0;
+    g.land=[];const cx=(WA_COLS-1)/2,cy=(WA_ROWS-1)/2;
+    for(let r=0;r<WA_ROWS;r++)for(let q=0;q<WA_COLS;q++){const dx=(q-cx)/8.6,dy=(r-cy)/5.6,d=dx*dx+dy*dy+Math.random()*.12;g.land.push(d<1?1:0);}
+    this.respawn(g);this.addBreeze(g);this.newKey(g);
+    g.clouds=[];for(let i=0;i<7;i++)g.clouds.push({x:A.rnd(0,480),y:A.rnd(20,350),w:A.ri(40,90),s:A.rnd(6,16)});},
+  cell(g,x,y){const q=Math.floor(x/WA_CS),r=Math.floor((y-WA_OY)/WA_CS);if(q<0||r<0||q>=WA_COLS||r>=WA_ROWS)return -1;return r*WA_COLS+q;},
+  ground(g,x,y){const i=this.cell(g,x,y);return i>=0&&g.land[i]>0;},
+  landCells(g){const o=[];for(let i=0;i<g.land.length;i++)if(g.land[i])o.push(i);return o;},
+  center(g){// клетката от острова, най-близо до центъра
+    let best=-1,bd=1e9;for(const i of this.landCells(g)){const x=(i%WA_COLS+.5)*WA_CS,y=WA_OY+(Math.floor(i/WA_COLS)+.5)*WA_CS,d=(x-240)**2+(y-185)**2;if(d<bd&&!g.crack.some(c=>c.i===i)){bd=d;best=i;}}return best;},
+  respawn(g){const i=this.center(g);g.p={x:(i%WA_COLS+.5)*WA_CS,y:WA_OY+(Math.floor(i/WA_COLS)+.5)*WA_CS,vx:0,vy:0,kx:0,ky:0,face:1};g.inv=1.5;g.fall=0;},
+  newKey(g){const L=this.landCells(g).filter(i=>{const x=(i%WA_COLS+.5)*WA_CS,y=WA_OY+(Math.floor(i/WA_COLS)+.5)*WA_CS;return Math.hypot(x-g.p.x,y-g.p.y)>90&&!g.crack.some(c=>c.i===i);});
+    const i=L.length?A.pick(L):this.center(g);g.key={x:(i%WA_COLS+.5)*WA_CS,y:WA_OY+(Math.floor(i/WA_COLS)+.5)*WA_CS,i};},
+  addBreeze(g){g.br.push({a:A.rnd(0,6.28),sp:A.rnd(.25,.45)*(Math.random()<.5?-1:1),cd:A.rnd(1.5,3),warn:0,bob:A.rnd(0,6)});},
+  bpos(b){return{x:240+Math.cos(b.a)*222,y:185+Math.sin(b.a)*160};},
+  update(g,dt){const p=g.p;
+    for(const cl of g.clouds){cl.x+=cl.s*dt;if(cl.x>520)cl.x=-100;}
+    for(const f of g.fx){f.t-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;}g.fx=g.fx.filter(f=>f.t>0);
+    // рушене на острова
+    g.crackT-=dt;if(g.crackT<=0){g.crackT=Math.max(5,12-g.keysN*.4);const L=this.landCells(g);if(L.length>40){
+        const edge=L.filter(i=>{const q=i%WA_COLS,r=Math.floor(i/WA_COLS);return [[1,0],[-1,0],[0,1],[0,-1]].some(([a,b])=>{const qq=q+a,rr=r+b;return qq<0||rr<0||qq>=WA_COLS||rr>=WA_ROWS||!g.land[rr*WA_COLS+qq];});}).filter(i=>i!==g.key.i&&!g.crack.some(c=>c.i===i));
+        A.shuffle(edge).slice(0,3).forEach(i=>g.crack.push({i,t:2.5}));}}
+    for(const c of g.crack){c.t-=dt;if(c.t<=0){g.land[c.i]=0;const x=(c.i%WA_COLS)*WA_CS,y=WA_OY+Math.floor(c.i/WA_COLS)*WA_CS;g.fx.push({x,y,vx:0,vy:60,t:.8,blk:1});A.beep(120,.08,'sawtooth',.03);}}
+    g.crack=g.crack.filter(c=>c.t>0);
+    // падане
+    if(g.fall>0){g.fall-=dt;if(g.fall<=0){g.lives--;if(g.lives<=0)return A.over(g,'Падна в пропастта! Ключове: '+g.keysN);this.respawn(g);}return;}
+    g.survive+=dt;if(g.survive>=5){g.survive-=5;g.score+=1;}
+    if(g.inv>0)g.inv-=dt;
+    // движение
+    let ix=0,iy=0;const K=A.keys;
+    if(K.ArrowLeft||K.KeyA)ix--;if(K.ArrowRight||K.KeyD)ix++;if(K.ArrowUp||K.KeyW)iy--;if(K.ArrowDown||K.KeyS)iy++;
+    if(A.mouse.down){const dx=A.mouse.x-p.x,dy=A.mouse.y-p.y,d=Math.hypot(dx,dy);if(d>6){ix=dx/d;iy=dy/d;}}
+    const il=Math.hypot(ix,iy);if(il>0){ix/=il;iy/=il;p.vx+=ix*900*dt;p.vy+=iy*900*dt;if(ix)p.face=ix>0?1:-1;}
+    const fr=Math.exp(-(il?3:9)*dt);p.vx*=fr;p.vy*=fr;const sp=Math.hypot(p.vx,p.vy);if(sp>140){p.vx*=140/sp;p.vy*=140/sp;}
+    const kf=Math.exp(-2.6*dt);p.kx*=kf;p.ky*=kf;
+    p.x+=(p.vx+p.kx)*dt;p.y+=(p.vy+p.ky)*dt;
+    if(!this.ground(g,p.x,p.y)){g.fall=.7;A.beep(300,.4,'sawtooth',.05);setTimeout(()=>A.beep(160,.3,'sawtooth',.05),150);return;}
+    // ключ
+    if(Math.hypot(p.x-g.key.x,p.y-g.key.y)<15){g.keysN++;g.score+=10;A.tune([660,880,1100]);
+      for(let i=0;i<10;i++)g.fx.push({x:g.key.x,y:g.key.y,vx:A.rnd(-80,80),vy:A.rnd(-80,80),t:.5,col:C.gold});
+      if(g.br.length<Math.min(6,1+Math.floor(g.keysN/3)))this.addBreeze(g);this.newKey(g);}
+    // вихрушки
+    const lvl=g.keysN;
+    for(const b of g.br){b.a+=b.sp*dt;b.bob+=dt*3;b.cd-=dt;const bp=this.bpos(b);
+      if(b.cd<=0&&!b.warn){b.warn=.6;}
+      if(b.warn>0){b.warn-=dt;if(b.warn<=0){b.warn=0;b.cd=Math.max(1.4,A.rnd(2.6,4)-lvl*.08);
+        const dx=p.x-bp.x,dy=p.y-bp.y,d=Math.hypot(dx,dy),s=Math.min(190,105+lvl*5);
+        g.wc.push({x:bp.x,y:bp.y,vx:dx/d*s,vy:dy/d*s,life:d/s+.5,r:0});A.beep(520,.08,'triangle',.03);}}}
+    for(const w of g.wc){w.x+=w.vx*dt;w.y+=w.vy*dt;w.life-=dt;w.r+=dt*12;
+      const d=Math.hypot(p.x-w.x,p.y-w.y);
+      if(d<13){w.life=0;this.blast(g,w,true);}
+      else if(w.life<=0)this.blast(g,w,false);}
+    g.wc=g.wc.filter(w=>w.life>0);},
+  blast(g,w,direct){const p=g.p;A.beep(200,.15,'square',.04);
+    for(let i=0;i<8;i++){const a=i/8*6.28;g.fx.push({x:w.x,y:w.y,vx:Math.cos(a)*90,vy:Math.sin(a)*90,t:.35,col:'#d6f6ff'});}
+    if(g.inv>0)return;
+    let dx=p.x-w.x,dy=p.y-w.y,d=Math.hypot(dx,dy);
+    if(direct){const s=Math.hypot(w.vx,w.vy);dx=w.vx/s;dy=w.vy/s;p.kx+=dx*230;p.ky+=dy*230;}
+    else if(d<42){dx/=d||1;dy/=d||1;const f=(1-d/42)*210;p.kx+=dx*f;p.ky+=dy*f;}},
+  drawSteve(x,y,s,face){c.fillStyle='#2b5aa8';c.fillRect(x-5*s,y-2*s,10*s,8*s);c.fillStyle='#3a3a8a';c.fillRect(x-5*s,y+6*s,10*s,4*s);
+    c.fillStyle='#c8946a';c.fillRect(x-5*s,y-12*s,10*s,10*s);c.fillStyle='#4a2f1a';c.fillRect(x-5*s,y-12*s,10*s,3*s);
+    c.fillStyle='#fff';c.fillRect(x+(face>0?0:-4)*s,y-8*s,2*s,2*s);c.fillRect(x+(face>0?3:-1)*s,y-8*s,2*s,2*s);
+    c.fillStyle='#3a2a9a';c.fillRect(x+(face>0?1:-3)*s,y-8*s,1*s,2*s);c.fillRect(x+(face>0?4:0)*s,y-8*s,1*s,2*s);},
+  draw(g){const p=g.p;
+    const gr=c.createLinearGradient(0,0,0,360);gr.addColorStop(0,'#5d8fd0');gr.addColorStop(1,'#1d2c4f');c.fillStyle=gr;c.fillRect(0,0,480,360);
+    c.fillStyle='rgba(255,255,255,.18)';for(const cl of g.clouds){c.fillRect(cl.x,cl.y,cl.w,10);c.fillRect(cl.x+10,cl.y-6,cl.w-20,6);}
+    // острова: първо страните (пръст), после горната част (трева)
+    for(let i=0;i<g.land.length;i++){if(!g.land[i])continue;const q=i%WA_COLS,r=Math.floor(i/WA_COLS),x=q*WA_CS,y=WA_OY+r*WA_CS;
+      const below=r+1<WA_ROWS&&g.land[i+WA_COLS];if(!below){A.block(x,y+WA_CS,WA_CS,C.dirt,8);c.fillStyle='#4f3420';c.fillRect(x,y+WA_CS+8,WA_CS,4);}}
+    for(let i=0;i<g.land.length;i++){if(!g.land[i])continue;const q=i%WA_COLS,r=Math.floor(i/WA_COLS),x=q*WA_CS,y=WA_OY+r*WA_CS;
+      const cr=g.crack.find(c=>c.i===i);let ox=0;if(cr)ox=Math.sin(g.t*40)*(cr.t<1?2:1);
+      A.block(x+ox,y,WA_CS,(q+r)%2?C.grass:'#62ab40');
+      if(cr){c.strokeStyle='#222';c.lineWidth=2;c.beginPath();c.moveTo(x+4,y+3);c.lineTo(x+10,y+10);c.lineTo(x+7,y+17);c.moveTo(x+10,y+10);c.lineTo(x+17,y+8);c.stroke();}}
+    // ключ
+    const k=g.key,kb=Math.sin(g.t*4)*2;c.fillStyle='rgba(0,0,0,.25)';c.fillRect(k.x-7,k.y+6,14,3);
+    c.fillStyle=C.gold;c.fillRect(k.x-7,k.y-9+kb,8,8);c.fillStyle='#1a1612';c.fillRect(k.x-5,k.y-7+kb,4,4);c.fillStyle=C.gold;c.fillRect(k.x+1,k.y-6+kb,8,3);c.fillRect(k.x+5,k.y-3+kb,2,3);c.fillRect(k.x+8,k.y-3+kb,2,4);
+    // ефекти
+    for(const f of g.fx){if(f.blk){c.globalAlpha=Math.max(0,f.t/.8);A.block(f.x,f.y,WA_CS,C.dirt);c.globalAlpha=1;}else{c.fillStyle=f.col;c.fillRect(f.x-2,f.y-2,4,4);}}
+    // играч
+    if(g.fall>0){const s=Math.max(.1,g.fall/.7);c.globalAlpha=s;this.drawSteve(p.x,p.y+(1-s)*30,1.2*s,p.face);c.globalAlpha=1;}
+    else if(!(g.inv>0&&Math.floor(g.t*10)%2)){c.fillStyle='rgba(0,0,0,.3)';c.fillRect(p.x-6,p.y+8,12,3);this.drawSteve(p.x,p.y,1.2,p.face);}
+    // заряди
+    for(const w of g.wc){c.save();c.translate(w.x,w.y);c.rotate(w.r);c.fillStyle='#e6fbff';c.fillRect(-6,-6,12,12);c.fillStyle='#8fd8ef';c.fillRect(-6,-2,12,4);c.fillRect(-2,-6,4,12);c.restore();}
+    // вихрушки
+    for(const b of g.br){const bp=this.bpos(b),y=bp.y+Math.sin(b.bob)*4;
+      for(let i=0;i<3;i++){const a=g.t*5+i*2.09;c.fillStyle='#9fe3f3';c.fillRect(bp.x+Math.cos(a)*14-2,y+10+i*5+Math.sin(a)*3,4,4);}
+      A.block(bp.x-9,y-12,18,b.warn>0?'#ffffff':'#7fd1e8');c.fillStyle='#1d3c66';c.fillRect(bp.x-6,y-6,4,3);c.fillRect(bp.x+2,y-6,4,3);
+      if(b.warn>0){c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=2;c.beginPath();c.arc(bp.x,y-3,14+b.warn*10,0,6.28);c.stroke();}}
+    // панел
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,16);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),6,8,13,'#ff5252');A.txt('🔑 '+g.keysN,240,8,13,'#ffd54f','center');A.txt('🌪️ '+g.br.length,474,8,13,'#bdf','right');}
+});
+</script>
+</body>
+</html>

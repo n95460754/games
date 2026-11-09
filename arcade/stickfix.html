@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Поправи с една клечка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪵 Поправи с една клечка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 371. Поправи с една клечка
+// Сметката е наредена от дървени пръчки (като цифрите на часовник).
+// Тя е грешна! Премести точно ЕДНА пръчка, за да стане вярна.
+// Всяко преместване, което дава вярна сметка, се приема.
+//      a
+//    f   b      битове: a=1 b=2 c=4 d=8 e=16 f=32 g=64
+//      g
+//    e   c
+//      d
+const SF_DIG=[63,6,91,79,102,109,125,7,127,111];
+const SF_VAL={};SF_DIG.forEach((m,d)=>SF_VAL[m]=d);
+// символи: {t:'d',m:маска} цифра, {t:'o',m:маска} знак (1 = минус, 3 = плюс), {t:'e'} равно
+function sfSyms(a,op,b,cc){const s=[];const num=n=>(''+n).split('').forEach(ch=>s.push({t:'d',m:SF_DIG[+ch],g:0}));
+  num(a);s.push({t:'o',m:op==='+'?3:1,g:1});num(b);s.push({t:'e',g:2});num(cc);s.push({t:'end'});return s;}
+// прочита сметката; връща null, ако някой символ не е цифра/знак
+function sfRead(S){const nums=['','',''];let op=null,part=0;
+  for(const s of S){if(s.t==='d'){const v=SF_VAL[s.m];if(v===undefined)return null;nums[part]+=v;}
+    else if(s.t==='o'){if(s.m===3)op='+';else if(s.m===1)op='-';else return null;part=1;}
+    else if(s.t==='e')part=2;}
+  for(const n of nums)if(n.length>1&&n[0]==='0')return null;
+  const a=+nums[0],b=+nums[1],r=+nums[2];return{ok:(op==='+'?a+b:a-b)===r,txt:nums[0]+' '+op+' '+nums[1]+' = '+nums[2]};}
+function sfBits(s){return s.t==='d'?7:s.t==='o'?2:0;}
+// всички места за пръчки: [символ, бит]
+function sfSlots(S){const o=[];S.forEach((s,i)=>{for(let b=0;b<sfBits(s);b++)o.push([i,b]);});return o;}
+function sfMake(lvl){
+  for(let tries=0;tries<400;tries++){
+    const op=Math.random()<.5?'+':'-';let a,b;
+    if(lvl<4){a=A.ri(0,9);b=A.ri(0,9);}else if(lvl<8){a=A.ri(0,Math.random()<.5?9:19);b=A.ri(0,9);}else{a=A.ri(0,49);b=A.ri(0,19);}
+    const r=op==='+'?a+b:a-b;if(r<0||r>99)continue;if(lvl<3&&r>9)continue;
+    const S=sfSyms(a,op,b,r),L=sfSlots(S),cand=[];
+    for(const [i,bi] of L){if(!(S[i].m>>bi&1))continue;
+      for(const [j,bj] of L){if(i===j&&bi===bj)continue;if(S[j].m>>bj&1)continue;
+        const T=S.map(s=>({...s}));T[i].m&=~(1<<bi);T[j].m|=1<<bj;const R=sfRead(T);if(R&&!R.ok)cand.push(T);}}
+    if(cand.length)return{S:A.pick(cand),sol:S};}
+  return null;}
+A.add({id:'stickfix',cat:'brain',icon:'🪵',name:'Поправи с една клечка',desc:'Сметката от дървени пръчки е грешна — премести само една пръчка, за да стане вярна!',
+  help:'Сметката е грешна! Кликни пръчка, за да я вземеш, после кликни празно място (бледите черти), за да я сложиш. Можеш да местиш пръчка и в цифрите, и в знака + / −. Клавиатура: ←/→ избират място, Space/Enter — вземи/сложи, S — пропусни (−10 сек). 120 секунди, +8 сек за всяка вярна.',
+  start(g){g.time=120;g.lvl=0;g.cur=0;g.fl=null;g.msg='';g.msgT=0;this.next(g);},
+  next(g){g.lvl++;const P=sfMake(g.lvl)||sfMake(1);g.S=P.S;g.orig=P.S.map(s=>({...s}));g.sol=P.sol;g.held=null;g.wait=0;this.layout(g);g.cur=Math.min(g.cur,g.slots.length-1);},
+  layout(g){const S=g.S,W={d:50,o:46,e:38,end:0},gap=8;let tw=0;S.forEach(s=>tw+=W[s.t]+(s.t==='end'?0:gap));tw-=gap;
+    let x=Math.round((480-tw)/2);g.pos=[];S.forEach(s=>{g.pos.push(x);x+=W[s.t]+gap;});
+    g.slots=[];const H=110,y=110,t=9,w=W.d;
+    S.forEach((s,i)=>{const X=g.pos[i];
+      if(s.t==='d'){const h2=H/2;
+        const R=[[X+t,y,w-2*t,t],[X+w-t,y+t,t,h2-t*1.5],[X+w-t,y+h2+t/2,t,h2-t*1.5],[X+t,y+H-t,w-2*t,t],[X,y+h2+t/2,t,h2-t*1.5],[X,y+t,t,h2-t*1.5],[X+t,y+h2-t/2,w-2*t,t]];
+        R.forEach((r,b)=>g.slots.push({i,b,r}));}
+      else if(s.t==='o'){const ow=W.o;g.slots.push({i,b:0,r:[X+4,y+H/2-t/2,ow-8,t]});g.slots.push({i,b:1,r:[X+ow/2-t/2,y+H/2-ow/2+4,t,ow-8]});}});},
+  on(g,sl){return g.S[sl.i].m>>sl.b&1;},
+  act(g,k){if(g.wait>0)return;const sl=g.slots[k];if(!sl)return;
+    if(g.held===null){if(!this.on(g,sl)){A.beep(160,.05);return;}g.S[sl.i].m&=~(1<<sl.b);g.held=k;A.beep(500,.05,'triangle');return;}
+    if(this.on(g,sl))return;
+    g.S[sl.i].m|=1<<sl.b;
+    if(k===g.held){g.held=null;A.beep(400,.04);return;}
+    g.held=null;const R=sfRead(g.S);
+    if(R&&R.ok){g.score++;g.time+=8;g.fl={ok:true,t:.4};g.msg='Вярно! '+R.txt;g.msgT=1.3;g.wait=1.3;A.tune([523,659,784]);}
+    else{g.time-=5;g.fl={ok:false,t:.4};g.msg=R?'Пак е грешно: '+R.txt+'  (−5 сек)':'Това не е цифра!  (−5 сек)';g.msgT=1.5;g.wait=.9;g.undo=true;A.beep(150,.25,'sawtooth');}},
+  skip(g){if(g.wait>0)return;g.time-=10;const R=sfRead(g.sol);g.msg='Пропуснато. Беше: '+(R?R.txt:'');g.msgT=1.5;g.wait=1.3;A.beep(250,.15);},
+  key(g,k){const n=g.slots.length;
+    if(k==='ArrowRight'||k==='ArrowDown'||k==='KeyD'){g.cur=(g.cur+1)%n;}
+    else if(k==='ArrowLeft'||k==='ArrowUp'||k==='KeyA'){g.cur=(g.cur+n-1)%n;}
+    else if(k==='Space'||k==='Enter'||k==='NumpadEnter')this.act(g,g.cur);
+    else if(k==='KeyS')this.skip(g);},
+  click(g,mx,my){if(mx>=360&&mx<=470&&my>=316&&my<=350)return this.skip(g);
+    let best=-1,bd=1e9;g.slots.forEach((sl,k)=>{const [x,y,w,h]=sl.r,dx=Math.max(x-mx,0,mx-x-w),dy=Math.max(y-my,0,my-y-h),d=dx*dx+dy*dy;if(d<bd){bd=d;best=k;}});
+    if(best>=0&&bd<=100){g.cur=best;this.act(g,best);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.msgT>0)g.msgT-=dt;
+    if(g.wait>0){g.wait-=dt;if(g.wait<=0){if(g.undo){g.undo=false;g.S=g.orig.map(s=>({...s}));}else this.next(g);}}
+    else{g.time-=dt;}
+    if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Поправени: '+g.score);}},
+  draw(g){A.bg('#2a2018');
+    // дъска
+    c.fillStyle='#3b2c1f';c.fillRect(0,80,480,170);for(let x=0;x<480;x+=40){c.fillStyle=(x/40)%2?'#3f2f21':'#37291c';c.fillRect(x,80,40,170);}
+    A.txt('Премести 1 пръчка, за да стане вярно!',240,40,17,'#ffd54f','center');
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<20?'#ff5252':'#fff');A.txt('Сметка '+g.lvl,470,14,13,'#b9c6d6','right');
+    // равно
+    g.S.forEach((s,i)=>{if(s.t==='e'){const X=g.pos[i];A.block(X+2,150,36,'#cfcfcf',9);A.block(X+2,174,36,'#cfcfcf',9);}});
+    g.slots.forEach((sl,k)=>{const [x,y,w,h]=sl.r;
+      if(this.on(g,sl)){c.fillStyle='#b8834a';c.fillRect(x,y,w,h);c.fillStyle='rgba(255,255,255,.22)';c.fillRect(x,y,w,2);c.fillRect(x,y,2,h);c.fillStyle='rgba(0,0,0,.3)';c.fillRect(x,y+h-2,w,2);c.fillRect(x+w-2,y,2,h);
+        c.fillStyle='#e04a2a';if(w>h)c.fillRect(x+w-5,y+2,4,h-4);else c.fillRect(x+2,y,w-4,4);}
+      else{c.fillStyle=g.held!==null?'rgba(255,230,150,.22)':'rgba(255,255,255,.07)';c.fillRect(x,y,w,h);}
+      if(k===g.cur){c.strokeStyle='#ffd54f';c.lineWidth=2;c.strokeRect(x-3,y-3,w+6,h+6);}});
+    if(g.held!==null){const [x,y,w,h]=g.slots[g.held].r;c.strokeStyle='rgba(255,120,80,.8)';c.setLineDash([4,3]);c.lineWidth=2;c.strokeRect(x-2,y-2,w+4,h+4);c.setLineDash([]);
+      const mx=A.mouse.x,my=A.mouse.y;c.fillStyle='#b8834a';c.fillRect(mx-18,my-4,36,8);c.fillStyle='#e04a2a';c.fillRect(mx+14,my-4,4,8);
+      A.txt('Сложи пръчката на празно място',240,270,14,'#ffe9a8','center');}
+    else A.txt('Кликни пръчка, за да я вземеш',240,270,14,'#b9c6d6','center');
+    if(g.msgT>0)A.txt(g.msg,240,300,15,g.fl&&g.fl.ok?'#7cff7c':'#ff8a65','center');
+    A.block(360,316,110,'#5a6b8c',34);A.txt('Пропусни (S)',415,333,13,'#fff','center');
+    A.txt('✔ '+g.score,14,333,18,'#7cff7c');
+    if(g.fl&&g.fl.t>0){c.fillStyle=g.fl.ok?'rgba(80,200,80,.2)':'rgba(220,60,60,.25)';c.fillRect(0,0,480,360);}}
+});
+</script>
+</body>
+</html>
