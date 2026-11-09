@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рудни камери</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛏️ Рудни камери</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 368. Рудни камери
+// Логическа задача "Сугуру": пещерата е разделена на камери от 1 до 5 блока.
+// Камера с N блока съдържа числата от 1 до N (всяко по веднъж),
+// а еднакви числа никога не се докосват — дори по диагонал.
+// Пъзелите се генерират в браузъра и всеки има единствено решение.
+const OC_COL=['#6d5a8a','#4f7a5a','#8a6a3a','#3f6a8a','#8a4a4a','#5a7a7a','#7a7040'];
+const OC_ORE=['', '#2a2a2a','#d8a07a','#ffd23f','#ff2e55','#4de8f5']; // въглища, желязо, злато, рубин, диамант
+function ocNb(n,i){const r=Math.floor(i/n),q=i%n,o=[];for(let dr=-1;dr<=1;dr++)for(let dq=-1;dq<=1;dq++){if(!dr&&!dq)continue;const a=r+dr,b=q+dq;if(a>=0&&b>=0&&a<n&&b<n)o.push(a*n+b);}return o;}
+// камери и решение се строят заедно (търсене с връщане назад, клетка по клетка)
+function ocGen(n){const N=n*n,v=new Array(N).fill(0),reg=new Array(N).fill(-1),RS=[],RM=[],RC=[];let steps=0; // RS: value bitmask, RC: count, RM: max index
+ const kn=i=>{const r=Math.floor(i/n),q=i%n,o=[];if(r){o.push(i-n);if(q)o.push(i-n-1);if(q<n-1)o.push(i-n+1);}if(q)o.push(i-1);return o;};
+ const KN=[];for(let i=0;i<N;i++)KN.push(kn(i));
+ const complete=r=>RS[r]===(1<<(RC[r]+1))-2;
+ function rec(i){if(++steps>1500)return false;
+  if(i===N){for(let r=0;r<RS.length;r++)if(!complete(r))return false;return true;}
+  const q=i%n,opts=[];
+  const rs=new Set();if(i>=n)rs.add(reg[i-n]);if(q)rs.add(reg[i-1]);
+  for(const r of rs)if(RC[r]<5)opts.push(r);
+  opts.push(-1);A.shuffle(opts);
+  // prefer joining (bigger regions)
+  if(opts.length>1&&Math.random()<.25){opts.splice(opts.indexOf(-1),1);opts.unshift(-1);}else{opts.splice(opts.indexOf(-1),1);opts.push(-1);}
+  for(const r of opts){const vals=A.shuffle([1,2,3,4,5]);
+   for(const k of vals){if(r>=0&&(RS[r]>>k&1))continue;if(KN[i].some(j=>v[j]===k))continue;
+     let rr=r;if(r<0){rr=RS.length;RS.push(0);RC.push(0);RM.push(0);}
+     // missing values must be fillable
+     const ns=RS[rr]|(1<<k),nc=RC[rr]+1;let maxv=0;for(let t=1;t<=5;t++)if(ns>>t&1)maxv=t;
+     if(maxv-nc>5-nc||maxv>5){if(r<0){RS.pop();RC.pop();RM.pop();}continue;}
+     const ps=RS[rr],pm=RM[rr];RS[rr]=ns;RC[rr]=nc;RM[rr]=i;v[i]=k;reg[i]=rr;
+     let okc=true;const old=i-n;if(old>=0){const ro=reg[old];if(RM[ro]===old&&!complete(ro))okc=false;}
+     if(okc&&rec(i+1))return true;
+     v[i]=0;reg[i]=-1;RS[rr]=ps;RC[rr]=nc-1;RM[rr]=pm;if(r<0){RS.pop();RC.pop();RM.pop();}
+     if(steps>1500)return false;}
+  }
+  return false;}
+ return rec(0)?{reg,sol:v}:null;}
+// решавач: брои решенията до lim (с ограничение на стъпките)
+function ocSolve(n,reg,size,grid,lim,rand){
+  const N=n*n,v=grid.slice(),NB=[];for(let i=0;i<N;i++)NB.push(ocNb(n,i));
+  const members={};reg.forEach((r,i)=>(members[r]=members[r]||[]).push(i));
+  let count=0,steps=0,sol=null;
+  function cand(i){const out=[];for(let k=1;k<=size[reg[i]];k++){let ok=true;for(const j of NB[i])if(v[j]===k){ok=false;break;}
+      if(ok)for(const j of members[reg[i]])if(v[j]===k){ok=false;break;}if(ok)out.push(k);}return out;}
+  function rec(){if(++steps>40000)return true;let best=-1,bc=null;
+    for(let i=0;i<N;i++)if(!v[i]){const cs=cand(i);if(!cs.length)return false;if(!bc||cs.length<bc.length){bc=cs;best=i;if(cs.length===1)break;}}
+    if(best<0){count++;if(!sol)sol=v.slice();return count>=lim;}
+    if(rand)A.shuffle(bc);
+    for(const k of bc){v[best]=k;if(rec())return true;v[best]=0;}
+    return false;}
+  rec();return{count,sol,aborted:steps>40000};}
+function ocMake(n){
+  for(let tries=0;tries<600;tries++){
+    const r=ocGen(n);if(!r)continue;
+    const reg=r.reg,size={};reg.forEach(x=>size[x]=(size[x]||0)+1);
+    if(Object.values(size).filter(x=>x===1).length>2)continue;
+    const sol=r.sol,giv=sol.slice();
+    for(const i of A.shuffle([...Array(n*n).keys()])){const keep=giv[i];giv[i]=0;const t=ocSolve(n,reg,size,giv,2,false);if(t.count!==1||t.aborted)giv[i]=keep;}
+    return{n,reg,size,sol,giv};}
+  return null;}
+A.add({id:'orechambers',cat:'puzzle',icon:'⛏️',name:'Рудни камери',desc:'Пъзел Сугуру: всяка камера с N блока съдържа числата от 1 до N, а еднаквите числа никога не се допират!',
+  help:'Камера от N блока трябва да има числата 1…N (по веднъж). Еднакви числа не бива да се докосват — дори по диагонал. Клик/докосване на клетка, после 1–5 (или бутоните вдясно); повторен клик сменя числото. Стрелки — местене, 0/Backspace — изтрий, H — подсказка (−20 точки).',
+  start(g){g.lvl=0;g.time=240;g.sel=-1;g.fx=[];this.newPuzzle(g);},
+  newPuzzle(g){g.lvl++;const n=g.lvl<=2?5:g.lvl<=4?6:7;g.P=ocMake(n);if(!g.P){g.P=ocMake(5);}
+    g.v=g.P.giv.slice();g.sel=g.v.findIndex(x=>!x);g.cs=Math.floor(Math.min(316/g.P.n,52));g.ox=Math.floor((330-g.cs*g.P.n)/2)+8;g.oy=Math.floor((360-g.cs*g.P.n)/2);g.solvedT=0;g.pt=0;},
+  bad(g,i){const P=g.P,v=g.v,k=v[i];if(!k)return false;if(k>P.size[P.reg[i]])return true;
+    for(const j of ocNb(P.n,i))if(v[j]===k)return true;
+    for(let j=0;j<v.length;j++)if(j!==i&&P.reg[j]===P.reg[i]&&v[j]===k)return true;return false;},
+  set(g,i,k){const P=g.P;if(i<0||P.giv[i]||g.solvedT>0)return;if(k>P.size[P.reg[i]])k=0;g.v[i]=k;A.beep(k?400+k*90:200,.04);this.check(g);},
+  check(g){const P=g.P;for(let i=0;i<g.v.length;i++)if(!g.v[i]||this.bad(g,i))return;
+    const bonus=Math.max(0,Math.floor(120-g.pt));const pts=P.n*P.n*3+bonus;g.score+=pts;g.time+=60;g.solvedT=1.8;g.msg='Решено! +'+pts+' точки, +60 сек';A.tune([523,659,784,1047]);},
+  hint(g){const P=g.P;if(g.solvedT>0)return;const wrong=[],empty=[];for(let i=0;i<g.v.length;i++){if(P.giv[i])continue;if(g.v[i]&&g.v[i]!==P.sol[i])wrong.push(i);else if(!g.v[i])empty.push(i);}
+    const pick=wrong.length?A.pick(wrong):empty.length?A.pick(empty):-1;if(pick<0)return;g.v[pick]=P.sol[pick];P.giv[pick]=P.sol[pick];g.score=Math.max(0,g.score-20);g.sel=pick;A.beep(250,.15,'triangle');this.check(g);},
+  key(g,k,ch){const P=g.P,n=P.n;
+    if(k.startsWith('Arrow')){if(g.sel<0)g.sel=0;let r=Math.floor(g.sel/n),q=g.sel%n;if(k==='ArrowUp')r=(r+n-1)%n;if(k==='ArrowDown')r=(r+1)%n;if(k==='ArrowLeft')q=(q+n-1)%n;if(k==='ArrowRight')q=(q+1)%n;g.sel=r*n+q;return;}
+    if(ch>='1'&&ch<='5')return this.set(g,g.sel,+ch);
+    if(ch==='0'||k==='Backspace'||k==='Delete')return this.set(g,g.sel,0);
+    if(k==='KeyH')this.hint(g);},
+  click(g,mx,my){const P=g.P,n=P.n,cs=g.cs;
+    const q=Math.floor((mx-g.ox)/cs),r=Math.floor((my-g.oy)/cs);
+    if(q>=0&&r>=0&&q<n&&r<n){const i=r*n+q;if(P.giv[i]){g.sel=i;return;}
+      if(g.sel===i){const m=P.size[P.reg[i]];this.set(g,i,(g.v[i]+1)%(m+1));}else g.sel=i;return;}
+    if(mx>=350&&mx<=470){for(let k=1;k<=6;k++){const bx=350+((k-1)%2)*62,by=150+Math.floor((k-1)/2)*52;if(mx>=bx&&mx<bx+56&&my>=by&&my<by+46){return this.set(g,g.sel,k===6?0:k);}}
+      if(my>=310&&my<=346)this.hint(g);}},
+  update(g,dt){if(g.solvedT>0){g.solvedT-=dt;if(g.solvedT<=0)this.newPuzzle(g);return;}
+    g.time-=dt;g.pt+=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Решени камери: '+(g.lvl-1));}},
+  draw(g){A.bg('#1a1612');const P=g.P,n=P.n,cs=g.cs,ox=g.ox,oy=g.oy;
+    for(let i=0;i<n*n;i++){const r=Math.floor(i/n),q=i%n,x=ox+q*cs,y=oy+r*cs;
+      A.block(x,y,cs,OC_COL[P.reg[i]%OC_COL.length]);
+      if(i===g.sel){c.fillStyle='rgba(255,255,255,.25)';c.fillRect(x,y,cs,cs);}
+      const k=g.v[i];
+      if(k){const bad=this.bad(g,i);const s=Math.floor(cs*.42);A.block(x+cs/2-s/2,y+cs/2-s/2-2,s,OC_ORE[k]);
+        A.txt(''+k,x+cs/2,y+cs/2,Math.floor(cs*.48),bad?'#ff5252':P.giv[i]?'#ffffff':'#ffe27a','center');}
+      else{c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x+cs/2-2,y+cs/2-2,4,4);}
+      // малък брояч на размера в ъгъла на камерата
+    }
+    // граници на камерите
+    c.fillStyle='#000';
+    for(let i=0;i<n*n;i++){const r=Math.floor(i/n),q=i%n,x=ox+q*cs,y=oy+r*cs;
+      if(q===n-1||P.reg[i+1]!==P.reg[i])c.fillRect(x+cs-2,y-1,4,cs+2);
+      if(r===n-1||P.reg[i+n]!==P.reg[i])c.fillRect(x-1,y+cs-2,cs+2,4);
+      if(q===0)c.fillRect(x-2,y-1,4,cs+2);if(r===0)c.fillRect(x-1,y-2,cs+2,4);}
+    if(g.sel>=0){const x=ox+(g.sel%n)*cs,y=oy+Math.floor(g.sel/n)*cs;c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(x+2,y+2,cs-4,cs-4);}
+    // панел
+    A.txt('Пещера '+g.lvl,410,24,16,'#ffd54f','center');
+    A.txt('⏱ '+Math.ceil(g.time),410,50,18,g.time<30?'#ff5252':'#fff','center');
+    if(g.sel>=0){A.txt('Камера: '+P.size[P.reg[g.sel]]+' бл.',410,80,13,'#b9c6d6','center');A.txt('числа 1–'+P.size[P.reg[g.sel]],410,98,13,'#b9c6d6','center');}
+    for(let k=1;k<=6;k++){const bx=350+((k-1)%2)*62,by=150+Math.floor((k-1)/2)*52;
+      const dis=g.sel>=0&&k<6&&k>P.size[P.reg[g.sel]];A.block(bx,by,56,dis?'#3a3a3a':'#5a6b8c',46);A.txt(k===6?'⌫':''+k,bx+28,by+23,20,dis?'#777':'#fff','center');}
+    A.block(350,310,118,'#7a5a2a',36);A.txt('💡 Подсказка',409,328,13,'#fff','center');
+    if(g.solvedT>0){c.fillStyle='rgba(0,0,0,.55)';c.fillRect(0,150,480,60);A.txt(g.msg,240,180,18,'#7cff7c','center');}
+  }
+});
+</script>
+</body>
+</html>

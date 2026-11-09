@@ -349,7 +349,10 @@ const GAMES=[
    {"id": "halfcut", "cat": "skill", "icon": "🔪", "name": "Раздели наравно", "desc": "Един прав разрез — две еднакви половини! Колкото по-близо до 50/50, толкова повече точки.", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "driller", "cat": "action", "icon": "🪨", "name": "Цветният сондаж", "desc": "Копай надолу през шарени блокове — еднаквите изчезват заедно! Пази се от падащите блокове и не оставай без въздух.", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "ricochet", "cat": "puzzle", "icon": "🧊", "name": "Рикошет на големите", "desc": "Големите се плъзгат по леда до стената — закарай правилния голем до диаманта с малко ходове!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "ludo", "cat": "board", "icon": "🎲", "name": "Не се сърди, човече", "desc": "Хвърляй зара и прибери четирите си пула у дома преди трите робота — и ги връщай в началото!", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "ludo", "cat": "board", "icon": "🎲", "name": "Не се сърди, човече", "desc": "Хвърляй зара и прибери четирите си пула у дома преди трите робота — и ги връщай в началото!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "jockey", "cat": "action", "icon": "🐔", "name": "Пилешки рицари", "desc": "Летиш на кокошка и се бориш с копие — който е по-високо при удара, печели! Събирай яйцата, преди да се излюпят.", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "orechambers", "cat": "puzzle", "icon": "⛏️", "name": "Рудни камери", "desc": "Пъзел Сугуру: всяка камера с N блока съдържа числата от 1 до N, а еднаквите числа никога не се допират!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "mobstats", "cat": "brain", "icon": "📊", "name": "Статистика с мобове", "desc": "Мода, медиана, обхват и средно — пресметни ги от броя на мобовете всяка нощ!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

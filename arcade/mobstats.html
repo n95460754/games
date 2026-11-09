@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Статистика с мобове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📊 Статистика с мобове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 369. Статистика с мобове
+// Всяка нощ броим мобовете пред къщата. Колоните показват колко са били.
+// Играчът намира МОДАТА (най-честото число), МЕДИАНАТА (средното по големина,
+// когато ги подредиш), ОБХВАТА (най-голямо − най-малко) и СРЕДНОТО АРИТМЕТИЧНО.
+const MS_MOBS=[['зомбита','#5d9b47','#2f7fb0'],['кийпъри','#4caf50','#2e7d32'],['скелети','#d8d8d8','#a0a0a0'],['паяци','#3a2f2f','#b71c1c'],['слузи','#7ccf5a','#5aa13a'],['ендърмени','#1a1a1a','#d06cff']];
+const MS_Q={mode:['МОДАТА','кое число се среща най-често?'],med:['МЕДИАНАТА','подреди ги — кое е по средата?'],rng:['ОБХВАТА','най-голямото минус най-малкото'],avg:['СРЕДНОТО','сборът, разделен на броя']};
+A.add(choiceGame({id:'mobstats',cat:'brain',icon:'📊',name:'Статистика с мобове',desc:'Мода, медиана, обхват и средно — пресметни ги от броя на мобовете всяка нощ!',time:90,
+  help:'Виж колко моба е имало всяка нощ и избери верния отговор с 1–4 или с клик. Мода = най-честото число, медиана = средното, когато ги подредиш, обхват = най-голямо − най-малко, средно = сбор ÷ брой. 90 секунди.',
+  next(g){const lv=g.score;const types=lv<3?['mode','rng']:lv<6?['mode','rng','med']:['mode','rng','med','avg'];const t=A.pick(types);
+    const n=t==='med'?A.pick(lv<10?[5,7]:[5,7,9]):A.ri(5,Math.min(8,5+Math.floor(lv/4)));const top=Math.min(9,5+Math.floor(lv/3));let a;
+    if(t==='mode'){const m=A.ri(1,top),k=A.ri(2,3);const rest=A.shuffle([...Array(top).keys()].map(x=>x+1).filter(x=>x!==m)).slice(0,n-k);
+      if(rest.length<n-k)return this.next(g);a=A.shuffle([...Array(k).fill(m),...rest]);g.ans=m;}
+    else if(t==='avg'){let tries=0;do{a=[];for(let i=0;i<n-1;i++)a.push(A.ri(1,top));const mean=A.ri(2,top-1);const last=mean*n-a.reduce((s,x)=>s+x,0);if(last>=1&&last<=9){a.push(last);A.shuffle(a);g.ans=mean;break;}a=null;}while(++tries<200);if(!a)return this.next(g);}
+    else{a=[];for(let i=0;i<n;i++)a.push(A.ri(1,top));const s=a.slice().sort((x,y)=>x-y);g.ans=t==='med'?s[(n-1)>>1]:s[n-1]-s[0];if(t==='rng'&&g.ans===0)return this.next(g);}
+    const s=a.slice().sort((x,y)=>x-y),mean=Math.round(a.reduce((x,y)=>x+y,0)/n);
+    const pool=[s[(n-1)>>1],s[n-1]-s[0],s[n-1],s[0],mean,g.ans+1,g.ans-1,g.ans+2].filter(x=>x>=0&&x!==g.ans);
+    g.opts=opts4(g.ans,()=>pool.length&&Math.random()<.7?A.pick(pool):Math.max(0,g.ans+A.ri(-3,3)));
+    g.a=a;g.t2=t;g.mob=A.pick(MS_MOBS);g.grow=0;},
+  update(g,dt){tick(g,dt);g.grow=Math.min(1,(g.grow||0)+dt*4);},
+  pic(g){c.fillStyle='#14202e';c.fillRect(0,0,480,250);
+    for(let i=0;i<30;i++){c.fillStyle='#fff';c.fillRect((i*71)%480,(i*37)%60+20,2,2);}
+    const Q=MS_Q[g.t2];A.txt('Колко '+g.mob[0]+' имаше всяка нощ?',240,34,15,'#b9c6d6','center');
+    A.txt('Намери '+Q[0]+': '+Q[1],240,56,15,'#ffd54f','center');
+    c.fillStyle='#5aa13a';c.fillRect(0,232,480,18);c.fillStyle='#7a5233';c.fillRect(0,244,480,6);
+    const n=g.a.length,w=Math.min(46,Math.floor(440/n)),x0=240-n*w/2;
+    g.a.forEach((v,i)=>{const x=x0+i*w+4,bw=w-8,bh=16,shown=Math.ceil(v*g.grow);
+      for(let k=0;k<shown;k++){const y=232-(k+1)*bh;if(k===v-1){A.block(x,y,bw,g.mob[1],bh);c.fillStyle='#000';c.fillRect(x+bw*.25,y+5,3,3);c.fillRect(x+bw*.75-3,y+5,3,3);}
+        else A.block(x,y,bw,g.mob[2],bh);}
+      A.txt(''+v,x+bw/2,232-v*bh-12,15,'#fff','center');A.txt('н'+(i+1),x+bw/2,241,10,'#e8f5d0','center');});
+  }
+}));
+</script>
+</body>
+</html>
