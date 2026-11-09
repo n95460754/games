@@ -3825,6 +3825,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T14:58:56.488Z"
+    },
+    {
+      "id": "EMP-0202",
+      "name": "Delta Coder",
+      "level": "Senior",
+      "role": "WebGL Specialist",
+      "role_bg": "WebGL специалист",
+      "department": "Engineering",
+      "manager": "Dev-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T15:03:58.593Z"
     }
   ],
   "chairman": {
