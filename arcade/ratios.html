@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пропорции на отварите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚗️ Пропорции на отварите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 327. Пропорции на отварите
+// Всяка отвара има рецепта като „2 захар : 3 вода“. Сметни колко от съставката трябва за по-голямо котле.
+const RT_I=[['захар','#e8e8e8'],['бутилки вода','#3b7bd6'],['адска брадавица','#a8323a'],['прах от блейз','#ffb020'],['редстоун','#d8202a'],
+  ['светлинен прах','#ffe066'],['паешки очи','#8e2440'],['златни моркови','#ffd23f'],['парчета диня','#e05a4a'],['фантомни мембрани','#a8b8d8']];
+A.add(choiceGame({id:'ratios',cat:'brain',icon:'⚗️',name:'Пропорции на отварите',desc:'Рецептата е „2 : 3“ — колко съставки трябват за по-голямо котле? Пропорции с Minecraft отвари',
+  time:60,bg:'#2a1f3a',
+  help:'Рецептата показва пропорцията между двете съставки (напр. 2 захар : 3 вода). Увеличи я със същия множител и избери верния отговор с клик или клавиши 1–4. Серия от 5 верни = +5 секунди. 60 секунди.',
+  next(g){const lv=Math.min(8,2+Math.floor(g.score/4));let a=A.ri(1,5),b=A.ri(1,5);while(b===a)b=A.ri(1,5);
+    const p=A.shuffle(RT_I.slice()),k=A.ri(2,lv),t=g.score<3?0:A.ri(g.score<8?0:1,g.score<8?1:2);g.i1=p[0];g.i2=p[1];g.a=a;g.b=b;g.qt=t;
+    if(t===0){g.q1='Трябват ти '+k+' отвари.';g.q2='Колко '+g.i1[0]+'?';g.ans=a*k;}
+    else if(t===1){g.q1='Имаш '+a*k+' '+g.i1[0]+'.';g.q2='Колко '+g.i2[0]+' трябват?';g.ans=b*k;}
+    else{g.q1='Общо '+(a+b)*k+' съставки в котлето.';g.q2='Колко от тях са '+g.i2[0]+'?';g.ans=b*k;}
+    g.opts=opts4(g.ans,()=>Math.max(1,g.ans+A.pick([-2,-1,1,2])*A.pick([1,a,b])));
+    if(g.lastOk===undefined)g.lastOk=0;},
+  pick2(g,i){const ok=g.opts[i]===g.ans;flash(g,ok);if(ok){g.score++;g.st=(g.st||0)+1;if(g.st%5===0){g.time+=5;g.why='Серия '+g.st+'! +5 сек';}else g.why='';}else{g.st=0;g.why='Беше '+g.ans;}this.next(g);},
+  pic(g){for(let x=0;x<480;x+=24)A.block(x,234,24,'#4a3a5a',24);
+    // котле
+    A.block(28,150,84,'#3a3a3a',70);c.fillStyle='#7a3fbf';c.fillRect(36,154,68,14);for(let i=0;i<3;i++){c.fillStyle='rgba(200,150,255,.7)';c.fillRect(46+i*20,140-((g.t*30+i*13)%30),6,6);}
+    A.txt('Рецепта за 1 отвара:',140,40,15,'#d8c8ff');
+    const row=(n,col,y,lab)=>{for(let i=0;i<n;i++)A.block(140+i*24,y,20,col);A.txt(n+' '+lab,140+n*24+6,y+10,14,'#fff');};
+    row(g.a,g.i1[1],58,g.i1[0]);row(g.b,g.i2[1],86,g.i2[0]);A.txt('пропорция '+g.a+' : '+g.b,470,40,13,'#ffd54f','right');
+    A.txt(g.q1,140,140,17,'#fff');A.txt(g.q2,140,170,19,'#ffd54f');
+    A.txt('🔥 '+(g.st||0),470,200,13,'#ffb3a0','right');}
+}));
+</script>
+</body>
+</html>

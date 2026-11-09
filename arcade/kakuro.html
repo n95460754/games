@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Какуро</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">➕ Какуро</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 326. Какуро
+// Кръстословица с числа: попълни белите блокове с цифри 1–9 така, че всяка редица да дава сбора от подсказката, без повтаряне на цифри.
+const KK_L=[
+  ['###','#..','#..'],
+  ['####','#..#','#...','##..'],
+  ['####','#...','#...','#...'],
+  ['#####','#..##','#...#','##...','###..'],
+  ['#####','#..##','#....','##...','##..#'],
+  ['#####','#....','#....','#....','#....'],
+  ['######','#..###','#...##','##....','###...','###..#'],
+  ['######','#..#..','#.....','##..##','#.....','#..#..']];
+A.add({id:'kakuro',cat:'puzzle',icon:'➕',name:'Какуро',desc:'Кръстословица с числа: всяка редица от блокове трябва да дава сбора от подсказката, без повтаряне на цифри',
+  help:'Числото в тъмния блок е сборът на белите блокове вдясно от него (горе) или под него (долу). Използвай цифри 1–9 и не повтаряй цифра в една редица. Клик върху блок и после цифра от лентата, или стрелки + клавиши 1–9 (0/Backspace = изтрий). Всяко решено какуро дава точки и +40 секунди.',
+  start(g){g.time=150;g.n=0;g.solved=0;this.make(g);},
+  make(g){const L=KK_L[Math.min(g.n,KK_L.length-1)>=KK_L.length-1?A.ri(4,KK_L.length-1):g.n];g.n++;
+    g.R=L.length;g.Cn=L[0].length;g.w=L.map(r=>[...r].map(ch=>ch==='.'));g.v=L.map(r=>[...r].map(()=>0));g.runs=[];g.hr=[];g.vr=[];
+    for(let r=0;r<g.R;r++){g.hr.push([]);g.vr.push([]);}
+    for(let r=0;r<g.R;r++)for(let cI=0;cI<g.Cn;cI++){
+      if(!g.w[r][cI]&&cI+1<g.Cn&&g.w[r][cI+1]){const run={r,c:cI,d:0,cells:[]};for(let k=cI+1;k<g.Cn&&g.w[r][k];k++){run.cells.push([r,k]);g.hr[r][k]=run;}g.runs.push(run);}
+      if(!g.w[r][cI]&&r+1<g.R&&g.w[r+1][cI]){const run={r,c:cI,d:1,cells:[]};for(let k=r+1;k<g.R&&g.w[k][cI];k++){run.cells.push([k,cI]);g.vr[k][cI]=run;}g.runs.push(run);}}
+    g.cells=[];for(let r=0;r<g.R;r++)for(let cI=0;cI<g.Cn;cI++)if(g.w[r][cI])g.cells.push([r,cI]);
+    const sol=g.R?g.w.map(r=>r.map(()=>0)):[];
+    const ok=(r,cI,d)=>![g.hr[r][cI],g.vr[r][cI]].some(run=>run&&run.cells.some(([a,b])=>sol[a][b]===d));
+    const fill=i=>{if(i===g.cells.length)return true;const[r,cI]=g.cells[i];for(const d of A.shuffle([1,2,3,4,5,6,7,8,9]))if(ok(r,cI,d)){sol[r][cI]=d;if(fill(i+1))return true;sol[r][cI]=0;}return false;};
+    fill(0);for(const run of g.runs)run.sum=run.cells.reduce((s,[a,b])=>s+sol[a][b],0);
+    g.sel=g.cells[0].slice();g.cs=Math.min(48,Math.floor(272/g.R),Math.floor(440/g.Cn));g.ox=Math.floor((480-g.Cn*g.cs)/2);g.oy=28+Math.floor((272-g.R*g.cs)/2);g.done=0;},
+  dup(g,r,cI){const d=g.v[r][cI];return d&&[g.hr[r][cI],g.vr[r][cI]].some(run=>run&&run.cells.some(([a,b])=>(a!==r||b!==cI)&&g.v[a][b]===d));},
+  bad(g,run){const vs=run.cells.map(([a,b])=>g.v[a][b]);if(vs.includes(0))return vs.reduce((s,x)=>s+x,0)>=run.sum;return vs.reduce((s,x)=>s+x,0)!==run.sum;},
+  put(g,d){if(g.done>0)return;const[r,cI]=g.sel;g.v[r][cI]=d;A.beep(d?500+d*40:200,.04);
+    if(g.cells.every(([a,b])=>g.v[a][b]&&!this.dup(g,a,b))&&g.runs.every(run=>!this.bad(g,run))){g.solved++;g.score+=g.runs.length;g.time+=40;g.done=1.4;A.tune([660,880,1100,1320]);}},
+  move(g,dr,dc){let[r,cI]=g.sel;for(let k=0;k<8;k++){r=(r+dr+g.R)%g.R;cI=(cI+dc+g.Cn)%g.Cn;if(g.w[r][cI]){g.sel=[r,cI];return;}}},
+  key(g,k,ch){const m={ArrowUp:[-1,0],KeyW:[-1,0],ArrowDown:[1,0],KeyS:[1,0],ArrowLeft:[0,-1],KeyA:[0,-1],ArrowRight:[0,1],KeyD:[0,1]}[k];
+    if(m)return this.move(g,m[0],m[1]);if(ch>='1'&&ch<='9')return this.put(g,+ch);if(ch==='0'||k==='Backspace'||k==='Delete')this.put(g,0);},
+  click(g,mx,my){if(my>=306){const i=Math.floor((mx-5)/47);if(i>=0&&i<9)this.put(g,i+1);else if(i===9)this.put(g,0);return;}
+    const cI=Math.floor((mx-g.ox)/g.cs),r=Math.floor((my-g.oy)/g.cs);if(r>=0&&r<g.R&&cI>=0&&cI<g.Cn&&g.w[r][cI]){g.sel=[r,cI];A.beep(400,.03);}},
+  update(g,dt){if(g.done>0){g.done-=dt;if(g.done<=0)this.make(g);return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени: '+g.solved);},
+  draw(g){A.bg('#23324a');for(let y=0;y<360;y+=24)for(let x=(y/24%2)*24;x<480;x+=48){c.fillStyle='#26364f';c.fillRect(x,y,24,24);}
+    const s=g.cs;
+    for(let r=0;r<g.R;r++)for(let cI=0;cI<g.Cn;cI++){const x=g.ox+cI*s,y=g.oy+r*s;
+      if(!g.w[r][cI]){A.block(x,y,s,'#3a3a3a');}else{const sel=g.sel[0]===r&&g.sel[1]===cI;A.block(x,y,s,sel?'#fff3a8':g.done>0?'#b8f0a8':'#e8e8e8');
+        if(g.v[r][cI])A.txt(''+g.v[r][cI],x+s/2,y+s/2+1,Math.floor(s*.55),this.dup(g,r,cI)?'#d84a3a':'#2e5da8','center');}}
+    for(const run of g.runs){const x=g.ox+run.c*s,y=g.oy+run.r*s,bad=this.bad(g,run);
+      c.strokeStyle='#777';c.lineWidth=1;c.beginPath();c.moveTo(x+2,y+2);c.lineTo(x+s-2,y+s-2);c.stroke();
+      const col=bad?'#ff7a6a':'#ffd54f',f=Math.max(10,Math.floor(s*.3));
+      if(run.d===0)A.txt(''+run.sum,x+s-4,y+s*.3,f,col,'right');else A.txt(''+run.sum,x+4,y+s*.72,f,col,'left');}
+    for(let i=0;i<10;i++){A.block(5+i*47,308,44,i<9?'#5a6b8c':'#8c5a5a',44);A.txt(i<9?''+(i+1):'⌫',27+i*47,331,20,'#fff','center');}
+    A.txt('⏱ '+Math.max(0,Math.ceil(g.time)),10,14,14,g.time<15?'#f66':'#fff');A.txt('Решени: '+g.solved,470,14,14,'#ffd54f','right');
+    if(g.done>0)A.txt('Решено! +40 сек',240,14,16,'#8f8','center');}
+});
+</script>
+</body>
+</html>

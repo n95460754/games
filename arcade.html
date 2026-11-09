@@ -307,7 +307,10 @@ const GAMES=[
   {"id": "numwords", "cat": "brain", "icon": "🔤", "name": "Числа с думи", "desc": "Прочети числото, написано с думи, и избери правилния запис с цифри — внимавай с нулите!", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "shulker", "cat": "action", "icon": "🟪", "name": "Шулкерски куршуми", "desc": "Шулкерите стрелят по теб с насочващи се куршуми — бягай, събирай изумруди и блъскай куршумите един в друг!", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "sheepswap", "cat": "puzzle", "icon": "🐑", "name": "Размяната на овцете", "desc": "Белите овце вървят само надясно, черните — само наляво. Прескачай и размени двете стада!", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "venn", "cat": "brain", "icon": "⭕", "name": "Кръговете на Вен", "desc": "Две правила, два кръга — сложи числото в левия, десния, общата част или извън кръговете", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "venn", "cat": "brain", "icon": "⭕", "name": "Кръговете на Вен", "desc": "Две правила, два кръга — сложи числото в левия, десния, общата част или извън кръговете", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "orehook", "cat": "skill", "icon": "🪝", "name": "Рудна кука", "desc": "Хвърляй люлеещата се кука и вади злато и диаманти — стигни целта преди времето да свърши", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "kakuro", "cat": "puzzle", "icon": "➕", "name": "Какуро", "desc": "Кръстословица с числа: всяка редица от блокове трябва да дава сбора от подсказката, без повтаряне на цифри", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "ratios", "cat": "brain", "icon": "⚗️", "name": "Пропорции на отварите", "desc": "Рецептата е „2 : 3“ — колко съставки трябват за по-голямо котле? Пропорции с Minecraft отвари", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

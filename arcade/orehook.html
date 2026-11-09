@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рудна кука</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪝 Рудна кука</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 325. Рудна кука
+// Куката се люлее над мината. Хвърли я в точния момент и издърпай злато, диаманти и мистериозни торби.
+const OH_T={
+  gold:{s:16,c:'#ffd23f',v:[50,90],w:1.5},big:{s:34,c:'#e8b820',v:[220,320],w:4.2},gem:{s:12,c:'#4de8f5',v:[400,520],w:.7},
+  stone:{s:24,c:'#7d7d7d',v:[10,20],w:3.2},rock:{s:34,c:'#666',v:[20,30],w:5},tnt:{s:20,c:'#d84a3a',v:[0,0],w:1},bag:{s:18,c:'#9a6a3a',v:[20,600],w:1.4}};
+A.add({id:'orehook',cat:'skill',icon:'🪝',name:'Рудна кука',desc:'Хвърляй люлеещата се кука и вади злато и диаманти — стигни целта преди времето да свърши',
+  help:'Куката се люлее. Space / ↓ / клик или докосване = хвърли я. Голямото злато носи много, но се дърпа бавно. Диамантите са леки и скъпи, камъните са тежки и евтини, ❓ торбите са изненада. TNT взривява всичко около себе си! Събери целта до края на времето, за да минеш на следващото ниво.',
+  start(g){g.lvl=0;g.goal=0;g.pops=[];g.boom=null;this.level(g);},
+  level(g){g.lvl++;g.goal+=250+g.lvl*150;g.time=60;g.h={a:0,dir:1,len:22,st:'swing',it:null};g.msg='Ниво '+g.lvl+' · цел 💰'+g.goal;g.msgT=2.2;
+    const bag=['gold','gold','gold','gold','big','stone','stone','rock','bag','tnt'];
+    for(let i=0;i<Math.min(4,1+Math.floor(g.lvl/2));i++)bag.push('gem');if(g.lvl>1)bag.push('big','tnt','stone');if(g.lvl>3)bag.push('rock','bag','gem');
+    g.it=[];for(const t of bag){const T=OH_T[t];for(let k=0;k<60;k++){const x=A.ri(20+T.s,460-T.s),y=A.ri(130+T.s/2,345-T.s/2);
+      if(g.it.every(o=>Math.hypot(o.x-x,o.y-y)>(o.s+T.s)/2+8)){g.it.push({t,x,y,s:T.s,v:A.ri(T.v[0],T.v[1])});break;}}}},
+  fire(g){if(g.h.st==='swing'){g.h.st='out';A.beep(300,.06);}},
+  key(g,k){if(k==='Space'||k==='ArrowDown'||k==='KeyS')this.fire(g);},
+  click(g){this.fire(g);},
+  end(g){if(g.score>=g.goal){A.tune([660,880,1100]);this.level(g);}else A.over(g,'Не стигна целта 💰'+g.goal);},
+  update(g,dt){const h=g.h;g.msgT-=dt;g.time-=dt;if(g.time<=0&&h.st==='swing')return this.end(g);
+    g.pops=g.pops.filter(p=>(p.t-=dt)>0);if(g.boom&&(g.boom.t-=dt)<=0)g.boom=null;
+    if(h.st==='swing'){h.a+=h.dir*dt*(1.5+g.lvl*.08);if(h.a>1.25){h.a=1.25;h.dir=-1;}if(h.a<-1.25){h.a=-1.25;h.dir=1;}return;}
+    const tx=240+Math.sin(h.a)*h.len,ty=52+Math.cos(h.a)*h.len;
+    if(h.st==='out'){h.len+=300*dt;
+      if(tx<0||tx>480||ty>360){h.st='back';return;}
+      for(const o of g.it)if(Math.hypot(o.x-tx,o.y-ty)<o.s/2+5){
+        if(o.t==='tnt'){g.boom={x:o.x,y:o.y,t:.5};A.beep(80,.4,'sawtooth',.08);g.it=g.it.filter(q=>Math.hypot(q.x-o.x,q.y-o.y)>80);h.st='back';}
+        else{h.it=o;g.it=g.it.filter(q=>q!==o);h.st='back';A.beep(200,.05);}break;}
+      return;}
+    h.len-=(h.it?380/OH_T[h.it.t].w:450)*dt;
+    if(h.it){h.it.x=tx;h.it.y=ty+h.it.s/2;}
+    if(h.len<=22){h.len=22;h.st='swing';
+      if(h.it){const v=h.it.v;g.score+=v;g.pops.push({x:240,y:40,s:'+'+v,t:1});A.beep(v>200?990:660,.1,'triangle');h.it=null;}
+      if(g.time<=0||!g.it.some(o=>o.t!=='tnt'))this.end(g);}},
+  item(o){const x=o.x-o.s/2,y=o.y-o.s/2;
+    if(o.t==='gem'){c.fillStyle='#4de8f5';c.beginPath();c.moveTo(o.x,y-2);c.lineTo(x+o.s+2,o.y);c.lineTo(o.x,y+o.s+2);c.lineTo(x-2,o.y);c.fill();c.fillStyle='#fff';c.fillRect(o.x-2,o.y-4,3,3);}
+    else{A.block(x,y,o.s,OH_T[o.t].c);
+      if(o.t==='gold'||o.t==='big'){c.fillStyle='#fff6b0';c.fillRect(x+o.s*.25,y+o.s*.25,o.s*.2,o.s*.2);}
+      if(o.t==='stone'||o.t==='rock'){c.fillStyle='#555';c.fillRect(x+o.s*.55,y+o.s*.5,o.s*.25,o.s*.2);}
+      if(o.t==='tnt'){c.fillStyle='#fff';c.fillRect(x,o.y-4,o.s,8);A.txt('TNT',o.x,o.y,8,'#d84a3a','center');}
+      if(o.t==='bag')A.txt('?',o.x,o.y+1,13,'#ffd54f','center');}},
+  draw(g){const h=g.h;A.bg(C.sky);c.fillStyle='#4f3420';c.fillRect(0,70,480,290);
+    for(let y=80;y<360;y+=20)for(let x=0;x<480;x+=20){const n=(x*7+y*13+g.lvl*5)%11;if(n<3){c.fillStyle=n?'#5c3d26':'#463020';c.fillRect(x,y,20,20);}}
+    for(let x=0;x<480;x+=20)A.block(x,60,20,C.grass,10);
+    // миньор
+    A.block(226,22,28,'#2e7dd1',22);A.block(230,6,20,'#e0b080',18);c.fillStyle='#222';c.fillRect(234,12,4,4);c.fillRect(242,12,4,4);A.block(228,2,24,'#7a5233',6);
+    for(const o of g.it)this.item(o);
+    const tx=240+Math.sin(h.a)*h.len,ty=52+Math.cos(h.a)*h.len;
+    c.strokeStyle='#222';c.lineWidth=2;c.beginPath();c.moveTo(240,48);c.lineTo(tx,ty);c.stroke();
+    if(h.it)this.item(h.it);
+    c.save();c.translate(tx,ty);c.rotate(-h.a);c.fillStyle='#bbb';c.fillRect(-8,0,16,4);c.fillRect(-8,0,4,10);c.fillRect(4,0,4,10);c.restore();
+    if(g.boom){c.fillStyle='rgba(255,160,40,'+(g.boom.t*1.6)+')';c.beginPath();c.arc(g.boom.x,g.boom.y,80*(1.2-g.boom.t),0,7);c.fill();}
+    for(const p of g.pops)A.txt(p.s,p.x+40,p.y-(1-p.t)*20,16,'#ffd54f','left');
+    A.txt('💰 '+g.score+' / '+g.goal,10,14,14,g.score>=g.goal?'#8f8':'#fff');A.txt('⏱ '+Math.max(0,Math.ceil(g.time)),470,14,14,g.time<10?'#f66':'#fff','right');
+    A.txt('Ниво '+g.lvl,470,34,12,'#fff','right');if(g.msgT>0)A.txt(g.msg,240,110,20,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

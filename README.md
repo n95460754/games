@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**334 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 324 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**337 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 327 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-334-5aa13a)
+![Games](https://img.shields.io/badge/games-337-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 324 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 327 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -469,8 +469,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 322 | 🟪 Shulker Bullets (Шулкерски куршуми) | [`shulker.html`](arcade/shulker.html) | Dodge arena in the End: shulker boxes on the walls pop open and fire slow homing bullets — run with arrows/WASD or hold your finger, grab emeralds (+1) and trick two bullets into crashing into each other (+2); more shulkers wake up over time, 3 hearts |
 | 323 | 🐑 Sheep Swap (Размяната на овцете) | [`sheepswap.html`](arcade/sheepswap.html) | The classic "frogs and toads" puzzle with sheep: white sheep only walk right, black only left, each can step into the gap or jump over one sheep — swap the two flocks; levels grow from 1+1 to 7+7 sheep, getting stuck costs a heart |
 | 324 | ⭕ Venn Circles (Кръговете на Вен) | [`venn.html`](arcade/venn.html) | Two rules, two overlapping circles ("even" and "multiple of 3", "has a 7", "perfect square"…) — drop each number into left only, both, right only or outside; rules change every 6 numbers, 5 in a row = +5 seconds |
+| 325 | 🪝 Ore Hook (Рудна кука) | [`orehook.html`](arcade/orehook.html) | Gold-miner style: the hook swings over the mine, throw it at the right moment to pull up gold, diamonds and mystery bags — big gold and stones are heavy and slow, TNT blows up everything nearby; reach the money goal before the 60 seconds run out to unlock the next level |
+| 326 | ➕ Kakuro (Какуро) | [`kakuro.html`](arcade/kakuro.html) | A number crossword: fill the white blocks with digits 1–9 so every run adds up to its clue, with no repeated digit in a run; random puzzles from 3×3 up to 6×6, wrong sums turn red, every solved grid gives points and +40 seconds |
+| 327 | ⚗️ Potion Ratios (Пропорции на отварите) | [`ratios.html`](arcade/ratios.html) | Ratios with Minecraft potions: the recipe is "2 sugar : 3 water" — how much is needed for 4 potions, if you have 8 sugar, or out of 25 ingredients in total? Pick 1 of 4 answers, 5 in a row = +5 seconds |
 
-All 324 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 327 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -498,8 +501,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–323
-│   └── venn.html           # 324. Venn Circles
+│   ├── ...                 # games 51–326
+│   └── ratios.html         # 327. Potion Ratios
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
