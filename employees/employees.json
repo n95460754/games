@@ -2419,6 +2419,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T08:46:16.524Z"
+    },
+    {
+      "id": "EMP-0128",
+      "name": "Zen Knight",
+      "level": "Lead",
+      "role": "DevOps Engineer",
+      "role_bg": "DevOps инженер",
+      "department": "Operations",
+      "manager": "DevOps-Master-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T08:51:18.368Z"
     }
   ],
   "chairman": {
