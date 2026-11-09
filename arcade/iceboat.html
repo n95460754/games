@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лодка по леда</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛶 Лодка по леда</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 307. Лодка по леда
+const IB_ICE=[];for(let i=0;i<24*18;i++)IB_ICE.push(Math.random());
+A.add({id:'iceboat',cat:'action',icon:'🛶',name:'Лодка по леда',desc:'Плъзгай се с лодка по леда, минавай през флаговете и не губи време',
+  help:'Стрелки / WASD — ← → завиване, ↑ газ, ↓ спирачка. Мишка / пръст: задръж и лодката плава към показалеца. Лодката се пързаля по леда — завивай рано! Мини през жълтия флаг: +1 точка и +време. Изумрудът дава +2 точки и +1 сек. Блоковете от плътен лед те отблъскват.',
+  start(g){g.x=240;g.y=200;g.a=-Math.PI/2;g.vx=0;g.vy=0;g.time=35;g.walls=[];g.parts=[];g.emer=null;g.et=7;g.bump=0;
+    let n=0;while(g.walls.length<9&&n++<400){const w={x:A.ri(1,21)*20,y:A.ri(3,15)*20,w:40,h:40};
+      if(Math.hypot(w.x+20-g.x,w.y+20-g.y)<90)continue;
+      if(g.walls.some(o=>A.hit({x:w.x-40,y:w.y-40,w:120,h:120},o)))continue;g.walls.push(w);}
+    this.newGate(g);},
+  free(g,x,y,r){if(x<r+4||x>476-r||y<34+r||y>356-r)return false;
+    for(const w of g.walls)if(x>w.x-r&&x<w.x+w.w+r&&y>w.y-r&&y<w.y+w.h+r)return false;return true;},
+  spot(g,r,far){let x,y,n=0;do{x=A.rnd(36,444);y=A.rnd(56,334);n++;}while(n<300&&(!this.free(g,x,y,r)||Math.hypot(x-g.x,y-g.y)<far));return {x,y};},
+  newGate(g){const p=this.spot(g,26,140);g.gate={x:p.x,y:p.y,r:22,w:0};},
+  click(g,x,y){},
+  update(g,dt){
+    g.time-=dt;g.bump-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! '+g.score+' точки');return;}
+    let turn=0,th=0;
+    if(A.keys.ArrowLeft||A.keys.KeyA)turn--;if(A.keys.ArrowRight||A.keys.KeyD)turn++;
+    if(A.keys.ArrowUp||A.keys.KeyW)th=1;if(A.keys.ArrowDown||A.keys.KeyS)th=-.6;
+    if(A.mouse.down&&!turn&&!th){const dx=A.mouse.x-g.x,dy=A.mouse.y-g.y;
+      if(Math.hypot(dx,dy)>14){let d=Math.atan2(dy,dx)-g.a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+        turn=A.clamp(d*2.5,-1,1);th=Math.abs(d)<1.4?1:.25;}}
+    g.a+=turn*3.6*dt;
+    const ca=Math.cos(g.a),sa=Math.sin(g.a);
+    let fw=g.vx*ca+g.vy*sa,sd=-g.vx*sa+g.vy*ca;
+    fw+=(th>0?270:th<0?-320:0)*Math.abs(th)*dt;if(th<0&&fw<-60)fw=-60;
+    fw*=Math.pow(.32,dt);sd*=Math.pow(.12,dt);   // ледът почти не спира страничното плъзгане
+    g.vx=fw*ca-sd*sa;g.vy=fw*sa+sd*ca;
+    const sp=Math.hypot(g.vx,g.vy);
+    // движение и сблъсъци поотделно по x и y
+    const nx=g.x+g.vx*dt;if(this.free(g,nx,g.y,9))g.x=nx;else{this.hitWall(g,Math.abs(g.vx));g.vx=-g.vx*.45;}
+    const ny=g.y+g.vy*dt;if(this.free(g,g.x,ny,9))g.y=ny;else{this.hitWall(g,Math.abs(g.vy));g.vy=-g.vy*.45;}
+    if(sp>70&&Math.random()<sp/400)g.parts.push({x:g.x-ca*12+A.rnd(-3,3),y:g.y-sa*12+A.rnd(-3,3),vx:A.rnd(-15,15),vy:A.rnd(-15,15),t:.45,col:'#f4fbff'});
+    // флаг
+    const gt=g.gate;gt.w+=dt*4;
+    if(Math.hypot(gt.x-g.x,gt.y-g.y)<gt.r+6){g.score++;g.time+=Math.max(1.6,3-g.score*.05);A.tune([660,880,1175]);
+      for(let i=0;i<12;i++)g.parts.push({x:gt.x,y:gt.y,vx:A.rnd(-90,90),vy:A.rnd(-90,90),t:.6,col:'#ffd23f'});this.newGate(g);}
+    // изумруд
+    g.et-=dt;if(!g.emer&&g.et<=0){const p=this.spot(g,14,60);g.emer={x:p.x,y:p.y,t:7};}
+    if(g.emer){g.emer.t-=dt;if(g.emer.t<=0){g.emer=null;g.et=A.rnd(6,11);}
+      else if(Math.hypot(g.emer.x-g.x,g.emer.y-g.y)<18){g.score+=2;g.time+=1;A.tune([880,1175,1480]);
+        for(let i=0;i<10;i++)g.parts.push({x:g.emer.x,y:g.emer.y,vx:A.rnd(-80,80),vy:A.rnd(-80,80),t:.5,col:'#3ddc84'});g.emer=null;g.et=A.rnd(6,11);}}
+    for(const q of g.parts){q.x+=q.vx*dt;q.y+=q.vy*dt;q.t-=dt;}
+    g.parts=g.parts.filter(q=>q.t>0);if(g.parts.length>150)g.parts.splice(0,g.parts.length-150);
+  },
+  hitWall(g,v){if(v>60&&g.bump<=0){g.bump=.2;A.beep(140,.08,'square',.04);
+    for(let i=0;i<5;i++)g.parts.push({x:g.x,y:g.y,vx:A.rnd(-60,60),vy:A.rnd(-60,60),t:.35,col:'#bfe3ff'});}},
+  draw(g){
+    // лед
+    for(let j=0;j<18;j++)for(let i=0;i<24;i++){const v=IB_ICE[j*24+i];c.fillStyle=v<.45?'#a9d3f5':v<.85?'#b6dbf7':'#c7e5fa';c.fillRect(i*20,j*20,20,20);
+      if(v>.93){c.fillStyle='rgba(255,255,255,.6)';c.fillRect(i*20+4,j*20+6,8,2);c.fillRect(i*20+10,j*20+12,6,2);}}
+    // сняг по ръба
+    c.fillStyle='#f2f7fc';c.fillRect(0,30,480,4);c.fillRect(0,356,480,4);c.fillRect(0,30,4,330);c.fillRect(476,30,4,330);
+    // блокове плътен лед
+    for(const w of g.walls){A.block(w.x,w.y,20,'#7fa8e6');A.block(w.x+20,w.y,20,'#8db4ec');A.block(w.x,w.y+20,20,'#8db4ec');A.block(w.x+20,w.y+20,20,'#7fa8e6');}
+    // флаг
+    const gt=g.gate,pulse=Math.sin(gt.w)*3;
+    c.strokeStyle='rgba(255,210,63,.7)';c.lineWidth=3;c.strokeRect(gt.x-gt.r-pulse,gt.y-gt.r-pulse,(gt.r+pulse)*2,(gt.r+pulse)*2);
+    c.fillStyle='#6b4a2b';c.fillRect(gt.x-2,gt.y-20,4,26);A.block(gt.x+2,gt.y-20,16,'#ffd23f',10);
+    if(g.emer&&(g.emer.t>2||Math.floor(g.t*8)%2)){const e=g.emer,b=Math.sin(g.t*5)*2;A.block(e.x-7,e.y-7+b,14,'#2ecc71');c.fillStyle='#b9ffd6';c.fillRect(e.x-3,e.y-3+b,3,3);}
+    for(const q of g.parts){c.fillStyle=q.col;c.globalAlpha=Math.max(0,q.t*2);c.fillRect(q.x-2,q.y-2,4,4);}c.globalAlpha=1;
+    // стрелка към флага, ако е далеч
+    const dx=gt.x-g.x,dy=gt.y-g.y,dd=Math.hypot(dx,dy);
+    if(dd>90){const ax=g.x+dx/dd*30,ay=g.y+dy/dd*30;c.fillStyle='rgba(255,180,0,.8)';c.fillRect(ax-3,ay-3,6,6);}
+    // лодка
+    c.save();c.translate(g.x,g.y);c.rotate(g.a);
+    c.fillStyle='#5a3b1f';c.fillRect(-14,-8,28,16);c.fillStyle='#9a6a3a';c.fillRect(-12,-6,24,12);c.fillStyle='#7a5233';c.fillRect(-10,-4,20,8);
+    c.fillStyle='#5a3b1f';c.fillRect(12,-5,4,10);
+    // гребла
+    const r=Math.sin(g.t*10)*(Math.hypot(g.vx,g.vy)>20?3:0);c.fillStyle='#c9a26b';c.fillRect(-2+r,-13,3,6);c.fillRect(-2-r,7,3,6);
+    c.restore();
+    // героят в лодката (не се върти)
+    A.block(g.x-5,g.y-7,10,'#c99a72',8);c.fillStyle='#3a2a1a';c.fillRect(g.x-5,g.y-7,10,3);
+    // горна лента
+    c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,0,480,30);
+    A.txt('⏱ '+g.time.toFixed(1),8,15,15,g.time<8?'#ff7b7b':'#fff');
+    A.txt('🚩 Флагове и изумруди',240,15,13,'#bfe3ff','center');
+    A.txt('Скорост '+Math.round(Math.hypot(g.vx,g.vy)/2),472,15,13,'#ffd54f','right');
+  }
+});
+</script>
+</body>
+</html>

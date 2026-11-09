@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Логически детектив</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🕵️ Логически детектив</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 309. Логически детектив
+const LG_NAMES=['Стив','Алекс','Зури','Кай'],LG_SKIN=['#2f9fb5','#5aa13a','#8e24aa','#d84a3a'];
+const LG_PET=[['вълк','#d8d8d8'],['котка','#f0a030'],['папагал','#e53935'],['кон','#8d5a2b']];
+const LG_ORE=[['диаманти','#4de8f5'],['злато','#ffd23f'],['изумруди','#2ecc71'],['желязо','#d8a07a']];
+function lgBox(x,y,w,h,col){c.fillStyle=col;c.fillRect(x,y,w,h);c.fillStyle='rgba(255,255,255,.22)';c.fillRect(x,y,w,3);c.fillRect(x,y,3,h);
+  c.fillStyle='rgba(0,0,0,.28)';c.fillRect(x,y+h-3,w,3);c.fillRect(x+w-3,y,3,h);}
+function lgPerms(n){const out=[],a=[...Array(n).keys()];
+  (function rec(k){if(k===n){out.push(a.slice());return;}for(let i=k;i<n;i++){[a[k],a[i]]=[a[i],a[k]];rec(k+1);[a[k],a[i]]=[a[i],a[k]];}})(0);return out;}
+A.add({id:'logicgrid',cat:'brain',icon:'🕵️',name:'Логически детектив',desc:'Прочети уликите и познай кой миньор какъв любимец има и каква руда копае',
+  help:'Всеки миньор има различен любимец и копае различна руда. Прочети уликите и попълни таблицата. Клик / докосване по клетка — следващ избор (десен клик — предишен). Стрелки / WASD — курсор, Space — следващ избор, 1–4 — избери направо, Enter или бутонът ✔ — провери. Вярно: +1 точка (с 4 миньори +2) и +15 сек. Грешно: −10 сек. 3 минути.',
+  start(g){g.time=180;g.solved=0;g.win=0;g.msg='';g.mt=0;this.next(g);},
+  ok(cl,P,O){if(cl.t==='P')return (P[cl.i]===cl.p)===cl.v;if(cl.t==='O')return (O[cl.i]===cl.o)===cl.v;
+    const j=P.indexOf(cl.p);return (O[j]===cl.o)===cl.v;},
+  next(g){const n=g.solved<2?3:4;g.n=n;const PS=lgPerms(n);
+    for(let tries=0;tries<40;tries++){
+      const P=A.pick(PS),O=A.pick(PS),soft=[],pos=[];
+      for(let i=0;i<n;i++)for(let k=0;k<n;k++){
+        (P[i]===k?pos:soft).push({t:'P',i,p:k,v:P[i]===k});(O[i]===k?pos:soft).push({t:'O',i,o:k,v:O[i]===k});}
+      for(let p=0;p<n;p++)for(let o=0;o<n;o++)soft.push({t:'L',p,o,v:O[P.indexOf(p)]===o});
+      const order=A.shuffle(soft).concat(A.shuffle(pos));
+      let alive=[];for(const a of PS)for(const b of PS)alive.push([a,b]);
+      const chosen=[];
+      for(const cl of order){if(alive.length===1)break;const na=alive.filter(x=>this.ok(cl,x[0],x[1]));if(na.length<alive.length){chosen.push(cl);alive=na;}}
+      // махни излишните улики
+      for(const cl of A.shuffle(chosen.slice())){const rest=chosen.filter(x=>x!==cl);let k=0;
+        for(const a of PS){for(const b of PS)if(rest.every(x=>this.ok(x,a,b)))k++;if(k>1)break;}
+        if(k===1)chosen.splice(chosen.indexOf(cl),1);}
+      g.P=P;g.O=O;g.clues=A.shuffle(chosen).map(x=>this.text(x));
+      if(chosen.length<=(n===3?6:10))break;}
+    g.aP=new Array(n).fill(-1);g.aO=new Array(n).fill(-1);g.cr=0;g.cc=0;
+    g.y0=Math.max(110,48+g.clues.length*17+6);g.rh=Math.min(40,Math.floor((352-g.y0)/n));},
+  text(cl){if(cl.t==='P')return LG_NAMES[cl.i]+(cl.v?' има ':' няма ')+LG_PET[cl.p][0]+'.';
+    if(cl.t==='O')return LG_NAMES[cl.i]+(cl.v?' копае ':' не копае ')+LG_ORE[cl.o][0]+'.';
+    return 'Който има '+LG_PET[cl.p][0]+','+(cl.v?' копае ':' не копае ')+LG_ORE[cl.o][0]+'.';},
+  cyc(g,r,col,d){const a=col?g.aO:g.aP,n=g.n;a[r]=((a[r]+1+(d<0?n:1))%(n+1))-1;A.beep(600,.03,'triangle',.04);},
+  check(g){const n=g.n;if(g.aP.includes(-1)||g.aO.includes(-1)){g.msg='Попълни всички клетки!';g.mt=1.6;A.beep(300,.1);return;}
+    let bad=0;for(let i=0;i<n;i++){if(g.aP[i]!==g.P[i])bad++;if(g.aO[i]!==g.O[i])bad++;}
+    if(!bad){g.score+=n-2;g.solved++;g.time+=15;g.win=1.3;g.msg='Браво, детективе! +'+(n-2);g.mt=1.3;A.tune([523,659,784,1047]);}
+    else{g.time-=10;g.msg=bad+' грешни клетки (−10 сек)';g.mt=1.8;flash(g,false);}},
+  key(g,k,ch){if(g.win>0)return;const n=g.n;
+    if(k==='ArrowUp'||k==='KeyW')g.cr=(g.cr+n-1)%n;else if(k==='ArrowDown'||k==='KeyS')g.cr=(g.cr+1)%n;
+    else if(k==='ArrowLeft'||k==='KeyA'||k==='ArrowRight'||k==='KeyD')g.cc=1-g.cc;
+    else if(k==='Space')this.cyc(g,g.cr,g.cc,1);
+    else if(k==='Enter'||k==='NumpadEnter')this.check(g);
+    else{const d=+ch;if(d>=1&&d<=n){(g.cc?g.aO:g.aP)[g.cr]=d-1;A.beep(600,.03,'triangle',.04);}}},
+  click(g,x,y,b){if(g.win>0)return;const n=g.n;
+    if(y<g.y0||y>g.y0+n*g.rh)return;
+    if(x>=398){this.check(g);return;}
+    const r=Math.floor((y-g.y0)/g.rh);if(r<0||r>=n)return;
+    const col=x>=250&&x<392?1:x>=104&&x<246?0:-1;if(col<0)return;g.cr=r;g.cc=col;this.cyc(g,r,col,b===2?-1:1);},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.mt-=dt;
+    if(g.win>0){g.win-=dt;if(g.win<=0)this.next(g);return;}
+    g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Решени загадки: '+g.solved);}},
+  draw(g){
+    // каменен фон
+    for(let j=0;j<9;j++)for(let i=0;i<12;i++){c.fillStyle=(i*7+j*3)%5?'#5f5f5f':'#585858';c.fillRect(i*40,j*40,40,40);}
+    // лист с улики
+    const ch=g.clues.length*17+10;lgBox(6,36,468,ch,'#e8dcb5');
+    g.clues.forEach((t,i)=>{c.font='bold 13px Consolas,monospace';c.textAlign='left';c.textBaseline='middle';c.fillStyle='#3a2a1a';c.fillText((i+1)+'. '+t,16,48+i*17);});
+    const n=g.n,y0=g.y0,rh=g.rh;
+    for(let r=0;r<n;r++){const y=y0+r*rh;
+      // миньор
+      A.block(8,y+2,rh-4,'#c99a72',Math.floor((rh-4)*.5));c.fillStyle='#3a2a1a';c.fillRect(8,y+2,rh-4,4);
+      A.block(8,y+2+Math.floor((rh-4)*.5),rh-4,LG_SKIN[r],rh-4-Math.floor((rh-4)*.5));
+      A.txt(LG_NAMES[r],14+rh,y+rh/2,14,'#fff');
+      for(let col=0;col<2;col++){const x=col?250:104,v=col?g.aO[r]:g.aP[r],L=col?LG_ORE:LG_PET,arr=col?g.aO:g.aP;
+        const dup=v>=0&&arr.filter(z=>z===v).length>1,show=g.win>0;
+        lgBox(x,y+2,142,rh-4,show?'#3f7a3f':'#4a5670');
+        if(v>=0){A.block(x+6,y+rh/2-7,14,L[v][1]);A.txt(L[v][0],x+26,y+rh/2,14,dup?'#ffab40':'#fff');}
+        else A.txt(col?'? руда':'? любимец',x+10,y+rh/2,13,'#aab4c8');
+        if(g.cr===r&&g.cc===col&&g.win<=0){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(x+1,y+3,140,rh-6);}}}
+    lgBox(398,y0+2,76,n*rh-4,'#2e7d32');A.txt('✔',436,y0+n*rh/2-8,22,'#fff','center');A.txt('Провери',436,y0+n*rh/2+14,11,'#fff','center');
+    // горна лента
+    c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,0,480,30);
+    A.txt('⏱ '+Math.ceil(g.time),8,15,15,g.time<20?'#ff7b7b':'#fff');
+    A.txt('Загадка '+(g.solved+1)+' · '+n+' миньори',240,15,13,'#ffd54f','center');
+    if(g.mt>0){c.fillStyle='rgba(0,0,0,.75)';c.fillRect(90,150,300,40);A.txt(g.msg,240,170,15,g.win>0?'#9be89b':'#ffab40','center');}
+    drawFlash(g);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ограда за овцете</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐑 Ограда за овцете</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 308. Ограда за овцете (Slitherlink)
+A.add({id:'fenceloop',cat:'puzzle',icon:'🐑',name:'Ограда за овцете',desc:'Построй една затворена ограда — числата казват колко парчета ограда има около всяко поле',
+  help:'Построй ЕДНА затворена ограда без разклонения и пресичания. Числото в поле казва колко от 4-те му страни са ограда. Клик / докосване по линия между колчетата — ограда → ✕ → празно (десен клик — направо ✕). Стрелки / WASD — разхождаш молива по колчетата и строиш/махаш ограда, X + стрелка — ✕. N или бутонът „Друг“ — нов пъзел. Пъзел = точки според размера, +20 сек. 4 минути.',
+  start(g){g.time=240;g.lv=0;g.win=0;this.level(g);},
+  level(g){const L=g.lv;g.N=L<2?4:L<4?5:L<6?6:7;g.show=L<2?1:L<4?.85:L<6?.75:.68;
+    const N=g.N;g.s=Math.floor(Math.min(300/N,300/N));g.ox=Math.floor((480-N*g.s)/2);g.oy=Math.floor(40+(310-N*g.s)/2);
+    this.gen(g);g.h=[];for(let r=0;r<=N;r++)g.h.push(new Array(N).fill(0));
+    g.v=[];for(let r=0;r<N;r++)g.v.push(new Array(N+1).fill(0));g.pr=0;g.pc=0;g.xm=false;g.win=0;},
+  m(R,N,r,c){return r<0||c<0||r>=N||c>=N?0:R[r][c];},
+  valid(R,N){
+    for(let r=0;r<=N;r++)for(let c=0;c<=N;c++){const a=this.m(R,N,r-1,c-1),b=this.m(R,N,r-1,c),d=this.m(R,N,r,c-1),e=this.m(R,N,r,c);if(a===e&&b===d&&a!==b)return false;}
+    // всички външни полета трябва да са свързани с края (без дупки)
+    const P=N+2,seen=new Uint8Array(P*P),st=[0];seen[0]=1;let cnt=0,tot=0;
+    for(let r=-1;r<=N;r++)for(let c=-1;c<=N;c++)if(!this.m(R,N,r,c))tot++;
+    while(st.length){const k=st.pop();cnt++;const r=Math.floor(k/P)-1,c=k%P-1;
+      for(const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]]){const rr=r+dr,cc=c+dc;if(rr<-1||cc<-1||rr>N||cc>N)continue;const kk=(rr+1)*P+cc+1;
+        if(!seen[kk]&&!this.m(R,N,rr,cc)){seen[kk]=1;st.push(kk);}}}
+    return cnt===tot;},
+  gen(g){const N=g.N;let R;
+    for(let t=0;t<300;t++){R=[];for(let r=0;r<N;r++)R.push(new Array(N).fill(0));
+      const target=Math.round(N*N*A.rnd(.42,.62));R[A.ri(0,N-1)][A.ri(0,N-1)]=1;let cnt=1,guard=0;
+      while(cnt<target&&guard++<3000){const r=A.ri(0,N-1),c=A.ri(0,N-1);if(R[r][c])continue;
+        if(!(this.m(R,N,r-1,c)||this.m(R,N,r+1,c)||this.m(R,N,r,c-1)||this.m(R,N,r,c+1)))continue;
+        R[r][c]=1;if(this.valid(R,N))cnt++;else R[r][c]=0;}
+      if(cnt>=target*.8&&this.valid(R,N))break;}
+    g.R=R;g.cl=[];
+    for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++){const me=R[r][c];let k=0;
+      for(const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]])if(this.m(R,N,r+dr,c+dc)!==me)k++;
+      row.push(Math.random()<g.show?k:-1);}g.cl.push(row);}},
+  cnt(g,r,c){return (g.h[r][c]===1)+(g.h[r+1][c]===1)+(g.v[r][c]===1)+(g.v[r][c+1]===1);},
+  deg(g,r,c){const N=g.N;let d=0;if(c>0&&g.h[r][c-1]===1)d++;if(c<N&&g.h[r][c]===1)d++;if(r>0&&g.v[r-1][c]===1)d++;if(r<N&&g.v[r][c]===1)d++;return d;},
+  check(g){const N=g.N;
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(g.cl[r][c]>=0&&this.cnt(g,r,c)!==g.cl[r][c])return;
+    let start=null,n2=0;
+    for(let r=0;r<=N;r++)for(let c=0;c<=N;c++){const d=this.deg(g,r,c);if(d!==0&&d!==2)return;if(d===2){n2++;if(!start)start=[r,c];}}
+    if(!start)return;
+    // обхождане на оградата — трябва да е една затворена линия
+    const seen=new Set([start[0]*99+start[1]]),st=[start];
+    while(st.length){const [r,c]=st.pop();const nb=[];
+      if(c>0&&g.h[r][c-1]===1)nb.push([r,c-1]);if(c<N&&g.h[r][c]===1)nb.push([r,c+1]);
+      if(r>0&&g.v[r-1][c]===1)nb.push([r-1,c]);if(r<N&&g.v[r][c]===1)nb.push([r+1,c]);
+      for(const q of nb){const k=q[0]*99+q[1];if(!seen.has(k)){seen.add(k);st.push(q);}}}
+    if(seen.size!==n2)return;
+    // реши: овцете са вътре
+    g.inside=[];for(let r=0;r<N;r++){const row=[];let inn=false;for(let c=0;c<N;c++){if(g.v[r][c]===1)inn=!inn;row.push(inn);}g.inside.push(row);}
+    g.score+=N-3;g.time+=20;g.win=1.6;A.tune([523,659,784,1047,1319]);},
+  setEdge(g,t,r,c,val){const a=t==='h'?g.h:g.v;a[r][c]=val;A.beep(val===1?520:val===2?260:380,.04,'triangle',.04);this.check(g);},
+  key(g,k){if(g.win>0)return;
+    if(k==='KeyN'){g.lv=Math.max(0,g.lv);this.level(g);return;}
+    if(k==='KeyX'){g.xm=!g.xm;return;}
+    const D={ArrowUp:[-1,0],KeyW:[-1,0],ArrowDown:[1,0],KeyS:[1,0],ArrowLeft:[0,-1],KeyA:[0,-1],ArrowRight:[0,1],KeyD:[0,1]}[k];
+    if(!D)return;const N=g.N,nr=g.pr+D[0],nc=g.pc+D[1];if(nr<0||nc<0||nr>N||nc>N)return;
+    let t,r,c;if(D[0]){t='v';r=Math.min(g.pr,nr);c=g.pc;}else{t='h';r=g.pr;c=Math.min(g.pc,nc);}
+    const a=t==='h'?g.h:g.v,cur=a[r][c];
+    this.setEdge(g,t,r,c,g.xm?(cur===2?0:2):(cur===1?0:1));g.xm=false;g.pr=nr;g.pc=nc;},
+  click(g,x,y,b){
+    if(y<30&&x>392){if(g.win<=0)this.level(g);return;}
+    if(g.win>0)return;
+    const N=g.N,fx=(x-g.ox)/g.s,fy=(y-g.oy)/g.s;
+    let best=null,bd=.36;
+    const ry=Math.round(fy),cx=Math.floor(fx);if(ry>=0&&ry<=N&&cx>=0&&cx<N&&Math.abs(fy-ry)<bd){bd=Math.abs(fy-ry);best=['h',ry,cx];}
+    const rx=Math.round(fx),cy=Math.floor(fy);if(rx>=0&&rx<=N&&cy>=0&&cy<N&&Math.abs(fx-rx)<bd){bd=Math.abs(fx-rx);best=['v',cy,rx];}
+    if(!best)return;const [t,r,c]=best,a=t==='h'?g.h:g.v,cur=a[r][c];
+    this.setEdge(g,t,r,c,b===2?(cur===2?0:2):(cur+1)%3);},
+  update(g,dt){
+    if(g.win>0){g.win-=dt;if(g.win<=0){g.lv++;this.level(g);}return;}
+    g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Ниво '+(g.lv+1));}
+  },
+  draw(g){
+    A.bg('#2b2118');const N=g.N,s=g.s,ox=g.ox,oy=g.oy;
+    // поле с трева
+    for(let r=0;r<N;r++)for(let q=0;q<N;q++){const x=ox+q*s,y=oy+r*s,ins=g.win>0&&g.inside[r][q];
+      c2(x,y,s,ins?'#6cc04a':((r+q)%2?'#4f9134':'#58a03a'));
+      if(ins){const b=Math.sin(g.t*6+r+q)*2,w=Math.floor(s*.5);A.block(x+s/2-w/2,y+s/2-w/2+b,w,'#f2f2f2',Math.floor(w*.75));
+        c.fillStyle='#d9b99b';c.fillRect(x+s/2+w/2-4,y+s/2-w/2+b+2,6,6);}
+      const k=g.cl[r][q];if(k>=0&&!ins){const n=this.cnt(g,r,q);A.txt(String(k),x+s/2,y+s/2,Math.floor(s*.45),n>k?'#ff6b6b':n===k?'#d7ffd0':'#fff','center');}}
+    function c2(x,y,s,col){c.fillStyle=col;c.fillRect(x,y,s,s);c.fillStyle='rgba(0,0,0,.12)';c.fillRect(x,y+s-2,s,2);c.fillRect(x+s-2,y,2,s);}
+    const lw=Math.max(5,Math.floor(s/9));
+    // ограда и ✕
+    for(let r=0;r<=N;r++)for(let q=0;q<N;q++){const st=g.h[r][q],x=ox+q*s,y=oy+r*s;
+      if(st===1){c.fillStyle='#8b5a2b';c.fillRect(x,y-lw/2,s,lw);c.fillStyle='#b07a43';c.fillRect(x,y-lw/2,s,2);}
+      else if(st===2)A.txt('✕',x+s/2,y,12,'#ff8a80','center');}
+    for(let r=0;r<N;r++)for(let q=0;q<=N;q++){const st=g.v[r][q],x=ox+q*s,y=oy+r*s;
+      if(st===1){c.fillStyle='#8b5a2b';c.fillRect(x-lw/2,y,lw,s);c.fillStyle='#b07a43';c.fillRect(x-lw/2,y,2,s);}
+      else if(st===2)A.txt('✕',x,y+s/2,12,'#ff8a80','center');}
+    // колчета
+    for(let r=0;r<=N;r++)for(let q=0;q<=N;q++){const x=ox+q*s,y=oy+r*s,d=this.deg(g,r,q);
+      c.fillStyle=d>2?'#ff3b3b':'#3b2a1a';c.fillRect(x-4,y-4,8,8);}
+    // молив (клавиатура)
+    const px=ox+g.pc*s,py=oy+g.pr*s;c.strokeStyle=g.xm?'#ff8a80':'#ffd54f';c.lineWidth=2;c.strokeRect(px-7,py-7,14,14);
+    // горна лента
+    c.fillStyle='rgba(0,0,0,.6)';c.fillRect(0,0,480,30);
+    A.txt('⏱ '+Math.ceil(g.time),8,15,15,g.time<20?'#ff7b7b':'#fff');
+    A.txt('Ниво '+(g.lv+1)+' · '+N+'×'+N,200,15,14,'#ffd54f','center');
+    A.block(396,3,80,'#5a6b8c',24);A.txt('⟳ Друг',436,15,13,'#fff','center');
+    if(g.win>0){c.fillStyle='rgba(0,0,0,.65)';c.fillRect(110,160,260,40);A.txt('Оградата е готова! +'+(N-3),240,180,18,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

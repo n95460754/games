@@ -289,7 +289,10 @@ const GAMES=[
   {"id": "dyemix", "cat": "brain", "icon": "🎨", "name": "Смеси боите", "desc": "Смесвай бои като в работната маса: червена + жълта = оранжева, синя + бяла = светлосиня", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "blazerods", "cat": "action", "icon": "🪄", "name": "Пръчки от блейз", "desc": "Събирай пръчки от блейз в крепостта в Недъра и избягвай огнените топки", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "railcount", "cat": "puzzle", "icon": "🛤️", "name": "Релси по броя", "desc": "Положи релси от входа до изхода — числата казват колко релси има във всеки ред и колона", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "furnacefuel", "cat": "brain", "icon": "♨️", "name": "Гориво за пещта", "desc": "Колко въглища, пръчки от блейз или кофи лава трябват, за да изпечеш всичко?", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "furnacefuel", "cat": "brain", "icon": "♨️", "name": "Гориво за пещта", "desc": "Колко въглища, пръчки от блейз или кофи лава трябват, за да изпечеш всичко?", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "iceboat", "cat": "action", "icon": "🛶", "name": "Лодка по леда", "desc": "Плъзгай се с лодка по леда, минавай през флаговете и не губи време", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "fenceloop", "cat": "puzzle", "icon": "🐑", "name": "Ограда за овцете", "desc": "Построй една затворена ограда — числата казват колко парчета ограда има около всяко поле", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "logicgrid", "cat": "brain", "icon": "🕵️", "name": "Логически детектив", "desc": "Прочети уликите и познай кой миньор какъв любимец има и каква руда копае", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
