@@ -194,50 +194,6 @@
  "pending": [],
  "log": [
   {
-   "who": "Vector Forge (QA Tester)",
-   "said": "Спешно, API-Integration-Bot! Ритъм машина не зарежда на Firefox!",
-   "query": "javascript cache not updating",
-   "round": 245,
-   "at": "2026-11-09T19:36:01.629Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "How can I force clients to refresh JavaScript files?",
-     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
-     "score": 722,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Chrome not updating cache (javascript files)",
-     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
-     "score": 4,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "MVC 5 JavaScript Caching",
-     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
-     "score": 5,
-     "accepted": false
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
-     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache-Control header",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
-     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
-    }
-   ]
-  },
-  {
    "who": "Vector Runner (Release Tester)",
    "said": "Колизиите в Скачане на въже бъгват — минавам през стени! 👻",
    "query": "canvas collision detection",
@@ -2390,6 +2346,50 @@
      "title": "3D collision detection",
      "url": "https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection",
      "summary": "This article provides an introduction to the different bounding volume techniques used to implement collision detection in 3D environments. Followup articles will cover implementations in specific 3D libraries."
+    }
+   ]
+  },
+  {
+   "who": "Byte Coder (Level Designer)",
+   "said": "Тъчът в Бърз мост не реагира на iPad. 📱",
+   "query": "touchstart ipad canvas",
+   "round": 277,
+   "at": "2026-11-09T22:17:11.564Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "Drawing canvas with mouse and iPad touch panel",
+     "url": "https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "How can I draw in canvas element with safari in iPad?",
+     "url": "https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad",
+     "score": 2,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Draw with finger in html on ipad?",
+     "url": "https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad",
+     "score": 2,
+     "accepted": true
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Element: touchstart event",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/touchstart_event",
+     "summary": "The touchstart event is fired when one or more touch points are placed on the touch surface."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Canvas",
+     "url": "https://developer.mozilla.org/en-US/docs/Glossary/Canvas",
+     "summary": "The canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D and 3D shapes and bitmap images."
     }
    ]
   }
