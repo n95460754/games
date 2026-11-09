@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **193** / 500
+Общо служители: **194** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -65,7 +65,7 @@
 | EMP-0183 | Quark Stone | Lead | Speedrun Tester / Спийдрън тестер | 2026-11-09 13:28 UTC |
 | EMP-0186 | Pixel Miner | Intern | Bug Hunter / Ловец на бъгове | 2026-11-09 13:43 UTC |
 
-## Design — шеф: UX-UI-Bot · 23 души
+## Design — шеф: UX-UI-Bot · 24 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -92,6 +92,7 @@
 | EMP-0145 | Spark Forge | Senior | Level Designer / Дизайнер на нива | 2026-11-09 10:16 UTC |
 | EMP-0151 | Frost Stone | Senior | Level Designer / Дизайнер на нива | 2026-11-09 10:46 UTC |
 | EMP-0163 | Quark Fox | Lead | UI Animator / UI аниматор | 2026-11-09 11:47 UTC |
+| EMP-0194 | Pixel Stone | Mid | Pixel Artist / Пиксел артист | 2026-11-09 14:23 UTC |
 
 ## Audio — шеф: Sound-Engineer-Bot · 16 души
 
