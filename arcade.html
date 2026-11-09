@@ -313,7 +313,10 @@ const GAMES=[
   {"id": "ratios", "cat": "brain", "icon": "⚗️", "name": "Пропорции на отварите", "desc": "Рецептата е „2 : 3“ — колко съставки трябват за по-голямо котле? Пропорции с Minecraft отвари", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "creeperlure", "cat": "action", "icon": "💥", "name": "Примами кийпърите", "desc": "Събери кийпърите на куп и избягай — взривът на един взривява и другите във верижна реакция", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "untangle", "cat": "puzzle", "icon": "🪢", "name": "Разплети въжетата", "desc": "Влачи блоковете, докато никое въже не пресича друго — с всяко ниво има повече възли", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "curling", "cat": "skill", "icon": "🥌", "name": "Кърлинг на леда", "desc": "Плъзгай камъни по леда към центъра на мишената и избивай червените камъни", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "curling", "cat": "skill", "icon": "🥌", "name": "Кърлинг на леда", "desc": "Плъзгай камъни по леда към центъра на мишената и избивай червените камъни", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "sheepshear", "cat": "action", "icon": "✂️", "name": "Стригач на овце", "desc": "Гони и стрижи овцете на ливадата, прави комбо и бягай от вълците", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "oredomino", "cat": "puzzle", "icon": "🀄", "name": "Рудно домино", "desc": "Раздели решетката от руди на доминота — всяка двойка числа трябва да се срещне точно веднъж", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "cubenets", "cat": "brain", "icon": "🎲", "name": "Мрежа на куба", "desc": "Сгъва ли се мрежата от 6 блока на куб и коя страна ще е срещу кийпъра?", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

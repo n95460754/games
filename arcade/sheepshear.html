@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стригач на овце</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">✂️ Стригач на овце</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 331. Стригач на овце
+// Тичай из ливадата и стрижи овцете — те бягат от теб! Цветната вълна носи повече точки, а вълците гонят теб.
+const SS={top:28,cols:['#f2f2f2','#f2f2f2','#f2f2f2','#e8463a','#3b7bd6','#7ed957','#ffd23f','#b05cd6','#ff8fc8','#2a2a2a']};
+A.add({id:'sheepshear',cat:'action',icon:'✂️',name:'Стригач на овце',desc:'Гони и стрижи овцете на ливадата, прави комбо и бягай от вълците',
+  help:'Стрелки / WASD = тичане. Мишка / пръст: цъкни или задръж — Стив тича натам. Докосни овца с вълна, за да я остригаш: бяла = 1 т., цветна = 2 т., златна = 5 т. Стрижи бързо една след друга за комбо ×2 и ×3! Овцете бягат от теб, а вълците ти отнемат сърце. 90 секунди, 3 сърца.',
+  start(g){g.p={x:240,y:200,f:1};g.time=90;g.lives=3;g.inv=0;g.combo=0;g.comboT=0;g.cnt=0;g.sheep=[];g.wolves=[];g.pops=[];g.tufts=[];g.tgt=null;g.wt=0;g.gt=10;
+    for(let i=0;i<9;i++)this.addSheep(g);this.addWolf(g);},
+  addSheep(g){let x,y;do{x=A.rnd(30,450);y=A.rnd(SS.top+30,330);}while(Math.hypot(x-g.p.x,y-g.p.y)<90);
+    g.sheep.push({x,y,vx:0,vy:0,t:0,col:A.pick(SS.cols),wool:true,re:0,gold:false});},
+  addWolf(g){let x,y;do{x=A.pick([14,466]);y=A.rnd(SS.top+20,340);}while(Math.hypot(x-g.p.x,y-g.p.y)<160);
+    g.wolves.push({x,y,sp:46+g.wolves.length*7,f:1});},
+  click(g,mx,my){g.tgt={x:mx,y:Math.max(SS.top+10,my)};},
+  move(g,mx,my){if(A.mouse.down)g.tgt={x:mx,y:Math.max(SS.top+10,my)};},
+  update(g,dt){const K=A.keys,p=g.p;g.time-=dt;if(g.time<=0){g.time=0;return A.over(g,'Времето изтече! Остригани овце: '+g.cnt);}
+    g.inv-=dt;g.comboT-=dt;if(g.comboT<=0)g.combo=0;
+    g.pops=g.pops.filter(o=>(o.t-=dt)>0);g.tufts=g.tufts.filter(o=>{o.x+=o.vx*dt;o.y+=o.vy*dt;o.vy+=120*dt;return (o.t-=dt)>0;});
+    // играч
+    let dx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),dy=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);
+    if(dx||dy)g.tgt=null;else if(g.tgt){const tx=g.tgt.x-p.x,ty=g.tgt.y-p.y,d=Math.hypot(tx,ty);if(d<4)g.tgt=null;else{dx=tx/d;dy=ty/d;}}
+    const l=Math.hypot(dx,dy)||1,sp=135;p.x=A.clamp(p.x+dx/l*sp*dt,10,470);p.y=A.clamp(p.y+dy/l*sp*dt,SS.top+14,346);if(dx)p.f=dx>0?1:-1;g.walk=(dx||dy)?g.walk+dt:0;
+    // овце
+    for(const s of g.sheep){s.t-=dt;const ex=s.x-p.x,ey=s.y-p.y,d=Math.hypot(ex,ey)||1;
+      if(s.wool&&d<85){const fs=s.gold?110:82;s.vx=ex/d*fs+Math.sin(g.t*3+s.y)*20;s.vy=ey/d*fs+Math.cos(g.t*3+s.x)*20;}
+      else if(s.t<=0){s.t=A.rnd(1,3);const a=A.rnd(0,6.28),v=Math.random()<.3?0:A.rnd(15,35);s.vx=Math.cos(a)*v;s.vy=Math.sin(a)*v;}
+      s.x+=s.vx*dt;s.y+=s.vy*dt;
+      if(s.x<16){s.x=16;s.vx=Math.abs(s.vx);}if(s.x>464){s.x=464;s.vx=-Math.abs(s.vx);}
+      if(s.y<SS.top+18){s.y=SS.top+18;s.vy=Math.abs(s.vy);}if(s.y>344){s.y=344;s.vy=-Math.abs(s.vy);}
+      if(!s.wool){s.re-=dt;if(s.re<=0){s.wool=true;s.col=A.pick(SS.cols);}}
+      else if(d<22){s.wool=false;s.re=7;g.cnt++;g.combo=g.comboT>0?g.combo+1:1;g.comboT=1.8;
+        const base=s.gold?5:s.col==='#f2f2f2'?1:2,m=g.combo>=6?3:g.combo>=3?2:1,pts=base*m;g.score+=pts;
+        g.pops.push({x:s.x,y:s.y-14,s:'+'+pts+(m>1?' ×'+m:''),t:1,col:s.gold?'#ffd23f':'#fff'});
+        for(let i=0;i<6;i++)g.tufts.push({x:s.x,y:s.y,vx:A.rnd(-60,60),vy:A.rnd(-90,-30),t:.7,col:s.gold?'#ffd23f':s.col});
+        if(s.gold){s.gold=false;g.time+=5;g.pops.push({x:s.x,y:s.y-30,s:'+5 сек',t:1.2,col:'#8cf'});A.tune([660,880,1100]);}
+        else A.beep(500+g.combo*60,.06,'triangle');}}
+    // златна овца
+    g.gt-=dt;if(g.gt<=0){g.gt=A.rnd(12,18);const w=g.sheep.filter(s=>s.wool&&!s.gold);if(w.length){const s=A.pick(w);s.gold=true;s.col='#ffd23f';}}
+    // вълци
+    g.wt+=dt;if(g.wt>18&&g.wolves.length<4){g.wt=0;this.addWolf(g);g.pops.push({x:240,y:60,s:'🐺 Още един вълк!',t:1.5,col:'#f88'});}
+    for(const w of g.wolves){const tx=p.x-w.x,ty=p.y-w.y,d=Math.hypot(tx,ty)||1,sp=w.sp+(90-g.time)*.25;
+      w.x+=(tx/d*sp+Math.sin(g.t*2+w.sp)*25)*dt;w.y+=(ty/d*sp+Math.cos(g.t*2+w.sp)*25)*dt;w.f=tx>0?1:-1;
+      if(d<20&&g.inv<=0){g.lives--;g.inv=1.6;g.combo=0;A.beep(140,.3,'sawtooth',.06);w.x-=tx/d*70;w.y-=ty/d*70;
+        if(g.lives<=0)return A.over(g,'Вълците те хванаха! Остригани овце: '+g.cnt);}}},
+  drawSheep(s){const x=s.x|0,y=s.y|0,f=s.vx>=0?1:-1;c.fillStyle='#3a3a3a';c.fillRect(x-9,y+5,4,6);c.fillRect(x+5,y+5,4,6);
+    if(s.wool)A.block(x-12,y-9,24,s.col,16);else A.block(x-9,y-6,18,'#e9b9a5',12);
+    A.block(x+f*12-(f>0?0:8),y-11,8,s.gold?'#d9a400':'#5a4a40');c.fillStyle='#000';c.fillRect(x+f*12+(f>0?5:-7),y-8,2,2);
+    if(s.gold&&Math.sin(performance.now()/120+x)>.3){c.fillStyle='#fff';c.fillRect(x-4,y-14,3,3);c.fillRect(x+7,y-2,2,2);}},
+  drawWolf(w){const x=w.x|0,y=w.y|0,f=w.f;c.fillStyle='#8a8a8a';c.fillRect(x-9,y+3,4,6);c.fillRect(x+5,y+3,4,6);
+    A.block(x-12,y-7,24,'#c9c9c9',12);A.block(x+f*12-(f>0?0:10),y-10,10,'#b0b0b0');c.fillStyle='#e33';c.fillRect(x+f*12+(f>0?6:-8),y-7,2,2);
+    c.fillStyle='#9a9a9a';c.fillRect(x-f*12-(f>0?6:0),y-6,6,4);},
+  draw(g){A.bg('#5aa13a');c.fillStyle='#62ab40';for(let y=SS.top;y<360;y+=24)for(let x=((y/24)%2)*24;x<480;x+=48)c.fillRect(x,y,24,24);
+    c.fillStyle='#3f8a24';for(let i=0;i<30;i++){c.fillRect((i*97)%470+5,SS.top+((i*53)%320)+6,2,5);}
+    for(let x=0;x<480;x+=24)A.block(x,SS.top-6,24,'#9a6a3a',8);
+    const p=g.p;
+    for(const s of g.sheep)this.drawSheep(s);
+    for(const w of g.wolves)this.drawWolf(w);
+    if(g.tgt){c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;c.strokeRect(g.tgt.x-5,g.tgt.y-5,10,10);}
+    if(g.inv<=0||Math.floor(g.t*12)%2){const x=p.x|0,y=p.y|0,st=Math.sin(g.walk*14)*3;
+      c.fillStyle='#3b3b9a';c.fillRect(x-6,y+4,5,9+st);c.fillRect(x+1,y+4,5,9-st);
+      A.block(x-7,y-8,14,'#2ea3b8',13);A.block(x-6,y-20,12,'#c9946a');c.fillStyle='#4a2e1a';c.fillRect(x-6,y-20,12,4);
+      c.fillStyle='#fff';c.fillRect(x+p.f*1-3,y-14,2,2);c.fillRect(x+p.f*1+2,y-14,2,2);
+      c.fillStyle='#d8d8d8';c.fillRect(x+p.f*8-2,y-4,4,8);c.fillStyle='#e8463a';c.fillRect(x+p.f*8-2,y+3,4,3);}
+    for(const t of g.tufts){c.fillStyle=t.col;c.fillRect(t.x-2,t.y-2,5,5);}
+    for(const o of g.pops)A.txt(o.s,o.x,o.y-(1-o.t)*16,14,o.col,'center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,SS.top-6);
+    A.txt('⏱ '+Math.ceil(g.time),8,11,14,g.time<10?'#f66':'#fff');A.txt('❤'.repeat(Math.max(0,g.lives)),80,11,14,'#f55');
+    A.txt('✂ '+g.cnt,150,11,14,'#fff');if(g.combo>=2)A.txt('Комбо '+g.combo+(g.combo>=6?' ×3':g.combo>=3?' ×2':''),470,11,14,'#ffd54f','right');}
+});
+</script>
+</body>
+</html>

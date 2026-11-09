@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рудно домино</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🀄 Рудно домино</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 332. Рудно домино
+// Решетката е покрита с невидими доминота. Раздели я на двойки така, че всяка двойка руди да се срещне точно веднъж.
+const OD={cols:['#7d7d7d','#2a2a2a','#d8a07a','#ffd23f','#ff2e55','#4de8f5','#3fcf5a'],dark:[0,0,1,1,0,1,1],BX:8,BY:30,BW:304,BH:322,PX:322};
+A.add({id:'oredomino',cat:'puzzle',icon:'🀄',name:'Рудно домино',desc:'Раздели решетката от руди на доминота — всяка двойка числа трябва да се срещне точно веднъж',
+  help:'Раздели цялата решетка на доминота (по 2 съседни блока). Всяка двойка числа (0-0, 0-1 … 6-6) трябва да е точно веднъж — таблицата вдясно показва кои вече са използвани. Мишка / пръст: плъзни от блок до съседен блок или цъкни два съседни блока; цъкни домино, за да го махнеш. Клавиатура: стрелки = курсор, Space = избери, после стрелка = постави домино натам; Space върху домино = махни. H = подсказка (−10 сек). Решено ниво = точки и +60 сек.',
+  start(g){g.lvl=0;g.time=150;g.hints=0;this.newLevel(g);},
+  newLevel(g){g.lvl++;const n=Math.min(6,g.lvl+2),R=n+1,W=n+2,N=R*W;g.n=n;g.R=R;g.W=W;
+    const m=new Array(N);
+    if(W%2===0){for(let i=0;i<N;i+=2){m[i]=i+1;m[i+1]=i;}}else{for(let r=0;r<R;r+=2)for(let x=0;x<W;x++){const a=r*W+x;m[a]=a+W;m[a+W]=a;}}
+    for(let k=0;k<N*40;k++){const r=A.ri(0,R-2),x=A.ri(0,W-2),a=r*W+x,b=a+1,cc=a+W,d=cc+1;
+      if(m[a]===b&&m[cc]===d){m[a]=cc;m[cc]=a;m[b]=d;m[d]=b;}else if(m[a]===cc&&m[b]===d){m[a]=b;m[b]=a;m[cc]=d;m[d]=cc;}}
+    const pairs=[];for(let i=0;i<=n;i++)for(let j=i;j<=n;j++)pairs.push([i,j]);A.shuffle(pairs);
+    g.v=new Array(N);g.sol=[];let k=0;
+    for(let a=0;a<N;a++)if(a<m[a]){const pr=pairs[k++],f=Math.random()<.5;g.v[a]=pr[f?0:1];g.v[m[a]]=pr[f?1:0];g.sol.push([a,m[a]]);}
+    g.pl=new Array(N).fill(-1);g.sel=-1;g.cur=0;g.down=-1;g.win=0;g.msg='Ниво '+g.lvl+': числа 0–'+n;g.msgT=2;
+    g.cs=Math.floor(Math.min(OD.BW/W,OD.BH/R,48));g.ox=OD.BX+Math.floor((OD.BW-W*g.cs)/2);g.oy=OD.BY+Math.floor((OD.BH-R*g.cs)/2);},
+  pk(g,a,b){const x=g.v[a],y=g.v[b];return Math.min(x,y)*10+Math.max(x,y);},
+  adj(g,a,b){const ax=a%g.W,bx=b%g.W;return (Math.abs(a-b)===1&&Math.floor(a/g.W)===Math.floor(b/g.W))||(Math.abs(a-b)===g.W&&ax===bx);},
+  unlink(g,a){const b=g.pl[a];if(b>=0){g.pl[b]=-1;g.pl[a]=-1;}},
+  place(g,a,b){if(g.win||a===b||!this.adj(g,a,b))return;this.unlink(g,a);this.unlink(g,b);g.pl[a]=b;g.pl[b]=a;A.beep(520,.05,'triangle');this.check(g);},
+  counts(g){const cnt={};for(let a=0;a<g.pl.length;a++){const b=g.pl[a];if(b>a){const k=this.pk(g,a,b);cnt[k]=(cnt[k]||0)+1;}}return cnt;},
+  check(g){if(g.pl.some(b=>b<0))return;const cnt=this.counts(g);if(Object.values(cnt).some(v=>v>1))return;
+    const doms=g.pl.length/2;g.score+=doms+g.lvl*5;g.time+=60;g.win=1.6;g.msg='Решено! +'+(doms+g.lvl*5)+' т., +60 сек';g.msgT=1.6;A.tune([523,659,784,1046]);},
+  hint(g){if(g.win)return;for(const [a,b] of g.sol)if(g.pl[a]!==b){this.unlink(g,a);this.unlink(g,b);g.pl[a]=b;g.pl[b]=a;g.time-=10;g.hints++;
+      g.msg='💡 Подсказка: −10 сек';g.msgT=1.2;A.beep(880,.1,'triangle');this.check(g);return;}},
+  cellAt(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x<0||y<0||x>=g.W||y>=g.R)return -1;return y*g.W+x;},
+  click(g,mx,my){if(mx>=OD.PX&&my>=300){this.hint(g);return;}const a=this.cellAt(g,mx,my);g.down=-1;if(a<0||g.win){g.sel=-1;return;}g.cur=a;
+    if(g.sel>=0&&g.sel!==a&&this.adj(g,g.sel,a)){this.place(g,g.sel,a);g.sel=-1;return;}
+    if(g.sel===a){g.sel=-1;return;}
+    if(g.pl[a]>=0&&g.sel<0){this.unlink(g,a);A.beep(260,.05);return;}
+    g.sel=a;g.down=a;},
+  release(g,mx,my){const a=g.down;g.down=-1;if(a<0)return;const b=this.cellAt(g,mx,my);if(b>=0&&b!==a&&this.adj(g,a,b)){this.place(g,a,b);g.sel=-1;g.cur=b;}},
+  key(g,k){if(k==='KeyH'){this.hint(g);return;}if(g.win)return;
+    const D={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(D){const x=g.cur%g.W+D[0],y=Math.floor(g.cur/g.W)+D[1];if(x<0||y<0||x>=g.W||y>=g.R)return;const t=y*g.W+x;
+      if(g.sel>=0){this.place(g,g.sel,t);g.sel=-1;}g.cur=t;return;}
+    if(k==='Space'||k==='Enter'){if(g.sel===g.cur)g.sel=-1;else if(g.pl[g.cur]>=0&&g.sel<0){this.unlink(g,g.cur);A.beep(260,.05);}else g.sel=g.cur;}},
+  update(g,dt){g.msgT-=dt;if(g.win){g.win-=dt;if(g.win<=0){g.win=0;this.newLevel(g);}return;}
+    g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Стигна ниво '+g.lvl);}},
+  draw(g){A.bg('#1d2b3a');const cs=g.cs,cnt=this.counts(g);
+    c.fillStyle='#3a2a1c';c.fillRect(g.ox-4,g.oy-4,g.W*cs+8,g.R*cs+8);
+    for(let a=0;a<g.v.length;a++){const x=g.ox+(a%g.W)*cs,y=g.oy+Math.floor(a/g.W)*cs,v=g.v[a];
+      A.block(x+2,y+2,cs-4,OD.cols[v]);c.fillStyle='rgba(255,255,255,.18)';c.fillRect(x+6,y+cs-12,4,4);c.fillRect(x+cs-11,y+7,3,3);
+      A.txt(''+v,x+cs/2,y+cs/2+1,Math.floor(cs*.5),OD.dark[v]?'#1b1b1b':'#fff','center');}
+    // поставени доминота
+    c.lineWidth=3;for(let a=0;a<g.pl.length;a++){const b=g.pl[a];if(b<=a)continue;const k=this.pk(g,a,b),bad=cnt[k]>1;
+      const x1=Math.min(a%g.W,b%g.W),y1=Math.min(Math.floor(a/g.W),Math.floor(b/g.W)),hz=Math.abs(a-b)===1;
+      c.strokeStyle=g.win?'#7ed957':bad?'#ff4040':'#fff';c.strokeRect(g.ox+x1*cs+2,g.oy+y1*cs+2,(hz?2:1)*cs-4,(hz?1:2)*cs-4);
+      c.fillStyle=c.strokeStyle;if(hz)c.fillRect(g.ox+(x1+1)*cs-2,g.oy+y1*cs+cs/2-3,4,6);else c.fillRect(g.ox+x1*cs+cs/2-3,g.oy+(y1+1)*cs-2,6,4);}
+    if(g.sel>=0){c.strokeStyle='#ffd54f';c.lineWidth=4;c.strokeRect(g.ox+(g.sel%g.W)*cs+1,g.oy+Math.floor(g.sel/g.W)*cs+1,cs-2,cs-2);
+      if(g.down>=0){const b=this.cellAt(g,A.mouse.x,A.mouse.y);if(b>=0&&b!==g.sel&&this.adj(g,g.sel,b)){c.strokeStyle='rgba(255,213,79,.6)';c.strokeRect(g.ox+(b%g.W)*cs+3,g.oy+Math.floor(b/g.W)*cs+3,cs-6,cs-6);}}}
+    c.strokeStyle='rgba(140,200,255,.9)';c.lineWidth=2;c.setLineDash([4,3]);c.strokeRect(g.ox+(g.cur%g.W)*cs+5,g.oy+Math.floor(g.cur/g.W)*cs+5,cs-10,cs-10);c.setLineDash([]);
+    // таблица с двойките
+    const n=g.n,ps=Math.min(20,Math.floor(140/(n+2))),px=OD.PX+6,py=48;A.txt('Двойки:',OD.PX+4,38,13,'#ffd54f');
+    let used=0;for(let i=0;i<=n;i++){A.block(px,py+(i+1)*ps,ps-2,OD.cols[i]);A.block(px+(i+1)*ps,py,ps-2,OD.cols[i]);
+      for(let j=0;j<=i;j++){const v=cnt[j*10+i]||0;if(v===1)used++;c.fillStyle=v===0?'#2c3b4d':v===1?'#4caf50':'#e53935';c.fillRect(px+(j+1)*ps,py+(i+1)*ps,ps-2,ps-2);
+        if(v)A.txt(v===1?'✓':'✗',px+(j+1)*ps+ps/2-1,py+(i+1)*ps+ps/2,Math.max(9,ps-8),'#fff','center');}}
+    const total=(n+1)*(n+2)/2,ty=py+(n+2)*ps+14;A.txt(used+' / '+total,OD.PX+75,ty,14,'#fff','center');
+    A.txt('Ниво '+g.lvl,OD.PX+75,ty+22,14,'#8cc8ff','center');
+    A.block(OD.PX,300,150,'#5a6b8c',40);A.txt('💡 Подсказка (H)',OD.PX+75,314,12,'#fff','center');A.txt('−10 сек',OD.PX+75,330,11,'#ffd54f','center');
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<15?'#f66':'#fff');A.txt('Покрий всичко, без повторени двойки',312,14,11,'#b9c6d6','right');
+    if(g.msgT>0){const mx=g.ox+g.W*cs/2,my=g.oy+g.R*cs/2;c.fillStyle='rgba(0,0,0,.7)';c.fillRect(mx-150,my-18,300,36);A.txt(g.msg,mx,my,16,'#ffd54f','center');}}
+});
+</script>
+</body>
+</html>

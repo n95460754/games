@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мрежа на куба</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎲 Мрежа на куба</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 333. Мрежа на куба
+// Сгъва ли се тази мрежа от 6 блока на куб? И коя страна ще застане срещу кийпъра?
+// Сгъването се проверява, като "търкаляме" куб по квадратчетата на мрежата.
+function cnFold(cells){const K=(x,y)=>x+','+y,idx={};cells.forEach((p,i)=>{idx[K(p[0],p[1])]=i;});
+  for(const [x,y] of cells)if(idx[K(x+1,y)]!==undefined&&idx[K(x,y+1)]!==undefined&&idx[K(x+1,y+1)]!==undefined)return null;
+  const face=cells.map(()=>-1);face[0]=0;const st=[[0,{B:0,T:1,N:2,S:3,E:4,W:5}]];
+  while(st.length){const [i,s]=st.pop(),[x,y]=cells[i];
+    for(const [dx,dy] of [[1,0],[-1,0],[0,-1],[0,1]]){const j=idx[K(x+dx,y+dy)];if(j===undefined||face[j]>=0)continue;let n;
+      if(dx===1)n={B:s.E,W:s.B,T:s.W,E:s.T,N:s.N,S:s.S};else if(dx===-1)n={B:s.W,E:s.B,T:s.E,W:s.T,N:s.N,S:s.S};
+      else if(dy===-1)n={B:s.N,S:s.B,T:s.S,N:s.T,E:s.E,W:s.W};else n={B:s.S,N:s.B,T:s.N,S:s.T,E:s.E,W:s.W};
+      face[j]=n.B;st.push([j,n]);}}
+  return face;}
+function cnOk(f){return !!f&&new Set(f).size===6;}
+function cnRand(){const cells=[[0,0]],has=new Set(['0,0']);
+  while(cells.length<6){const [x,y]=A.pick(cells),[dx,dy]=A.pick([[1,0],[-1,0],[0,1],[0,-1]]),k=(x+dx)+','+(y+dy);if(!has.has(k)){has.add(k);cells.push([x+dx,y+dy]);}}
+  const mx=Math.min(...cells.map(p=>p[0])),my=Math.min(...cells.map(p=>p[1]));
+  return cells.map(p=>[p[0]-mx,p[1]-my]).sort((a,b)=>a[1]-b[1]||a[0]-b[0]);}
+const CN={pal:['#e8463a','#e8463a','#3b7bd6','#3b7bd6','#ffd23f','#ffd23f']};
+A.add({id:'cubenets',cat:'brain',icon:'🎲',name:'Мрежа на куба',desc:'Сгъва ли се мрежата от 6 блока на куб и коя страна ще е срещу кийпъра?',
+  help:'Представи си, че сгъваш хартиените квадратчета. Въпрос „Става ли куб?“: 1 / Y / ← = Да, 2 / N / → = Не (или цъкни бутона). Въпрос „Срещу кийпъра“: цъкни квадратчето, което ще е от отсрещната страна на кийпъра, или натисни номера му 1–6. След отговора еднаквите цветове показват срещуположните страни. 3 верни подред = +3 сек. 90 секунди.',
+  start(g){g.time=90;g.q=0;g.streak=0;g.show=0;this.next(g);},
+  next(g){g.q++;g.show=0;g.pick=-1;
+    if(g.q>3&&Math.random()<.5){let cells,f;do{cells=cnRand();f=cnFold(cells);}while(!cnOk(f));
+      g.type='opp';g.cells=cells;g.face=f;g.mark=A.ri(0,5);g.ans=f.indexOf(f[g.mark]^1);}
+    else{const want=Math.random()<.5;let cells,f;
+      do{cells=cnRand();f=cnFold(cells);}while(cnOk(f)!==want||(!want&&!f&&Math.random()<.75));
+      g.type='fold';g.cells=cells;g.face=f;g.ans=want;}
+    const w=Math.max(...g.cells.map(p=>p[0]))+1,h=Math.max(...g.cells.map(p=>p[1]))+1;
+    g.cs=Math.floor(Math.min(42,200/h,400/w));g.ox=240-w*g.cs/2;g.oy=(g.type==='opp'?150:145)-h*g.cs/2;},
+  answer(g,ok,pick){if(g.show>0)return;g.pick=pick;g.ok=ok;g.show=ok?1.1:2.2;flash(g,ok);
+    if(ok){g.score+=g.type==='opp'?2:1;g.streak++;if(g.streak%3===0){g.time+=3;g.bonus=1;}}else g.streak=0;},
+  key(g,k,ch){if(g.show>0)return;
+    if(g.type==='fold'){if(k==='Digit1'||k==='Numpad1'||k==='KeyY'||k==='ArrowLeft')this.answer(g,g.ans===true,0);
+      else if(k==='Digit2'||k==='Numpad2'||k==='KeyN'||k==='ArrowRight')this.answer(g,g.ans===false,1);}
+    else{const n=+ch;if(n>=1&&n<=6&&n-1!==g.mark)this.answer(g,n-1===g.ans,n-1);}},
+  click(g,mx,my){if(g.show>0)return;
+    if(g.type==='fold'){if(my>262&&my<330){if(mx>=30&&mx<235)this.answer(g,g.ans===true,0);else if(mx>245&&mx<450)this.answer(g,g.ans===false,1);}return;}
+    const i=g.cells.findIndex(p=>mx>=g.ox+p[0]*g.cs&&mx<g.ox+(p[0]+1)*g.cs&&my>=g.oy+p[1]*g.cs&&my<g.oy+(p[1]+1)*g.cs);
+    if(i>=0&&i!==g.mark)this.answer(g,i===g.ans,i);},
+  update(g,dt){if(g.show>0){if(g.fl)g.fl.t-=dt;g.show-=dt;if(g.show<=0)this.next(g);if(g.bonus)g.bonus-=dt;return;}
+    if(g.bonus)g.bonus-=dt;tick(g,dt);},
+  creeper(x,y,s){A.block(x,y,s,'#4caf50');c.fillStyle='#0d2a0d';const u=s/8;c.fillRect(x+u*1.5,y+u*2,u*2,u*2);c.fillRect(x+u*4.5,y+u*2,u*2,u*2);
+    c.fillRect(x+u*3.5,y+u*4,u,u*2);c.fillRect(x+u*2.5,y+u*5,u*3,u*2);},
+  draw(g){A.bg('#1d2b3a');const cs=g.cs,rev=g.show>0&&cnOk(g.face);
+    A.txt(g.type==='fold'?'Става ли куб от тази мрежа?':'Коя страна ще е СРЕЩУ кийпъра?',240,40,20,'#fff','center');
+    g.cells.forEach((p,i)=>{const x=g.ox+p[0]*cs,y=g.oy+p[1]*cs;
+      if(g.type==='opp'&&i===g.mark){this.creeper(x+1,y+1,cs-2);if(rev){c.strokeStyle=CN.pal[g.face[i]];c.lineWidth=4;c.strokeRect(x+3,y+3,cs-6,cs-6);}return;}
+      if(rev)A.block(x+1,y+1,cs-2,CN.pal[g.face[i]]);
+      else{A.block(x+1,y+1,cs-2,'#7a5233');c.fillStyle='#5aa13a';c.fillRect(x+1,y+1,cs-2,Math.max(4,cs/5|0));}
+      if(g.type==='opp')A.txt(''+(i+1),x+cs/2,y+cs/2+2,Math.floor(cs*.45),'#fff','center');});
+    if(g.show>0&&g.type==='opp'){const mark=(i,col)=>{const p=g.cells[i];c.strokeStyle=col;c.lineWidth=4;c.strokeRect(g.ox+p[0]*cs-2,g.oy+p[1]*cs-2,cs+4,cs+4);};
+      if(!g.ok&&g.pick>=0)mark(g.pick,'#ff4040');mark(g.ans,'#fff');}
+    if(g.type==='fold'){[['1) ✔ Да, става',0],['2) ✘ Не става',1]].forEach(([t,i])=>{const x=i?245:30;
+        let col='#5a6b8c';if(g.show>0&&(i===0)===g.ans)col='#3e8e41';else if(g.show>0&&i===g.pick)col='#a33';A.block(x,262,205,col,62);A.txt(t,x+102,293,18,'#fff','center');});}
+    else A.txt('Цъкни квадратчето или натисни номера му (1–6)',240,300,14,'#b9c6d6','center');
+    if(g.show>0)A.txt(g.ok?'Браво!':g.type==='fold'?(g.ans?'Става — сгъни го наум отново!':'Не става — някои страни се застъпват.'):'Отсреща е №'+(g.ans+1),240,g.type==='fold'?250:272,16,g.ok?'#7ed957':'#ffb0a0','center');
+    if(rev)A.txt('Еднакъв цвят = срещуположни страни',240,345,12,'#ffd54f','center');
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);A.txt('Подред: '+g.streak,470,14,14,'#8cc8ff','right');
+    if(g.bonus>0)A.txt('+3 сек!',240,70,16,'#7ed957','center');drawFlash(g);}
+});
+</script>
+</body>
+</html>
