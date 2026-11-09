@@ -842,6 +842,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T01:47:34.346Z"
+    },
+    {
+      "id": "EMP-0045",
+      "name": "Orbit Coder",
+      "level": "Mid",
+      "role": "UI Animator",
+      "role_bg": "UI аниматор",
+      "department": "Design",
+      "manager": "UX-UI-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T01:52:36.274Z"
     }
   ],
   "chairman": {
