@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фото сафари</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📸 Фото сафари</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 312. Фото сафари
+const PS_MOBS=[
+  {n:'Пиле',pts:1,sp:55,w:16,h:16,body:'#f2f2f2',head:'#ffffff',acc:'#f2a51d',fly:0,wt:3},
+  {n:'Прасе',pts:1,sp:45,w:30,h:18,body:'#f0a5a5',head:'#f5b5b5',acc:'#d77c7c',fly:0,wt:3},
+  {n:'Овца',pts:1,sp:40,w:30,h:20,body:'#eeeeee',head:'#d9c3a5',acc:'#bbbbbb',fly:0,wt:3},
+  {n:'Крава',pts:1,sp:38,w:34,h:22,body:'#4a3a2a',head:'#5a4632',acc:'#ffffff',fly:0,wt:2},
+  {n:'Крийпър',pts:2,sp:65,w:16,h:30,body:'#4caf50',head:'#5cc35f',acc:'#1b3a1b',fly:0,wt:2},
+  {n:'Прилеп',pts:3,sp:110,w:18,h:10,body:'#4a3a32',head:'#5b4a40',acc:'#000',fly:1,wt:2},
+  {n:'Папагал',pts:3,sp:95,w:16,h:16,body:'#e53935',head:'#ffd23f',acc:'#2f6fb8',fly:1,wt:2},
+  {n:'Мушрум крава',pts:5,sp:120,w:34,h:22,body:'#c0281f',head:'#c63a2f',acc:'#eeeeee',fly:0,wt:1}];
+const PS_BAG=[];PS_MOBS.forEach((m,i)=>{for(let k=0;k<m.wt;k++)PS_BAG.push(i);});
+A.add({id:'photosafari',cat:'skill',icon:'📸',name:'Фото сафари',desc:'Снимай мобовете точно в центъра на обектива — редките носят повече точки',
+  help:'Мишка / стрелки / WASD — мести обектива. Клик / Space — снимай (с пръст: докосни моба). Мобът трябва да е в рамката: в самия център = ×3, близо = ×2. Пиле, прасе, овца, крава = 1, крийпър = 2, прилеп и папагал = 3, мушрум крава = 5. Имаш 12 кадъра и 90 секунди.',
+  start(g){g.fx=240;g.fy=200;g.mobs=[];g.sp=.3;g.film=12;g.time=90;g.flash=0;g.last=null;g.lt=0;g.end=0;
+    g.photo=document.createElement('canvas');g.photo.width=90;g.photo.height=70;
+    g.clouds=[];for(let i=0;i<5;i++)g.clouds.push({x:A.rnd(0,480),y:A.rnd(34,90),w:A.ri(3,6)*14});},
+  spawn(g){const t=PS_MOBS[A.pick(PS_BAG)],dir=Math.random()<.5?1:-1;
+    const m={t,dir,x:dir>0?-40:520,vx:dir*t.sp*A.rnd(.85,1.25),ph:Math.random()*6};
+    m.y=t.fly?A.rnd(70,170):A.rnd(212,296)-t.h;m.by=m.y;g.mobs.push(m);},
+  move(g,x,y){if(g.end)return;g.fx=A.clamp(x,45,435);g.fy=A.clamp(y,60,325);},
+  click(g,x,y){this.move(g,x,y);this.snap(g);},
+  key(g,k){if(k==='Space'||k==='Enter')this.snap(g);},
+  snap(g){if(g.film<=0||g.end||g.flash>0)return;g.film--;
+    g.photo.getContext('2d').drawImage(cv,g.fx-45,g.fy-35,90,70,0,0,90,70);
+    let best=null;for(const m of g.mobs){const cx=m.x+m.t.w/2,cy=m.y+m.t.h/2;
+      if(Math.abs(cx-g.fx)<45&&Math.abs(cy-g.fy)<35){const d=Math.hypot(cx-g.fx,cy-g.fy),mul=d<9?3:d<20?2:1,p=m.t.pts*mul;
+        if(!best||p>best.p)best={p,m,mul};}}
+    g.flash=.15;A.beep(1500,.03,'square',.05);setTimeout(()=>A.beep(900,.05,'square',.04),60);
+    if(best){g.score+=best.p;g.last={txt:best.m.t.n+(best.mul===3?' · ПЕРФЕКТНО ×3':best.mul===2?' · ×2':'')+'  +'+best.p,ok:1};best.m.snapped=1;
+      if(best.mul===3)A.tune([880,1175,1568]);}
+    else g.last={txt:'Празен кадър…',ok:0};
+    g.lt=2;if(g.film<=0)g.end=1.6;},
+  update(g,dt){
+    const mv=260*dt;if(A.keys.ArrowLeft||A.keys.KeyA)this.move(g,g.fx-mv,g.fy);if(A.keys.ArrowRight||A.keys.KeyD)this.move(g,g.fx+mv,g.fy);
+    if(A.keys.ArrowUp||A.keys.KeyW)this.move(g,g.fx,g.fy-mv);if(A.keys.ArrowDown||A.keys.KeyS)this.move(g,g.fx,g.fy+mv);
+    g.flash=Math.max(0,g.flash-dt);g.lt=Math.max(0,g.lt-dt);
+    g.sp-=dt;if(g.sp<=0&&g.mobs.length<7){this.spawn(g);g.sp=A.rnd(.7,1.5);}
+    for(const m of g.mobs){m.x+=m.vx*dt;m.ph+=dt*6;if(m.t.fly)m.y=m.by+Math.sin(m.ph*.7)*22;
+      else if(Math.random()<dt*.3)m.vx*=-1;}
+    g.mobs=g.mobs.filter(m=>m.x>-60&&m.x<540);
+    for(const cl of g.clouds){cl.x+=8*dt;if(cl.x>500)cl.x=-cl.w;}
+    if(g.end){g.end-=dt;if(g.end<=0)A.over(g,'Филмът свърши!');return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече!');},
+  drawMob(m){const t=m.t,x=m.x,y=m.y,f=m.vx>0;
+    if(t.fly){const wing=Math.sin(m.ph*2)>0?-5:3;c.fillStyle=t.acc;c.fillRect(x-6,y+wing,6,4);c.fillRect(x+t.w,y+wing,6,4);
+      A.block(x,y,t.w,t.body,t.h);c.fillStyle=t.head;c.fillRect(f?x+t.w-6:x,y,6,6);c.fillStyle='#000';c.fillRect(f?x+t.w-4:x+2,y+2,2,2);return;}
+    const leg=Math.sin(m.ph)>0?2:0;c.fillStyle=t.acc==='#ffffff'?'#3a2a1a':t.acc;
+    if(t.n==='Крийпър'){A.block(x,y+8,t.w,t.body,t.h-14);c.fillStyle='#2e7d32';c.fillRect(x,y+t.h-6,6,6-leg);c.fillRect(x+10,y+t.h-6,6,4+leg);
+      A.block(x-1,y-4,18,t.head,14);c.fillStyle=t.acc;c.fillRect(x+2,y,4,4);c.fillRect(x+10,y,4,4);c.fillRect(x+6,y+4,4,6);return;}
+    c.fillRect(x+3,y+t.h-2,5,6-leg);c.fillRect(x+t.w-8,y+t.h-2,5,4+leg);
+    A.block(x,y,t.w,t.body,t.h);
+    if(t.n==='Крава'){c.fillStyle='#fff';c.fillRect(x+8,y+4,8,6);c.fillRect(x+20,y+12,7,5);}
+    if(t.n==='Мушрум крава'){c.fillStyle='#fff';c.fillRect(x+6,y+5,4,4);c.fillRect(x+22,y+10,4,4);c.fillStyle='#c0281f';c.fillRect(x+12,y-5,8,5);c.fillStyle='#fff';c.fillRect(x+14,y-4,2,2);}
+    const hx=f?x+t.w-4:x-10,hs=t.n==='Пиле'?10:14;A.block(hx,y-6,hs,t.head);c.fillStyle='#000';c.fillRect(f?hx+hs-4:hx+2,y-2,2,2);
+    if(t.n==='Пиле'){c.fillStyle=t.acc;c.fillRect(f?hx+hs:hx-4,y-1,4,3);c.fillStyle='#d32f2f';c.fillRect(f?hx+hs-2:hx,y+2,2,3);}
+    if(t.n==='Прасе'){c.fillStyle=t.acc;c.fillRect(f?hx+hs-2:hx-2,y+1,5,4);}},
+  draw(g){A.bg('#7ec0ee');
+    c.fillStyle='rgba(255,255,255,.85)';for(const cl of g.clouds)c.fillRect(cl.x,cl.y,cl.w,14);
+    for(let x=0;x<480;x+=20){A.block(x,200,20,'#6fb24a',12);}c.fillStyle='#5aa13a';c.fillRect(0,212,480,148);
+    c.fillStyle='rgba(0,0,0,.06)';for(let x=0;x<480;x+=40)for(let y=220;y<360;y+=40)c.fillRect(x+((y/40)%2)*20,y,20,20);
+    for(const tx of [30,400]){A.block(tx+12,150,16,'#6b4a2a',52);for(let i=0;i<3;i++)for(let j=0;j<2;j++)A.block(tx+i*14-2,118+j*16,16,'#2f7a2a');}
+    const ms=g.mobs.slice().sort((a,b)=>(a.y+a.t.h)-(b.y+b.t.h));for(const m of ms)this.drawMob(m);
+    // обектив
+    const L=g.fx-45,T=g.fy-35;c.fillStyle='rgba(0,0,0,.25)';c.fillRect(0,0,480,T);c.fillRect(0,T+70,480,360-T-70);c.fillRect(0,T,L,70);c.fillRect(L+90,T,480-L-90,70);
+    c.fillStyle='#fff';for(const [ax,ay,sx,sy] of [[L,T,1,1],[L+90,T,-1,1],[L,T+70,1,-1],[L+90,T+70,-1,-1]]){c.fillRect(ax-(sx<0?3:0),ay-(sy<0?3:0),14*sx,3);c.fillRect(ax-(sx<0?3:0),ay-(sy<0?3:0),3,14*sy);}
+    c.strokeStyle='rgba(255,80,80,.9)';c.lineWidth=2;c.beginPath();c.arc(g.fx,g.fy,9,0,7);c.stroke();c.fillStyle='rgba(255,80,80,.9)';c.fillRect(g.fx-1,g.fy-1,2,2);
+    if(g.flash>0){c.fillStyle='rgba(255,255,255,'+(g.flash/.15)+')';c.fillRect(0,0,480,360);}
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,24);
+    A.txt('🎞 '+g.film,10,12,15,'#fff');A.txt('⏱ '+Math.ceil(Math.max(0,g.time)),470,12,15,'#fff','right');
+    if(g.lt>0&&g.last){c.fillStyle='#f4f1e8';c.fillRect(372,30,102,96);c.drawImage(g.photo,378,36,90,70);c.strokeStyle='#333';c.lineWidth=1;c.strokeRect(378,36,90,70);
+      A.txt(g.last.txt,240,12,13,g.last.ok?'#ffd54f':'#ffb0a0','center');}
+  }
+});
+</script>
+</body>
+</html>

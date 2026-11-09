@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кофи с вода</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪣 Кофи с вода</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 311. Кофи с вода
+A.add({id:'jugs',cat:'puzzle',icon:'🪣',name:'Кофи с вода',desc:'Отмери точно толкова литра вода само с напълване, изливане и преливане',
+  help:'Трябва ти точно толкова литра, колкото пише горе. Клик / докосване на кофа — избери я; клик на друга кофа — прелей в нея. Бутоните под кофите: „Пълни“ — напълни от извора, „Излей“ — излей водата. Клавиши: 1 2 3 — избери / прелей, F — напълни, E — излей, R — започни нивото отново. Решиш ли с най-малко ходове — 3 ⭐.',
+  start(g){g.lvl=0;g.time=180;g.msg='';g.mt=0;this.newLevel(g);},
+  bfs(caps){const n=caps.length,key=s=>s.join(','),start=caps.map(()=>0),dist=new Map([[key(start),0]]),q=[start],best={};
+    while(q.length){const s=q.shift(),d=dist.get(key(s));for(const v of s)if(!(v in best))best[v]=d;
+      const nx=[];for(let i=0;i<n;i++){let t=s.slice();t[i]=caps[i];nx.push(t);t=s.slice();t[i]=0;nx.push(t);
+        for(let j=0;j<n;j++)if(j!==i){t=s.slice();const m=Math.min(s[i],caps[j]-s[j]);t[i]-=m;t[j]+=m;nx.push(t);}}
+      for(const t of nx){const k=key(t);if(!dist.has(k)){dist.set(k,d+1);q.push(t);}}}
+    return best;},
+  newLevel(g){const three=g.lvl>=3,need=three?4:3;
+    while(true){const caps=[];const n=three?3:2;
+      while(caps.length<n){const v=A.ri(3,three?12:9);if(!caps.includes(v))caps.push(v);}
+      caps.sort((a,b)=>a-b);const best=this.bfs(caps),opts=[];
+      for(const t in best){const v=+t;if(v>0&&!caps.includes(v)&&best[v]>=need&&best[v]<=(three?9:8))opts.push(v);}
+      if(opts.length){g.caps=caps;g.goal=A.pick(opts);g.min=best[g.goal];break;}}
+    g.w=g.caps.map(()=>0);g.sel=-1;g.moves=0;g.anim=g.caps.map(()=>0);g.done=0;},
+  bx(g,i){const n=g.caps.length,sp=480/n;return Math.round(sp*i+sp/2);},
+  geo(g,i){const h=g.caps[i]*16,x=this.bx(g,i)-34;return {x,y:262-h,w:68,h};},
+  act(g,op,i,j){if(g.done)return;const w=g.w,c=g.caps;let ch=false;
+    if(op==='fill'&&w[i]<c[i]){w[i]=c[i];ch=true;A.beep(520,.12,'triangle');}
+    else if(op==='empty'&&w[i]>0){w[i]=0;ch=true;A.beep(260,.12,'triangle');}
+    else if(op==='pour'){const m=Math.min(w[i],c[j]-w[j]);if(m>0){w[i]-=m;w[j]+=m;ch=true;A.beep(400,.1,'triangle');A.beep(600,.1,'triangle');}else A.beep(150,.08);}
+    if(!ch){g.msg=op==='pour'?'Не може да се прелее!':'Нищо не се промени';g.mt=1.2;return;}
+    g.moves++;g.sel=-1;
+    if(w.includes(g.goal)){const st=g.moves<=g.min?3:g.moves<=g.min+3?2:1;g.score+=st;g.done=1.8;g.stars=st;g.time+=40;A.tune([660,880,1100]);}},
+  pickB(g,i){if(i<0||i>=g.caps.length||g.done)return;if(g.sel<0){g.sel=i;A.beep(700,.04);}else if(g.sel===i){g.sel=-1;}else this.act(g,'pour',g.sel,i);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=g.caps.length)return this.pickB(g,n-1);
+    const s=g.sel>=0?g.sel:-1;
+    if(k==='KeyF'){if(s>=0)this.act(g,'fill',s);else{g.msg='Първо избери кофа (1, 2, 3)';g.mt=1.2;}}
+    else if(k==='KeyE'){if(s>=0)this.act(g,'empty',s);else{g.msg='Първо избери кофа (1, 2, 3)';g.mt=1.2;}}
+    else if(k==='KeyR'&&!g.done){g.w=g.caps.map(()=>0);g.sel=-1;g.moves=0;A.beep(300,.06);}},
+  click(g,x,y){for(let i=0;i<g.caps.length;i++){const b=this.bx(g,i);
+      if(y>=286&&y<=326){if(x>=b-46&&x<b-2)return this.act(g,'fill',i);if(x>b+2&&x<=b+46)return this.act(g,'empty',i);}
+      const r=this.geo(g,i);if(x>=b-50&&x<=b+50&&y>=r.y-24&&y<=272)return this.pickB(g,i);}
+    if(x>=410&&y>=334){if(!g.done){g.w=g.caps.map(()=>0);g.sel=-1;g.moves=0;}}
+    else if(g.sel>=0)g.sel=-1;},
+  update(g,dt){g.mt=Math.max(0,g.mt-dt);
+    for(let i=0;i<g.w.length;i++)g.anim[i]+=(g.w[i]-g.anim[i])*Math.min(1,dt*10);
+    if(g.done){g.done-=dt;if(g.done<=0){g.done=0;g.lvl++;this.newLevel(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Нива: '+g.lvl);},
+  draw(g){A.bg('#6fb3e8');
+    // земя и камък
+    for(let x=0;x<480;x+=20){A.block(x,270,20,C.grass,8);A.block(x,278,20,C.dirt);for(let y=298;y<360;y+=20)A.block(x,y,20,C.stone);}
+    // извор
+    c.fillStyle='rgba(59,123,214,.8)';c.fillRect(0,40,14,230);A.block(0,30,20,C.stone);
+    for(let i=0;i<g.caps.length;i++){const r=this.geo(g,i),b=this.bx(g,i),lv=g.anim[i]*16;
+      if(g.sel===i){c.fillStyle='rgba(255,213,79,.35)';c.fillRect(r.x-8,r.y-8,r.w+16,r.h+16);}
+      // кофа: железни стени
+      c.fillStyle='rgba(255,255,255,.18)';c.fillRect(r.x,r.y,r.w,r.h);
+      c.fillStyle='#3b7bd6';c.fillRect(r.x+6,r.y+r.h-lv,r.w-12,lv);
+      c.fillStyle='rgba(255,255,255,.3)';if(lv>0)c.fillRect(r.x+6,r.y+r.h-lv,r.w-12,3);
+      for(let k=1;k<g.caps[i];k++){c.fillStyle='rgba(0,0,0,.35)';c.fillRect(r.x+6,r.y+r.h-k*16,8,2);}
+      A.block(r.x,r.y,6,'#c8c8c8',r.h);A.block(r.x+r.w-6,r.y,6,'#c8c8c8',r.h);A.block(r.x,r.y+r.h-6,r.w,'#a9a9a9',6);
+      A.txt(Math.round(g.anim[i])+'/'+g.caps[i]+' л',b,r.y-14,14,g.w[i]===g.goal?'#7CFC00':'#fff','center');
+      A.txt('['+(i+1)+']',b,r.y+r.h/2,12,'rgba(255,255,255,.75)','center');
+      // бутони
+      A.block(b-46,288,44,'#2f6fb8',36);A.txt('Пълни',b-24,306,12,'#fff','center');
+      A.block(b+2,288,44,'#7a5233',36);A.txt('Излей',b+24,306,12,'#fff','center');}
+    A.block(410,334,66,'#5a6b8c',22);A.txt('R ↺',443,345,12,'#fff','center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,26);
+    A.txt('Ниво '+(g.lvl+1),10,13,14,'#fff');A.txt('Цел: точно '+g.goal+' л',240,13,16,'#ffd54f','center');A.txt('⏱ '+Math.ceil(g.time),470,13,14,'#fff','right');
+    A.txt('Ходове: '+g.moves+' · най-малко: '+g.min,10,345,12,'#fff');
+    if(g.mt>0)A.txt(g.msg,240,44,14,'#ffb0a0','center');
+    if(g.done){c.fillStyle='rgba(0,0,0,.5)';c.fillRect(90,110,300,90);A.txt('Браво! '+g.goal+' литра!',240,135,20,'#7CFC00','center');
+      A.txt('⭐'.repeat(g.stars)+'  +40 сек.',240,172,18,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

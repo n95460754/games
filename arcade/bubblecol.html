@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Воден асансьор</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🫧 Воден асансьор</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 310. Воден асансьор
+A.add({id:'bubblecol',cat:'action',icon:'🫧',name:'Воден асансьор',desc:'Издигай се в мехурчестата колона и избягвай магмата и рибите балон',
+  help:'← → / A D — плувай наляво и надясно. Мишка / пръст: задръж и героят плува към показалеца. Минавай през дупките в магмените редове, пази се от рибите балон. Зелено XP кълбо = +3 точки, всеки 5 блока нагоре = +1. Имаш 3 сърца.',
+  start(g){g.x=240;g.d=0;g.bonus=0;g.hp=3;g.inv=0;g.obj=[];g.next=120;g.parts=[];g.wall=0;g.bub=[];
+    for(let i=0;i<26;i++)g.bub.push({x:A.rnd(30,450),y:A.rnd(0,360),s:A.rnd(2,5)});},
+  speed(g){return Math.min(190,70+g.t*2.2);},
+  spawn(g){
+    const r=Math.random(),gap=Math.max(84,150-g.t*1.1);
+    if(r<.5){const gx=A.rnd(24,456-gap);g.obj.push({k:'magma',y:-20,gx,gw:gap});
+      if(Math.random()<.6)g.obj.push({k:'xp',x:gx+gap/2,y:-10,r:7});}
+    else if(r<.8){const dir=Math.random()<.5?1:-1;g.obj.push({k:'puff',x:dir>0?34:446,y:-20,vx:dir*A.rnd(50,90+g.t),r:11,ph:Math.random()*6});}
+    else{const x=A.rnd(50,430);for(let i=0;i<3;i++)g.obj.push({k:'xp',x:x+A.rnd(-25,25),y:-10-i*34,r:7});}
+    g.next=g.d+A.rnd(120,190)-Math.min(40,g.t*.6);
+  },
+  hurt(g){if(g.inv>0)return;g.hp--;g.inv=1.3;A.beep(140,.25,'sawtooth',.06);
+    for(let i=0;i<10;i++)g.parts.push({x:g.x,y:270,vx:A.rnd(-90,90),vy:A.rnd(-90,60),t:.6,col:'#ff6a00'});
+    if(g.hp<=0)A.over(g,'Изгоря в магмата!');},
+  update(g,dt){
+    const v=this.speed(g);
+    let mx=0;if(A.keys.ArrowLeft||A.keys.KeyA)mx=-1;if(A.keys.ArrowRight||A.keys.KeyD)mx=1;
+    if(A.mouse.down&&!mx){const dx=A.mouse.x-g.x;if(Math.abs(dx)>4)mx=Math.sign(dx)*Math.min(1,Math.abs(dx)/30);}
+    g.x=A.clamp(g.x+mx*240*dt,32,448);
+    g.d+=v*dt;g.wall=(g.wall+v*dt)%20;g.inv=Math.max(0,g.inv-dt);
+    if(g.d>=g.next)this.spawn(g);
+    const P={x:g.x-9,y:261,w:18,h:18};
+    for(const o of g.obj){o.y+=v*dt;
+      if(o.k==='magma'){if(o.y+20>P.y&&o.y<P.y+P.h&&(P.x<o.gx||P.x+P.w>o.gx+o.gw)){this.hurt(g);}}
+      else if(o.k==='puff'){o.x+=o.vx*dt;o.ph+=dt*4;if((o.x<34&&o.vx<0)||(o.x>446&&o.vx>0))o.vx=-o.vx;
+        if(Math.hypot(o.x-g.x,o.y-270)<o.r+9)this.hurt(g);}
+      else if(o.k==='xp'&&!o.got&&Math.hypot(o.x-g.x,o.y-270)<o.r+12){o.got=true;g.bonus+=3;A.beep(990,.06,'triangle');
+        for(let i=0;i<6;i++)g.parts.push({x:o.x,y:o.y,vx:A.rnd(-60,60),vy:A.rnd(-60,60),t:.4,col:'#9cff57'});}
+    }
+    g.obj=g.obj.filter(o=>o.y<390&&!o.got);
+    for(const b of g.bub){b.y-=(v*.5+40*b.s/5)*dt;if(b.y<-6){b.y=366;b.x=A.rnd(30,450);}}
+    for(const p of g.parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt;}g.parts=g.parts.filter(p=>p.t>0);
+    g.score=Math.floor(g.d/100)+g.bonus;
+  },
+  draw(g){
+    const deep=Math.min(1,g.d/8000);
+    c.fillStyle='rgb('+Math.round(30+20*deep)+','+Math.round(90-40*deep)+','+Math.round(170-50*deep)+')';c.fillRect(0,0,480,360);
+    // стени от призмарин
+    for(let y=-20;y<380;y+=20)for(const x of [0,460]){const yy=y+g.wall;A.block(x,yy,20,((Math.floor((y-g.d)/20)+x)%3===0)?'#3f8f86':'#4fa59a');}
+    // мехурчета от пясъка на душите
+    c.fillStyle='rgba(220,240,255,.55)';for(const b of g.bub)c.fillRect(b.x,b.y,b.s,b.s);
+    for(const o of g.obj){
+      if(o.k==='magma'){for(let x=20;x<460;x+=20){if(x+20>o.gx&&x<o.gx+o.gw)continue;A.block(x,o.y,20,'#8c2b12');
+          c.fillStyle=(Math.floor(g.t*4+x/20)%2)?'#ff8a1e':'#ffb347';c.fillRect(x+4,o.y+6,4,4);c.fillRect(x+12,o.y+12,4,3);}
+        // ръбчета на дупката
+        c.fillStyle='rgba(255,255,255,.18)';c.fillRect(o.gx,o.y-2,o.gw,2);}
+      else if(o.k==='puff'){const s=o.r*2+Math.sin(o.ph)*3;A.block(o.x-s/2,o.y-s/2,s,'#e8c63a');
+        c.fillStyle='#7a5a10';for(let i=0;i<4;i++){c.fillRect(o.x-s/2-3,o.y-s/2+i*s/4+2,3,2);c.fillRect(o.x+s/2,o.y-s/2+i*s/4+2,3,2);}
+        c.fillStyle='#000';c.fillRect(o.x+(o.vx>0?3:-7),o.y-4,4,4);c.fillStyle='#c0392b';c.fillRect(o.x+(o.vx>0?s/2-4:-s/2),o.y+2,4,3);}
+      else if(o.k==='xp'){const p=1+Math.sin(g.t*8+o.x)*.15;c.fillStyle='#4fd12a';c.fillRect(o.x-o.r*p,o.y-o.r*p,o.r*2*p,o.r*2*p);
+        c.fillStyle='#d8ff7a';c.fillRect(o.x-3,o.y-3,6,6);}
+    }
+    // героят
+    if(!(g.inv>0&&Math.floor(g.t*12)%2)){const x=g.x-9,y=261;A.block(x,y,18,'#c99a6b');c.fillStyle='#4a2f1a';c.fillRect(x,y,18,5);
+      c.fillStyle='#fff';c.fillRect(x+3,y+8,4,3);c.fillRect(x+11,y+8,4,3);c.fillStyle='#3b4fbf';c.fillRect(x+5,y+8,2,3);c.fillRect(x+13,y+8,2,3);
+      A.block(x+2,y+18,14,'#2fa6b8',10);
+      c.fillStyle='rgba(220,240,255,.7)';c.fillRect(g.x-2+Math.sin(g.t*9)*4,y+32+(g.t*60%20),3,3);}
+    for(const p of g.parts){c.fillStyle=p.col;c.fillRect(p.x,p.y,4,4);}
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,24);
+    A.txt('❤'.repeat(g.hp)+'♡'.repeat(Math.max(0,3-g.hp)),10,12,15,'#ff5a5a');
+    A.txt('⬆ '+Math.floor(g.d/20)+' блока',240,12,14,'#bfe8ff','center');
+    A.txt('XP: '+g.bonus,470,12,14,'#9cff57','right');
+  }
+});
+</script>
+</body>
+</html>

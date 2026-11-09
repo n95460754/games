@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**319 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 309 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**322 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 312 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-319-5aa13a)
+![Games](https://img.shields.io/badge/games-322-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 309 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 312 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -454,8 +454,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 307 | 🛶 Ice Boat (Лодка по леда) | [`iceboat.html`](arcade/iceboat.html) | Drifty ice-racing: steer an oak boat across a frozen lake (keys or hold the mouse / finger), slide through the yellow flags for +1 point and extra time, grab emeralds for +2 and bounce off packed-ice blocks before the clock runs out |
 | 308 | 🐑 Sheep Fence (Ограда за овцете) | [`fenceloop.html`](arcade/fenceloop.html) | Logic puzzle ("Slitherlink"): build one closed fence loop between the posts — each number says how many of the field's 4 sides are fenced; click/tap edges or "walk the pencil" with the arrow keys, grids grow from 4×4 to 7×7 and the sheep move in when you win |
 | 309 | 🕵️ Logic Detective (Логически детектив) | [`logicgrid.html`](arcade/logicgrid.html) | Deduction puzzles: read clues like "Whoever has the wolf mines emeralds" and work out each miner's pet and ore; every puzzle has exactly one answer, 3 miners at first, then 4; 3-minute timer, +15 s per solve, −10 s for a wrong check |
+| 310 | 🫧 Bubble Column (Воден асансьор) | [`bubblecol.html`](arcade/bubblecol.html) | Vertical dodger: ride a soul-sand bubble column upward, steer left/right (keys or hold the mouse / finger) through the gaps in magma-block rows, dodge bouncing pufferfish and grab green XP orbs; it gets faster the higher you go, 3 hearts |
+| 311 | 🪣 Water Buckets (Кофи с вода) | [`jugs.html`](arcade/jugs.html) | The classic jug puzzle: measure exactly N litres using only fill, empty and pour between 2 (later 3) buckets; every level is generated and checked with a breadth-first search, solve it in the fewest moves for 3 stars, +40 s per level |
+| 312 | 📸 Photo Safari (Фото сафари) | [`photosafari.html`](arcade/photosafari.html) | Camera skill game: chickens, pigs, creepers, bats, parrots and the rare mooshroom wander by — move the viewfinder (mouse, keys or tap) and snap them dead-centre for ×3 points; 12 shots of film and 90 seconds, each photo pops up as a little polaroid |
 
-All 309 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 312 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -483,8 +486,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–308
-│   └── logicgrid.html      # 309. Logic Detective
+│   ├── ...                 # games 51–311
+│   └── photosafari.html    # 312. Photo Safari
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
