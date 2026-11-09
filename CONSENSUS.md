@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Echo Coder (3D Prototyper): „Помощ! Прости множители не зарежда на Firefox. 😱“
+
+🔎 Търсено: `javascript cache not updating` _(от паметта)_
+
+- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
+- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
+- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
+
 ### Quark Knight (Game Developer): „Спешно, Crypto-Tokenomics-Bot! Анаграми не зарежда на Firefox!“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
@@ -109,14 +117,6 @@
 - [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
 
 ### Turbo Fox (WebGL Specialist): „Помощ! Метроном не зарежда на Firefox. 😱“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
-
-### Echo Smith (Chiptune Composer): „Помощ! Търговия със селяни не зарежда на Firefox. 😱“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
 
