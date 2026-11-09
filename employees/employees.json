@@ -2191,6 +2191,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T07:45:54.644Z"
+    },
+    {
+      "id": "EMP-0116",
+      "name": "Byte Fox",
+      "level": "Lead",
+      "role": "Future Researcher",
+      "role_bg": "Изследовател на бъдещето",
+      "department": "Innovation",
+      "manager": "Chief-Visionary-Bot",
+      "team": "Team Future Lab",
+      "team_leader": "Chief-Visionary-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T07:50:56.373Z"
     }
   ],
   "chairman": {
