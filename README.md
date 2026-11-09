@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**367 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 357 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**370 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 360 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-367-5aa13a)
+![Games](https://img.shields.io/badge/games-370-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 357 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 360 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -502,8 +502,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 355 | 📦 Air Drop (Доставка от въздуха) | [`airdrop.html`](arcade/airdrop.html) | Fly a blocky airship over the sea and drop food crates onto the villagers' rafts before they float away. The wind pushes the crates and later seagulls knock them aside. Land in the middle of a raft for +2. Keyboard, mouse or touch drag. |
 | 356 | 💎 Gem Caves (Диаманти в пещерите) | [`gemcaves.html`](arcade/gemcaves.html) | A logic puzzle like Star Battle: put exactly one diamond in every row, every column and every coloured cave, and two diamonds may never touch, not even diagonally. Boards grow from 5×5 to 8×8; each solved cave gives +30 seconds. |
 | 357 | 🧰 Chest Shuffle (Следи сандъка) | [`chestshuffle.html`](arcade/chestshuffle.html) | The cups-and-ball game with chests: a diamond goes into one chest, then the chests swap places faster and faster. Follow it with your eyes and pick the right one. Later come 4 and 5 chests and double swaps. 3 hearts. |
+| 358 | 🌩️ Lightning Rod (Гръмоотвод) | [`lightningrod.html`](arcade/lightningrod.html) | A thunderstorm over the village! A cloud glows yellow where lightning will strike — run along the rooftops with a copper lightning rod and catch the bolt before it sets a house on fire. Golden bolts give 3 points, 5 catches in a row give a bonus, and later two bolts come at once. 5 hearts. |
+| 359 | 🧮 KenKen (Калкудоку) | [`kenken.html`](arcade/kenken.html) | Like sudoku with sums: fill the grid so every row and column has 1…N once, and the numbers in each coloured ore vein must make its clue (6+, 2÷, 12×, 1−). Starts with 3×3, then 4×4 and 5×5. Every solved puzzle gives points and +25 seconds. |
+| 360 | 🎲 Dice General (Генерал със зарове) | [`yahtzee.html`](arcade/yahtzee.html) | The classic 5-dice game (Yahtzee / Генерал) for one player: roll up to 3 times, hold the dice you like and write the score in one of 13 rows — full house, straights, four of a kind and the 50-point General. 63+ in the top part gives a +35 bonus. |
 
-All 357 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 360 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -531,8 +534,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–356
-│   └── chestshuffle.html   # 357. Chest Shuffle
+│   ├── ...                 # games 51–359
+│   └── yahtzee.html        # 360. Dice General
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

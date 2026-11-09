@@ -340,7 +340,10 @@ const GAMES=[
    {"id": "mapscale", "cat": "brain", "icon": "🗺️", "name": "Мащаб на картата", "desc": "Преброй блоковете на пътя и сметни истинското разстояние по мащаба на картата", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "airdrop", "cat": "action", "icon": "📦", "name": "Доставка от въздуха", "desc": "Пускай сандъци от дирижабъла точно върху саловете на селяните. Внимавай за вятъра!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "gemcaves", "cat": "puzzle", "icon": "💎", "name": "Диаманти в пещерите", "desc": "По един диамант във всеки ред, колона и пещера — и никога два един до друг!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "chestshuffle", "cat": "skill", "icon": "🧰", "name": "Следи сандъка", "desc": "Диамантът се скрива в сандък, сандъците се разбъркват — проследи го с поглед!", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "chestshuffle", "cat": "skill", "icon": "🧰", "name": "Следи сандъка", "desc": "Диамантът се скрива в сандък, сандъците се разбъркват — проследи го с поглед!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "lightningrod", "cat": "action", "icon": "🌩️", "name": "Гръмоотвод", "desc": "Тичай по покривите с медния гръмоотвод и хващай мълниите, преди да ударят къщите!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "kenken", "cat": "puzzle", "icon": "🧮", "name": "Калкудоку", "desc": "Числа без повторения в ред и колона — и всяка рудна жила трябва да дава своята сметка!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "yahtzee", "cat": "board", "icon": "🎲", "name": "Генерал със зарове", "desc": "Хвърли 5 зара до 3 пъти и попълни таблицата: фул, кента, каре и генерал!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

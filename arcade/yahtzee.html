@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Генерал със зарове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🎲 Генерал със зарове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 360. Генерал със зарове
+// Класическата игра с 5 зара (Генерал / Yahtzee) за един играч. Всеки ход хвърляш до 3 пъти,
+// задържаш заровете, които ти харесват, и записваш резултата в един от 13-те реда.
+// Горната част дава бонус +35 при поне 63 точки. Колко най-много можеш да събереш?
+A.add({id:'yahtzee',cat:'board',icon:'🎲',name:'Генерал със зарове',desc:'Хвърли 5 зара до 3 пъти и попълни таблицата: фул, кента, каре и генерал!',
+  help:'Space / R / бутона = хвърли (до 3 пъти на ход). 1–5 или клик върху зар = задръж го. ↑ ↓ + Enter или клик на ред = запиши. Горна част ≥ 63 = бонус +35. Генерал (5 еднакви) = 50!',
+  ROWS:[['Единици',1],['Двойки',2],['Тройки',3],['Четворки',4],['Петици',5],['Шестици',6],['Бонус (63+)','b'],['Три еднакви','3k'],['Каре','4k'],['Фул','fh'],['Малка кента','ss'],['Голяма кента','ls'],['Генерал','y'],['Шанс','ch']],
+  start(g){g.d=[1,2,3,4,5];g.hold=[0,0,0,0,0];g.rolls=0;g.anim=0;g.turn=1;g.sc={};g.cur=0;g.msg='Хвърли заровете!';g.yb=0;this.total(g);},
+  pts(g,id){const d=g.d,cnt=[0,0,0,0,0,0,0];d.forEach(v=>cnt[v]++);const sum=d.reduce((a,b)=>a+b,0),mx=Math.max(...cnt),has=n=>cnt[n]>0;
+    if(typeof id==='number')return cnt[id]*id;
+    if(id==='3k')return mx>=3?sum:0;if(id==='4k')return mx>=4?sum:0;
+    if(id==='fh')return cnt.includes(3)&&cnt.includes(2)?25:0;
+    if(id==='ss')return [[1,2,3,4],[2,3,4,5],[3,4,5,6]].some(s=>s.every(has))?30:0;
+    if(id==='ls')return [[1,2,3,4,5],[2,3,4,5,6]].some(s=>s.every(has))?40:0;
+    if(id==='y')return mx===5?50:0;if(id==='ch')return sum;return 0;},
+  upper(g){let s=0;for(let i=1;i<=6;i++)s+=g.sc[i]||0;return s;},
+  total(g){const u=this.upper(g);let s=u+(u>=63?35:0)+g.yb;for(const k in g.sc)if(isNaN(+k))s+=g.sc[k];g.score=s;},
+  free(g,i){const id=this.ROWS[i][1];return id!=='b'&&g.sc[id]===undefined;},
+  roll(g){if(g.rolls>=3||g.anim>0||g.turn>13)return;g.rolls++;g.anim=.45;g.msg='';
+    for(let i=0;i<5;i++)if(!g.hold[i])g.d[i]=A.ri(1,6);A.beep(220,.05,'triangle');
+    if(!this.free(g,g.cur))this.step(g,1);},
+  finishRoll(g){const cnt=[0,0,0,0,0,0,0];g.d.forEach(v=>cnt[v]++);
+    if(Math.max(...cnt)===5){A.tune([660,880,1100,1320,1760]);g.msg=g.sc.y===50?'Още един генерал! +100 бонус при запис':'ГЕНЕРАЛ! 🎉';}
+    else A.beep(440,.05);
+    let best=-1,bi=g.cur;this.ROWS.forEach((r,i)=>{if(this.free(g,i)){const p=this.pts(g,r[1]);if(p>best){best=p;bi=i;}}});g.cur=bi;},
+  step(g,dir){for(let n=0;n<14;n++){g.cur=(g.cur+dir+14)%14;if(this.free(g,g.cur))return;}},
+  write(g,i){if(g.rolls===0||g.anim>0||!this.free(g,i))return;const id=this.ROWS[i][1],p=this.pts(g,id);
+    if(this.pts(g,'y')===50&&g.sc.y===50){g.yb+=100;}
+    g.sc[id]=p;this.total(g);A.beep(p?700:200,.1,'triangle');g.msg=p?'+'+p+' в „'+this.ROWS[i][0]+'“':'0 в „'+this.ROWS[i][0]+'“ 😬';
+    g.turn++;g.rolls=0;g.hold=[0,0,0,0,0];
+    if(g.turn>13){this.total(g);const u=this.upper(g);return A.over(g,u>=63?'Таблицата е пълна! Бонусът е твой 🏆':'Таблицата е пълна!');}
+    if(!this.free(g,g.cur))this.step(g,1);},
+  toggle(g,i){if(g.rolls===0||g.anim>0)return;g.hold[i]=g.hold[i]?0:1;A.beep(g.hold[i]?600:350,.04);},
+  key(g,k,ch){const n=+ch;if(n>=1&&n<=5)return this.toggle(g,n-1);
+    if(k==='Space'||k==='KeyR')return this.roll(g);
+    if(k==='ArrowUp'||k==='KeyW')this.step(g,-1);else if(k==='ArrowDown'||k==='KeyS')this.step(g,1);
+    else if(k==='Enter'||k==='NumpadEnter')this.write(g,g.cur);},
+  click(g,mx,my){for(let i=0;i<5;i++){const [x,y]=this.dpos(i);if(mx>=x&&mx<x+44&&my>=y-14&&my<y+44)return this.toggle(g,i);}
+    if(mx>=20&&mx<=236&&my>=196&&my<=240)return this.roll(g);
+    if(mx>=252&&my>=40&&my<40+14*22){const i=Math.floor((my-40)/22);if(this.free(g,i)){g.cur=i;this.write(g,i);}}},
+  dpos(i){return [12+(i%3)*78+(i>2?39:0),i>2?122:58];},
+  update(g,dt){if(g.fl)g.fl.t-=dt;if(g.anim>0){g.anim-=dt;if(g.anim<=0)this.finishRoll(g);}},
+  die(x,y,v,held){A.block(x,y,44,held?'#fff3c4':'#eeeeee');if(held){c.strokeStyle='#ffd23f';c.lineWidth=3;c.strokeRect(x-2,y-2,48,48);}
+    const P={1:[[1,1]],2:[[0,0],[2,2]],3:[[0,0],[1,1],[2,2]],4:[[0,0],[2,0],[0,2],[2,2]],5:[[0,0],[2,0],[1,1],[0,2],[2,2]],6:[[0,0],[2,0],[0,1],[2,1],[0,2],[2,2]]}[v];
+    c.fillStyle=v===1?'#c62828':'#222';for(const [a,b] of P)c.fillRect(x+8+a*11,y+8+b*11,7,7);},
+  draw(g){A.bg('#1f5a2e');for(let x=0;x<250;x+=25)for(let y=0;y<360;y+=25)if((x+y)%50)c.fillStyle='#226232',c.fillRect(x,y,25,25);
+    A.block(0,0,248,'#7a5233',8);A.block(0,352,248,'#7a5233',8);
+    A.txt('Ход '+Math.min(13,g.turn)+' / 13',12,24,15,'#ffd54f');A.txt('Хвърляния: '+'🎲'.repeat(3-g.rolls),236,24,12,'#fff','right');
+    for(let i=0;i<5;i++){const [x,y0]=this.dpos(i),y=y0-(g.hold[i]?10:0);const v=g.anim>0&&!g.hold[i]?A.ri(1,6):g.d[i];
+      if(g.rolls===0&&g.anim<=0){c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x,y,44,44);A.txt('?',x+22,y+24,20,'#9fbf9f','center');}
+      else this.die(x+(g.anim>0&&!g.hold[i]?A.ri(-2,2):0),y,v,g.hold[i]);
+      A.txt(String(i+1),x+22,y0+56,11,g.hold[i]?'#ffd23f':'#9fbf9f','center');}
+    const can=g.rolls<3&&g.anim<=0;A.block(20,196,216,can?'#c58c2a':'#555',44);A.txt(g.rolls===0?'🎲 Хвърли (Space)':can?'🎲 Пак (Space) · '+(3-g.rolls):'Избери ред →',128,219,15,'#fff','center');
+    const u=this.upper(g);A.txt('Горна част: '+u+' / 63',12,268,13,u>=63?'#9cff8a':'#fff');
+    A.txt(g.msg,124,300,g.msg.length>26?11:13,'#ffd54f','center');
+    A.txt('Общо: '+g.score,124,334,20,'#fff','center');
+    // таблица
+    c.fillStyle='#e8d8b0';c.fillRect(248,0,232,360);c.fillStyle='#5d3b1f';c.fillRect(248,0,4,360);
+    A.txt('Таблица',364,22,15,'#5d3b1f','center');
+    this.ROWS.forEach((r,i)=>{const y=40+i*22,id=r[1],fr=this.free(g,i);
+      if(i===6||i===7){c.fillStyle='#b89a6a';c.fillRect(256,y-1,218,2);}
+      if(fr&&i===g.cur&&g.rolls>0){c.fillStyle='rgba(255,210,63,.55)';c.fillRect(254,y,222,21);}
+      c.font='bold 13px Consolas,monospace';c.textBaseline='middle';c.textAlign='left';c.fillStyle=id==='b'?'#7a5a3a':'#3a2a1a';c.fillText(r[0],260,y+11);
+      c.textAlign='right';let t='',col='#1a1a1a';
+      if(id==='b'){t=u>=63?'35':'—';col=u>=63?'#2e7d32':'#8a7a6a';}
+      else if(!fr){t=String(g.sc[id]);if(id==='y'&&g.yb)t+=' +'+g.yb;}
+      else if(g.rolls>0&&g.anim<=0){t=String(this.pts(g,id));col=t==='0'?'#b0a090':'#2e7dd1';}
+      c.fillStyle=col;c.fillText(t,470,y+11);});
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

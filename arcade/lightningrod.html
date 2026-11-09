@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гръмоотвод</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌩️ Гръмоотвод</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 358. Гръмоотвод
+// Буря над селото! Облаците светват там, където ще удари мълния. Тичай по покривите
+// с медния гръмоотвод и я хвани, преди да подпали някоя къща. Златните мълнии дават
+// 3 точки, а поредица от хванати мълнии дава бонус.
+A.add({id:'lightningrod',cat:'action',icon:'🌩️',name:'Гръмоотвод',desc:'Тичай по покривите с медния гръмоотвод и хващай мълниите, преди да ударят къщите!',
+  help:'Където облакът светне в жълто, след малко пада мълния. Застани под нея с гръмоотвода! ← → / A D, мишка или плъзгане с пръст. Златната мълния = 3 точки, 5 поредни = бонус. 5 сърца.',
+  start(g){g.x=240;g.tx=null;g.lives=5;g.warn=[];g.bolts=[];g.fire=[];g.next=1;g.combo=0;g.flashT=0;g.face=1;
+    g.rain=[];for(let i=0;i<70;i++)g.rain.push([A.rnd(0,480),A.rnd(0,360),A.rnd(260,380)]);
+    g.houses=[0,1,2,3,4,5].map(i=>({x:i*80+6,col:A.pick(['#9a6a3a','#b07b45','#8a5a2a']),roof:A.pick(['#a33a2a','#7a4a7a','#3a5a8a','#5a6a3a'])}));},
+  move(g,mx){g.tx=A.clamp(mx,12,468);},
+  click(g,mx){g.tx=A.clamp(mx,12,468);},
+  spawn(g){const t=g.t,gold=Math.random()<.12,n=t>40&&Math.random()<Math.min(.45,(t-40)/120)?2:1;
+    for(let i=0;i<n;i++){let x,tries=0;do{x=A.rnd(16,464);}while(tries++<20&&g.warn.some(w=>Math.abs(w.x-x)<70));
+      const wt=Math.max(.6,1.45-t*.011)+i*.35;g.warn.push({x,t:wt,max:wt,gold:gold&&i===0});}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.flashT-=dt;if(g.bonus)g.bonus.t-=dt;
+    const L=A.keys.ArrowLeft||A.keys.KeyA,R=A.keys.ArrowRight||A.keys.KeyD,sp=280;
+    if(L||R){g.tx=null;const d=(R?1:0)-(L?1:0);g.x+=d*sp*dt;if(d)g.face=d;}
+    else if(g.tx!==null){const d=g.tx-g.x,s=Math.min(Math.abs(d),420*dt);g.x+=Math.sign(d)*s;if(Math.abs(d)>2)g.face=Math.sign(d);}
+    g.x=A.clamp(g.x,12,468);
+    for(const r of g.rain){r[1]+=r[2]*dt;r[0]-=40*dt;if(r[1]>360){r[1]=A.rnd(-20,0);r[0]=A.rnd(0,500);}}
+    g.next-=dt;if(g.next<=0){this.spawn(g);g.next=Math.max(.5,2-g.t*.02)*A.rnd(.8,1.2);}
+    for(const w of g.warn){w.t-=dt;if(w.t<=0)this.strike(g,w);}
+    g.warn=g.warn.filter(w=>w.t>0);
+    for(const b of g.bolts)b.t-=dt;g.bolts=g.bolts.filter(b=>b.t>0);
+    for(const f of g.fire)f.t-=dt;g.fire=g.fire.filter(f=>f.t>0);
+    if(g.lives<=0)A.over(g,'Селото изгоря от мълниите! 🔥');},
+  strike(g,w){g.flashT=.12;const caught=Math.abs(w.x-g.x)<24;
+    if(caught){g.bolts.push({x:w.x,y:166,t:.28,gold:w.gold});g.combo++;let p=w.gold?3:1;if(g.combo%5===0){p+=2;g.bonus={t:1};}g.score+=p;
+      A.beep(w.gold?1200:900,.12,'square',.05);A.beep(300,.2,'sawtooth',.03);}
+    else{g.bolts.push({x:w.x,y:232,t:.28,gold:w.gold});g.combo=0;g.lives--;flash(g,false);g.fire.push({x:w.x,t:2.5});
+      A.beep(80,.35,'sawtooth',.07);}},
+  bolt(x0,y0,x1,y1,col,seed){c.strokeStyle=col;c.lineWidth=4;c.beginPath();c.moveTo(x0,y0);const n=7;
+    for(let i=1;i<n;i++){const u=i/n;c.lineTo(x0+(x1-x0)*u+((i*seed*37)%23-11),y0+(y1-y0)*u);}c.lineTo(x1,y1);c.stroke();
+    c.strokeStyle='#fff';c.lineWidth=1.5;c.stroke();},
+  draw(g){
+    A.bg(g.flashT>0?'#5a6a8a':'#1c2333');
+    for(let x=0;x<480;x+=40)for(let y=0;y<40;y+=20)A.block(x+((y/20)%2)*20-20,y,40,(x+y)%80?'#3d4352':'#444a5a',20);
+    for(const w of g.warn){const u=1-w.t/w.max,on=Math.sin(g.t*(10+u*20))>0;
+      c.fillStyle=w.gold?'rgba(255,210,63,'+(.25+u*.5)+')':'rgba(255,240,140,'+(.15+u*.45)+')';c.fillRect(w.x-24,0,48,40);
+      if(on){c.fillStyle=w.gold?'#ffd23f':'#fff59d';c.fillRect(w.x-3,42,6,10+u*16);}
+      c.fillStyle='rgba(255,255,200,.08)';c.fillRect(w.x-24,40,48,192);}
+    c.fillStyle='rgba(150,180,255,.35)';for(const r of g.rain)c.fillRect(r[0],r[1],1,7);
+    for(const h of g.houses){A.block(h.x,262,68,h.col,70);A.block(h.x-4,232,76,h.roof,30);A.block(h.x+8,276,18,'#8fd3ff',18);A.block(h.x+42,290,18,'#5d3b1f',42);}
+    for(const f of g.fire){const fx=f.x;for(let i=0;i<5;i++){const fy=228-((g.t*80+i*13)%30);A.block(fx-12+i*5,fy,7,i%2?'#ff6a00':'#ffd23f');}
+      c.fillStyle='rgba(40,40,40,.6)';c.fillRect(fx-8,200-((g.t*40)%30),10,10);}
+    A.block(0,332,480,'#5aa13a',28);
+    // играчът и гръмоотводът
+    const px=g.x,py=212;A.block(px-7,py-30,14,'#c58c5a',12);c.fillStyle='#000';c.fillRect(px+(g.face>0?1:-5),py-26,3,3);
+    A.block(px-8,py-18,16,'#2e7dd1',12);A.block(px-8,py-6,16,'#3b3b6b',8);
+    A.block(px-2,166,5,'#d9874a',40);A.block(px-5,162,11,'#e89a5a',6);
+    for(const b of g.bolts)this.bolt(b.x,40,b.y===166?px:b.x,b.y,b.gold?'#ffd23f':'#e0f0ff',Math.floor(b.x));
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,52,14,'#f55');
+    if(g.combo>1)A.txt('Серия ×'+g.combo,470,52,13,'#ffd54f','right');
+    if(g.bonus&&g.bonus.t>0){A.txt('+2 бонус!',px,140,16,'#9cff8a','center');}
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
