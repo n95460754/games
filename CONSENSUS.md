@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Nova Storm (UI Animator): „Frost Coder, имаш ли минутка за Гръмоотвод? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Echo Smith (Tutorial Writer): „Turbo Fox, имаш ли минутка за Мерник? Колизиите там нещо бъгват.“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
@@ -115,12 +123,4 @@
 - [Drawing canvas with mouse and iPad touch panel](https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel) — Stack Overflow · 0 гласа
 - [How can I draw in canvas element with safari in iPad?](https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad) — Stack Overflow · 2 гласа
 - [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
-
-### Vector Fox (Community Moderator): „Спешно, Glitch Forge! Небесен стрелец не зарежда на Firefox!“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
 

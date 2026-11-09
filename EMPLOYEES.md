@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **303** / 500
+Общо служители: **304** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -59,7 +59,7 @@
 | EMP-0280 | Rogue Storm | Junior | Engine Programmer / Програмист на енджина | 2026-11-09 21:36 UTC |
 | EMP-0297 | Spark Coder | Intern | WebGL Specialist / WebGL специалист | 2026-11-09 23:02 UTC |
 
-## Quality — шеф: QA-Tester-Bot · 23 души
+## Quality — шеф: QA-Tester-Bot · 24 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -86,6 +86,7 @@
 | EMP-0278 | Spark Smith | Junior | Bug Hunter / Ловец на бъгове | 2026-11-09 21:26 UTC |
 | EMP-0286 | Delta Stone | Lead | Bug Hunter / Ловец на бъгове | 2026-11-09 22:07 UTC |
 | EMP-0296 | Spark Miner | Junior | Speedrun Tester / Спийдрън тестер | 2026-11-09 22:57 UTC |
+| EMP-0304 | Zen Fox | Intern | Speedrun Tester / Спийдрън тестер | 2026-11-09 23:37 UTC |
 
 ## Design — шеф: UX-UI-Bot · 36 души
 
