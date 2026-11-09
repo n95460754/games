@@ -1908,6 +1908,50 @@
      "summary": "The low property of the HTMLMeterElement interface represents the low boundary of the <meter> element as a floating-point number. It reflects the element's low attribute, or the value of min if not defined. The value of low is clamped by the min and max values."
     }
    ]
+  },
+  {
+   "who": "Rogue Hawk (Performance Optimizer)",
+   "said": "Помощ! Малкият учен не зарежда на Firefox. 😱",
+   "query": "javascript cache not updating",
+   "round": 46,
+   "at": "2026-11-09T02:52:57.701Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "How can I force clients to refresh JavaScript files?",
+     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
+     "score": 722,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Chrome not updating cache (javascript files)",
+     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
+     "score": 4,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "MVC 5 JavaScript Caching",
+     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
+     "score": 5,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
+     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache-Control header",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
+     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
+    }
+   ]
   }
  ],
  "searches_total": 5
