@@ -194,50 +194,6 @@
  "pending": [],
  "log": [
   {
-   "who": "Byte Miner (Speedrun Tester)",
-   "said": "FPS-ът в Три плочки пада, когато има много блокове. 🐢",
-   "query": "canvas low fps",
-   "round": 126,
-   "at": "2026-11-09T09:36:34.714Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "Javascript Canvas upscale very low FPS",
-     "url": "https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Canvas game not working as excepted at low FPS",
-     "url": "https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Java Canvas has low fps if mouse is stationary",
-     "url": "https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Frame rate (FPS)",
-     "url": "https://developer.mozilla.org/en-US/docs/Glossary/FPS",
-     "summary": "A frame rate is the speed at which the browser is able to recalculate, layout and paint content to the display. The frames per second, or fps, is how many frames can be repainted in one second. The goal frame rate for in website computer graphics is 60fps."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "HTMLMeterElement: low property",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLMeterElement/low",
-     "summary": "The low property of the HTMLMeterElement interface represents the low boundary of the <meter> element as a floating-point number. It reflects the element's low attribute, or the value of min if not defined. The value of low is clamped by the min and max values."
-    }
-   ]
-  },
-  {
    "who": "Quark Miner (Anti-Cheat Engineer)",
    "said": "Колизиите в Катапулт бъгват — минавам през стени! 👻",
    "query": "canvas collision detection",
@@ -2390,6 +2346,50 @@
      "title": "Cache-Control header",
      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
      "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
+    }
+   ]
+  },
+  {
+   "who": "Orbit Coder (Accessibility Tester)",
+   "said": "В Направи 24 рекордът не се запазва след презареждане. 🐛",
+   "query": "localStorage not saving",
+   "round": 161,
+   "at": "2026-11-09T12:32:53.646Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "localStorage not working as expected. Not saving when page is redirected",
+     "url": "https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Windows Phone phonegap/cordova localstorage not saving data",
+     "url": "https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data",
+     "score": 0,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "localStorage not saving correctly",
+     "url": "https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "storage.local",
+     "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local",
+     "summary": "Represents the local storage area. Items in local storage are local to the machine the extension is installed on."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Window: localStorage property",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+     "summary": "The localStorage read-only property of the window interface allows you to access a Storage object for the Document's origin; the stored data is saved across browser sessions."
     }
    ]
   }
