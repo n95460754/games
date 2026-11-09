@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скорост, време, път</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🚃 Скорост, време, път</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 336. Скорост, време, път
+// Вагонетките учат физика: път = скорост × време. Намери пътя, времето или скоростта.
+// По-късно идват минути (1 мин = 60 с) и две вагонетки, които се гонят.
+A.add(Object.assign(choiceGame({time:90,bg:'#22303e'}),{id:'cartspeed',cat:'brain',icon:'🚃',name:'Скорост, време, път',desc:'Път = скорост × време! Колко блока ще измине вагонетката, за колко секунди и колко бързо?',
+  help:'Вагонетката се движи с еднаква скорост (бл/с = блока в секунда). Път = скорост × време, време = път ÷ скорост, скорост = път ÷ време. Избери верния отговор с 1–4 или цъкни бутона. Внимавай: 1 минута = 60 секунди! 3 верни подред = +3 сек. 90 секунди.',
+  start(g){g.time=90;g.streak=0;g.bonus=0;g.anim=0;this.next(g);},
+  pick2(g,i){const ok=g.opts[i]===g.ans;flash(g,ok);if(ok){g.score++;g.streak++;if(g.streak%3===0){g.time+=3;g.bonus=1;}}else{g.streak=0;g.why='Беше '+g.ans;}this.next(g);},
+  update(g,dt){tick(g,dt);g.anim+=dt;g.bonus-=dt;},
+  next(g){const L=g.score;let v=A.ri(2,L<6?6:L<14?10:15),t=A.ri(2,L<6?6:L<14?10:12),types=L<3?['d','t']:L<8?['d','t','v']:['d','t','v','m','r'];
+    g.ty=A.pick(types);g.v=v;g.tt=t;g.anim=0;let ans,u,near;
+    if(g.ty==='d'){ans=v*t;u=' бл';g.q='Скорост '+v+' бл/с, време '+t+' с.';g.q2='Колко блока изминава?';near=()=>A.pick([(v+A.pick([-1,1]))*t,v*(t+A.pick([-1,1])),v+t,ans+A.pick([-10,10,-2,2])]);}
+    else if(g.ty==='t'){ans=t;u=' с';g.q='Път '+v*t+' блока със скорост '+v+' бл/с.';g.q2='За колко секунди?';near=()=>Math.max(1,ans+A.ri(-3,3));}
+    else if(g.ty==='v'){ans=v;u=' бл/с';g.q=v*t+' блока за '+t+' секунди.';g.q2='Каква е скоростта?';near=()=>Math.max(1,ans+A.ri(-3,3));}
+    else if(g.ty==='m'){const m=A.ri(1,3);g.v=v=A.ri(2,8);ans=v*60*m;u=' бл';g.q='Скорост '+v+' бл/с за '+m+' мин.';g.q2='Колко блока? (1 мин = 60 с)';g.tt=m*60;near=()=>A.pick([v*m,v*10*m,v*60*(m+A.pick([-1,1]))||v*30,ans+A.pick([-60,60,-v*10,v*10])]);}
+    else{const v2=v+A.ri(1,5),gap=(v2-v)*A.ri(2,8);ans=gap/(v2-v);u=' с';g.v2=v2;g.gap=gap;g.q='Зомби с '+v+' бл/с е '+gap+' бл. пред теб.';g.q2='Ти караш с '+v2+' бл/с. След колко с го стигаш?';
+      near=()=>Math.max(1,A.pick([ans+A.ri(-3,3),Math.round(gap/v2)||2,Math.round(gap/v)]));}
+    g.ans=ans+u;g.opts=opts4(ans,near).map(x=>x+u);},
+  pic(g){// релси и вагонетка
+    const y0=190;c.fillStyle='#3a2a1a';for(let x=0;x<480;x+=16)c.fillRect(x+2,y0+10,10,6);c.fillStyle='#9a9a9a';c.fillRect(0,y0+8,480,3);c.fillRect(0,y0+15,480,2);
+    const per=Math.min(4,g.ty==='m'?3:g.tt*.35),f=(g.anim%(per+1))/per,cx=30+Math.min(1,f)*380;
+    c.fillStyle='#ffd54f';c.fillRect(30,y0+26,2,8);c.fillRect(410,y0+26,2,8);c.fillRect(30,y0+29,380,2);
+    const lbl=g.ty==='r'?g.gap+' бл. разстояние':g.ty==='t'||g.ty==='v'?g.v*g.tt+' блока':'? блока';A.txt(lbl,220,y0+44,12,'#ffd54f','center');
+    if(g.ty==='r'){const zx=130+Math.min(1,f)*200;A.block(zx-8,y0-22,16,'#3e8e41',18);A.block(zx-7,y0-36,14,'#5aa13a');c.fillStyle='#000';c.fillRect(zx-4,y0-31,3,3);c.fillRect(zx+1,y0-31,3,3);
+      const px=30+Math.min(1,f)*300;this.cart(px,y0);}
+    else this.cart(cx,y0);
+    A.txt(g.q,240,62,g.q.length>34?15:18,'#fff','center');A.txt(g.q2,240,96,g.q2.length>36?14:17,'#8cc8ff','center');
+    A.txt('Подред: '+g.streak,240,14,13,'#8cc8ff','center');if(g.bonus>0)A.txt('+3 сек!',240,132,16,'#7ed957','center');},
+  cart(x,y){x=x|0;A.block(x-16,y-14,32,'#7d7d7d',18);c.fillStyle='#4a4a4a';c.fillRect(x-13,y-11,26,4);
+    c.fillStyle='#222';c.fillRect(x-12,y+3,7,7);c.fillRect(x+5,y+3,7,7);
+    A.block(x-6,y-30,12,'#c9946a');c.fillStyle='#4a2e1a';c.fillRect(x-6,y-30,12,4);c.fillStyle='#fff';c.fillRect(x-3,y-24,2,2);c.fillRect(x+2,y-24,2,2);}
+}));
+</script>
+</body>
+</html>

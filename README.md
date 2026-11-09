@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**343 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 333 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**346 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 336 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-343-5aa13a)
+![Games](https://img.shields.io/badge/games-346-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 333 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 336 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -478,8 +478,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 331 | ✂️ Sheep Shearer (Стригач на овце) | [`sheepshear.html`](arcade/sheepshear.html) | Run around the meadow and shear the sheep — they run away from you! White wool = 1, colored = 2, a golden sheep = 5 points and +5 seconds; shear quickly one after another for ×2 and ×3 combos, while wolves chase you and take your hearts |
 | 332 | 🀄 Ore Dominoes (Рудно домино) | [`oredomino.html`](arcade/oredomino.html) | A "Dominosa" puzzle: split the grid of numbered ore blocks into dominoes so that every pair (0-0, 0-1 … 6-6) appears exactly once; a pair table shows what is used, grids grow from 4×5 to 7×8, solved levels give points and +60 seconds |
 | 333 | 🎲 Cube Nets (Мрежа на куба) | [`cubenets.html`](arcade/cubenets.html) | Spatial thinking: does this net of 6 blocks fold into a cube — yes or no? Later also "which square ends up opposite the creeper?"; after each answer the opposite faces light up in matching colors, 3 in a row = +3 seconds |
+| 334 | 👂 Warden Sneak (Тихо покрай Уордъна) | [`wardensneak.html`](arcade/wardensneak.html) | The Warden is blind but hears everything: sneak through a dark cave collecting echo shards. Walking fills the noise meter and sculk sensors make a lot of noise — unless you sneak (Shift / Space). A full meter makes the Warden charge; ancient chests give 3 points, 3 hearts |
+| 335 | 🏝️ Ocean Islands (Острови в океана) | [`nurikabe.html`](arcade/nurikabe.html) | A "Nurikabe" logic puzzle: every number is a sand island with that many blocks — flood everything else with water so the sea is connected and there is no 2×2 pool; red marks show mistakes, grids grow from 5×5 to 9×9, each solved puzzle gives points and +45 seconds |
+| 336 | 🚃 Speed, Time, Distance (Скорост, време, път) | [`cartspeed.html`](arcade/cartspeed.html) | Physics with minecarts: distance = speed × time. Find how many blocks a cart travels, how many seconds it takes or how fast it goes; later come minutes (1 min = 60 s) and chasing a zombie on the rails; 3 right in a row = +3 seconds |
 
-All 333 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 336 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -507,8 +510,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–332
-│   └── cubenets.html       # 333. Cube Nets
+│   ├── ...                 # games 51–335
+│   └── cartspeed.html      # 336. Speed, Time, Distance
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

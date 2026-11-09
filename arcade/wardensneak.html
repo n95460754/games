@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тихо покрай Уордъна</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👂 Тихо покрай Уордъна</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 334. Тихо покрай Уордъна
+// Уордънът е сляп, но чува всичко! Промъквай се из тъмната пещера и събирай ехо-кристали.
+// Ходенето вдига шум, промъкването (Shift / Space) е почти безшумно и не задейства скълк сензорите.
+const WS={top:28,T:24,cols:20,rows:14};
+A.add({id:'wardensneak',cat:'action',icon:'👂',name:'Тихо покрай Уордъна',desc:'Промъквай се из тъмната пещера и събирай ехо-кристали — ако вдигаш шум, Уордънът идва!',
+  help:'Стрелки / WASD = ходене. Shift (задръж) или Space / бутона „Промъкване“ = тихо промъкване. Мишка / пръст: цъкни или задръж — Стив върви натам; десен бутон също превключва промъкването. Уордънът е сляп, но чува: ходенето пълни шумомера, а стъпка върху скълк сензор (синьо-зелен блок) вдига много шум — освен ако се промъкваш! Пълен шумомер = Уордънът тича към теб. Ехо-кристал = 1 т., древен сандък = 3 т. 3 сърца.',
+  start(g){g.p={x:60,y:300,f:1};g.lives=3;g.inv=0;g.noise=0;g.sneak=false;g.tgt=null;g.lvl=1;g.got=0;g.pops=[];g.rings=[];g.walk=0;
+    g.w={x:380,y:110,tx:380,ty:110,anger:0,wt:0,f:-1,roar:0};g.chest=null;g.ct=15;g.cell=-1;
+    g.sensors=[];for(let i=0;i<9;i++)this.addSensor(g);g.shards=[];for(let i=0;i<3;i++)this.addShard(g);},
+  free(g,x,y,d){return Math.hypot(x-g.p.x,y-g.p.y)>d&&Math.hypot(x-g.w.x,y-g.w.y)>60;},
+  addSensor(g){for(let n=0;n<50;n++){const cx=A.ri(0,WS.cols-1),cy=A.ri(1,WS.rows-1),x=cx*WS.T+12,y=WS.top+cy*WS.T+12;
+      if(!g.sensors.some(s=>s.cx===cx&&s.cy===cy)&&this.free(g,x,y,70)){g.sensors.push({cx,cy,fl:0});return;}}},
+  addShard(g){for(let n=0;n<50;n++){const x=A.rnd(20,460),y=A.rnd(WS.top+20,340);if(this.free(g,x,y,90)){g.shards.push({x,y});return;}}},
+  toggle(g){g.sneak=!g.sneak;A.beep(g.sneak?300:500,.05,'triangle');},
+  btn(mx,my){return mx<104&&my>326;},
+  click(g,mx,my,b){if(b===2||this.btn(mx,my))return this.toggle(g);g.tgt={x:mx,y:Math.max(WS.top+10,my)};},
+  move(g,mx,my){if(A.mouse.down&&!this.btn(mx,my))g.tgt={x:mx,y:Math.max(WS.top+10,my)};},
+  key(g,k){if(k==='Space')this.toggle(g);},
+  noiseAt(g,amt,x,y){g.noise=Math.min(100,g.noise+amt);g.rings.push({x,y,r:4,t:.8});g.w.tx=x;g.w.ty=y;},
+  update(g,dt){const K=A.keys,p=g.p,w=g.w;g.inv-=dt;
+    g.pops=g.pops.filter(o=>(o.t-=dt)>0);g.rings=g.rings.filter(o=>{o.r+=70*dt;return (o.t-=dt)>0;});
+    const sn=g.sneak||K.ShiftLeft||K.ShiftRight;
+    let dx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),dy=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);
+    if(dx||dy)g.tgt=null;else if(g.tgt){const tx=g.tgt.x-p.x,ty=g.tgt.y-p.y,d=Math.hypot(tx,ty);if(d<4)g.tgt=null;else{dx=tx/d;dy=ty/d;}}
+    const moving=!!(dx||dy),l=Math.hypot(dx,dy)||1,sp=sn?48:115;
+    p.x=A.clamp(p.x+dx/l*sp*dt,10,470);p.y=A.clamp(p.y+dy/l*sp*dt,WS.top+14,346);if(dx)p.f=dx>0?1:-1;g.walk=moving?g.walk+dt:0;
+    // шум: ходенето пълни шумомера, тишината го изпразва
+    g.noise=Math.max(0,g.noise+((moving&&!sn?24+g.lvl*1.5:0)-13)*dt);
+    if(moving&&!sn&&Math.random()<dt*3)g.rings.push({x:p.x,y:p.y+10,r:3,t:.5});
+    // скълк сензори
+    const cx=Math.floor(p.x/WS.T),cy=Math.floor((p.y+8-WS.top)/WS.T),cell=cx+cy*100;
+    if(cell!==g.cell){g.cell=cell;const s=g.sensors.find(s=>s.cx===cx&&s.cy===cy);
+      if(s&&!sn){s.fl=1;this.noiseAt(g,38,p.x,p.y);A.beep(1200,.15,'sine',.05);A.beep(900,.2,'sine',.04);}}
+    for(const s of g.sensors)s.fl=Math.max(0,s.fl-dt);
+    // Уордънът
+    if(g.noise>=100&&w.anger<=0){w.anger=3.5;w.roar=1;A.beep(70,.6,'sawtooth',.09);g.pops.push({x:240,y:60,s:'УОРДЪНЪТ ТЕ ЧУ!',t:1.4,col:'#4de8f5'});}
+    w.roar-=dt;w.wt-=dt;
+    let tx,ty,ws;
+    if(w.anger>0){w.anger-=dt;tx=p.x;ty=p.y;ws=118+g.lvl*4;}
+    else{if(g.noise>45){w.tx=p.x+A.rnd(-40,40);w.ty=p.y+A.rnd(-40,40);}
+      else if(w.wt<=0){w.wt=A.rnd(2,4);w.tx=A.rnd(40,440);w.ty=A.rnd(WS.top+30,330);}
+      tx=w.tx;ty=w.ty;ws=24+g.noise*.45+g.lvl*2;}
+    const ex=tx-w.x,ey=ty-w.y,ed=Math.hypot(ex,ey);if(ed>3){w.x+=ex/ed*ws*dt;w.y+=ey/ed*ws*dt;w.f=ex>0?1:-1;}
+    w.x=A.clamp(w.x,16,464);w.y=A.clamp(w.y,WS.top+20,340);
+    if(Math.hypot(w.x-p.x,w.y-p.y)<24&&g.inv<=0){g.lives--;g.inv=2;w.anger=0;g.noise=30;A.beep(110,.4,'sawtooth',.08);
+      const a=Math.atan2(p.y-w.y,p.x-w.x);w.x-=Math.cos(a)*90;w.y-=Math.sin(a)*90;w.x=A.clamp(w.x,16,464);w.y=A.clamp(w.y,WS.top+20,340);w.wt=2;
+      if(g.lives<=0)return A.over(g,'Уордънът те хвана! Кристали: '+g.got);}
+    // кристали и сандък
+    for(let i=g.shards.length-1;i>=0;i--){const s=g.shards[i];if(Math.hypot(s.x-p.x,s.y-p.y)<16){g.shards.splice(i,1);g.score++;g.got++;
+      g.pops.push({x:s.x,y:s.y-10,s:'+1',t:.8,col:'#4de8f5'});A.beep(1000+g.got%5*80,.06,'triangle');this.addShard(g);
+      if(g.got%5===0){g.lvl++;this.addSensor(g);this.addSensor(g);g.pops.push({x:240,y:80,s:'Ниво '+g.lvl+' — повече сензори!',t:1.5,col:'#ffd54f'});}}}
+    g.ct-=dt;if(!g.chest&&g.ct<=0){for(let n=0;n<30;n++){const x=A.rnd(30,450),y=A.rnd(WS.top+30,330);if(this.free(g,x,y,150)){g.chest={x,y,t:12};break;}}g.ct=A.rnd(15,22);}
+    if(g.chest){g.chest.t-=dt;if(g.chest.t<=0)g.chest=null;else if(Math.hypot(g.chest.x-p.x,g.chest.y-p.y)<18){g.score+=3;
+      g.pops.push({x:g.chest.x,y:g.chest.y-12,s:'+3 древен сандък!',t:1.2,col:'#ffd23f'});A.tune([660,880,1100]);g.chest=null;}}},
+  drawWarden(g){const w=g.w,x=w.x|0,y=w.y|0,f=w.f,sh=w.anger>0?Math.sin(g.t*30)*1.5:0;
+    c.fillStyle='#0b2a2e';c.fillRect(x-11+sh,y+6,8,10);c.fillRect(x+3+sh,y+6,8,10);
+    A.block(x-14+sh,y-14,28,'#123c44',22);A.block(x-11+sh,y-30,22,'#164a52',17);
+    c.fillStyle='#0b2a2e';c.fillRect(x-15+sh,y-36,5,9);c.fillRect(x+10+sh,y-36,5,9);
+    const glow=.5+.5*Math.sin(g.t*(w.anger>0?14:3));c.fillStyle='rgba(77,232,245,'+(.45+glow*.5)+')';
+    c.fillRect(x-7+sh,y-9,5,5);c.fillRect(x+3+sh,y-6,5,5);c.fillRect(x-2+sh,y-1,4,4);
+    c.fillStyle='#08191b';c.fillRect(x-7+sh,y-24,14,3);
+    if(w.roar>0){c.strokeStyle='rgba(77,232,245,'+w.roar+')';c.lineWidth=3;c.beginPath();c.arc(x,y-14,40+(1-w.roar)*60,0,6.28);c.stroke();}},
+  draw(g){A.bg('#1b1f24');const T=WS.T;
+    for(let cy=0;cy<WS.rows;cy++)for(let cx=0;cx<WS.cols;cx++){const h=(cx*7+cy*13)%5;c.fillStyle=h===0?'#2b3038':h===1?'#252a31':'#22262c';c.fillRect(cx*T,WS.top+cy*T,T,T);}
+    c.fillStyle='#14171b';for(let i=0;i<26;i++)c.fillRect((i*89)%470,WS.top+((i*61)%330),6,3);
+    for(const s of g.sensors){const x=s.cx*T,y=WS.top+s.cy*T;A.block(x+2,y+2,T-4,s.fl>0?'#3fd8c8':'#0f5c5a',T-4);
+      c.fillStyle=s.fl>0?'#e8fffd':'#1fa59c';c.fillRect(x+6,y+5,3,6);c.fillRect(x+15,y+5,3,6);c.fillRect(x+10,y+8,4,4);}
+    for(const s of g.shards){const b=Math.sin(g.t*4+s.x)*2;c.fillStyle='#4de8f5';c.beginPath();c.moveTo(s.x,s.y-9+b);c.lineTo(s.x+6,s.y+b);c.lineTo(s.x,s.y+9+b);c.lineTo(s.x-6,s.y+b);c.fill();
+      c.fillStyle='#e8ffff';c.fillRect(s.x-1,s.y-4+b,2,4);}
+    if(g.chest){const x=g.chest.x-11|0,y=g.chest.y-9|0;if(g.chest.t>3||Math.floor(g.t*8)%2){A.block(x,y,22,'#9a6a3a',18);c.fillStyle='#ffd23f';c.fillRect(x+9,y+6,4,5);c.fillStyle='#5a3a1a';c.fillRect(x,y+5,22,2);}}
+    for(const r of g.rings){c.strokeStyle='rgba(77,232,245,'+(r.t*.8)+')';c.lineWidth=2;c.beginPath();c.arc(r.x,r.y,r.r,0,6.28);c.stroke();}
+    this.drawWarden(g);
+    if(g.tgt){c.strokeStyle='rgba(255,255,255,.4)';c.lineWidth=2;c.strokeRect(g.tgt.x-5,g.tgt.y-5,10,10);}
+    const p=g.p,sn=g.sneak||A.keys.ShiftLeft||A.keys.ShiftRight;
+    if(g.inv<=0||Math.floor(g.t*12)%2){const x=p.x|0,y=(p.y|0)+(sn?4:0),st=Math.sin(g.walk*(sn?6:14))*3;
+      c.fillStyle='#3b3b9a';c.fillRect(x-6,y+4,5,9-(sn?4:0)+st);c.fillRect(x+1,y+4,5,9-(sn?4:0)-st);
+      A.block(x-7+(sn?p.f*2:0),y-8,14,'#2ea3b8',13);A.block(x-6+(sn?p.f*3:0),y-20,12,'#c9946a');c.fillStyle='#4a2e1a';c.fillRect(x-6+(sn?p.f*3:0),y-20,12,4);
+      c.fillStyle='#fff';c.fillRect(x+p.f+(sn?p.f*3:0)-3,y-14,2,2);c.fillRect(x+p.f+(sn?p.f*3:0)+2,y-14,2,2);}
+    // тъмнина около играча
+    const gr=c.createRadialGradient(p.x,p.y,30,p.x,p.y,150);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,'rgba(0,0,0,'+(.62+.12*Math.sin(g.t*1.5))+')');
+    c.fillStyle=gr;c.fillRect(0,WS.top,480,360-WS.top);
+    for(const o of g.pops)A.txt(o.s,o.x,o.y-(1-o.t)*16,14,o.col,'center');
+    // горна лента и шумомер
+    c.fillStyle='rgba(0,0,0,.7)';c.fillRect(0,0,480,WS.top-4);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),8,12,14,'#f55');A.txt('💎 '+g.got,70,12,14,'#4de8f5');A.txt('Ниво '+g.lvl,140,12,13,'#ccc');
+    A.txt('Шум',236,12,13,'#ccc');c.fillStyle='#000';c.fillRect(270,4,200,16);
+    const n=g.noise;c.fillStyle=n>75?'#ff4040':n>45?'#ffb300':'#3fd8c8';c.fillRect(272,6,196*n/100,12);
+    c.fillStyle='rgba(255,255,255,.3)';c.fillRect(272+196*.45,6,2,12);
+    A.block(4,328,98,sn?'#3e8e41':'#5a6b8c',28);A.txt(sn?'🤫 Промъкване':'🚶 Ходене',53,342,12,'#fff','center');}
+});
+</script>
+</body>
+</html>

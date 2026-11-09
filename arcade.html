@@ -316,7 +316,10 @@ const GAMES=[
    {"id": "curling", "cat": "skill", "icon": "🥌", "name": "Кърлинг на леда", "desc": "Плъзгай камъни по леда към центъра на мишената и избивай червените камъни", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "sheepshear", "cat": "action", "icon": "✂️", "name": "Стригач на овце", "desc": "Гони и стрижи овцете на ливадата, прави комбо и бягай от вълците", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "oredomino", "cat": "puzzle", "icon": "🀄", "name": "Рудно домино", "desc": "Раздели решетката от руди на доминота — всяка двойка числа трябва да се срещне точно веднъж", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "cubenets", "cat": "brain", "icon": "🎲", "name": "Мрежа на куба", "desc": "Сгъва ли се мрежата от 6 блока на куб и коя страна ще е срещу кийпъра?", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "cubenets", "cat": "brain", "icon": "🎲", "name": "Мрежа на куба", "desc": "Сгъва ли се мрежата от 6 блока на куб и коя страна ще е срещу кийпъра?", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "wardensneak", "cat": "action", "icon": "👂", "name": "Тихо покрай Уордъна", "desc": "Промъквай се из тъмната пещера и събирай ехо-кристали — ако вдигаш шум, Уордънът идва!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "nurikabe", "cat": "puzzle", "icon": "🏝️", "name": "Острови в океана", "desc": "Залей морето около пясъчните острови — числото казва колко блока е островът, а водата трябва да е цяла", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "cartspeed", "cat": "brain", "icon": "🚃", "name": "Скорост, време, път", "desc": "Път = скорост × време! Колко блока ще измине вагонетката, за колко секунди и колко бързо?", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

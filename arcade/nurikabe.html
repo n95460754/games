@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Острови в океана</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🏝️ Острови в океана</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 335. Острови в океана (Нурикабе)
+// Числото е остров от пясък с толкова блока. Всичко останало е вода: водата трябва да е свързана
+// и никъде да няма квадрат 2×2 от вода. Всеки остров има точно едно число.
+const NK={D:[[1,0],[-1,0],[0,1],[0,-1]]};
+function nkWaterOk(sol,n){let tot=0,st=-1;for(let i=0;i<n*n;i++)if(!sol[i]){tot++;st=i;}if(!tot)return false;
+  const seen=new Uint8Array(n*n),q=[st];seen[st]=1;let k=0;
+  while(q.length){const i=q.pop();k++;const x=i%n,y=i/n|0;for(const [dx,dy] of NK.D){const a=x+dx,b=y+dy;if(a<0||b<0||a>=n||b>=n)continue;const j=a+b*n;if(!sol[j]&&!seen[j]){seen[j]=1;q.push(j);}}}
+  return k===tot;}
+function nkPools(w,n){const r=[];for(let y=0;y<n-1;y++)for(let x=0;x<n-1;x++){const i=x+y*n;if(w(i)&&w(i+1)&&w(i+n)&&w(i+n+1))r.push(i);}return r;}
+// пясъчна клетка до чужд остров?
+function nkTouches(sol,n,i,id){const x=i%n,y=i/n|0;for(const [dx,dy] of NK.D){const a=x+dx,b=y+dy;if(a<0||b<0||a>=n||b>=n)continue;const v=sol[a+b*n];if(v&&v!==id)return true;}return false;}
+function nkGen(n){
+  for(let att=0;att<400;att++){const sol=new Int16Array(n*n),sz=[0];let id=0;const maxS=n<=5?4:n<=6?5:6;
+    const grow=(isl,i)=>{sol[i]=isl;if(nkWaterOk(sol,n)){sz[isl]++;return true;}sol[i]=0;return false;};
+    const seed=i=>{if(sol[i]||nkTouches(sol,n,i,-1))return false;id++;sz.push(0);if(!grow(id,i)){id--;sz.pop();return false;}return true;};
+    const extend=isl=>{const c=[];for(let i=0;i<n*n;i++)if(sol[i]===isl){const x=i%n,y=i/n|0;for(const [dx,dy] of NK.D){const a=x+dx,b=y+dy;if(a<0||b<0||a>=n||b>=n)continue;const j=a+b*n;if(!sol[j]&&!nkTouches(sol,n,j,isl))c.push(j);}}
+      A.shuffle(c);for(const j of c)if(grow(isl,j))return true;return false;};
+    const want=Math.round(n*n/5);
+    for(let k=0;k<200&&id<want;k++){if(seed(A.ri(0,n*n-1))){const t=A.ri(1,maxS);while(sz[id]<t&&extend(id));}}
+    // поправи басейните 2×2
+    let pools=nkPools(i=>!sol[i],n),guard=0;
+    while(pools.length&&guard++<60){const p=A.pick(pools),cells=A.shuffle([p,p+1,p+n,p+n+1]);let done=false;
+      for(const j of cells){if(seed(j)){done=true;break;}}
+      if(!done)for(const j of cells){const x=j%n,y=j/n|0;for(const [dx,dy] of NK.D){const a=x+dx,b=y+dy;if(a<0||b<0||a>=n||b>=n)continue;const v=sol[a+b*n];
+        if(v&&sz[v]<maxS+1&&!nkTouches(sol,n,j,v)&&grow(v,j)){done=true;break;}}if(done)break;}
+      pools=nkPools(i=>!sol[i],n);}
+    if(pools.length||id<2)continue;
+    const clue=new Int16Array(n*n);for(let isl=1;isl<=id;isl++){const cs=[];for(let i=0;i<n*n;i++)if(sol[i]===isl)cs.push(i);clue[A.pick(cs)]=cs.length;}
+    return clue;}
+  return null;}
+A.add({id:'nurikabe',cat:'puzzle',icon:'🏝️',name:'Острови в океана',desc:'Нурикабе: залей морето около пясъчните острови — числото казва колко блока е островът, а водата трябва да е цяла',
+  help:'Всяко число е остров от пясък с толкова блока. Сложи вода във всички останали полета. Правила: водата е свързана в едно море; няма квадрат 2×2 от вода; всеки остров има точно едно число и толкова блока. Клик / докосване = вода → точка (сигурен пясък) → празно; десен бутон = точка. Клавиатура: стрелки + Space (вода), X (точка). N = нов пъзел (−20 сек). Решен пъзел = точки и +45 сек.',
+  start(g){g.time=150;g.lvl=0;g.cx=0;g.cy=0;g.won=0;this.level(g);},
+  level(g){g.lvl++;g.n=Math.min(9,4+Math.ceil(g.lvl/2));let cl=null;while(!cl)cl=nkGen(g.n);g.clue=cl;g.m=new Int8Array(g.n*g.n);g.cs=Math.floor(Math.min(300,440)/g.n);
+    g.ox=Math.floor((480-g.cs*g.n)/2);g.oy=36+Math.floor((300-g.cs*g.n)/2);g.cx=Math.min(g.cx,g.n-1);g.cy=Math.min(g.cy,g.n-1);this.check(g);},
+  set(g,i,v){if(g.won>0||g.clue[i])return;g.m[i]=v;A.beep(v===1?420:v===2?640:300,.04,'triangle');this.check(g);},
+  cyc(g,i){this.set(g,i,(g.m[i]+1)%3);},
+  click(g,mx,my,b){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x<0||y<0||x>=g.n||y>=g.n)return;g.cx=x;g.cy=y;const i=x+y*g.n;
+    if(b===2)this.set(g,i,g.m[i]===2?0:2);else this.cyc(g,i);},
+  key(g,k){const i=g.cx+g.cy*g.n;
+    if(k==='ArrowLeft'||k==='KeyA')g.cx=Math.max(0,g.cx-1);else if(k==='ArrowRight'||k==='KeyD')g.cx=Math.min(g.n-1,g.cx+1);
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=Math.max(0,g.cy-1);else if(k==='ArrowDown'||k==='KeyS')g.cy=Math.min(g.n-1,g.cy+1);
+    else if(k==='Space'||k==='Enter')this.set(g,i,g.m[i]===1?0:1);else if(k==='KeyX')this.set(g,i,g.m[i]===2?0:2);
+    else if(k==='KeyN'&&g.won<=0){g.time-=20;g.lvl--;this.level(g);A.beep(200,.15,'sawtooth');}},
+  // проверка: водата = маркираната вода, всичко друго е пясък
+  check(g){const n=g.n,m=g.m,cl=g.clue,W=i=>m[i]===1;g.pool=new Set();for(const p of nkPools(W,n)){g.pool.add(p);g.pool.add(p+1);g.pool.add(p+n);g.pool.add(p+n+1);}
+    g.bad=new Set();let ok=g.pool.size===0;
+    // острови от немаркирана вода
+    const seen=new Uint8Array(n*n);
+    for(let s=0;s<n*n;s++){if(W(s)||seen[s])continue;const comp=[],q=[s];seen[s]=1;
+      while(q.length){const i=q.pop();comp.push(i);const x=i%n,y=i/n|0;for(const [dx,dy] of NK.D){const a=x+dx,b=y+dy;if(a<0||b<0||a>=n||b>=n)continue;const j=a+b*n;if(!W(j)&&!seen[j]){seen[j]=1;q.push(j);}}}
+      const nums=comp.filter(i=>cl[i]);if(nums.length!==1||cl[nums[0]]!==comp.length)ok=false;
+      // явна грешка: две числа в един остров от сигурен пясък или прекалено голям остров
+      const solid=comp.every(i=>cl[i]||m[i]===2);if(nums.length>1&&solid)nums.forEach(i=>g.bad.add(i));
+      if(nums.length===1&&solid&&comp.length>cl[nums[0]])g.bad.add(nums[0]);
+      if(nums.length===1){const closed=comp.every(i=>{const x=i%n,y=i/n|0;return NK.D.every(([dx,dy])=>{const a=x+dx,b=y+dy;return a<0||b<0||a>=n||b>=n||W(a+b*n)||comp.includes(a+b*n);});});
+        if(closed&&comp.length<cl[nums[0]])g.bad.add(nums[0]);}}
+    // водата свързана?
+    const wl=[];for(let i=0;i<n*n;i++)if(W(i))wl.push(i);
+    if(wl.length){const sw=new Uint8Array(n*n),q=[wl[0]];sw[wl[0]]=1;let k=0;while(q.length){const i=q.pop();k++;const x=i%n,y=i/n|0;
+      for(const [dx,dy] of NK.D){const a=x+dx,b=y+dy;if(a<0||b<0||a>=n||b>=n)continue;const j=a+b*n;if(W(j)&&!sw[j]){sw[j]=1;q.push(j);}}}if(k!==wl.length)ok=false;}else ok=false;
+    if(ok){const pts=g.n*g.n/5|0;g.score+=pts;g.time+=45;g.won=1.6;g.pts=pts;A.tune([523,659,784,1047]);}},
+  update(g,dt){if(g.won>0){g.won-=dt;if(g.won<=0)this.level(g);return;}g.time-=dt;if(g.time<=0){g.time=0;A.over(g,'Времето изтече! Решени пъзели: '+(g.lvl-1));}},
+  draw(g){A.bg('#14324f');const n=g.n,cs=g.cs,t=g.t;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=x+y*n,px=g.ox+x*cs,py=g.oy+y*cs,v=g.m[i];
+      if(g.clue[i]||v===2||(g.won>0&&v!==1)){A.block(px,py,cs,'#e0c068');c.fillStyle='#cdae55';c.fillRect(px+cs*.25|0,py+cs*.6|0,3,3);c.fillRect(px+cs*.65|0,py+cs*.3|0,3,3);}
+      else if(v===1){A.block(px,py,cs,g.pool.has(i)?'#b8443a':'#3b7bd6');c.fillStyle='rgba(255,255,255,.35)';const o=Math.sin(t*2+x+y)*cs*.15;c.fillRect(px+cs*.2+o|0,py+cs*.35|0,cs*.3|0,2);c.fillRect(px+cs*.45-o|0,py+cs*.65|0,cs*.3|0,2);}
+      else{A.block(px,py,cs,'#5c6f80');}
+      if(v===2&&!g.clue[i]){c.fillStyle='#7a5233';c.fillRect(px+cs/2-3,py+cs/2-3,6,6);}
+      if(g.clue[i])A.txt(''+g.clue[i],px+cs/2,py+cs/2+1,Math.floor(cs*.5),g.bad.has(i)?'#d00':'#3a2410','center');}
+    c.strokeStyle='#000';c.lineWidth=2;c.strokeRect(g.ox,g.oy,cs*n,cs*n);
+    if(g.won<=0){c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(g.ox+g.cx*cs+1,g.oy+g.cy*cs+1,cs-2,cs-2);}
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<15?'#f66':'#fff');A.txt('Пъзел '+g.lvl+' · '+n+'×'+n,240,14,14,'#8cc8ff','center');A.txt('N = нов',470,14,12,'#bbb','right');
+    if(g.pool.size&&g.won<=0)A.txt('Червено = вода 2×2 — не е позволено!',240,350,12,'#ffb0a0','center');
+    else if(g.won<=0)A.txt('Клик: вода → точка → празно',240,350,12,'#b9c6d6','center');
+    if(g.won>0){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,150,480,60);A.txt('Браво! Островите са готови! +'+g.pts+' т. +45 сек',240,180,18,'#7ed957','center');}}
+});
+</script>
+</body>
+</html>
