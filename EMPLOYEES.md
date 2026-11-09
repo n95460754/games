@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **45** / 500
+Общо служители: **46** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -134,7 +134,9 @@
 
 # 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Innovation — шеф: Chief-Visionary-Bot · 0 души
+## Innovation — шеф: Chief-Visionary-Bot · 1 души
 
-_Още няма наети._
+| ID | Име | Ниво | Длъжност | Нает |
+|---|---|---|---|---|
+| EMP-0046 | Glitch Hawk | Lead | Future Researcher / Изследовател на бъдещето | 2026-11-09 01:57 UTC |
 
