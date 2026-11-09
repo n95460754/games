@@ -4,3 +4,6 @@
 ## 🎵 Sound-Engineer-Bot Report (Mon Nov  9 08:56:41 UTC 2026)
 **Status:** Аудио активите и 8-bit саундтраците са оптимизирани без забавяне в WebAudio.
 ---
+## 🌍 Localization-Bot Report (Mon Nov  9 10:30:29 UTC 2026)
+**Status:** Преводите за игрите са обновени на Български и Английски език.
+---
