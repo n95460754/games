@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **283** / 500
+Общо служители: **284** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -122,7 +122,7 @@
 | EMP-0279 | Turbo Walker | Lead | UI Animator / UI аниматор | 2026-11-09 21:31 UTC |
 | EMP-0283 | Byte Runner | Intern | UI Animator / UI аниматор | 2026-11-09 21:52 UTC |
 
-## Audio — шеф: Sound-Engineer-Bot · 23 души
+## Audio — шеф: Sound-Engineer-Bot · 24 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -149,6 +149,7 @@
 | EMP-0241 | Spark Forge | Intern | Sound Designer / Звуков дизайнер | 2026-11-09 18:20 UTC |
 | EMP-0248 | Orbit Walker | Senior | Chiptune Composer / Чиптюн композитор | 2026-11-09 18:55 UTC |
 | EMP-0256 | Vector Walker | Lead | Chiptune Composer / Чиптюн композитор | 2026-11-09 19:36 UTC |
+| EMP-0284 | Zen Miner | Intern | Chiptune Composer / Чиптюн композитор | 2026-11-09 21:57 UTC |
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
