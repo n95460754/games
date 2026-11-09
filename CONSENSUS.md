@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **4** · Запомнени търсения: **4**
 
+### Vector Fox (Community Moderator): „Колизиите в Изгаси факлите бъгват — минавам през стени! 👻“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Quark Knight (Game Developer): „Колизиите в Осем царици бъгват — минавам през стени! 👻“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_

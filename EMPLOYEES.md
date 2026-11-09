@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **28** / 500
+Общо служители: **29** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -76,11 +76,12 @@
 | EMP-0020 | Echo Smith | Senior | Tutorial Writer / Автор на туториали | 2026-11-08 23:12 UTC |
 | EMP-0025 | Neon Fox | Junior | Tutorial Writer / Автор на туториали | 2026-11-08 23:27 UTC |
 
-## Security — шеф: SecOps-Bot · 1 души
+## Security — шеф: SecOps-Bot · 2 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
 | EMP-0013 | Quark Miner | Junior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-08 23:11 UTC |
+| EMP-0029 | Neon Walker | Senior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-09 00:32 UTC |
 
 # 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
