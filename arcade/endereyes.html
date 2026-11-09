@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Очите на Ендър</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">👁️ Очите на Ендър</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 347. Очите на Ендър
+// Логически пъзел „Звездна битка“: сложи точно по едно Око на Ендър във всеки ред,
+// всяка колона и всеки биом, като две очи никога не се докосват (и по диагонал).
+A.add({id:'endereyes',cat:'puzzle',icon:'👁️',name:'Очите на Ендър',desc:'По едно око във всеки ред, колона и биом — и никога едно до друго, дори по диагонал!',
+  help:'Клик / докосване — око → ✕ → празно. Десен бутон — само ✕. Стрелки / WASD — избор, Space — око, X — ✕, H или бутона „Подсказка“ — показва едно око (−30 т.). 6 пъзела, бързината носи бонус.',
+  BIO:[['#6fbf4a','Равнина'],['#e6cf7c','Пустиня'],['#eef4ff','Снежен'],['#2e7d32','Джунгла'],['#d9813b','Каньон'],['#4f8fe0','Океан'],['#b07cc6','Гъби'],['#b5413a','Недър']],
+  SIZES:[5,5,6,6,7,8],
+  start(g){g.k=0;g.cx=0;g.cy=0;this.make(g);},
+  make(g){
+    const n=this.SIZES[g.k];g.n=n;g.cs=Math.floor(300/n);g.x0=20+Math.floor((310-n*g.cs)/2);g.y0=30+Math.floor((310-n*g.cs)/2);
+    let best=null;
+    for(let tries=0;tries<80;tries++){
+      const sol=this.perm(n),reg=this.grow(n,sol);
+      best={sol,reg};if(this.count(n,reg,2)===1)break;
+    }
+    g.sol=best.sol;g.reg=best.reg;g.m=[];for(let y=0;y<n;y++)g.m.push(new Array(n).fill(0));
+    g.pt=0;g.done=0;g.hints=0;this.check(g);
+  },
+  // разположение по едно в ред и колона, без допиране
+  perm(n){const p=[],used=new Array(n).fill(false);
+    const go=r=>{if(r===n)return true;const cols=A.shuffle([...Array(n).keys()]);
+      for(const c of cols){if(used[c]||(r&&Math.abs(p[r-1]-c)<2))continue;used[c]=true;p[r]=c;if(go(r+1))return true;used[c]=false;}return false;};
+    go(0);return p;},
+  // биомите растат от всяко око
+  grow(n,sol){const reg=[];for(let y=0;y<n;y++)reg.push(new Array(n).fill(-1));
+    sol.forEach((x,y)=>reg[y][x]=y);let left=n*n-n;
+    while(left>0){const r=A.ri(0,n-1),cand=[];
+      for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(reg[y][x]===-1&&[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dy])=>reg[y+dy]&&reg[y+dy][x+dx]===r))cand.push([x,y]);
+      if(cand.length){const [x,y]=A.pick(cand);reg[y][x]=r;left--;}}
+    return reg;},
+  // брой решения (спира при lim)
+  count(n,reg,lim){let cnt=0;const col=new Array(n).fill(false),rg=new Array(n).fill(false),p=[];
+    const go=r=>{if(cnt>=lim)return;if(r===n){cnt++;return;}
+      for(let c=0;c<n;c++){const q=reg[r][c];if(col[c]||rg[q]||(r&&Math.abs(p[r-1]-c)<2))continue;col[c]=rg[q]=true;p[r]=c;go(r+1);col[c]=rg[q]=false;}};
+    go(0);return cnt;},
+  check(g){const n=g.n,eyes=[];g.bad={};
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(g.m[y][x]===1)eyes.push([x,y]);
+    for(let i=0;i<eyes.length;i++)for(let j=i+1;j<eyes.length;j++){const [a,b]=eyes[i],[c2,d]=eyes[j];
+      if(a===c2||b===d||g.reg[b][a]===g.reg[d][c2]||(Math.abs(a-c2)<2&&Math.abs(b-d)<2)){g.bad[a+','+b]=1;g.bad[c2+','+d]=1;}}
+    g.eyes=eyes.length;
+    if(eyes.length===n&&!Object.keys(g.bad).length&&!g.done){
+      const pts=Math.max(20,n*20+Math.max(0,90-Math.floor(g.pt))-g.hints*30);g.score+=pts;g.done=1.6;g.gain=pts;A.tune([523,659,784,1046]);}
+  },
+  set(g,x,y,v){if(g.done||x<0||y<0||x>=g.n||y>=g.n)return;g.m[y][x]=v;A.beep(v===1?660:v===2?300:200,.05);this.check(g);},
+  hint(g){if(g.done)return;for(let y=0;y<g.n;y++){if(g.m[y].some((v,x)=>(v===1)!==(x===g.sol[y]))){
+      for(let x=0;x<g.n;x++)if(g.m[y][x]===1)g.m[y][x]=0;g.m[y][g.sol[y]]=1;g.hints++;g.cx=g.sol[y];g.cy=y;A.beep(990,.1,'triangle');this.check(g);return;}}},
+  key(g,k){
+    const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(d){g.cx=A.clamp(g.cx+d[0],0,g.n-1);g.cy=A.clamp(g.cy+d[1],0,g.n-1);return;}
+    const v=g.m[g.cy][g.cx];
+    if(k==='Space'||k==='Enter')this.set(g,g.cx,g.cy,v===1?0:1);
+    else if(k==='KeyX')this.set(g,g.cx,g.cy,v===2?0:2);
+    else if(k==='KeyH')this.hint(g);
+  },
+  click(g,mx,my,b){
+    if(mx>340&&my>250&&my<300){this.hint(g);return;}
+    const x=Math.floor((mx-g.x0)/g.cs),y=Math.floor((my-g.y0)/g.cs);
+    if(x<0||y<0||x>=g.n||y>=g.n)return;g.cx=x;g.cy=y;
+    const v=g.m[y][x];this.set(g,x,y,b===2?(v===2?0:2):(v+1)%3);
+  },
+  update(g,dt){
+    if(g.done){g.done-=dt;if(g.done<=0){g.done=0;g.k++;if(g.k>=this.SIZES.length)return A.over(g,'Всички 6 пъзела са решени! 🐉');this.make(g);}return;}
+    g.pt+=dt;
+  },
+  draw(g){
+    A.bg('#1b1530');const n=g.n,s=g.cs,x0=g.x0,y0=g.y0;
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){
+      const X=x0+x*s,Y=y0+y*s;A.block(X,Y,s,this.BIO[g.reg[y][x]][0]);
+      const v=g.m[y][x];
+      if(v===1){const bad=g.bad[x+','+y],r=s*.32;
+        c.fillStyle=bad?'#d32f2f':'#0f3d33';c.fillRect(X+s/2-r,Y+s/2-r,r*2,r*2);
+        c.fillStyle=bad?'#ff8a80':'#3fd9a0';c.fillRect(X+s/2-r+3,Y+s/2-r+3,r*2-6,r*2-6);
+        c.fillStyle='#0b1f1a';c.fillRect(X+s/2-r*.35,Y+s/2-r*.6,r*.7,r*1.2);}
+      else if(v===2){c.fillStyle='rgba(0,0,0,.45)';const q=s*.14;c.fillRect(X+s/2-q,Y+s/2-q,q*2,q*2);}
+    }
+    // граници на биомите
+    c.fillStyle='#000';
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++){const X=x0+x*s,Y=y0+y*s;
+      if(x<n-1&&g.reg[y][x]!==g.reg[y][x+1])c.fillRect(X+s-2,Y-1,4,s+2);
+      if(y<n-1&&g.reg[y][x]!==g.reg[y+1][x])c.fillRect(X-1,Y+s-2,s+2,4);}
+    c.strokeStyle='#000';c.lineWidth=4;c.strokeRect(x0,y0,n*s,n*s);
+    c.strokeStyle='#ffd54f';c.lineWidth=2;c.strokeRect(x0+g.cx*s+2,y0+g.cy*s+2,s-4,s-4);
+    // табло
+    A.txt('Пъзел '+(g.k+1)+'/6',350,50,15,'#ffd54f');
+    A.txt(n+'×'+n,350,75,14,'#fff');
+    A.txt('Очи: '+g.eyes+'/'+n,350,105,14,g.eyes===n?'#3fd9a0':'#fff');
+    A.txt('⏱ '+Math.floor(g.pt)+' с',350,130,14,'#fff');
+    A.txt('Бонус: '+Math.max(0,90-Math.floor(g.pt)),350,155,12,'#b9c6d6');
+    A.txt('1 в ред, колона,',350,190,11,'#b9c6d6');A.txt('биом; без допир',350,206,11,'#b9c6d6');
+    A.block(345,255,125,'#5a6b8c',40);A.txt('💡 Подсказка',407,275,13,'#fff','center');
+    if(g.done)A.txt('Браво! +'+g.gain,175,180,28,'#ffd54f','center');
+  }
+});
+</script>
+</body>
+</html>

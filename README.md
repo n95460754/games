@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**355 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 345 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**358 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 348 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-355-5aa13a)
+![Games](https://img.shields.io/badge/games-358-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 345 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 348 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -490,8 +490,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 343 | 🐢 Turtle Rescue (Спаси костенурките) | [`turtles.html`](arcade/turtles.html) | Baby turtles hatch on the beach and crawl to the sea; run around as Steve and swing your sword at the zombies and phantoms that try to eat them. Keyboard or click/tap to move. |
 | 344 | 🟨 Block Regions (Блокови участъци) | [`fillomino.html`](arcade/fillomino.html) | A "Fillomino" logic puzzle: fill in numbers so every group of equal touching numbers N has exactly N blocks, and equal groups never touch. 4 puzzles, faster = more points. |
 | 345 | 🏘️ Building Views (Изгледи на постройката) | [`views.html`](arcade/views.html) | Spatial thinking: look at a building made of cubes and pick how it looks from the front, from the right or from above. 60 seconds. |
+| 346 | 📿 Ore Serpent (Рудната змия) | [`orechain.html`](arcade/orechain.html) | A Zuma-style shooter: a chain of ore blocks crawls along a spiral toward the lava. Shoot ores from the dispenser in the middle — 3 or more of the same touching vanish, and gaps that close with matching colours make combo chains. Mouse/touch to aim and shoot, or arrows + Space. |
+| 347 | 👁️ Eyes of Ender (Очите на Ендър) | [`endereyes.html`](arcade/endereyes.html) | A "Star Battle" logic puzzle: place exactly one Eye of Ender in every row, every column and every biome, and no two eyes may touch, not even diagonally. 6 puzzles from 5×5 to 8×8, each with a unique solution; speed gives a bonus, hints cost points. |
+| 348 | 🔥 Keep the Fires (Пази огньовете) | [`campfires.html`](arcade/campfires.html) | Night falls and mobs lurk in the dark: run Steve between up to 6 campfires and throw on logs before any burns out. Rain clouds drift over and put fires out faster. Click/tap a fire or press 1–6; 3 hearts, score = seconds survived. |
 
-All 345 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 348 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -519,8 +522,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–344
-│   └── views.html          # 345. Building Views
+│   ├── ...                 # games 51–347
+│   └── campfires.html      # 348. Keep the Fires
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

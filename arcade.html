@@ -328,7 +328,10 @@ const GAMES=[
    {"id": "isolation", "cat": "board", "icon": "⛰️", "name": "Рушащият се остров", "desc": "Блокът зад теб пада в лавата — заклещи Крийпъра, преди той да заклещи теб!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "turtles", "cat": "action", "icon": "🐢", "name": "Спаси костенурките", "desc": "Пази малките костенурки по пътя им към морето — удряй зомбитата и фантомите с меча!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "fillomino", "cat": "puzzle", "icon": "🟨", "name": "Блокови участъци", "desc": "Филомино: попълни числата така, че всеки участък с число N да има точно N блока", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "views", "cat": "brain", "icon": "🏘️", "name": "Изгледи на постройката", "desc": "Как изглежда постройката от кубчета отпред, отдясно и отгоре?", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "views", "cat": "brain", "icon": "🏘️", "name": "Изгледи на постройката", "desc": "Как изглежда постройката от кубчета отпред, отдясно и отгоре?", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "orechain", "cat": "action", "icon": "📿", "name": "Рудната змия", "desc": "Стреляй с руди по пълзящата верига — 3 еднакви изчезват, преди да стигнат лавата!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "endereyes", "cat": "puzzle", "icon": "👁️", "name": "Очите на Ендър", "desc": "По едно око във всеки ред, колона и биом — и никога едно до друго, дори по диагонал!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "campfires", "cat": "skill", "icon": "🔥", "name": "Пази огньовете", "desc": "Тичай между лагерните огньове и ги поддържай с дърва — ако угаснат, мобовете идват!", "unit": " с", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

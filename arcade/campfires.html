@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пази огньовете</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔥 Пази огньовете</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 348. Пази огньовете
+// Нощ е и мобовете дебнат в тъмното. Тичай със Стив между лагерните огньове и
+// хвърляй дърва, преди някой да угасне. Дъждовните облаци гасят по-бързо!
+A.add({id:'campfires',cat:'skill',icon:'🔥',name:'Пази огньовете',desc:'Тичай между лагерните огньове и ги поддържай с дърва — ако угаснат, мобовете идват!',unit:' с',
+  help:'Клик / докосване на огън или клавиши 1–6 — Стив тича дотам и хвърля дърво. Стрелки / WASD — към съседен огън, Space — още едно дърво. Внимавай с дъждовните облаци! 3 сърца.',
+  SL:[[80,130],[240,130],[400,130],[80,270],[240,270],[400,270]],
+  ORDER:[0,2,4,1,3,5],
+  start(g){
+    g.f=this.SL.map(([x,y])=>({x,y,on:false,fuel:.9,rate:A.rnd(.05,.085),flash:0}));
+    g.on=0;this.light(g);this.light(g);
+    g.sx=200;g.sy=200;g.tgt=0;g.auto=false;g.cd=0;g.hp=3;g.cloud=null;g.nextCloud=12;g.parts=[];g.stars=[];
+    for(let i=0;i<40;i++)g.stars.push([A.ri(0,479),A.ri(0,70),Math.random()]);
+  },
+  light(g){if(g.on>=6)return;const f=g.f[this.ORDER[g.on++]];f.on=true;f.fuel=.9;f.flash=1;A.beep(440,.1,'triangle');},
+  stand(g,i){const f=g.f[i];return [f.x-38,f.y+6];},
+  go(g,i){if(!g.f[i].on)return;g.tgt=i;g.auto=true;},
+  feed(g){const [tx,ty]=this.stand(g,g.tgt);if(g.cd>0||Math.hypot(g.sx-tx,g.sy-ty)>6)return;const f=g.f[g.tgt];if(!f.on)return;
+    f.fuel=Math.min(1,f.fuel+.38);f.flash=.5;g.cd=.28;A.beep(220,.06,'sawtooth');
+    for(let i=0;i<6;i++)g.parts.push({x:f.x,y:f.y-10,vx:A.rnd(-40,40),vy:A.rnd(-120,-60),t:.5,col:A.pick(['#ffd23f','#ff6a00'])});},
+  key(g,k,ch){
+    const n=+ch;if(n>=1&&n<=6){this.go(g,n-1);return;}
+    if(k==='Space'){this.feed(g);return;}
+    const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(!d)return;let cx=g.tgt%3,cy=Math.floor(g.tgt/3);
+    for(let s=0;s<2;s++){cx+=d[0];cy+=d[1];if(cx<0||cx>2||cy<0||cy>1)return;const i=cy*3+cx;if(g.f[i].on){this.go(g,i);return;}}
+  },
+  click(g,mx,my){let bi=-1,bd=80;g.f.forEach((f,i)=>{if(!f.on)return;const d=Math.hypot(mx-f.x,my-f.y);if(d<bd){bd=d;bi=i;}});
+    if(bi<0)return;if(bi===g.tgt&&!g.auto)this.feed(g);else this.go(g,bi);},
+  update(g,dt){
+    g.score=g.t;g.cd-=dt;
+    // нови огньове с времето
+    const want=g.t>60?6:g.t>42?5:g.t>26?4:g.t>12?3:2;while(g.on<want)this.light(g);
+    // Стив тича
+    const [tx,ty]=this.stand(g,g.tgt),dx=tx-g.sx,dy=ty-g.sy,d=Math.hypot(dx,dy),sp=250*dt;
+    if(d>sp){g.sx+=dx/d*sp;g.sy+=dy/d*sp;}else{g.sx=tx;g.sy=ty;if(g.auto){g.auto=false;g.cd=0;this.feed(g);}}
+    // облак
+    g.nextCloud-=dt;
+    if(!g.cloud&&g.nextCloud<=0){const dir=A.pick([-1,1]);g.cloud={x:dir>0?-90:570,row:A.ri(0,1),dir,sp:A.rnd(45,70)};g.nextCloud=A.rnd(9,15);}
+    if(g.cloud){g.cloud.x+=g.cloud.dir*g.cloud.sp*dt;if(g.cloud.x<-120||g.cloud.x>600)g.cloud=null;}
+    // горене
+    const hard=1+g.t/100;
+    for(const f of g.f){if(!f.on)continue;f.flash=Math.max(0,f.flash-dt);
+      const wet=g.cloud&&g.cloud.row===(f.y>200?1:0)&&Math.abs(g.cloud.x-f.x)<75;f.wet=wet;
+      f.fuel-=f.rate*hard*(wet?3:1)*dt;
+      if(f.fuel<=0){g.hp--;f.fuel=.6;f.flash=1;A.beep(120,.4,'sawtooth',.06);
+        for(let i=0;i<10;i++)g.parts.push({x:f.x,y:f.y-10,vx:A.rnd(-30,30),vy:A.rnd(-60,-20),t:1,col:'#777'});
+        if(g.hp<=0)return A.over(g,'Огънят угасна и мобовете дойдоха! 🧟');}}
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+  },
+  draw(g){
+    A.bg('#0c1430');
+    g.stars.forEach(([x,y,p])=>{c.fillStyle=Math.sin(g.t*2+p*9)>-.3?'#cfd8ff':'#5a6aa0';c.fillRect(x,y,2,2);});
+    c.fillStyle='#e8e8c8';c.fillRect(420,18,22,22);
+    for(let x=0;x<24;x++)for(let y=4;y<18;y++){c.fillStyle=y===4?'#2f5a22':((x+y)%2?'#22421a':'#264a1d');c.fillRect(x*20,y*20,20,20);}
+    // светлина около огньовете
+    for(const f of g.f){if(!f.on)continue;const r=40+f.fuel*60,gr=c.createRadialGradient(f.x,f.y,4,f.x,f.y,r);
+      gr.addColorStop(0,'rgba(255,170,60,.45)');gr.addColorStop(1,'rgba(255,170,60,0)');c.fillStyle=gr;c.fillRect(f.x-r,f.y-r,r*2,r*2);}
+    g.f.forEach((f,i)=>{
+      if(!f.on){c.fillStyle='rgba(0,0,0,.3)';c.fillRect(f.x-18,f.y+6,36,8);return;}
+      A.block(f.x-20,f.y+4,40,'#6b4a2b',8);A.block(f.x-16,f.y-2,32,'#7a5233',7);
+      const h=6+f.fuel*34,fl=Math.sin(g.t*14+i)*2;
+      A.block(f.x-12,f.y-h+fl,24,'#ff6a00',h-fl);A.block(f.x-7,f.y-h*.75+fl,14,'#ffd23f',h*.75-fl);
+      if(f.flash>0){c.fillStyle='rgba(255,255,255,'+(f.flash*.4)+')';c.fillRect(f.x-25,f.y-45,50,60);}
+      c.fillStyle='#000';c.fillRect(f.x-22,f.y+18,44,7);c.fillStyle=f.fuel<.25?(Math.sin(g.t*15)>0?'#ff3d3d':'#7a1010'):'#43a047';c.fillRect(f.x-21,f.y+19,42*f.fuel,5);
+      A.txt(String(i+1),f.x+26,f.y-30,12,'#ffd54f','center');
+    });
+    // облак и дъжд
+    if(g.cloud){const cy=g.cloud.row?190:50,x=g.cloud.x;
+      c.fillStyle='rgba(120,160,230,.7)';for(let k=0;k<14;k++){const rx=x-60+((k*37+g.t*300)%120),ry=cy+20+((k*53+g.t*400)%90);c.fillRect(rx,ry,2,8);}
+      A.block(x-70,cy,140,'#9aa6b8',22);A.block(x-45,cy-14,70,'#b4bfcf',18);}
+    // Стив
+    const sx=g.sx,sy=g.sy,w=Math.sin(g.t*14)*(g.auto?3:0);
+    A.block(sx-8,sy-34,16,'#c68e5a');c.fillStyle='#4a2f1a';c.fillRect(sx-8,sy-34,16,5);c.fillStyle='#fff';c.fillRect(sx-5,sy-26,3,3);c.fillRect(sx+2,sy-26,3,3);
+    A.block(sx-8,sy-18,16,'#2aa7b8',14);A.block(sx-8,sy-4+w*0,8,'#3a3a9a',12);A.block(sx,sy-4,8,'#3a3a9a',12);
+    c.fillStyle='#7a5233';c.fillRect(sx+8,sy-14,10,5);
+    g.parts.forEach(p=>{c.fillStyle=p.col;c.fillRect(p.x-2,p.y-2,4,4);});
+    A.txt('❤'.repeat(g.hp)+'🖤'.repeat(Math.max(0,3-g.hp)),10,14,14,'#f55');
+    A.txt('⏱ '+Math.floor(g.t)+' с',470,14,14,'#fff','right');
+  }
+});
+</script>
+</body>
+</html>

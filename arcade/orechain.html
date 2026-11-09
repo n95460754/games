@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Рудната змия</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📿 Рудната змия</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 346. Рудната змия
+// Верига от рудни блокове пълзи по спирала към лавата. Изстрелвай руди от
+// раздавача в средата: 3 или повече еднакви една до друга изчезват.
+A.add({id:'orechain',cat:'action',icon:'📿',name:'Рудната змия',desc:'Стреляй с руди по пълзящата верига — 3 еднакви изчезват, преди да стигнат лавата!',
+  help:'Мишка / пръст — прицел, клик / докосване — изстрел. Стрелки ← → — завъртане, Space — изстрел, ↑ / ↓ / X / десен бутон / докосване на раздавача — смени рудата. 3+ еднакви една до друга изчезват!',
+  COLS:['#3ad65c','#4de8f5','#ffd23f','#e8322b','#2f5bd6','#a35bd6'],
+  D:18,
+  start(g){this.mkPath(g);g.lv=1;g.a=-Math.PI/2;g.parts=[];g.shot=null;g.cd=0;g.msg='Ниво 1';g.msgT=2;this.level(g);},
+  mkPath(g){
+    const raw=[],T=1.75*Math.PI*2;
+    for(let i=0;i<=3000;i++){const u=i/3000,th=Math.PI+u*T,rx=222-120*u,ry=160-84*u;raw.push([240+Math.cos(th)*rx,182+Math.sin(th)*ry]);}
+    const P=[raw[0]];let dist=0,need=1;
+    for(let i=1;i<raw.length;i++){const a=raw[i-1],b=raw[i],d=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      while(d>0&&dist+d>=need){const f=(need-dist)/d;P.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]);need++;}dist+=d;}
+    g.P=P;g.L=P.length;
+    // фонът и улеят се рисуват веднъж
+    const o=document.createElement('canvas');o.width=480;o.height=360;const x=o.getContext('2d');
+    for(let i=0;i<24;i++)for(let j=0;j<18;j++){x.fillStyle=(i*7+j*13)%5?'#6f6f6f':'#7d7d7d';x.fillRect(i*20,j*20,20,20);x.fillStyle='rgba(0,0,0,.15)';x.fillRect(i*20,j*20+18,20,2);x.fillRect(i*20+18,j*20,2,20);}
+    x.lineCap='round';x.lineJoin='round';
+    const stroke=(w,col)=>{x.strokeStyle=col;x.lineWidth=w;x.beginPath();x.moveTo(P[0][0],P[0][1]);for(let i=4;i<P.length;i+=4)x.lineTo(P[i][0],P[i][1]);x.stroke();};
+    stroke(26,'#2b2118');stroke(20,'#5c4127');stroke(4,'#4a3320');
+    g.bgc=o;
+  },
+  level(g){g.ch=[];g.s=0;g.left=24+g.lv*8;g.rush=true;g.nc=Math.min(6,3+g.lv);g.cur=A.ri(0,g.nc-1);g.nxt=A.ri(0,g.nc-1);},
+  pos(g,s){const i=Math.max(0,Math.min(g.L-1,Math.round(s)));return g.P[i];},
+  front(g){return g.s+(g.ch.length-1)*this.D;},
+  color(g){if(g.ch.length){const set=[...new Set(g.ch.map(b=>b.c))];return A.pick(set);}return A.ri(0,g.nc-1);},
+  fixColors(g){if(!g.ch.length)return;const has=new Set(g.ch.map(b=>b.c));if(!has.has(g.cur))g.cur=this.color(g);if(!has.has(g.nxt))g.nxt=this.color(g);},
+  swap(g){[g.cur,g.nxt]=[g.nxt,g.cur];A.beep(520,.04);},
+  fire(g){if(g.shot||g.cd>0)return;g.shot={x:240+Math.cos(g.a)*24,y:182+Math.sin(g.a)*24,vx:Math.cos(g.a)*540,vy:Math.sin(g.a)*540,c:g.cur};
+    g.cur=g.nxt;g.nxt=this.color(g);g.cd=.18;A.beep(330,.05,'square');},
+  key(g,k){
+    if(k==='Space')this.fire(g);
+    else if(['ArrowUp','ArrowDown','KeyW','KeyS','KeyX'].includes(k))this.swap(g);
+  },
+  move(g,x,y){g.a=Math.atan2(y-182,x-240);},
+  click(g,x,y,b){if(b===2||Math.hypot(x-240,y-182)<26){this.swap(g);return;}g.a=Math.atan2(y-182,x-240);this.fire(g);},
+  burst(g,b,n){const p=this.pos(g,b.v);for(let i=0;i<n;i++)g.parts.push({x:p[0],y:p[1],vx:A.rnd(-90,90),vy:A.rnd(-120,40),t:.6,col:this.COLS[b.c]});},
+  resolve(g,idx,mult){
+    const ch=g.ch;if(idx<0||idx>=ch.length)return;const c=ch[idx].c;let a=idx,b=idx;
+    while(a>0&&ch[a-1].c===c)a--;while(b<ch.length-1&&ch[b+1].c===c)b++;
+    const n=b-a+1;if(n<3)return;
+    for(let i=a;i<=b;i++)this.burst(g,ch[i],4);
+    ch.splice(a,n);const pts=n*10*mult;g.score+=pts;
+    g.msg=mult>1?'Верига ×'+mult+'! +'+pts:'+'+pts;g.msgT=1;
+    A.tune(mult>1?[660,880,1100]:[660,880]);
+    if(a>0&&a<ch.length&&ch[a-1].c===ch[a].c)this.resolve(g,a,mult+1);
+  },
+  update(g,dt){
+    const D=this.D;g.cd-=dt;if(g.msgT>0)g.msgT-=dt;
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.a-=dt*3;if(A.keys.ArrowRight||A.keys.KeyD)g.a+=dt*3;
+    // движение на веригата
+    if(g.rush&&g.ch.length&&this.front(g)>g.L*.28)g.rush=false;
+    const sp=g.rush?120:10+g.lv*3;
+    if(!g.ch.length){g.s=Math.min(g.s,0);if(g.left>0)g.rush=true;}
+    g.s+=sp*dt;
+    while(g.left>0&&g.s>=0){const c=g.ch.length&&Math.random()<.5?g.ch[0].c:A.ri(0,g.nc-1);g.s-=D;g.ch.unshift({c,v:g.s});g.left--;}
+    g.ch.forEach((b,i)=>{const t=g.s+i*D;b.v+=(t-b.v)*Math.min(1,dt*10);});
+    // изстрел
+    const sh=g.shot;
+    if(sh){
+      for(let k=0;k<8&&g.shot;k++){
+        sh.x+=sh.vx*dt/8;sh.y+=sh.vy*dt/8;
+        let hit=-1,hd=1e9;
+        g.ch.forEach((b,i)=>{if(b.v<0)return;const p=this.pos(g,b.v),d=Math.hypot(p[0]-sh.x,p[1]-sh.y);if(d<D-1&&d<hd){hd=d;hit=i;}});
+        if(hit>=0){
+          const b=g.ch[hit],pf=this.pos(g,b.v+D/2),pb=this.pos(g,b.v-D/2);
+          const ahead=Math.hypot(pf[0]-sh.x,pf[1]-sh.y)<Math.hypot(pb[0]-sh.x,pb[1]-sh.y);
+          const idx=ahead?hit+1:hit;
+          g.ch.splice(idx,0,{c:sh.c,v:b.v+(ahead?D/2:-D/2)});
+          g.shot=null;A.beep(250,.04);
+          this.resolve(g,idx,1);this.fixColors(g);
+        }
+        else if(sh.x<-20||sh.x>500||sh.y<-20||sh.y>380)g.shot=null;
+      }
+    }
+    // частици
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=300*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+    // край или следващо ниво
+    if(g.ch.length&&this.front(g)>=g.L-1)return A.over(g,'Рудите паднаха в лавата! 🌋');
+    if(!g.ch.length&&g.left<=0){g.score+=100*g.lv;g.lv++;g.msg='Ниво '+g.lv+'! +'+(100*(g.lv-1));g.msgT=2;A.tune([523,659,784,1046]);this.level(g);}
+  },
+  draw(g){
+    const D=this.D;c.drawImage(g.bgc,0,0);
+    // лавата в края
+    const e=g.P[g.L-1],danger=g.ch.length&&this.front(g)>g.L-220;
+    A.block(e[0]-15,e[1]-15,30,danger&&Math.sin(g.t*12)>0?'#ffb000':C.lava);
+    c.fillStyle='#ffd23f';c.fillRect(e[0]-6,e[1]-6,5,5);c.fillRect(e[0]+4,e[1]+2,4,4);
+    // веригата
+    for(const b of g.ch){if(b.v<-D/2)continue;const p=this.pos(g,b.v),x=p[0]-D/2,y=p[1]-D/2;
+      A.block(x,y,D,'#8a8a8a');c.fillStyle=this.COLS[b.c];c.fillRect(x+4,y+4,4,4);c.fillRect(x+10,y+5,4,4);c.fillRect(x+6,y+10,5,4);c.fillRect(x+12,y+11,3,3);}
+    // прицел
+    c.strokeStyle='rgba(255,255,255,.25)';c.setLineDash([4,6]);c.lineWidth=2;c.beginPath();c.moveTo(240,182);c.lineTo(240+Math.cos(g.a)*150,182+Math.sin(g.a)*150);c.stroke();c.setLineDash([]);
+    // раздавачът
+    A.block(222,164,36,'#5a5a5a');c.fillStyle='#222';c.fillRect(234,176,12,12);
+    const mx=240+Math.cos(g.a)*24,my=182+Math.sin(g.a)*24;
+    A.block(mx-8,my-8,16,this.COLS[g.cur]);
+    A.block(234,198,12,this.COLS[g.nxt]);
+    if(g.shot)A.block(g.shot.x-D/2,g.shot.y-D/2,D,this.COLS[g.shot.c]);
+    g.parts.forEach(p=>{c.fillStyle=p.col;c.fillRect(p.x-2,p.y-2,4,4);});
+    A.txt('Ниво '+g.lv+' · остават '+(g.left+g.ch.length),8,10,12,'#fff');
+    if(g.msgT>0)A.txt(g.msg,240,140,18,'#ffd54f','center');
+  }
+});
+</script>
+</body>
+</html>
