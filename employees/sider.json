@@ -1,6 +1,6 @@
 {
- "runs": 11,
- "fixed_total": 96,
+ "runs": 12,
+ "fixed_total": 102,
  "history": [
   {
    "round": 16,
@@ -100,15 +100,24 @@
    "idle_after": 0,
    "fixer": "Perplexity",
    "given": 7
+  },
+  {
+   "round": 27,
+   "at": "2026-11-09T01:12:21.593Z",
+   "workers": 65,
+   "idle_before": 6,
+   "idle_after": 0,
+   "fixer": "ChatGPT",
+   "given": 6
   }
  ],
  "last": {
-  "round": 26,
-  "at": "2026-11-09T01:07:19.690Z",
-  "workers": 64,
-  "idle_before": 7,
+  "round": 27,
+  "at": "2026-11-09T01:12:21.593Z",
+  "workers": 65,
+  "idle_before": 6,
   "idle_after": 0,
-  "fixer": "Perplexity",
-  "given": 7
+  "fixer": "ChatGPT",
+  "given": 6
  }
 }

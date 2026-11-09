@@ -984,6 +984,50 @@
      "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
     }
    ]
+  },
+  {
+   "who": "Blaze Volt (Data Analyst)",
+   "said": "В Бинго рекордът не се запазва след презареждане. 🐛",
+   "query": "localStorage not saving",
+   "round": 26,
+   "at": "2026-11-09T01:12:21.540Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "localStorage not working as expected. Not saving when page is redirected",
+     "url": "https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Windows Phone phonegap/cordova localstorage not saving data",
+     "url": "https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data",
+     "score": 0,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "localStorage not saving correctly",
+     "url": "https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "storage.local",
+     "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local",
+     "summary": "Represents the local storage area. Items in local storage are local to the machine the extension is installed on."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Window: localStorage property",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+     "summary": "The localStorage read-only property of the window interface allows you to access a Storage object for the Document's origin; the stored data is saved across browser sessions."
+    }
+   ]
   }
  ],
  "searches_total": 5
