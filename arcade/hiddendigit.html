@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скритата цифра</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">❓ Скритата цифра</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 374. Скритата цифра
+A.add({id:'hiddendigit',cat:'brain',icon:'❓',name:'Скритата цифра',desc:'Сметка в колонка, но една цифра е скрита под златен блок — открий коя е!',
+  help:'Напиши скритата цифра (0–9) или я цъкни на редицата долу. Вярно = 1 т., всеки 5 поред = +5 секунди. Грешка = −5 секунди. Имаш 90 секунди.',
+  start(g){g.time=90;g.streak=0;g.why='';this.next(g);},
+  next(g){const s=g.score;let a,b,op;const r=A.ri(0,s<4?1:2);
+    if(r<2){op=r?'−':'+';const big=s>=7;a=A.ri(big?100:10,big?999:99);b=A.ri(big?100:10,big?999:99);if(op==='−'&&b>a)[a,b]=[b,a];if(op==='−'&&a===b)a+=A.ri(1,9);}
+    else{op='×';a=s>=12?A.ri(100,999):A.ri(12,99);b=A.ri(2,9);}
+    const res=op==='+'?a+b:op==='−'?a-b:a*b;
+    g.rows=[String(a),String(b),String(res)];g.op=op;
+    const cells=[];g.rows.forEach((row,i)=>{for(let j=0;j<row.length;j++)cells.push([i,j]);});
+    g.hid=A.pick(cells);g.ans=+g.rows[g.hid[0]][g.hid[1]];g.pop=.25;},
+  pick2(g,d){const ok=d===g.ans;flash(g,ok);
+    if(ok){g.score++;g.streak++;g.why='';if(g.streak%5===0){g.time+=5;g.why='Серия '+g.streak+'! +5 с';A.tune([660,880,1100]);}}
+    else{g.streak=0;g.time-=5;g.why='Беше '+g.ans+' (−5 с)';}
+    this.next(g);},
+  key(g,k,ch){if(ch>='0'&&ch<='9'&&ch.length===1)this.pick2(g,+ch);},
+  click(g,mx,my){if(my>=300&&my<=354){const i=Math.floor(mx/48);if(i>=0&&i<=9)this.pick2(g,i);}},
+  update(g,dt){if(g.pop>0)g.pop-=dt;tick(g,dt);},
+  draw(g){A.bg('#2b2f3a');
+    for(let x=0;x<480;x+=40)for(let y=0;y<300;y+=40){c.fillStyle=((x+y)/40)%2?'#30353f':'#2b2f3a';c.fillRect(x,y,40,40);}
+    const S=38,R=320,Y=[50,98,168],L=Math.max(...g.rows.map(r=>r.length));
+    g.rows.forEach((row,i)=>{for(let j=0;j<row.length;j++){const x=R-(row.length-j)*S,y=Y[i];
+      const hid=g.hid[0]===i&&g.hid[1]===j;
+      if(hid){const z=g.pop>0?g.pop*12:0;A.block(x+2-z/2,y+2-z/2,S-4+z,C.gold);A.txt('?',x+S/2,y+S/2,24+Math.sin(g.t*6)*2,'#5a3a00','center');}
+      else{A.block(x+2,y+2,S-4,i===2?'#5a8a4a':'#7d7d7d');A.txt(row[j],x+S/2,y+S/2,24,'#fff','center');}}});
+    A.txt(g.op,R-L*S-26,Y[1]+S/2,30,'#ffd54f','center');
+    c.fillStyle='#9a6a3a';c.fillRect(R-L*S-44,148,L*S+50,8);c.fillStyle='#6a4520';c.fillRect(R-L*S-44,154,L*S+50,2);
+    A.txt('⏱ '+Math.ceil(g.time),12,16,16,g.time<10?'#ff5252':'#fff');
+    A.txt('Серия: '+g.streak,12,40,13,'#7cff7c');
+    if(g.why)A.txt(g.why,470,16,13,'#ffd54f','right');
+    A.txt('Коя цифра е под златния блок?',240,236,15,'#b9c6d6','center');
+    for(let i=0;i<10;i++){A.block(i*48+3,302,42,'#5a6b8c',50);A.txt(String(i),i*48+24,327,22,'#fff','center');}
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

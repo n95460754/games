@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Археология с четка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🖌️ Археология с четка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 375. Археология с четка
+const BD_W=8,BD_H=6,BD_S=40,BD_X=12,BD_Y=40;
+A.add({id:'brushdig',cat:'skill',icon:'🖌️',name:'Археология с четка',desc:'Изчетквай подозрителния пясък и намери древната делва, но спри навреме, за да не я счупиш!',
+  help:'Задръж мишката/пръста върху пясъка (или стрелки + задръж Space), за да го изчеткаш. Числото показва колко парчета има около клетката. Щом се покаже парче — спри, иначе ще се пукне! 120 секунди.',
+  start(g){g.time=120;g.cur={x:0,y:0};g.sites=0;g.parts=[];g.snd=0;g.msg='';this.site(g);},
+  site(g){g.sites++;g.cells=[];for(let i=0;i<BD_W*BD_H;i++)g.cells.push({sand:1,art:false,crack:false,over:0,n:0});
+    const k=Math.min(7,A.ri(3,4)+Math.floor(g.sites/2));let x=A.ri(1,BD_W-2),y=A.ri(1,BD_H-2);const set=[[x,y]];g.cells[y*BD_W+x].art=true;
+    let tries=0;while(set.length<k&&tries++<500){const [px,py]=A.pick(set),[dx,dy]=A.pick([[1,0],[-1,0],[0,1],[0,-1]]),nx=px+dx,ny=py+dy;
+      if(nx<0||ny<0||nx>=BD_W||ny>=BD_H||g.cells[ny*BD_W+nx].art)continue;g.cells[ny*BD_W+nx].art=true;set.push([nx,ny]);}
+    g.k=set.length;g.found=0;g.cracks=0;g.done=0;
+    for(let y=0;y<BD_H;y++)for(let x=0;x<BD_W;x++){let n=0;for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++){const X=x+a,Y=y+b;if((a||b)&&X>=0&&Y>=0&&X<BD_W&&Y<BD_H&&g.cells[Y*BD_W+X].art)n++;}g.cells[y*BD_W+x].n=n;}},
+  cellAt(mx,my){const x=Math.floor((mx-BD_X)/BD_S),y=Math.floor((my-BD_Y)/BD_S);return x>=0&&y>=0&&x<BD_W&&y<BD_H?{x,y}:null;},
+  key(g,k){const m={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(m){g.cur.x=A.clamp(g.cur.x+m[0],0,BD_W-1);g.cur.y=A.clamp(g.cur.y+m[1],0,BD_H-1);}},
+  click(g,mx,my){const p=this.cellAt(mx,my);if(p)g.cur=p;},
+  update(g,dt){g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече! Обекти: '+(g.sites-1));
+    for(let i=g.parts.length-1;i>=0;i--){const q=g.parts[i];q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=200*dt;q.t-=dt;if(q.t<=0)g.parts.splice(i,1);}
+    if(g.done>0){g.done-=dt;if(g.done<=0)this.site(g);return;}
+    let t=null;
+    if(A.mouse.down){const p=this.cellAt(A.mouse.x,A.mouse.y);if(p){g.cur=p;t=p;}}
+    else if(A.keys.Space)t=g.cur;
+    g.brushing=!!t;if(!t)return;
+    const cl=g.cells[t.y*BD_W+t.x],cx=BD_X+t.x*BD_S+BD_S/2,cy=BD_Y+t.y*BD_S+BD_S/2;
+    g.snd-=dt;
+    if(cl.sand>0){cl.sand-=dt/.7;if(g.snd<=0){g.snd=.12;A.beep(A.rnd(300,420),.04,'triangle',.02);}
+      if(Math.random()<.5)g.parts.push({x:cx+A.rnd(-15,15),y:cy+A.rnd(-5,15),vx:A.rnd(-60,60),vy:A.rnd(-80,-20),t:.4,col:'#e8d48a'});
+      if(cl.sand<=0){cl.sand=0;if(cl.art){g.found++;A.beep(760,.1,'triangle',.05);}else A.beep(240,.05);
+        if(g.found===g.k){const ok=g.k-g.cracks,pts=ok*2+(g.cracks?0:5);g.score+=pts;g.time+=5;g.done=1.6;
+          g.msg=g.cracks?'Делвата е намерена! +'+pts:'Цяла делва! +'+pts+' 🏆';A.tune(g.cracks?[523,659]:[523,659,784,1046]);}}}
+    else if(cl.art&&!cl.crack){cl.over+=dt;if(cl.over>.45){cl.crack=true;g.cracks++;A.beep(120,.3,'sawtooth',.05);
+      for(let i=0;i<8;i++)g.parts.push({x:cx,y:cy,vx:A.rnd(-90,90),vy:A.rnd(-120,0),t:.6,col:'#b5653a'});}}
+  },
+  draw(g){A.bg('#3a2a1c');
+    c.fillStyle='#4a3424';c.fillRect(BD_X-6,BD_Y-6,BD_W*BD_S+12,BD_H*BD_S+12);
+    const NC=['','#4fc3f7','#7cff7c','#ffd54f','#ff9a3c','#ff5252','#e040fb','#fff','#fff'];
+    for(let y=0;y<BD_H;y++)for(let x=0;x<BD_W;x++){const cl=g.cells[y*BD_W+x],X=BD_X+x*BD_S,Y=BD_Y+y*BD_S;
+      if(cl.art){A.block(X,Y,BD_S,cl.crack?'#7a4428':'#b5653a');c.fillStyle=cl.crack?'#3a2214':'#6e3418';c.fillRect(X+6,Y+12,28,4);c.fillRect(X+6,Y+24,28,4);
+        c.fillStyle='#e8b070';c.fillRect(X+10+((x+y)%3)*6,Y+17,6,6);
+        if(cl.crack){c.strokeStyle='#1a0f08';c.lineWidth=2;c.beginPath();c.moveTo(X+8,Y+4);c.lineTo(X+18,Y+18);c.lineTo(X+14,Y+26);c.lineTo(X+30,Y+36);c.stroke();}}
+      else{A.block(X,Y,BD_S,'#7a5233');if(cl.sand<=0&&cl.n)A.txt(String(cl.n),X+20,Y+21,20,NC[cl.n],'center');}
+      if(cl.sand>0){const h=Math.ceil(BD_S*cl.sand);A.block(X,Y+BD_S-h,BD_S,'#d9c27a',h);c.fillStyle='#bfa65e';
+        if(h>14){c.fillRect(X+8,Y+BD_S-h+6,4,4);c.fillRect(X+26,Y+BD_S-h+10,4,4);}if(h>28)c.fillRect(X+16,Y+BD_S-h+20,4,4);}
+      if(cl.art&&cl.sand<=0&&!cl.crack&&cl.over>0){c.fillStyle='rgba(255,40,40,'+Math.min(.6,cl.over)+')';c.fillRect(X,Y,BD_S,BD_S);}}
+    const cu=g.cur;c.strokeStyle=g.brushing?'#fff':'#ffd54f';c.lineWidth=3;c.strokeRect(BD_X+cu.x*BD_S+2,BD_Y+cu.y*BD_S+2,BD_S-4,BD_S-4);
+    if(g.brushing){const bx=BD_X+cu.x*BD_S+30+Math.sin(g.t*30)*5,by=BD_Y+cu.y*BD_S+8;c.fillStyle='#9a6a3a';c.fillRect(bx,by-14,4,14);c.fillStyle='#e8e0c8';c.fillRect(bx-3,by,10,6);}
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x-2,q.y-2,4,4);});
+    const px=412;A.txt('Обект '+g.sites,px,30,16,'#ffd54f','center');
+    A.txt('⏱ '+Math.ceil(g.time),px,58,16,g.time<15?'#ff5252':'#fff','center');
+    A.txt('Парчета: '+g.found+'/'+g.k,px,92,13,'#e8b070','center');A.txt('Пукнати: '+g.cracks,px,114,13,g.cracks?'#ff5252':'#7cff7c','center');
+    A.txt('Число = парчета',px,160,11,'#b9c6d6','center');A.txt('наоколо (и по диаг.)',px,176,11,'#b9c6d6','center');
+    A.txt('Парче се показа?',px,210,11,'#ffab91','center');A.txt('СПРИ да четкаш!',px,226,12,'#ff5252','center');
+    A.txt('Цяла делва +5',px,260,11,'#7cff7c','center');A.txt('Парче = 2 т.',px,276,11,'#7cff7c','center');
+    A.txt('Изкопано: +5 с',px,292,11,'#7cff7c','center');
+    if(g.done>0){c.fillStyle='rgba(0,0,0,.7)';c.fillRect(0,150,480,60);A.txt(g.msg,240,180,20,'#ffd54f','center');}}
+});
+</script>
+</body>
+</html>

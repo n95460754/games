@@ -355,7 +355,10 @@ const GAMES=[
    {"id": "mobstats", "cat": "brain", "icon": "📊", "name": "Статистика с мобове", "desc": "Мода, медиана, обхват и средно — пресметни ги от броя на мобовете всяка нощ!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "windarena", "cat": "action", "icon": "🌪️", "name": "Вятърна арена", "desc": "Вихрушките стрелят с вятърни заряди и те бутат към ръба — събирай ключове и не падай от острова!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "stickfix", "cat": "brain", "icon": "🪵", "name": "Поправи с една клечка", "desc": "Сметката от дървени пръчки е грешна — премести само една пръчка, за да стане вярна!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "oreprobe", "cat": "puzzle", "icon": "🔦", "name": "Сонда за руди", "desc": "Пускай лъчи в тъмната пещера и по това къде излизат познай къде са скрити диамантите!", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "oreprobe", "cat": "puzzle", "icon": "🔦", "name": "Сонда за руди", "desc": "Пускай лъчи в тъмната пещера и по това къде излизат познай къде са скрити диамантите!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "hoglinrun", "cat": "action", "icon": "🐗", "name": "Бягай от хоглините", "desc": "Събирай злато в Недъра, а хоглините се засилват по червената линия — отскочи навреме!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "hiddendigit", "cat": "brain", "icon": "❓", "name": "Скритата цифра", "desc": "Сметка в колонка, но една цифра е скрита под златен блок — открий коя е!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "brushdig", "cat": "skill", "icon": "🖌️", "name": "Археология с четка", "desc": "Изчетквай пясъка, намери древната делва по числата и спри навреме, за да не я счупиш!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
