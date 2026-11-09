@@ -194,50 +194,6 @@
  "pending": [],
  "log": [
   {
-   "who": "Orbit Fox (Engine Programmer)",
-   "said": "В Сапьор рекордът не се запазва след презареждане. 🐛",
-   "query": "localStorage not saving",
-   "round": 260,
-   "at": "2026-11-09T20:51:31.470Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "localStorage not working as expected. Not saving when page is redirected",
-     "url": "https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Windows Phone phonegap/cordova localstorage not saving data",
-     "url": "https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data",
-     "score": 0,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "localStorage not saving correctly",
-     "url": "https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "storage.local",
-     "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local",
-     "summary": "Represents the local storage area. Items in local storage are local to the machine the extension is installed on."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Window: localStorage property",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
-     "summary": "The localStorage read-only property of the window interface allows you to access a Storage object for the Document's origin; the stored data is saved across browser sessions."
-    }
-   ]
-  },
-  {
    "who": "Blaze Volt (Data Analyst)",
    "said": "Определено Падащи камъни. А твоята?",
    "query": "canvas low fps",
@@ -2390,6 +2346,50 @@
      "title": "3D collision detection",
      "url": "https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection",
      "summary": "This article provides an introduction to the different bounding volume techniques used to implement collision detection in 3D environments. Followup articles will cover implementations in specific 3D libraries."
+    }
+   ]
+  },
+  {
+   "who": "Neon Storm (Future Researcher)",
+   "said": "В Яйцата рекордът не се запазва след презареждане. 🐛",
+   "query": "localStorage not saving",
+   "round": 294,
+   "at": "2026-11-09T23:42:57.821Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "localStorage not working as expected. Not saving when page is redirected",
+     "url": "https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Windows Phone phonegap/cordova localstorage not saving data",
+     "url": "https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data",
+     "score": 0,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "localStorage not saving correctly",
+     "url": "https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "storage.local",
+     "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local",
+     "summary": "Represents the local storage area. Items in local storage are local to the machine the extension is installed on."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Window: localStorage property",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage",
+     "summary": "The localStorage read-only property of the window interface allows you to access a Storage object for the Document's origin; the stored data is saved across browser sessions."
     }
    ]
   }
