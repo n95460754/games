@@ -1,33 +1,44 @@
 name: HR Bot (hires employees every 5 min)
 
-# Наема по 1 служител на всеки 5 минути за CEO-Bot.
+# Наема по 1 служител на всеки 5 минути за Claude-CEO и движи целия офис
+# (чат, отбори, Sider AI, Janitor, Consensus, Monica).
+#
+# Как върви на всеки 5 минути: GitHub пуска таймерите (schedule) в това репо
+# много рядко, затова — като Auto Game — едно пускане стои живо ~5.5 часа и прави
+# кръг на всеки INTERVAL_MINUTES. Преди да свърши, само пуска следващото, така че
+# веригата не спира. Таймерът веднъж на час е само резерва, ако веригата се скъса.
+#
 # Безопасен дизайн:
-#  - push с GITHUB_TOKEN (НЕ с CEO_BOT_TOKEN) -> не задейства останалите ботове
-#  - пише само в employees/ и EMPLOYEES.md, НЕ в AI_BOARD_ROOM.md / CEO_REPORT.md
-#  - не създава нови workflow файлове; спира при MAX_EMPLOYEES
+#  - push с GITHUB_TOKEN (НЕ с CEO_BOT_TOKEN) -> не задейства другите ботове
+#  - пише само в employees/ и офис .md файловете, НЕ в AI_BOARD_ROOM.md / CEO_REPORT.md
+#  - не създава нови workflow файлове; спира да наема при MAX_EMPLOYEES
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # минимумът в GitHub; реално може да закъснява 5-15 мин
+    - cron: '41 * * * *'    # резерва: рестартира веригата, ако някога се скъса
   workflow_dispatch:
     inputs:
       count:
-        description: 'Колко служители да наеме сега'
+        description: 'Колко служители да наеме в първия кръг'
         default: '1'
 
 permissions:
   contents: write
+  actions: write   # за да пусне следващото звено от веригата
 
 concurrency:
   group: hr-bot
   cancel-in-progress: false
 
+env:
+  MAX_EMPLOYEES: '500'
+  INTERVAL_MINUTES: 5
+  LOOP_MINUTES: 330
+
 jobs:
   hire:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-    env:
-      MAX_EMPLOYEES: '500'
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
 
@@ -35,25 +46,43 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Hire employee
-        run: node scripts/hire-employee.js "${{ github.event.inputs.count || '1' }}"
-
-      - name: Consensus searches the web for errors from the last round
-        run: node scripts/consensus.js
-        continue-on-error: true   # ако интернетът не отговори, офисът продължава
-
-      - name: Employees talk, teams work, Sider checks, janitor cleans
-        run: node scripts/office-chat.js
-
-      - name: Commit & push
+      - name: Run the office every few minutes
+        env:
+          FIRST_COUNT: ${{ github.event.inputs.count || '1' }}
         run: |
           git config user.name "HR-Bot"
           git config user.email "hr-bot@users.noreply.github.com"
-          git add employees/employees.json employees/chat.json employees/met.json employees/tasks.json employees/janitor.json employees/consensus.json employees/sider.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md JANITOR.md CONSENSUS.md SIDER.md
-          git diff --cached --quiet && { echo "Нищо ново."; exit 0; }
-          git commit -m "chore(hr): hire new employee for Claude-CEO"
-          for i in 1 2 3; do
-            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
-            sleep $((i * 5))
+          FILES="employees/employees.json employees/chat.json employees/met.json employees/tasks.json employees/janitor.json employees/consensus.json employees/sider.json EMPLOYEES.md OFFICE_CHAT.md TEAMS.md JANITOR.md CONSENSUS.md SIDER.md"
+          count="$FIRST_COUNT"
+          end=$(( $(date +%s) + LOOP_MINUTES * 60 ))
+          while [ "$(date +%s)" -lt "$end" ]; do
+            git pull -q --rebase origin "$GITHUB_REF_NAME" || { git rebase --abort 2>/dev/null; git reset -q --hard "origin/$GITHUB_REF_NAME"; }
+            if node scripts/hire-employee.js "$count" \
+               && { node scripts/consensus.js || echo "Consensus: интернетът не отговори, продължаваме"; } \
+               && node scripts/office-chat.js; then
+              git add $FILES
+              if git diff --cached --quiet; then
+                echo "Нищо ново."
+              else
+                git commit -q -m "chore(hr): hire new employee for Claude-CEO"
+                pushed=0
+                for i in 1 2 3 4; do
+                  if git push -q origin "HEAD:$GITHUB_REF_NAME"; then pushed=1; break; fi
+                  sleep $((i * 5))
+                  git pull -q --rebase origin "$GITHUB_REF_NAME" || { git rebase --abort 2>/dev/null; break; }
+                done
+                [ "$pushed" = 1 ] && echo "Кръгът е качен." || { echo "Push не мина, връщам се към main"; git reset -q --hard "origin/$GITHUB_REF_NAME"; }
+              fi
+            else
+              echo "::warning::Скрипт се провали в този кръг; връщам се към main и продължавам"
+              git reset -q --hard "origin/$GITHUB_REF_NAME"
+            fi
+            count=1
+            sleep $(( INTERVAL_MINUTES * 60 ))
           done
-          exit 1
+
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run hr_bot.yml --ref "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY"
