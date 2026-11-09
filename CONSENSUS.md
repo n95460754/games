@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Zen Forge (API Developer): „Тъчът в Щит не реагира на iPad. 📱“
+
+🔎 Търсено: `touchstart ipad canvas` _(от паметта)_
+
+- [Drawing canvas with mouse and iPad touch panel](https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel) — Stack Overflow · 0 гласа
+- [How can I draw in canvas element with safari in iPad?](https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad) — Stack Overflow · 2 гласа
+- [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
+
 ### Turbo Fox (WebGL Specialist): „Колизиите в Ограда за овцете бъгват — минавам през стени! 👻“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
@@ -115,12 +123,4 @@
 - [Drawing canvas with mouse and iPad touch panel](https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel) — Stack Overflow · 0 гласа
 - [How can I draw in canvas element with safari in iPad?](https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad) — Stack Overflow · 2 гласа
 - [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
-
-### Rogue Hawk (Performance Optimizer): „В Спри вагонетката рекордът не се запазва след презареждане. 🐛“
-
-🔎 Търсено: `localStorage not saving` _(от паметта)_
-
-- [localStorage not working as expected. Not saving when page is redirected](https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected) — Stack Overflow · 0 гласа
-- [Windows Phone phonegap/cordova localstorage not saving data](https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data) — Stack Overflow ✅ приет отговор · 0 гласа
-- [localStorage not saving correctly](https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly) — Stack Overflow · 0 гласа
 
