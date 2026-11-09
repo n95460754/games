@@ -5117,6 +5117,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T20:41:27.347Z"
+    },
+    {
+      "id": "EMP-0270",
+      "name": "Zen Walker",
+      "level": "Intern",
+      "role": "Secret Hunter",
+      "role_bg": "Ловец на тайни",
+      "department": "Gameplay",
+      "manager": "Game-Physics-Bot",
+      "team": "Team Gameplay",
+      "team_leader": "Game-Physics-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T20:46:29.172Z"
     }
   ],
   "chairman": {
