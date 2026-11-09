@@ -18,11 +18,11 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **203** / 500
+Общо служители: **204** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Engineering — шеф: Dev-Bot · 20 души
+## Engineering — шеф: Dev-Bot · 21 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -46,6 +46,7 @@
 | EMP-0185 | Turbo Smith | Lead | Game Developer / Разработчик на игри | 2026-11-09 13:38 UTC |
 | EMP-0191 | Quark Miner | Intern | Game Developer / Разработчик на игри | 2026-11-09 14:08 UTC |
 | EMP-0202 | Delta Coder | Senior | WebGL Specialist / WebGL специалист | 2026-11-09 15:03 UTC |
+| EMP-0204 | Spark Stone | Lead | Engine Programmer / Програмист на енджина | 2026-11-09 15:14 UTC |
 
 ## Quality — шеф: QA-Tester-Bot · 16 души
 
