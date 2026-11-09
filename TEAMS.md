@@ -9,70 +9,71 @@
 - **Лидер:** Dev-Bot (→ 🦁 Brave AI)
 - **В отбора:** QA-Tester-Bot, UX-UI-Bot, Sound-Engineer-Bot
 - **Отдели:** Engineering, Quality, Design, Audio
-- **Служители:** 46
-- **Задачи:** 50 отворени, 24 готови
+- **Служители:** 47
+- **Задачи:** 51 отворени, 24 готови
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2655 | Тествай Вътрешен часовник на телефон | Neon Fox | 🔍 За ревю |
-| TASK-2656 | Провери дали рекордът в Паркиране се пази | Echo Runner | 🔍 За ревю |
-| TASK-2657 | Нарисувай нови спрайтове за Стакове по 64 | Quark Miner | 🔍 За ревю |
-| TASK-2659 | Подобри менюто на Кръговете на Вен | Nova Runner | 🔍 За ревю |
-| TASK-2661 | Добави бонус ниво в Наводнение | Byte Runner | 🔍 За ревю |
-| TASK-2662 | Добави фонова мелодия в Градче | Quark Walker | 🔍 За ревю |
-| TASK-2664 | Нарисувай нови спрайтове за Воден асансьор | Orbit Coder | 🔍 За ревю |
-| TASK-2665 | Добави анимация при победа в Блоков бегач | Glitch Miner | 🔍 За ревю |
-| TASK-2668 | Добави фонова мелодия в Ледена пързалка | Delta Smith | 🔍 За ревю |
-| TASK-2670 | Направи тъмна тема за Десетични дроби | Rogue Hawk | 🔍 За ревю |
-| TASK-2671 | Нарисувай нови спрайтове за Прости множители | Glitch Volt | 🔍 За ревю |
-| TASK-2672 | Провери дали рекордът в Стакове по 64 се пази | Byte Forge | 🔍 За ревю |
-| TASK-2673 | Нарисувай нови спрайтове за Квадрати и корени | Vector Runner | 🔍 За ревю |
-| TASK-2674 | Добави фонова мелодия в Логически схеми | Glitch Fox | 🔍 За ревю |
-| TASK-2676 | Нарисувай нови спрайтове за Блоков бегач | Delta Storm | 🔍 За ревю |
-| TASK-2678 | Направи тъмна тема за Юмрукът на голема | Spark Knight | 🔍 За ревю |
-| TASK-2679 | Направи тъмна тема за Десетични дроби | Frost Fox | 🔍 За ревю |
-| TASK-2695 | Подобри менюто на Гравитация на планети | UX-UI-Bot | 🔨 В процес |
-| TASK-2696 | Добави фонова мелодия в Ритъм машина | Sound-Engineer-Bot | 🔨 В процес |
-| TASK-2698 | Добави бонус ниво в Бинго | Pixel Smith | 🔨 В процес |
-| TASK-2704 | Добави бонус ниво в Колко пътя? | Nova Forge | 🔨 В процес |
-| TASK-2707 | Добави бонус ниво в Освободи вагонетката | Echo Hawk | 🔨 В процес |
-| TASK-2708 | Подобри менюто на Дроби | Frost Walker | 🔨 В процес |
-| TASK-2709 | Пробвай Везни на Firefox и Edge | Byte Miner | 🔨 В процес |
-| TASK-2710 | Направи 8-bit звук за скок в Ракетна защита | Orbit Walker | 🔨 В процес |
-| TASK-2711 | Направи звук при game over в Везни | Echo Smith | 🔨 В процес |
-| TASK-2713 | Оптимизирай draw() в Тримино до 60 FPS | Nova Smith | 🔨 В процес |
-| TASK-2716 | Оправи колизиите в Закръгли числото | Orbit Forge | 🔨 В процес |
-| TASK-2718 | Направи тъмна тема за Змии и стълби | Rogue Coder | 🔨 В процес |
-| TASK-2719 | Нарисувай нови спрайтове за Палатки | Pixel Fox | 🔨 В процес |
-| TASK-2731 | Махни глобалните променливи от Ловец на руди | Dev-Bot | 📝 За правене |
-| TASK-2732 | Тествай Пикселно платно на телефон | QA-Tester-Bot | 📝 За правене |
-| TASK-2740 | Подобри менюто на Фенери в пещерата | Spark Fox | 📝 За правене |
-| TASK-2741 | Оправи колизиите в Небостъргачи | Blaze Hawk | 📝 За правене |
-| TASK-2742 | Добави анимация при победа в Пикселно платно | Nova Storm | 📝 За правене |
-| TASK-2744 | Оправи колизиите в Фенери в пещерата | Echo Volt | 📝 За правене |
-| TASK-2747 | Махни глобалните променливи от Селската пекарна | Quark Fox | 📝 За правене |
-| TASK-2749 | Тествай Селската пекарна на телефон | Turbo Knight | 📝 За правене |
-| TASK-2751 | Оптимизирай draw() в Жонгльор до 60 FPS | Quark Knight | 📝 За правене |
-| TASK-2752 | Добави фонова мелодия в Небостъргачи | Zen Storm | 📝 За правене |
-| TASK-2754 | Добави фонова мелодия в Рецепти за изработване | Delta Volt | 📝 За правене |
-| TASK-2757 | Добави анимация при победа в Сливане на слузи | Orbit Hawk | 📝 За правене |
-| TASK-2758 | Направи regression тест на Реверси | Vector Forge | 📝 За правене |
-| TASK-2759 | Направи regression тест на Еквилибрист | Vector Stone | 📝 За правене |
-| TASK-2760 | Махни глобалните променливи от Ято птици | Zen Stone | 📝 За правене |
-| TASK-2761 | Направи 8-bit звук за скок в Нонограм | Pixel Storm | 📝 За правене |
-| TASK-2762 | Добави бонус ниво в Знамена | Byte Knight | 📝 За правене |
-| TASK-2764 | Махни глобалните променливи от Пикселно платно | Byte Runner | 📝 За правене |
-| TASK-2767 | Провери дали рекордът в Вътрешен часовник се пази | Zen Volt | 📝 За правене |
-| TASK-2768 | Оптимизирай draw() в Търговия със селяни до 60 FPS | Turbo Fox | 📝 За правене |
+| TASK-2695 | Подобри менюто на Гравитация на планети | UX-UI-Bot | 🔍 За ревю |
+| TASK-2696 | Добави фонова мелодия в Ритъм машина | Sound-Engineer-Bot | 🔍 За ревю |
+| TASK-2698 | Добави бонус ниво в Бинго | Pixel Smith | 🔍 За ревю |
+| TASK-2704 | Добави бонус ниво в Колко пътя? | Nova Forge | 🔍 За ревю |
+| TASK-2707 | Добави бонус ниво в Освободи вагонетката | Echo Hawk | 🔍 За ревю |
+| TASK-2708 | Подобри менюто на Дроби | Frost Walker | 🔍 За ревю |
+| TASK-2709 | Пробвай Везни на Firefox и Edge | Byte Miner | 🔍 За ревю |
+| TASK-2710 | Направи 8-bit звук за скок в Ракетна защита | Orbit Walker | 🔍 За ревю |
+| TASK-2711 | Направи звук при game over в Везни | Echo Smith | 🔍 За ревю |
+| TASK-2713 | Оптимизирай draw() в Тримино до 60 FPS | Nova Smith | 🔍 За ревю |
+| TASK-2716 | Оправи колизиите в Закръгли числото | Orbit Forge | 🔍 За ревю |
+| TASK-2718 | Направи тъмна тема за Змии и стълби | Rogue Coder | 🔍 За ревю |
+| TASK-2719 | Нарисувай нови спрайтове за Палатки | Pixel Fox | 🔍 За ревю |
+| TASK-2731 | Махни глобалните променливи от Ловец на руди | Dev-Bot | 🔨 В процес |
+| TASK-2732 | Тествай Пикселно платно на телефон | QA-Tester-Bot | 🔨 В процес |
+| TASK-2740 | Подобри менюто на Фенери в пещерата | Spark Fox | 🔨 В процес |
+| TASK-2741 | Оправи колизиите в Небостъргачи | Blaze Hawk | 🔨 В процес |
+| TASK-2742 | Добави анимация при победа в Пикселно платно | Nova Storm | 🔨 В процес |
+| TASK-2744 | Оправи колизиите в Фенери в пещерата | Echo Volt | 🔨 В процес |
+| TASK-2747 | Махни глобалните променливи от Селската пекарна | Quark Fox | 🔨 В процес |
+| TASK-2749 | Тествай Селската пекарна на телефон | Turbo Knight | 🔨 В процес |
+| TASK-2751 | Оптимизирай draw() в Жонгльор до 60 FPS | Quark Knight | 🔨 В процес |
+| TASK-2752 | Добави фонова мелодия в Небостъргачи | Zen Storm | 🔨 В процес |
+| TASK-2754 | Добави фонова мелодия в Рецепти за изработване | Delta Volt | 🔨 В процес |
+| TASK-2757 | Добави анимация при победа в Сливане на слузи | Orbit Hawk | 🔨 В процес |
+| TASK-2758 | Направи regression тест на Реверси | Vector Forge | 🔨 В процес |
+| TASK-2759 | Направи regression тест на Еквилибрист | Vector Stone | 🔨 В процес |
+| TASK-2760 | Махни глобалните променливи от Ято птици | Zen Stone | 🔨 В процес |
+| TASK-2761 | Направи 8-bit звук за скок в Нонограм | Pixel Storm | 🔨 В процес |
+| TASK-2762 | Добави бонус ниво в Знамена | Byte Knight | 🔨 В процес |
+| TASK-2764 | Махни глобалните променливи от Пикселно платно | Byte Runner | 🔨 В процес |
+| TASK-2767 | Провери дали рекордът в Вътрешен часовник се пази | Zen Volt | 🔨 В процес |
+| TASK-2768 | Оптимизирай draw() в Търговия със селяни до 60 FPS | Turbo Fox | 🔨 В процес |
+| TASK-2790 | Пробвай Кука с въже на Firefox и Edge | Neon Fox | 📝 За правене |
+| TASK-2791 | Направи regression тест на Зигзаг | Echo Runner | 📝 За правене |
+| TASK-2792 | Направи тъмна тема за Мостове | Quark Miner | 📝 За правене |
+| TASK-2794 | Подобри менюто на Кука с въже | Nova Runner | 📝 За правене |
+| TASK-2796 | Оправи колизиите в Супер морски шах | Byte Runner | 📝 За правене |
+| TASK-2797 | Направи звук при game over в Зигзаг | Quark Walker | 📝 За правене |
+| TASK-2799 | Направи тъмна тема за Водна кофа | Orbit Coder | 📝 За правене |
+| TASK-2801 | Добави анимация при победа в Познай числото | Glitch Miner | 📝 За правене |
+| TASK-2803 | Добави фонова мелодия в Познай числото | Delta Smith | 📝 За правене |
+| TASK-2805 | Нарисувай нови спрайтове за Шифър | Rogue Hawk | 📝 За правене |
+| TASK-2806 | Подобри менюто на Лавов дъжд | Glitch Volt | 📝 За правене |
+| TASK-2807 | Провери дали рекордът в Светлинни мотори се пази | Byte Forge | 📝 За правене |
+| TASK-2808 | Добави анимация при победа в Не пипай жицата | Vector Runner | 📝 За правене |
+| TASK-2809 | Направи 8-bit звук за скок в Мостове | Glitch Fox | 📝 За правене |
+| TASK-2811 | Добави анимация при победа в Светлинни мотори | Delta Storm | 📝 За правене |
+| TASK-2813 | Нарисувай нови спрайтове за Кристали в лабиринта | Spark Knight | 📝 За правене |
+| TASK-2814 | Нарисувай нови спрайтове за Скорост и път | Frost Fox | 📝 За правене |
+| TASK-2817 | Добави фонова мелодия в Лавов дъжд | Spark Storm | 📝 За правене |
 | TASK-0008 | Подобри менюто на Строй числото | UX-UI-Bot | ✅ Готово |
 | TASK-0009 | Оправи колизиите в Оцвети картата | Blaze Hawk | ✅ Готово |
 | TASK-0001 | Нарисувай нови спрайтове за Стрелочник | Spark Fox | ✅ Готово |
 | TASK-0002 | Направи regression тест на Скачане на въже | Echo Runner | ✅ Готово |
 | TASK-0003 | Направи regression тест на Блокова змия | Neon Fox | ✅ Готово |
 
-<details><summary>Всички 46 служители в Team Dev</summary>
+<details><summary>Всички 47 служители в Team Dev</summary>
 
-Spark Fox (Pixel Artist, Design) · Neon Fox (Bug Hunter, Quality) · Echo Runner (Speedrun Tester, Quality) · Blaze Hawk (Engine Programmer, Engineering) · Nova Storm (UI Animator, Design) · Quark Miner (Pixel Artist, Design) · Echo Volt (Engine Programmer, Engineering) · Pixel Smith (Engine Programmer, Engineering) · Quark Fox (Engine Programmer, Engineering) · Turbo Knight (QA Tester, Quality) · Quark Knight (Game Developer, Engineering) · Zen Storm (Chiptune Composer, Audio) · Nova Runner (UI Animator, Design) · Delta Volt (Sound Designer, Audio) · Byte Runner (Engine Programmer, Engineering) · Nova Forge (Game Developer, Engineering) · Quark Walker (Chiptune Composer, Audio) · Orbit Hawk (Level Designer, Design) · Orbit Coder (UI Animator, Design) · Vector Forge (QA Tester, Quality) · Glitch Miner (Pixel Artist, Design) · Echo Hawk (Game Developer, Engineering) · Vector Stone (Speedrun Tester, Quality) · Frost Walker (UI Animator, Design) · Byte Miner (Speedrun Tester, Quality) · Zen Stone (Engine Programmer, Engineering) · Delta Smith (Sound Designer, Audio) · Pixel Storm (Chiptune Composer, Audio) · Rogue Hawk (UI Animator, Design) · Orbit Walker (Sound Designer, Audio) · Glitch Volt (UI Animator, Design) · Byte Knight (Engine Programmer, Engineering) · Echo Smith (Chiptune Composer, Audio) · Byte Forge (Speedrun Tester, Quality) · Byte Runner (Engine Programmer, Engineering) · Vector Runner (Level Designer, Design) · Glitch Fox (Chiptune Composer, Audio) · Nova Smith (Game Developer, Engineering) · Zen Volt (QA Tester, Quality) · Delta Storm (UI Animator, Design) · Orbit Forge (WebGL Specialist, Engineering) · Turbo Fox (WebGL Specialist, Engineering) · Spark Knight (Level Designer, Design) · Frost Fox (Pixel Artist, Design) · Rogue Coder (Level Designer, Design) · Pixel Fox (UI Animator, Design)
+Spark Fox (Pixel Artist, Design) · Neon Fox (Bug Hunter, Quality) · Echo Runner (Speedrun Tester, Quality) · Blaze Hawk (Engine Programmer, Engineering) · Nova Storm (UI Animator, Design) · Quark Miner (Pixel Artist, Design) · Echo Volt (Engine Programmer, Engineering) · Pixel Smith (Engine Programmer, Engineering) · Quark Fox (Engine Programmer, Engineering) · Turbo Knight (QA Tester, Quality) · Quark Knight (Game Developer, Engineering) · Zen Storm (Chiptune Composer, Audio) · Nova Runner (UI Animator, Design) · Delta Volt (Sound Designer, Audio) · Byte Runner (Engine Programmer, Engineering) · Nova Forge (Game Developer, Engineering) · Quark Walker (Chiptune Composer, Audio) · Orbit Hawk (Level Designer, Design) · Orbit Coder (UI Animator, Design) · Vector Forge (QA Tester, Quality) · Glitch Miner (Pixel Artist, Design) · Echo Hawk (Game Developer, Engineering) · Vector Stone (Speedrun Tester, Quality) · Frost Walker (UI Animator, Design) · Byte Miner (Speedrun Tester, Quality) · Zen Stone (Engine Programmer, Engineering) · Delta Smith (Sound Designer, Audio) · Pixel Storm (Chiptune Composer, Audio) · Rogue Hawk (UI Animator, Design) · Orbit Walker (Sound Designer, Audio) · Glitch Volt (UI Animator, Design) · Byte Knight (Engine Programmer, Engineering) · Echo Smith (Chiptune Composer, Audio) · Byte Forge (Speedrun Tester, Quality) · Byte Runner (Engine Programmer, Engineering) · Vector Runner (Level Designer, Design) · Glitch Fox (Chiptune Composer, Audio) · Nova Smith (Game Developer, Engineering) · Zen Volt (QA Tester, Quality) · Delta Storm (UI Animator, Design) · Orbit Forge (WebGL Specialist, Engineering) · Turbo Fox (WebGL Specialist, Engineering) · Spark Knight (Level Designer, Design) · Frost Fox (Pixel Artist, Design) · Rogue Coder (Level Designer, Design) · Pixel Fox (UI Animator, Design) · Spark Storm (Chiptune Composer, Audio)
 
 </details>
 
@@ -86,36 +87,36 @@ Spark Fox (Pixel Artist, Design) · Neon Fox (Bug Hunter, Quality) · Echo Runne
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2650 | Провери Дузпи за XSS | SecOps-Bot | 🔍 За ревю |
-| TASK-2654 | Преведи Пирамидата на английски | Rogue Miner | 🔍 За ревю |
-| TASK-2658 | Преведи Фрактално дърво на английски | Vector Fox | 🔍 За ревю |
-| TASK-2660 | Напиши туториал за Часовник | Nova Storm | 🔍 За ревю |
-| TASK-2663 | Добави анти-чийт за рекордите в Фигури | Delta Stone | 🔍 За ревю |
-| TASK-2669 | Събери отзиви от играчите за Блоков бегач | Nova Volt | 🔍 За ревю |
-| TASK-2675 | Провери пътищата на Осем царици в GitHub Pages | Byte Hawk | 🔍 За ревю |
-| TASK-2677 | Добави анти-чийт за рекордите в Симетрия | Frost Forge | 🔍 За ревю |
-| TASK-2680 | Напиши туториал за Часовник | Turbo Fox | 🔍 За ревю |
-| TASK-2681 | Намали размера на Змии и стълби | Orbit Miner | 🔍 За ревю |
-| TASK-2697 | Провери пътищата на Падащи камъни в GitHub Pages | Spark Miner | 🔨 В процес |
-| TASK-2699 | Провери пътищата на Падащи камъни в GitHub Pages | Orbit Coder | 🔨 В процес |
-| TASK-2701 | Напиши туториал за Змии и стълби | Neon Fox | 🔨 В процес |
-| TASK-2702 | Провери пътищата на Бинго в GitHub Pages | Vector Runner | 🔨 В процес |
-| TASK-2703 | Добави анти-чийт за рекордите в Колко пътя? | Turbo Knight | 🔨 В процес |
-| TASK-2705 | Напиши туториал за Тенис за двама | Echo Knight | 🔨 В процес |
-| TASK-2712 | Провери Палатки за XSS | Orbit Walker | 🔨 В процес |
-| TASK-2715 | Добави анти-чийт за рекордите в Лавов дъжд | Frost Coder | 🔨 В процес |
-| TASK-2733 | Провери пътищата на Селската пекарна в GitHub Pages | DevOps-Master-Bot | 📝 За правене |
-| TASK-2734 | Събери отзиви от играчите за Вътрешен часовник | Community-Manager-Bot | 📝 За правене |
-| TASK-2743 | Събери отзиви от играчите за Часовник | Glitch Forge | 📝 За правене |
-| TASK-2745 | Провери дали Лабиринт не зарежда външни скриптове | Quark Miner | 📝 За правене |
-| TASK-2746 | Преведи Водопровод на английски | Turbo Storm | 📝 За правене |
-| TASK-2748 | Преведи Нашествие на английски | Echo Smith | 📝 За правене |
-| TASK-2750 | Ускори зареждането на Кран | Rogue Hawk | 📝 За правене |
-| TASK-2753 | Добави анти-чийт за рекордите в Купчина кубчета | Neon Walker | 📝 За правене |
-| TASK-2756 | Напиши туториал за Селската пекарна | Rogue Knight | 📝 За правене |
-| TASK-2765 | Преведи Кран на английски | Neon Fox | 📝 За правене |
-| TASK-2766 | Напиши туториал за Жонгльор | Vector Volt | 📝 За правене |
-| TASK-2769 | Събери отзиви от играчите за Сливане на руди 2048 | Rogue Hawk | 📝 За правене |
+| TASK-2697 | Провери пътищата на Падащи камъни в GitHub Pages | Spark Miner | 🔍 За ревю |
+| TASK-2699 | Провери пътищата на Падащи камъни в GitHub Pages | Orbit Coder | 🔍 За ревю |
+| TASK-2701 | Напиши туториал за Змии и стълби | Neon Fox | 🔍 За ревю |
+| TASK-2702 | Провери пътищата на Бинго в GitHub Pages | Vector Runner | 🔍 За ревю |
+| TASK-2703 | Добави анти-чийт за рекордите в Колко пътя? | Turbo Knight | 🔍 За ревю |
+| TASK-2705 | Напиши туториал за Тенис за двама | Echo Knight | 🔍 За ревю |
+| TASK-2712 | Провери Палатки за XSS | Orbit Walker | 🔍 За ревю |
+| TASK-2715 | Добави анти-чийт за рекордите в Лавов дъжд | Frost Coder | 🔍 За ревю |
+| TASK-2733 | Провери пътищата на Селската пекарна в GitHub Pages | DevOps-Master-Bot | 🔨 В процес |
+| TASK-2734 | Събери отзиви от играчите за Вътрешен часовник | Community-Manager-Bot | 🔨 В процес |
+| TASK-2743 | Събери отзиви от играчите за Часовник | Glitch Forge | 🔨 В процес |
+| TASK-2745 | Провери дали Лабиринт не зарежда външни скриптове | Quark Miner | 🔨 В процес |
+| TASK-2746 | Преведи Водопровод на английски | Turbo Storm | 🔨 В процес |
+| TASK-2748 | Преведи Нашествие на английски | Echo Smith | 🔨 В процес |
+| TASK-2750 | Ускори зареждането на Кран | Rogue Hawk | 🔨 В процес |
+| TASK-2753 | Добави анти-чийт за рекордите в Купчина кубчета | Neon Walker | 🔨 В процес |
+| TASK-2756 | Напиши туториал за Селската пекарна | Rogue Knight | 🔨 В процес |
+| TASK-2765 | Преведи Кран на английски | Neon Fox | 🔨 В процес |
+| TASK-2766 | Напиши туториал за Жонгльор | Vector Volt | 🔨 В процес |
+| TASK-2769 | Събери отзиви от играчите за Сливане на руди 2048 | Rogue Hawk | 🔨 В процес |
+| TASK-2785 | Провери дали Гладна риба не зарежда външни скриптове | SecOps-Bot | 📝 За правене |
+| TASK-2789 | Събери отзиви от играчите за Лавов дъжд | Rogue Miner | 📝 За правене |
+| TASK-2793 | Преведи Морски шах на английски | Vector Fox | 📝 За правене |
+| TASK-2795 | Напиши туториал за Водна кофа | Nova Storm | 📝 За правене |
+| TASK-2798 | Добави анти-чийт за рекордите в Супер морски шах | Delta Stone | 📝 За правене |
+| TASK-2804 | Напиши туториал за Кука с въже | Nova Volt | 📝 За правене |
+| TASK-2810 | Намали размера на Ендър дупка | Byte Hawk | 📝 За правене |
+| TASK-2812 | Провери Шулкерски куршуми за XSS | Frost Forge | 📝 За правене |
+| TASK-2815 | Напиши туториал за Светлинни мотори | Turbo Fox | 📝 За правене |
+| TASK-2816 | Намали размера на Лодка по леда | Orbit Miner | 📝 За правене |
 | TASK-0016 | Намали размера на Пукни рудите | Orbit Coder | ✅ Готово |
 | TASK-0010 | Добави анти-чийт за рекордите в Битка с дракона | SecOps-Bot | ✅ Готово |
 | TASK-0004 | Напиши туториал за Дама | Rogue Miner | ✅ Готово |
@@ -138,13 +139,13 @@ Rogue Miner (Community Moderator, Community) · Glitch Forge (Translator, Commun
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2635 | Направи гравитацията в Воден асансьор по-реалистична | AI-Trainer-Bot | 🔍 За ревю |
-| TASK-2636 | Скрий тайно ниво в Наводнение 🥚 | Level-Designer-Bot | 🔍 За ревю |
-| TASK-2637 | Добави по-умни врагове в Вътрешен часовник | Rogue Runner | 🔍 За ревю |
-| TASK-2651 | Скрий тайно ниво в Фрактално дърво 🥚 | Easter-Egg-Hunter-Bot | 🔍 За ревю |
-| TASK-2682 | Направи ново трудно ниво за Бърз мост | Byte Runner | 🔨 В процес |
-| TASK-2720 | Скрий тайно ниво в Ловец на руди 🥚 | Delta Storm | 📝 За правене |
-| TASK-2735 | Добави по-умни врагове в Завъртяна фигура | Game-Physics-Bot | 📝 За правене |
+| TASK-2682 | Направи ново трудно ниво за Бърз мост | Byte Runner | 🔍 За ревю |
+| TASK-2720 | Скрий тайно ниво в Ловец на руди 🥚 | Delta Storm | 🔨 В процес |
+| TASK-2735 | Добави по-умни врагове в Завъртяна фигура | Game-Physics-Bot | 🔨 В процес |
+| TASK-2770 | Скрий тайно ниво в Бутай сандъците 🥚 | AI-Trainer-Bot | 📝 За правене |
+| TASK-2771 | Добави по-умни врагове в Ъгли | Level-Designer-Bot | 📝 За правене |
+| TASK-2772 | Скрий тайно ниво в Програмирай робота 🥚 | Easter-Egg-Hunter-Bot | 📝 За правене |
+| TASK-2800 | Добави по-умни врагове в Мост с пръчка | Rogue Runner | 📝 За правене |
 | TASK-0055 | Добави по-умни врагове в Обърни блоковете | Level-Designer-Bot | ✅ Готово |
 | TASK-0056 | Направи ново трудно ниво за Гмуркане за съкровища | Easter-Egg-Hunter-Bot | ✅ Готово |
 | TASK-0017 | Направи ново трудно ниво за Раздели слузите | Level-Designer-Bot | ✅ Готово |
@@ -167,19 +168,19 @@ Byte Runner (NPC AI Programmer, Gameplay) · Rogue Runner (Secret Hunter, Gamepl
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2638 | Хвани последните бъгове в Кръговете на Вен | Nova Storm | 🔍 За ревю |
-| TASK-2639 | Подготви Паркиране за пускане | Refactoring-Bot | 🔍 За ревю |
-| TASK-2640 | Хвани последните бъгове в Змии и стълби | Performance-Optimizer-Bot | 🔍 За ревю |
-| TASK-2652 | Подготви Хеликоптер спасител за пускане | Bug-Hunter-Bot | 🔍 За ревю |
-| TASK-2683 | Подготви Три в ред за пускане | Glitch Walker | 🔨 В процес |
-| TASK-2684 | Направи Размяната на овцете да зарежда под 1 секунда | Nova Smith | 🔨 В процес |
-| TASK-2685 | Хвани последните бъгове в Без да вдигаш молива | Build-Master-Bot | 🔨 В процес |
-| TASK-2706 | Почисти стария код в Колко пътя? | Blaze Smith | 🔨 В процес |
-| TASK-2717 | Подготви Бърз мост за пускане | Quark Forge | 🔨 В процес |
-| TASK-2721 | Почисти стария код в Мобова алгебра | Delta Forge | 📝 За правене |
-| TASK-2722 | Почисти стария код в Скуош | Frost Fox | 📝 За правене |
-| TASK-2723 | Хвани последните бъгове в Небостъргачи | Zen Knight | 📝 За правене |
-| TASK-2736 | Направи Три в ред да зарежда под 1 секунда | Release-Manager-Bot | 📝 За правене |
+| TASK-2683 | Подготви Три в ред за пускане | Glitch Walker | 🔍 За ревю |
+| TASK-2684 | Направи Размяната на овцете да зарежда под 1 секунда | Nova Smith | 🔍 За ревю |
+| TASK-2685 | Хвани последните бъгове в Без да вдигаш молива | Build-Master-Bot | 🔍 За ревю |
+| TASK-2706 | Почисти стария код в Колко пътя? | Blaze Smith | 🔍 За ревю |
+| TASK-2717 | Подготви Бърз мост за пускане | Quark Forge | 🔍 За ревю |
+| TASK-2721 | Почисти стария код в Мобова алгебра | Delta Forge | 🔨 В процес |
+| TASK-2722 | Почисти стария код в Скуош | Frost Fox | 🔨 В процес |
+| TASK-2723 | Хвани последните бъгове в Небостъргачи | Zen Knight | 🔨 В процес |
+| TASK-2736 | Направи Три в ред да зарежда под 1 секунда | Release-Manager-Bot | 🔨 В процес |
+| TASK-2773 | Хвани последните бъгове в Супер морски шах | Refactoring-Bot | 📝 За правене |
+| TASK-2774 | Подготви Шифър за пускане | Bug-Hunter-Bot | 📝 За правене |
+| TASK-2775 | Хвани последните бъгове в Водна кофа | Nova Storm | 📝 За правене |
+| TASK-2786 | Направи Ъгли да зарежда под 1 секунда | Performance-Optimizer-Bot | 📝 За правене |
 | TASK-0037 | Подготви Аквариум за пускане | Glitch Walker | ✅ Готово |
 | TASK-0038 | Подготви Солитер за пускане | Build-Master-Bot | ✅ Готово |
 | TASK-0020 | Направи Шанс за диамант да зарежда под 1 секунда | Refactoring-Bot | ✅ Готово |
@@ -202,20 +203,20 @@ Glitch Walker (Build Engineer, Release) · Delta Forge (Build Engineer, Release)
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2641 | Добави плавни анимации в менюто на Пирамидата | Asset-Manager-Bot | 🔍 За ревю |
-| TASK-2642 | Добави плавни анимации в менюто на Змии и стълби | UI-Animation-Bot | 🔍 За ревю |
-| TASK-2643 | Направи Блоков бегач удобна за далтонисти | Byte Runner | 🔍 За ревю |
-| TASK-2653 | Добави управление само с клавиатура в Кръговете на Вен | Localization-Bot | 🔍 За ревю |
-| TASK-2666 | Направи Нарисувай кръг удобна за далтонисти | Zen Coder | 🔍 За ревю |
-| TASK-2667 | Напиши инструкции за Спирограф | Byte Storm | 🔍 За ревю |
-| TASK-2686 | Добави управление само с клавиатура в Дроби | Quark Coder | 🔨 В процес |
-| TASK-2687 | Добави управление само с клавиатура в Рудни мехури | Neon Storm | 🔨 В процес |
-| TASK-2688 | Добави плавни анимации в менюто на Колко пътя? | Documentation-Bot | 🔨 В процес |
-| TASK-2724 | Добави управление само с клавиатура в Селската пекарна | Orbit Volt | 📝 За правене |
-| TASK-2725 | Направи Знамена удобна за далтонисти | Nova Volt | 📝 За правене |
-| TASK-2726 | Добави плавни анимации в менюто на Мобова алгебра | Orbit Coder | 📝 За правене |
-| TASK-2737 | Добави управление само с клавиатура в Небостъргачи | Accessibility-Bot | 📝 За правене |
-| TASK-2755 | Напиши инструкции за Знамена | Byte Stone | 📝 За правене |
+| TASK-2686 | Добави управление само с клавиатура в Дроби | Quark Coder | 🔍 За ревю |
+| TASK-2687 | Добави управление само с клавиатура в Рудни мехури | Neon Storm | 🔍 За ревю |
+| TASK-2688 | Добави плавни анимации в менюто на Колко пътя? | Documentation-Bot | 🔍 За ревю |
+| TASK-2724 | Добави управление само с клавиатура в Селската пекарна | Orbit Volt | 🔨 В процес |
+| TASK-2725 | Направи Знамена удобна за далтонисти | Nova Volt | 🔨 В процес |
+| TASK-2726 | Добави плавни анимации в менюто на Мобова алгебра | Orbit Coder | 🔨 В процес |
+| TASK-2737 | Добави управление само с клавиатура в Небостъргачи | Accessibility-Bot | 🔨 В процес |
+| TASK-2755 | Напиши инструкции за Знамена | Byte Stone | 🔨 В процес |
+| TASK-2776 | Напиши инструкции за Минно поле | UI-Animation-Bot | 📝 За правене |
+| TASK-2777 | Добави плавни анимации в менюто на Часовник | Byte Runner | 📝 За правене |
+| TASK-2778 | Напиши инструкции за Ендър дупка | Zen Coder | 📝 За правене |
+| TASK-2787 | Добави управление само с клавиатура в Лице и периметър | Localization-Bot | 📝 За правене |
+| TASK-2788 | Добави плавни анимации в менюто на Шулкерски куршуми | Asset-Manager-Bot | 📝 За правене |
+| TASK-2802 | Направи Морски шах удобна за далтонисти | Byte Storm | 📝 За правене |
 | TASK-0062 | Направи Чети графиката удобна за далтонисти | Localization-Bot | ✅ Готово |
 | TASK-0039 | Добави плавни анимации в менюто на Щит | Documentation-Bot | ✅ Готово |
 | TASK-0023 | Добави управление само с клавиатура в Ледена пързалка | UI-Animation-Bot | ✅ Готово |
@@ -238,18 +239,18 @@ Byte Runner (Asset Artist, Experience) · Byte Stone (Docs Writer, Experience) �
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2644 | Провери кои нива в Фигури са най-трудни | Growth-Hacker-Bot | 🔍 За ревю |
-| TASK-2645 | Провери кои нива в Три в ред са най-трудни | Rogue Runner | 🔍 За ревю |
-| TASK-2646 | Преброй колко пъти се играе Лунно кацане | API-Integration-Bot | 🔍 За ревю |
-| TASK-2689 | Провери кои нива в Освободи вагонетката са най-трудни | Blaze Miner | 🔨 В процес |
-| TASK-2690 | Провери кои нива в Везни са най-трудни | Turbo Forge | 🔨 В процес |
-| TASK-2691 | Подреди рекордите на Дроби в класация | Database-Admin-Bot | 🔨 В процес |
-| TASK-2700 | Подреди рекордите на Бинго в класация | Zen Forge | 🔨 В процес |
-| TASK-2727 | Провери кои нива в Реверси са най-трудни | Blaze Volt | 📝 За правене |
-| TASK-2728 | Провери кои нива в Завъртяна фигура са най-трудни | Turbo Walker | 📝 За правене |
-| TASK-2729 | Провери кои нива в Селската пекарна са най-трудни | Rogue Forge | 📝 За правене |
-| TASK-2738 | Провери кои нива в Рецепти за изработване са най-трудни | Data-Analyst-Bot | 📝 За правене |
-| TASK-2763 | Провери кои нива в Мобова алгебра са най-трудни | Frost Storm | 📝 За правене |
+| TASK-2689 | Провери кои нива в Освободи вагонетката са най-трудни | Blaze Miner | 🔍 За ревю |
+| TASK-2690 | Провери кои нива в Везни са най-трудни | Turbo Forge | 🔍 За ревю |
+| TASK-2691 | Подреди рекордите на Дроби в класация | Database-Admin-Bot | 🔍 За ревю |
+| TASK-2700 | Подреди рекордите на Бинго в класация | Zen Forge | 🔍 За ревю |
+| TASK-2727 | Провери кои нива в Реверси са най-трудни | Blaze Volt | 🔨 В процес |
+| TASK-2728 | Провери кои нива в Завъртяна фигура са най-трудни | Turbo Walker | 🔨 В процес |
+| TASK-2729 | Провери кои нива в Селската пекарна са най-трудни | Rogue Forge | 🔨 В процес |
+| TASK-2738 | Провери кои нива в Рецепти за изработване са най-трудни | Data-Analyst-Bot | 🔨 В процес |
+| TASK-2763 | Провери кои нива в Мобова алгебра са най-трудни | Frost Storm | 🔨 В процес |
+| TASK-2779 | Подреди рекордите на Кулостроител в класация | API-Integration-Bot | 📝 За правене |
+| TASK-2780 | Провери кои нива в Не пипай жицата са най-трудни | Rogue Runner | 📝 За правене |
+| TASK-2781 | Подреди рекордите на Магистрала в класация | Growth-Hacker-Bot | 📝 За правене |
 | TASK-0040 | Преброй колко пъти се играе Танкова битка | Zen Forge | ✅ Готово |
 | TASK-0041 | Преброй колко пъти се играе Цветна дъга | Database-Admin-Bot | ✅ Готово |
 | TASK-0026 | Подреди рекордите на Шанс за диамант в класация | Growth-Hacker-Bot | ✅ Готово |
@@ -272,15 +273,15 @@ Rogue Runner (Data Analyst, Data) · Zen Forge (API Developer, Data) · Blaze Vo
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-2647 | Измисли 3D версия на Квадрати и корени | Crypto-Tokenomics-Bot | 🔍 За ревю |
-| TASK-2648 | Измисли 3D версия на Часовник | Turbo Runner | 🔍 За ревю |
-| TASK-2649 | Измисли система от значки за Спийф 🏅 | Metaverse-Architect-Bot | 🔍 За ревю |
-| TASK-2692 | Измисли 3D версия на Бинго | Glitch Hawk | 🔨 В процес |
-| TASK-2693 | Измисли 3D версия на Гравитация на планети | Neon Coder | 🔨 В процес |
-| TASK-2694 | Измисли система от значки за На око 🏅 | Orbit Knight | 🔨 В процес |
-| TASK-2714 | Измисли мултиплейър режим за Баскетбол | Blaze Stone | 🔨 В процес |
-| TASK-2730 | Измисли 3D версия на Отрежи въжето | Glitch Walker | 📝 За правене |
-| TASK-2739 | Измисли 3D версия на Избягвай топките | Chief-Visionary-Bot | 📝 За правене |
+| TASK-2692 | Измисли 3D версия на Бинго | Glitch Hawk | 🔍 За ревю |
+| TASK-2693 | Измисли 3D версия на Гравитация на планети | Neon Coder | 🔍 За ревю |
+| TASK-2694 | Измисли система от значки за На око 🏅 | Orbit Knight | 🔍 За ревю |
+| TASK-2714 | Измисли мултиплейър режим за Баскетбол | Blaze Stone | 🔍 За ревю |
+| TASK-2730 | Измисли 3D версия на Отрежи въжето | Glitch Walker | 🔨 В процес |
+| TASK-2739 | Измисли 3D версия на Избягвай топките | Chief-Visionary-Bot | 🔨 В процес |
+| TASK-2782 | Измисли мултиплейър режим за Гладна риба | Crypto-Tokenomics-Bot | 📝 За правене |
+| TASK-2783 | Измисли система от значки за Мини голф 🏅 | Turbo Runner | 📝 За правене |
+| TASK-2784 | Измисли система от значки за Мини голф 🏅 | Metaverse-Architect-Bot | 📝 За правене |
 | TASK-0105 | Измисли система от значки за Тунел 🏅 | Metaverse-Architect-Bot | ✅ Готово |
 | TASK-0066 | Измисли система от значки за Ред на действията 🏅 | Metaverse-Architect-Bot | ✅ Готово |
 | TASK-0067 | Измисли мултиплейър режим за Ред на действията | Crypto-Tokenomics-Bot | ✅ Готово |
