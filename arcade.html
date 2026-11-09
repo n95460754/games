@@ -343,7 +343,10 @@ const GAMES=[
    {"id": "chestshuffle", "cat": "skill", "icon": "🧰", "name": "Следи сандъка", "desc": "Диамантът се скрива в сандък, сандъците се разбъркват — проследи го с поглед!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "lightningrod", "cat": "action", "icon": "🌩️", "name": "Гръмоотвод", "desc": "Тичай по покривите с медния гръмоотвод и хващай мълниите, преди да ударят къщите!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "kenken", "cat": "puzzle", "icon": "🧮", "name": "Калкудоку", "desc": "Числа без повторения в ред и колона — и всяка рудна жила трябва да дава своята сметка!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "yahtzee", "cat": "board", "icon": "🎲", "name": "Генерал със зарове", "desc": "Хвърли 5 зара до 3 пъти и попълни таблицата: фул, кента, каре и генерал!", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "yahtzee", "cat": "board", "icon": "🎲", "name": "Генерал със зарове", "desc": "Хвърли 5 зара до 3 пъти и попълни таблицата: фул, кента, каре и генерал!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "dolphin", "cat": "action", "icon": "🐬", "name": "Делфинът скачач", "desc": "Гмурни се дълбоко, изскочи високо над вълните и събирай рибки, без да удряш лодките!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "bimaru", "cat": "puzzle", "icon": "⛵", "name": "Скритата флотилия", "desc": "Намери скритите лодки по числата в редовете и колоните — лодките никога не се допират!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "halfcut", "cat": "skill", "icon": "🔪", "name": "Раздели наравно", "desc": "Един прав разрез — две еднакви половини! Колкото по-близо до 50/50, толкова повече точки.", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Делфинът скачач</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐬 Делфинът скачач</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 361. Делфинът скачач
+// Блоков делфин плува в морето. Задръж, за да се гмурнеш надолу, пусни — и водата
+// те изтласква нагоре, така че излиташ над вълните. Събирай рибки под водата и във
+// въздуха, гмуркай се под лодките, прескачай медузите и пази се от чайките.
+A.add({id:'dolphin',cat:'action',icon:'🐬',name:'Делфинът скачач',desc:'Гмурни се дълбоко, изскочи високо над вълните и събирай рибки, без да удряш лодките!',
+  help:'Задръж Space / ↓ / мишката / пръста = гмуркане надолу. Пусни = водата те изхвърля нагоре и прескачаш над вълните. Рибка = 1, златна рибка = 3, много висок скок = +2. Пази се от лодки, медузи и чайки. 3 сърца.',
+  SURF:150,
+  start(g){g.y=200;g.vy=0;g.lives=3;g.hurt=0;g.spd=150;g.dist=0;g.obs=[];g.fish=[];g.nextO=1.6;g.nextF=.6;g.pop=[];
+    g.air=false;g.apex=999;g.bub=[];for(let i=0;i<25;i++)g.bub.push([A.rnd(0,480),A.rnd(160,350),A.rnd(10,30)]);},
+  click(g){},
+  hold(){return A.mouse.down||A.keys.Space||A.keys.ArrowDown||A.keys.KeyS;},
+  spawnObs(g){const r=Math.random(),t=g.t;
+    if(r<.4)g.obs.push({k:'boat',x:520,y:this.SURF-22,w:62,h:30});
+    else if(r<.75)g.obs.push({k:'jelly',x:520,y:A.rnd(190,320),w:22,h:22,ph:A.rnd(0,6)});
+    else g.obs.push({k:'gull',x:520,y:A.rnd(25,105),w:28,h:16,ph:A.rnd(0,6)});
+    if(t>45&&Math.random()<.3)g.obs.push({k:'jelly',x:560,y:A.rnd(200,320),w:22,h:22,ph:A.rnd(0,6)});},
+  spawnFish(g){const p=Math.random();
+    if(p<.45){const y0=A.rnd(185,320);for(let i=0;i<4;i++)g.fish.push({x:520+i*26,y:y0+Math.sin(i)*8,gold:false});}
+    else if(p<.85){const top=A.rnd(30,90);for(let i=0;i<5;i++){const u=i/4;g.fish.push({x:520+i*30,y:this.SURF-(this.SURF-top)*Math.sin(u*Math.PI),gold:i===2&&Math.random()<.5});}}
+    else g.fish.push({x:520,y:A.rnd(20,50),gold:true});},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.hurt-=dt;
+    g.spd=Math.min(320,150+g.t*2.2);const sp=g.spd*dt;g.dist+=sp;
+    const S=this.SURF,H=this.hold();
+    if(g.y>S){g.vy+=(H?650:-560)*dt;g.vy*=1-1.1*dt;
+      if(g.air){g.air=false;if(g.apex<45){g.score+=2;g.pop.push({x:120,y:g.apex+20,s:'Висок скок +2!',t:1});A.beep(1100,.1,'triangle');}
+        for(let i=0;i<8;i++)g.pop.push({x:120+A.rnd(-20,20),y:S,s:'',drop:1,vx:A.rnd(-60,60),vy:A.rnd(-160,-60),t:.6});A.beep(180,.12,'sawtooth',.03);}}
+    else{if(!g.air){g.air=true;g.apex=g.y;}g.vy+=(H?1100:640)*dt;g.apex=Math.min(g.apex,g.y);}
+    g.y+=g.vy*dt;if(g.y>338){g.y=338;g.vy=Math.min(0,g.vy);}if(g.y<8){g.y=8;g.vy=Math.max(0,g.vy);}
+    g.nextO-=dt;if(g.nextO<=0){this.spawnObs(g);g.nextO=Math.max(.75,1.9-g.t*.015)*A.rnd(.8,1.25);}
+    g.nextF-=dt;if(g.nextF<=0){this.spawnFish(g);g.nextF=A.rnd(1.1,1.9);}
+    const me={x:104,y:g.y-9,w:34,h:18};
+    for(const o of g.obs){o.x-=sp*(o.k==='gull'?1.25:1);
+      if(o.k==='jelly')o.y+=Math.sin(g.t*2+o.ph)*30*dt;if(o.k==='gull')o.y+=Math.sin(g.t*4+o.ph)*20*dt;
+      if(!o.done&&g.hurt<=0&&A.hit(me,{x:o.x+4,y:o.y+3,w:o.w-8,h:o.h-6})){o.done=1;g.lives--;g.hurt=1.3;flash(g,false);
+        if(g.lives<=0)return A.over(g,o.k==='boat'?'Удари се в лодката! 🚤':o.k==='jelly'?'Медузата те опари! 🪼':'Чайката те клъвна! 🐦');}}
+    g.obs=g.obs.filter(o=>o.x>-80);
+    for(const f of g.fish){f.x-=sp;if(!f.got&&Math.abs(f.x-121)<20&&Math.abs(f.y-g.y)<16){f.got=1;const p=f.gold?3:1;g.score+=p;
+      A.beep(f.gold?1300:880,.06,'triangle');if(f.gold)g.pop.push({x:f.x,y:f.y-12,s:'+3',t:.8});}}
+    g.fish=g.fish.filter(f=>!f.got&&f.x>-20);
+    for(const p of g.pop){p.t-=dt;if(p.drop){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=500*dt;}else p.y-=30*dt;}g.pop=g.pop.filter(p=>p.t>0);
+    for(const b of g.bub){b[0]-=sp*.4;b[1]-=b[2]*dt;if(b[1]<S+8||b[0]<0){b[0]=A.rnd(480,520);b[1]=A.rnd(250,350);}}},
+  draw(g){const S=this.SURF,off=g.dist;
+    c.fillStyle='#7cc4f0';c.fillRect(0,0,480,S);c.fillStyle='#a8dcff';c.fillRect(0,S-40,480,40);
+    A.block(400,20,30,'#ffe066');
+    for(let i=0;i<4;i++){const x=((i*150-off*.2)%600+600)%600-60;A.block(x,40+i%2*20,44,'#ffffff',14);A.block(x+12,30+i%2*20,24,'#ffffff',10);}
+    // вода
+    for(let y=S;y<360;y+=20){const k=(y-S)/210;c.fillStyle='rgb('+Math.round(40-30*k)+','+Math.round(120-70*k)+','+Math.round(200-80*k)+')';c.fillRect(0,y,480,20);}
+    for(let x=-20;x<500;x+=20){const xx=x-(off%20);A.block(xx,S-4+((Math.floor((x+off)/20))%2)*3,20,'#4a9de0',8);}
+    for(let x=0;x<500;x+=24){const xx=x-(off*.9%24);A.block(xx,346,24,(Math.floor((x+off*.9)/24))%3?'#e0c068':'#c9a850',14);}
+    c.fillStyle='rgba(255,255,255,.35)';for(const b of g.bub)c.fillRect(b[0],b[1],4,4);
+    for(const f of g.fish){A.block(f.x-8,f.y-5,14,f.gold?'#ffd23f':'#ff8a3d',10);c.fillStyle=f.gold?'#e0a800':'#d4602a';c.fillRect(f.x+6,f.y-6,5,12);c.fillStyle='#000';c.fillRect(f.x-6,f.y-3,2,2);}
+    for(const o of g.obs){if(o.k==='boat'){A.block(o.x,o.y+12,o.w,'#9a6a3a',16);A.block(o.x+6,o.y+22,o.w-12,'#7a5233',8);A.block(o.x+26,o.y-26,4,'#5d3b1f',38);A.block(o.x+30,o.y-24,22,'#eeeeee',26);}
+      else if(o.k==='jelly'){c.globalAlpha=.85;A.block(o.x,o.y,o.w,'#e07ad8',14);for(let i=0;i<4;i++){c.fillStyle='#f0a8ec';c.fillRect(o.x+2+i*5,o.y+14,3,8+((Math.floor(g.t*6)+i)%2)*4);}c.globalAlpha=1;}
+      else{const fl=Math.sin(g.t*12+o.ph)>0;A.block(o.x+6,o.y+5,18,'#f4f4f4',8);A.block(o.x,o.y+5,6,'#ffb300',4);c.fillStyle='#cfd8dc';c.fillRect(o.x+8,fl?o.y-4:o.y+12,12,6);c.fillStyle='#000';c.fillRect(o.x+8,o.y+6,2,2);}}
+    // делфинът
+    const x=104,y=g.y,ang=A.clamp(g.vy/600,-.7,.7);c.save();c.translate(x+17,y);c.rotate(ang);
+    if(g.hurt>0&&Math.floor(g.t*12)%2)c.globalAlpha=.4;
+    A.block(-17,-8,34,'#6b8fb5',16);A.block(-12,4,22,'#c8d8e8',5);A.block(15,-3,10,'#6b8fb5',7);A.block(-6,-14,10,'#56799e',7);
+    A.block(-26,-9,10,'#56799e',7);A.block(-26,2,10,'#56799e',7);c.fillStyle='#000';c.fillRect(9,-4,3,3);c.restore();c.globalAlpha=1;
+    for(const p of g.pop){if(p.drop){c.fillStyle='#d8f0ff';c.fillRect(p.x,p.y,4,4);}else A.txt(p.s,p.x,p.y,14,'#ffd54f','center');}
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,14,'#f55');A.txt(Math.floor(g.dist/30)+' м',470,14,13,'#fff','right');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

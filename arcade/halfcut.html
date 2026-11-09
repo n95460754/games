@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Раздели наравно</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔪 Раздели наравно</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 363. Раздели наравно
+// Блокова торта (или сирене, или диня) трябва да се раздели на две ЕДНАКВИ половини
+// с един прав разрез. Колкото по-близо до 50% / 50%, толкова повече точки.
+// Площта се смята точно: всяко квадратче се изрязва с правата (отрязване на многоъгълник).
+A.add({id:'halfcut',cat:'skill',icon:'🔪',name:'Раздели наравно',desc:'Един прав разрез — две еднакви половини! Колкото по-близо до 50/50, толкова повече точки.',
+  help:'Натисни и плъзни с мишката / пръста, за да начертаеш разреза, и пусни. С клавиатура: ← → завърта ножа, ↑ ↓ го мести, Space реже. 50/50 ±1% = 10 точки, ±3% = 6, ±6% = 3, ±10% = 1. По-лош разрез или изтекло време = −1 сърце. 3 сърца.',
+  KINDS:[{n:'Торта',body:'#c98b4f',top:'#ff9ecb',dot:'#d32f2f'},{n:'Сирене',body:'#ffd54f',top:'#ffe082',dot:'#e0a800'},{n:'Диня',body:'#e53950',top:'#5aa13a',dot:'#222'},{n:'Хляб',body:'#e0b070',top:'#9a6a3a',dot:'#c98b4f'}],
+  start(g){g.lives=3;g.round=0;g.res=null;this.make(g);},
+  make(g){g.round++;const n=Math.min(30,8+g.round*2),cells=new Set(),key=(x,y)=>x+','+y;
+    let x=A.ri(4,7),y=A.ri(3,5);cells.add(key(x,y));
+    while(cells.size<n){const arr=[...cells],p=A.pick(arr).split(',').map(Number),d=A.pick([[1,0],[-1,0],[0,1],[0,-1]]);
+      const nx=p[0]+d[0],ny=p[1]+d[1];if(nx>=0&&nx<12&&ny>=0&&ny<9)cells.add(key(nx,ny));}
+    g.cells=[...cells].map(s=>s.split(',').map(Number));g.has=cells;
+    const xs=g.cells.map(c0=>c0[0]),ys=g.cells.map(c0=>c0[1]),S=26;
+    const w=(Math.max(...xs)-Math.min(...xs)+1)*S,h=(Math.max(...ys)-Math.min(...ys)+1)*S;
+    g.S=S;g.ox=240-w/2-Math.min(...xs)*S;g.oy=190-h/2-Math.min(...ys)*S;
+    g.cx=240;g.cy=190;g.ang=Math.PI/2;g.off=0;g.drag=null;g.res=null;g.kind=A.pick(this.KINDS);
+    g.limit=Math.max(6,14-g.round*.4);g.tl=g.limit;},
+  // нормала и разстояние на правата
+  line(g){if(g.drag&&g.drag.b){const {a,b}=g.drag,dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1;const nx=-dy/L,ny=dx/L;return {nx,ny,d:nx*a[0]+ny*a[1]};}
+    const nx=Math.cos(g.ang),ny=Math.sin(g.ang);return {nx,ny,d:nx*g.cx+ny*g.cy+g.off};},
+  clip(poly,nx,ny,d,side){const out=[],f=p=>(nx*p[0]+ny*p[1]-d)*side;
+    for(let i=0;i<poly.length;i++){const P=poly[i],Q=poly[(i+1)%poly.length],fp=f(P),fq=f(Q);
+      if(fp<=0)out.push(P);if((fp<0&&fq>0)||(fp>0&&fq<0)){const t=fp/(fp-fq);out.push([P[0]+(Q[0]-P[0])*t,P[1]+(Q[1]-P[1])*t]);}}
+    return out;},
+  area(p){let s=0;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];s+=a[0]*b[1]-b[0]*a[1];}return Math.abs(s)/2;},
+  sq(g,c0){const x=g.ox+c0[0]*g.S,y=g.oy+c0[1]*g.S,S=g.S;return [[x,y],[x+S,y],[x+S,y+S],[x,y+S]];},
+  cut(g,L){if(g.res)return;let a1=0,tot=0;const parts=[[],[]];
+    for(const c0 of g.cells){const q=this.sq(g,c0);tot+=g.S*g.S;const p1=this.clip(q,L.nx,L.ny,L.d,1),p2=this.clip(q,L.nx,L.ny,L.d,-1);
+      a1+=this.area(p1);parts[0].push({p:p1,c:c0});parts[1].push({p:p2,c:c0});}
+    const pct=a1/tot*100,err=Math.abs(pct-50);let pts=err<=1?10:err<=3?6:err<=6?3:err<=10?1:0;
+    g.score+=pts;g.res={a:pct,b:100-pct,pts,t:0,L,parts};
+    if(pts===0){g.lives--;flash(g,false);A.beep(120,.3,'sawtooth',.06);}else{A.beep(pts>=6?1100:760,.1,'triangle');if(pts===10)A.tune([659,784,1047]);}
+    A.beep(300,.05,'square',.03);},
+  click(g,mx,my){if(g.res)return;g.drag={a:[mx,my],b:null};},
+  move(g,mx,my){if(g.drag&&A.mouse.down)g.drag.b=[mx,my];},
+  release(g,mx,my){if(!g.drag||g.res)return;g.drag.b=[mx,my];const {a,b}=g.drag;
+    if(Math.hypot(b[0]-a[0],b[1]-a[1])<20){g.drag=null;return;}this.cut(g,this.line(g));g.drag=null;},
+  key(g,k){if(g.res)return;if(k==='Space'||k==='Enter'){g.drag=null;this.cut(g,this.line(g));}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(g.res){g.res.t+=dt;if(g.res.t>1.8){if(g.lives<=0)return A.over(g,'Ножът се затъпи! 🔪');this.make(g);}return;}
+    const k=A.keys,sl=k.ShiftLeft||k.ShiftRight?.3:1;
+    if(k.ArrowLeft||k.KeyA){g.ang-=1.6*dt*sl;g.drag=null;}if(k.ArrowRight||k.KeyD){g.ang+=1.6*dt*sl;g.drag=null;}
+    if(k.ArrowUp||k.KeyW){g.off-=90*dt*sl;g.drag=null;}if(k.ArrowDown||k.KeyS){g.off+=90*dt*sl;g.drag=null;}
+    g.off=A.clamp(g.off,-170,170);
+    g.tl-=dt;if(g.tl<=0){g.lives--;flash(g,false);A.beep(120,.3,'sawtooth',.06);g.res={a:0,b:0,pts:0,t:0,late:1};}},
+  piece(g,pc,dx,dy){const K=g.kind;if(pc.p.length<3)return;c.fillStyle=g.has.has(pc.c[0]+','+(pc.c[1]-1))?K.body:K.top;
+    c.beginPath();pc.p.forEach((p,i)=>i?c.lineTo(p[0]+dx,p[1]+dy):c.moveTo(p[0]+dx,p[1]+dy));c.closePath();c.fill();c.strokeStyle='rgba(0,0,0,.25)';c.lineWidth=1;c.stroke();},
+  draw(g){A.bg('#1d2b3a');const K=g.kind,S=g.S;
+    for(let x=0;x<480;x+=40)for(let y=40;y<360;y+=40)A.block(x,y,40,(x/40+y/40)%2?'#3f6a8f':'#4a789e');
+    c.fillStyle='rgba(255,255,255,.12)';c.beginPath();c.ellipse(240,192,200,150,0,0,7);c.fill();
+    if(g.res&&g.res.parts){const L=g.res.L,u=Math.min(1,g.res.t*4)*8;
+      g.res.parts[0].forEach(pc=>this.piece(g,pc,-L.nx*u,-L.ny*u));g.res.parts[1].forEach(pc=>this.piece(g,pc,L.nx*u,L.ny*u));
+      // среден център на всяка половина за надписа
+      const cen=side=>{let sx=0,sy=0,n=0;for(const pc of g.res.parts[side])for(const p of pc.p){sx+=p[0];sy+=p[1];n++;}return n?[sx/n,sy/n]:[240,190];};
+      const c1=cen(0),c2=cen(1);A.txt(g.res.a.toFixed(1)+'%',c1[0]-L.nx*30,c1[1]-L.ny*30,16,'#fff','center');A.txt(g.res.b.toFixed(1)+'%',c2[0]+L.nx*30,c2[1]+L.ny*30,16,'#fff','center');
+      const p=g.res.pts;A.txt(p===10?'ПЕРФЕКТНО! +10':p?'+'+p:'Неравно! −❤',240,60,22,p>=6?'#7dff7a':p?'#ffd54f':'#ff6b6b','center');}
+    else{for(const c0 of g.cells){const x=g.ox+c0[0]*S,y=g.oy+c0[1]*S,topC=!g.has.has(c0[0]+','+(c0[1]-1));
+        A.block(x,y,S,topC?K.top:K.body);if((c0[0]*7+c0[1]*3)%5===0){c.fillStyle=K.dot;c.fillRect(x+S/2-3,y+S/2-3,6,6);}}
+      if(g.res&&g.res.late)A.txt('Времето изтече! −❤',240,60,22,'#ff6b6b','center');
+      else{const L=this.line(g),px=L.nx*L.d,py=L.ny*L.d,tx=-L.ny,ty=L.nx;
+        c.beginPath();c.moveTo(px-tx*700,py-ty*700);c.lineTo(px+tx*700,py+ty*700);c.strokeStyle='#000';c.lineWidth=4;c.stroke();c.strokeStyle='#fff';c.lineWidth=2;c.setLineDash([8,6]);c.stroke();c.setLineDash([]);
+        if(g.drag&&g.drag.b){A.block(g.drag.b[0]-6,g.drag.b[1]-6,12,'#cfd8dc');}}}
+    c.fillStyle='#1a120e';c.fillRect(0,0,480,30);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,15,14,'#f55');A.txt(K.n+' · Кръг '+g.round,240,15,14,'#ffd54f','center');
+    if(!g.res){const w=Math.max(0,g.tl/g.limit)*120;c.fillStyle='#333';c.fillRect(350,9,120,12);c.fillStyle=g.tl<3?'#ff6b6b':'#7dff7a';c.fillRect(350,9,w,12);}
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>

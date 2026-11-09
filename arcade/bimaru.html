@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скритата флотилия</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⛵ Скритата флотилия</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 362. Скритата флотилия
+// Логически пъзел (като „Bimaru“ / морски бой-пасианс). В морето са скрити дървени лодки.
+// Числата отстрани казват колко квадратчета лодка има във всеки ред и колона.
+// Лодките са прави, не се допират една до друга (дори по диагонал), а флотилията е дадена вдясно.
+A.add({id:'bimaru',cat:'puzzle',icon:'⛵',name:'Скритата флотилия',desc:'Намери скритите лодки по числата в редовете и колоните — лодките никога не се допират!',
+  help:'Числата казват колко квадратчета лодка има в реда/колоната. Лодките са прави и не се допират, дори по диагонал. Клик = лодка → вода → празно, десен клик = вода. Стрелки + Space (лодка) / X (вода), C = изчисти. Всеки решен пъзел = точки и +45 сек.',
+  start(g){g.time=150;g.lv=0;g.solved=0;g.kb=0;this.board(g);},
+  FLEETS:[[3,2,2,1,1],[3,2,2,1,1,1],[4,3,2,2,1,1],[4,3,2,2,1,1,1],[4,3,3,2,2,1,1,1]],
+  SIZES:[6,6,7,7,8],
+  board(g){const L=Math.min(g.lv,4),N=this.SIZES[L],F=this.FLEETS[L];g.N=N;g.F=F;let sol;
+    for(let tries=0;tries<500;tries++){sol=this.place(N,F);if(sol)break;}
+    g.sol=sol;g.rc=sol.map(r=>r.reduce((a,b)=>a+b,0));g.cc=[...Array(N)].map((_,q)=>sol.reduce((a,r)=>a+r[q],0));
+    g.st=[...Array(N)].map(()=>Array(N).fill(0));g.fix=[...Array(N)].map(()=>Array(N).fill(0));
+    // подсказки: няколко открити квадратчета
+    const ships=[],water=[];for(let r=0;r<N;r++)for(let q=0;q<N;q++)(sol[r][q]?ships:water).push([r,q]);
+    A.shuffle(ships).slice(0,L<2?2:1).forEach(([r,q])=>{g.st[r][q]=1;g.fix[r][q]=1;});
+    A.shuffle(water).slice(0,L<2?3:2).forEach(([r,q])=>{g.st[r][q]=2;g.fix[r][q]=1;});
+    g.cs=Math.min(40,Math.floor(300/N));g.ox=28;g.oy=44;g.cur=[0,0];this.check(g);},
+  place(N,F){const B=[...Array(N)].map(()=>Array(N).fill(0));
+    for(const len of F){let ok=false;for(let t=0;t<200&&!ok;t++){const h=Math.random()<.5,r=A.ri(0,h?N-1:N-len),q=A.ri(0,h?N-len:N-1);
+        let free=true;for(let i=0;i<len&&free;i++){const a=r+(h?0:i),b=q+(h?i:0);
+          for(let dr=-1;dr<=1;dr++)for(let dq=-1;dq<=1;dq++){const x=a+dr,y=b+dq;if(x>=0&&y>=0&&x<N&&y<N&&B[x][y])free=false;}}
+        if(free){for(let i=0;i<len;i++)B[r+(h?0:i)][q+(h?i:0)]=1;ok=true;}}
+      if(!ok)return null;}
+    return B;},
+  // проверка на лодките на играча
+  check(g){const N=g.N,S=g.st,seen=[...Array(N)].map(()=>Array(N).fill(0)),lens=[];let touch=false,bent=false;
+    for(let r=0;r<N;r++)for(let q=0;q<N;q++)if(S[r][q]===1){
+      if(r+1<N&&((q>0&&S[r+1][q-1]===1)||(q+1<N&&S[r+1][q+1]===1)))touch=true;
+      if(!seen[r][q]){const st=[[r,q]],cells=[];seen[r][q]=1;while(st.length){const [a,b]=st.pop();cells.push([a,b]);
+          for(const [da,db] of [[1,0],[-1,0],[0,1],[0,-1]]){const x=a+da,y=b+db;if(x>=0&&y>=0&&x<N&&y<N&&S[x][y]===1&&!seen[x][y]){seen[x][y]=1;st.push([x,y]);}}}
+        const rows=new Set(cells.map(p=>p[0])),cols=new Set(cells.map(p=>p[1]));if(rows.size>1&&cols.size>1)bent=true;
+        // лодката е „завършена“, ако около нея няма празни квадратчета
+        let closed=true;for(const [a,b] of cells)for(const [da,db] of [[1,0],[-1,0],[0,1],[0,-1]]){const x=a+da,y=b+db;if(x>=0&&y>=0&&x<N&&y<N&&S[x][y]===0)closed=false;}
+        lens.push({n:cells.length,closed});}}
+    g.rowN=S.map(r=>r.filter(v=>v===1).length);g.colN=[...Array(N)].map((_,q)=>S.reduce((a,r)=>a+(r[q]===1),0));
+    g.touch=touch;g.bent=bent;
+    // кои лодки от флотилията вече са намерени
+    const done=lens.filter(l=>l.closed).map(l=>l.n).sort((a,b)=>b-a);g.found=g.F.map(()=>false);
+    for(const n of done){const i=g.F.findIndex((f,j)=>f===n&&!g.found[j]);if(i>=0)g.found[i]=true;}
+    const fl=lens.map(l=>l.n).sort((a,b)=>b-a).join(),want=g.F.slice().sort((a,b)=>b-a).join();
+    const ok=!touch&&!bent&&fl===want&&g.rowN.every((v,i)=>v===g.rc[i])&&g.colN.every((v,i)=>v===g.cc[i]);
+    if(ok&&!g.solved){const pts=N*5+Math.min(30,Math.floor(g.time/5));g.score+=pts;g.gain=pts;g.time+=45;g.solved=1.6;flash(g,true);A.tune([523,659,784,1047]);}},
+  set(g,r,q,v){if(g.solved>0||g.fix[r][q])return;g.st[r][q]=v;A.beep(v===1?660:v===2?420:300,.04,'triangle');this.check(g);},
+  cell(g,mx,my){const r=Math.floor((my-g.oy)/g.cs),q=Math.floor((mx-g.ox)/g.cs);return r>=0&&q>=0&&r<g.N&&q<g.N?[r,q]:null;},
+  click(g,mx,my,b){const p=this.cell(g,mx,my);if(!p){if(mx>350&&my>318)this.clear(g);return;}g.kb=0;g.cur=p;const [r,q]=p;
+    if(b===2)this.set(g,r,q,g.st[r][q]===2?0:2);else this.set(g,r,q,(g.st[r][q]+1)%3);},
+  clear(g){if(g.solved>0)return;for(let r=0;r<g.N;r++)for(let q=0;q<g.N;q++)if(!g.fix[r][q])g.st[r][q]=0;A.beep(200,.08);this.check(g);},
+  key(g,k){const cu=g.cur,N=g.N;
+    if(k==='ArrowLeft')cu[1]=(cu[1]+N-1)%N;else if(k==='ArrowRight')cu[1]=(cu[1]+1)%N;else if(k==='ArrowUp')cu[0]=(cu[0]+N-1)%N;else if(k==='ArrowDown')cu[0]=(cu[0]+1)%N;
+    else if(k==='Space'||k==='Enter')this.set(g,cu[0],cu[1],g.st[cu[0]][cu[1]]===1?0:1);
+    else if(k==='KeyX')this.set(g,cu[0],cu[1],g.st[cu[0]][cu[1]]===2?0:2);
+    else if(k==='Backspace'||k==='Delete')this.set(g,cu[0],cu[1],0);else if(k==='KeyC')this.clear(g);else return;g.kb=1;},
+  update(g,dt){if(g.fl)g.fl.t-=dt;
+    if(g.solved>0){g.solved-=dt;if(g.solved<=0){g.solved=0;g.lv++;this.board(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени: '+g.lv);},
+  ship(g,x,y,s,r,q){const S=g.st,N=g.N,on=(a,b)=>a>=0&&b>=0&&a<N&&b<N&&S[a][b]===1;
+    const u=on(r-1,q),d=on(r+1,q),l=on(r,q-1),rt=on(r,q+1),m=4;
+    const x0=x+(l?0:m),y0=y+(u?0:m),x1=x+s-(rt?0:m),y1=y+s-(d?0:m);
+    A.block(x0,y0,x1-x0,'#9a6a3a',y1-y0);c.fillStyle='#7a5233';
+    if(u||d)c.fillRect(x+s/2-2,y0,4,y1-y0);else c.fillRect(x0,y+s/2-2,x1-x0,4);
+    if(!u&&!d&&!l&&!rt){A.block(x+s/2-2,y+5,4,'#5d3b1f',s-14);A.block(x+s/2+2,y+7,s/3,'#eeeeee',s/3);}},
+  draw(g){A.bg('#14324a');const N=g.N,s=g.cs,ox=g.ox,oy=g.oy;
+    for(let r=0;r<N;r++)for(let q=0;q<N;q++){const x=ox+q*s,y=oy+r*s,v=g.st[r][q];
+      if(v===0){A.block(x,y,s,'#5d6b7a');}
+      else{A.block(x,y,s,'#3b7bd6');c.fillStyle='rgba(255,255,255,.35)';const w=Math.floor(g.t*2+r+q)%2*3;c.fillRect(x+6+w,y+s/2,s/3,2);c.fillRect(x+s/2-w,y+s/2+6,s/4,2);
+        if(v===1)this.ship(g,x,y,s,r,q);}
+      if(g.fix[r][q]){c.strokeStyle='#ffd23f';c.lineWidth=2;c.strokeRect(x+2,y+2,s-4,s-4);}}
+    c.strokeStyle='rgba(0,0,0,.4)';c.lineWidth=1;for(let i=0;i<=N;i++){c.beginPath();c.moveTo(ox+i*s,oy);c.lineTo(ox+i*s,oy+N*s);c.moveTo(ox,oy+i*s);c.lineTo(ox+N*s,oy+i*s);c.stroke();}
+    const col=(have,want)=>have===want?'#7dff7a':have>want?'#ff6b6b':'#fff';
+    for(let q=0;q<N;q++)A.txt(''+g.cc[q],ox+q*s+s/2,oy-14,16,col(g.colN[q],g.cc[q]),'center');
+    for(let r=0;r<N;r++)A.txt(''+g.rc[r],ox+N*s+14,oy+r*s+s/2,16,col(g.rowN[r],g.rc[r]),'center');
+    if(g.kb&&!g.solved){c.strokeStyle='#fff';c.lineWidth=3;c.strokeRect(ox+g.cur[1]*s+1,oy+g.cur[0]*s+1,s-2,s-2);}
+    // флотилия
+    const px=356;A.txt('Флотилия:',px,52,14,'#ffd54f');let y=74;
+    g.F.forEach((n,i)=>{for(let j=0;j<n;j++)A.block(px+j*18,y-7,16,g.found[i]?'#9a6a3a':'#4a5a6a',14);if(g.found[i])A.txt('✓',px+n*18+6,y,13,'#7dff7a');y+=22;});
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);A.txt('Пъзел '+(g.lv+1),470,14,13,'#fff','right');
+    if(g.touch)A.txt('Лодките се допират!',px,y+10,12,'#ff6b6b');else if(g.bent)A.txt('Лодката е крива!',px,y+10,12,'#ff6b6b');
+    A.block(352,322,120,'#5a6b8c',28);A.txt('C) изчисти',412,336,13,'#fff','center');
+    if(g.solved>0){c.fillStyle='rgba(0,0,0,.5)';c.fillRect(0,150,480,60);A.txt('Флотилията е намерена! +'+g.gain,240,180,22,'#ffd54f','center');}
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
