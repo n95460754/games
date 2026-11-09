@@ -506,6 +506,50 @@
      "summary": "This article provides an introduction to the different bounding volume techniques used to implement collision detection in 3D environments. Followup articles will cover implementations in specific 3D libraries."
     }
    ]
+  },
+  {
+   "who": "Neon Walker (Anti-Cheat Engineer)",
+   "said": "Тъчът в Бързи пръсти не реагира на iPad. 📱",
+   "query": "touchstart ipad canvas",
+   "round": 19,
+   "at": "2026-11-09T00:37:08.779Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "Drawing canvas with mouse and iPad touch panel",
+     "url": "https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "How can I draw in canvas element with safari in iPad?",
+     "url": "https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad",
+     "score": 2,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Draw with finger in html on ipad?",
+     "url": "https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad",
+     "score": 2,
+     "accepted": true
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Element: touchstart event",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/touchstart_event",
+     "summary": "The touchstart event is fired when one or more touch points are placed on the touch surface."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Canvas",
+     "url": "https://developer.mozilla.org/en-US/docs/Glossary/Canvas",
+     "summary": "The canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D and 3D shapes and bitmap images."
+    }
+   ]
   }
  ],
  "searches_total": 4

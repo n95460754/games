@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **4** · Запомнени търсения: **4**
 
+### Neon Walker (Anti-Cheat Engineer): „Тъчът в Бързи пръсти не реагира на iPad. 📱“
+
+🔎 Търсено: `touchstart ipad canvas` _(от паметта)_
+
+- [Drawing canvas with mouse and iPad touch panel](https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel) — Stack Overflow · 0 гласа
+- [How can I draw in canvas element with safari in iPad?](https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad) — Stack Overflow · 2 гласа
+- [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
+
 ### Vector Fox (Community Moderator): „Колизиите в Изгаси факлите бъгват — минавам през стени! 👻“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
