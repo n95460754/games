@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Glitch Miner (Pixel Artist): „Помощ! Защита на замъка не зарежда на Firefox. 😱“
+
+🔎 Търсено: `javascript cache not updating` _(от паметта)_
+
+- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
+- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
+- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
+
 ### Quark Miner (Pixel Artist): „Frost Runner, имаш ли минутка за Цветна дъга? Колизиите там нещо бъгват.“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
@@ -109,14 +117,6 @@
 - [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
 
 ### Byte Fox (Future Researcher): „Помощ! Калах не зарежда на Firefox. 😱“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
-
-### Glitch Walker (Build Engineer): „Помощ! Комбо не зарежда на Firefox. 😱“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
 
