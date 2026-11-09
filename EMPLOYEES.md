@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **242** / 500
+Общо служители: **243** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -216,7 +216,7 @@
 
 # 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Gameplay — шеф: Game-Physics-Bot · 11 души
+## Gameplay — шеф: Game-Physics-Bot · 12 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -231,6 +231,7 @@
 | EMP-0169 | Turbo Volt | Mid | Level Builder / Строител на нива | 2026-11-09 12:17 UTC |
 | EMP-0223 | Pixel Stone | Junior | Level Builder / Строител на нива | 2026-11-09 16:49 UTC |
 | EMP-0230 | Nova Miner | Senior | NPC AI Programmer / Програмист на NPC AI | 2026-11-09 17:25 UTC |
+| EMP-0243 | Blaze Walker | Intern | Physics Programmer / Програмист на физика | 2026-11-09 18:30 UTC |
 
 # 🚀 Team Release — лидер: Release-Manager-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
