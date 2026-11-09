@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **96** / 500
+Общо служители: **97** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -180,7 +180,7 @@
 
 # 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Innovation — шеф: Chief-Visionary-Bot · 5 души
+## Innovation — шеф: Chief-Visionary-Bot · 6 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -189,4 +189,5 @@
 | EMP-0072 | Turbo Runner | Senior | 3D Prototyper / 3D прототипист | 2026-11-09 04:08 UTC |
 | EMP-0088 | Blaze Stone | Senior | 3D Prototyper / 3D прототипист | 2026-11-09 05:28 UTC |
 | EMP-0092 | Glitch Walker | Junior | 3D Prototyper / 3D прототипист | 2026-11-09 05:49 UTC |
+| EMP-0097 | Neon Coder | Lead | Game Inventor / Изобретател на игри | 2026-11-09 06:15 UTC |
 
