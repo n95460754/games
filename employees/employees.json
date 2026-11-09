@@ -5668,6 +5668,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T23:07:45.687Z"
+    },
+    {
+      "id": "EMP-0299",
+      "name": "Vector Coder",
+      "level": "Junior",
+      "role": "Community Moderator",
+      "role_bg": "Модератор",
+      "department": "Community",
+      "manager": "Community-Manager-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T23:12:47.497Z"
     }
   ],
   "chairman": {
