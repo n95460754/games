@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вълнен валяк</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🧶 Вълнен валяк</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 314. Вълнен валяк
+const WR_COLS=['#e53935','#ffd23f','#4caf50','#3b7bd6','#ff9800','#c56bff','#4de8f5','#f06292'];
+const WR_D={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]};
+A.add({id:'woolroll',cat:'puzzle',icon:'🧶',name:'Вълнен валяк',desc:'Търкаляй блок вълна — той се плъзга до стената и боядисва пода. Оцвети целия под!',
+  help:'Стрелки / WASD — търкаляй вълната. Мишка / пръст — кликни или докосни от страната, накъдето искаш да тръгне. Вълната не спира, докато не удари стена, и оцветява всяко поле, през което мине. Оцвети целия под, за да минеш нивото. С малко ходове = 3 ⭐ и бонус. R — започни нивото отново. Имаш 120 секунди, +20 за всяко ниво.',
+  start(g){g.lvl=0;g.time=120;g.msg='';g.mt=0;this.newLevel(g);},
+  gen(C,R,lvl){
+    for(let tries=0;tries<60;tries++){
+      const m=new Array(C*R).fill(0);for(let x=0;x<C;x++){m[x]=2;m[(R-1)*C+x]=2;}for(let y=0;y<R;y++){m[y*C]=2;m[y*C+C-1]=2;}
+      let px=A.ri(1,C-2),py=A.ri(1,R-2);const sx=px,sy=py;m[py*C+px]=1;let moves=0,floor=1,ld=-1;
+      const want=Math.floor((C-2)*(R-2)*A.rnd(.5,.7)),maxM=4+lvl*2;
+      for(let a=0;a<400&&moves<maxM&&floor<want;a++){
+        let di=A.ri(0,3);if(di===(ld^1))continue;const [dx,dy]=[[-1,0],[1,0],[0,-1],[0,1]][di];
+        let x=px,y=py,st=0;const goal=A.ri(1,Math.max(C,R)-3);
+        while(true){const i=(y+dy)*C+x+dx,v=m[i];if(v===2)break;
+          if(v===1){x+=dx;y+=dy;st++;continue;}
+          if(st>=goal){m[i]=2;break;}m[i]=1;floor++;x+=dx;y+=dy;st++;}
+        if(!st)continue;px=x;py=y;moves++;ld=di;}
+      for(let i=0;i<m.length;i++)if(!m[i])m[i]=2;
+      if(floor>=Math.min(8+lvl*2,want*.8)&&moves>=2)return {m,sx,sy,par:moves,floor};
+    }
+    return null;},
+  newLevel(g){g.lvl++;const C=Math.min(13,6+g.lvl),R=Math.min(9,5+Math.floor(g.lvl/2));
+    let L=null;while(!L)L=this.gen(C,R,g.lvl);
+    g.L=L;g.C=C;g.R=R;g.cs=Math.floor(Math.min(440/C,316/R));g.ox=Math.floor((480-g.cs*C)/2);g.oy=34+Math.floor((322-g.cs*R)/2);
+    g.col=WR_COLS[(g.lvl-1)%WR_COLS.length];this.reset(g);},
+  reset(g){g.px=g.L.sx;g.py=g.L.sy;g.paint=new Set([g.py*g.C+g.px]);g.moves=0;g.anim=null;g.done=0;},
+  go(g,dx,dy){if(g.anim||g.done)return;let x=g.px,y=g.py;const path=[];
+    while(g.L.m[(y+dy)*g.C+x+dx]===1){x+=dx;y+=dy;path.push([x,y]);}
+    if(!path.length){A.beep(110,.06,'square',.03);return;}
+    g.moves++;g.anim={path,i:0,t:0,dx,dy};A.beep(330,.05,'triangle',.04);},
+  key(g,k){if(k==='KeyR'){this.reset(g);return;}const d=WR_D[k];if(d)this.go(g,d[0],d[1]);},
+  click(g,x,y){const cx=g.ox+(g.px+.5)*g.cs,cy=g.oy+(g.py+.5)*g.cs,dx=x-cx,dy=y-cy;
+    if(y<30&&x>400){this.reset(g);return;}
+    if(Math.abs(dx)<g.cs*.4&&Math.abs(dy)<g.cs*.4)return;
+    if(Math.abs(dx)>Math.abs(dy))this.go(g,Math.sign(dx),0);else this.go(g,0,Math.sign(dy));},
+  update(g,dt){
+    g.mt=Math.max(0,g.mt-dt);
+    if(g.done){g.done-=dt;if(g.done<=0){g.done=0;this.newLevel(g);}return;}
+    g.time-=dt;if(g.time<=0){g.time=0;return A.over(g,'Времето изтече! Стигна до ниво '+g.lvl);}
+    const a=g.anim;if(a){a.t+=dt*16;
+      while(a.i<a.path.length&&a.t>=a.i+1){const [x,y]=a.path[a.i];if(!g.paint.has(y*g.C+x)){g.paint.add(y*g.C+x);A.beep(500+g.paint.size*9,.02,'sine',.025);}g.px=x;g.py=y;a.i++;}
+      if(a.i>=a.path.length){g.anim=null;A.beep(160,.05,'square',.03);
+        if(g.paint.size>=g.L.floor){const st=g.moves<=g.L.par?3:g.moves<=g.L.par+3?2:1;
+          g.score+=g.L.floor+st*5;g.time+=20;g.done=1.4;g.msg='Ниво '+g.lvl+'! '+'⭐'.repeat(st)+'  +'+(g.L.floor+st*5)+' · +20 сек';g.mt=1.4;A.tune([523,659,784,1047]);}}}
+  },
+  draw(g){A.bg('#2b2f38');const s=g.cs;
+    for(let y=0;y<g.R;y++)for(let x=0;x<g.C;x++){const X=g.ox+x*s,Y=g.oy+y*s,i=y*g.C+x;
+      if(g.L.m[i]===2){A.block(X,Y,s,'#7d7d7d');c.fillStyle='rgba(0,0,0,.15)';c.fillRect(X+s*.2,Y+s*.3,s*.2,s*.15);c.fillRect(X+s*.6,Y+s*.6,s*.15,s*.15);}
+      else if(g.paint.has(i)){c.fillStyle=g.col;c.fillRect(X,Y,s,s);c.fillStyle='rgba(255,255,255,.12)';c.fillRect(X+2,Y+2,s-4,2);c.fillStyle='rgba(0,0,0,.12)';c.fillRect(X,Y+s-2,s,2);}
+      else{c.fillStyle='#b89a74';c.fillRect(X,Y,s,s);c.fillStyle='#a8896a';c.fillRect(X,Y,s,1);c.fillRect(X,Y,1,s);}}
+    let rx=g.px,ry=g.py;const a=g.anim;if(a&&a.i<a.path.length){const f=a.t-a.i;rx+=a.dx*f;ry+=a.dy*f;}
+    const X=g.ox+rx*s+s*.1,Y=g.oy+ry*s+s*.1,w=s*.8;A.block(X,Y,w,'#f4f4f4');
+    c.fillStyle=g.col;c.fillRect(X+w*.15,Y+w*.15,w*.7,w*.12);c.fillRect(X+w*.15,Y+w*.73,w*.7,w*.12);
+    c.fillStyle='#000';c.fillRect(X+w*.28,Y+w*.38,w*.12,w*.14);c.fillRect(X+w*.6,Y+w*.38,w*.12,w*.14);c.fillRect(X+w*.4,Y+w*.6,w*.2,w*.06);
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,26);
+    A.txt('Ниво '+g.lvl,10,13,15,'#ffd54f');A.txt('Ходове: '+g.moves+' / '+g.L.par+' ⭐',170,13,13,'#fff','center');
+    A.txt('🎨 '+Math.round(g.paint.size/g.L.floor*100)+'%',290,13,13,'#fff','center');
+    A.txt('⏱ '+Math.ceil(g.time),380,13,15,g.time<15?'#ff8a80':'#fff','center');A.txt('↻ R',470,13,13,'#b9c6d6','right');
+    if(g.mt>0){c.fillStyle='rgba(0,0,0,.6)';c.fillRect(40,150,400,54);A.txt(g.msg,240,177,17,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

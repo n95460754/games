@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фуния за сортиране</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📦 Фуния за сортиране</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 315. Фуния за сортиране
+const HS_ITEMS=[
+  {n:'Въглища',t:'ore',c:'#2a2a2a'},{n:'Желязо',t:'ore',c:'#d8a07a'},{n:'Злато',t:'ore',c:'#ffd23f'},{n:'Диамант',t:'ore',c:'#4de8f5'},
+  {n:'Изумруд',t:'ore',c:'#2ecc71'},{n:'Червен прах',t:'ore',c:'#ff2e55'},{n:'Лапис',t:'ore',c:'#2f4fd6'},
+  {n:'Ябълка',t:'food',c:'#e53935'},{n:'Хляб',t:'food',c:'#c8902e'},{n:'Морков',t:'food',c:'#ff9800'},{n:'Диня',t:'food',c:'#e84a5f'},
+  {n:'Бисквитка',t:'food',c:'#b5793a'},{n:'Пържола',t:'food',c:'#a0522d'},{n:'Торта',t:'food',c:'#f5f0e6'}];
+A.add({id:'hoppersort',cat:'skill',icon:'📦',name:'Фуния за сортиране',desc:'Сортирай падащите предмети — руди в единия сандък, храна в другия, а TNT в лавата!',
+  help:'По фунията падат предмети. ← / A — към левия сандък, → / D — към десния, ↓ / S / Space — пусни долу в лавата. Мишка / пръст: докосни лявата, дясната или средната част на екрана. Руди и храна отиват в своите сандъци (виж надписите — понякога сандъците се разменят!), а TNT само в лавата. Сортираш винаги най-долния предмет. Грешка = −1 сърце, имаш 3.',
+  start(g){g.items=[];g.lives=3;g.left='ore';g.v=55;g.sp=0;g.streak=0;g.fx=[];g.msg='';g.mt=0;g.swapAt=12;g.shake=0;g.done=0;},
+  spawn(g){const tnt=g.done>=5&&Math.random()<.16;
+    g.items.push({k:tnt?{n:'TNT',t:'tnt',c:'#d84a3a'}:A.pick(HS_ITEMS),x:240,y:-16,st:'fall',vx:0,vy:0,a:1});},
+  low(g){let b=null;for(const it of g.items)if(it.st==='fall'&&(!b||it.y>b.y))b=it;return b;},
+  side(t,g){return t==='tnt'?'pit':(t===g.left?'L':'R');},
+  act(g,where){const it=this.low(g);if(!it)return;
+    if(where==='pit'){it.st='drop';it.vy=Math.max(g.v,380);return;}
+    it.st=where;it.vx=where==='L'?-320:320;it.vy=-60;this.judge(g,it,where);},
+  judge(g,it,where){const ok=this.side(it.k.t,g)===where;g.done++;
+    if(ok){g.streak++;g.score+=1+(g.streak%10===0?5:0);if(g.streak%10===0){g.msg='Серия '+g.streak+'! +5';g.mt=1.2;A.tune([660,880,1100]);}
+      else A.beep(where==='pit'?300:700+g.streak*15,.06,'triangle',.05);
+      g.fx.push({x:where==='L'?80:where==='R'?400:240,y:250,t:.6,txt:'+1',col:'#8f8'});}
+    else{g.streak=0;g.lives--;g.shake=.35;A.beep(110,.3,'sawtooth',.07);
+      const why=it.k.t==='tnt'?'TNT избухна в сандъка!':where==='pit'?it.k.n+' изгоря в лавата!':it.k.n+' не е за там!';
+      g.msg=why;g.mt=1.6;g.fx.push({x:where==='L'?80:where==='R'?400:240,y:250,t:.8,txt:'✖',col:'#f55'});
+      if(g.lives<=0)return A.over(g,why);}
+    if(g.done>=g.swapAt){g.swapAt+=A.ri(10,16);g.left=g.left==='ore'?'food':'ore';g.msg='⚠ Сандъците се размениха!';g.mt=1.6;A.beep(520,.15,'square',.05);}
+  },
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')this.act(g,'L');else if(k==='ArrowRight'||k==='KeyD')this.act(g,'R');
+    else if(k==='ArrowDown'||k==='KeyS'||k==='Space')this.act(g,'pit');},
+  click(g,x){this.act(g,x<180?'L':x>300?'R':'pit');},
+  update(g,dt){g.mt=Math.max(0,g.mt-dt);g.shake=Math.max(0,g.shake-dt);
+    g.v=Math.min(210,55+g.done*2.2);
+    g.sp-=dt;const gap=Math.max(.55,1.9-g.done*.025);if(g.sp<=0){this.spawn(g);g.sp=gap;}
+    for(const it of g.items){
+      if(it.st==='fall'){it.y+=g.v*dt;if(it.y>=262){it.st='drop';it.vy=g.v;}}
+      else if(it.st==='drop'){it.vy+=600*dt;it.y+=it.vy*dt;if(it.y>310&&!it.j){it.j=1;it.a=0;this.judge(g,it,'pit');if(A.state!=='play')return;}}
+      else{it.x+=it.vx*dt;it.vy+=500*dt;it.y+=it.vy*dt;if((it.st==='L'&&it.x<80)||(it.st==='R'&&it.x>400)){it.vx=0;if(it.y>285)it.a=0;}}
+    }
+    g.items=g.items.filter(it=>it.a>0);
+    for(const f of g.fx){f.t-=dt;f.y-=40*dt;}g.fx=g.fx.filter(f=>f.t>0);},
+  pic(k,x,y,s){const h=s/2;
+    if(k.t==='ore'){A.block(x-h,y-h,s,'#7d7d7d');c.fillStyle=k.c;[[.2,.2],[.6,.15],[.4,.5],[.15,.65],[.65,.65]].forEach(p=>c.fillRect(x-h+p[0]*s,y-h+p[1]*s,s*.2,s*.2));return;}
+    if(k.t==='tnt'){A.block(x-h,y-h,s,'#d84a3a');c.fillStyle='#eee';c.fillRect(x-h,y-s*.18,s,s*.36);A.txt('TNT',x,y+1,s*.3,'#222','center');return;}
+    c.fillStyle=k.c;
+    if(k.n==='Ябълка'){c.fillRect(x-h*.8,y-h*.5,s*.8,s*.8);c.fillRect(x-h*.6,y-h*.7,s*.6,s*.1);c.fillStyle='#5a3a1a';c.fillRect(x-1,y-h,3,s*.25);c.fillStyle='#3f8a24';c.fillRect(x+2,y-h,s*.2,s*.1);}
+    else if(k.n==='Хляб'){c.fillRect(x-h,y-h*.4,s,s*.45);c.fillStyle='#a06a1e';for(let i=0;i<3;i++)c.fillRect(x-h*.7+i*s*.3,y-h*.3,s*.1,s*.3);}
+    else if(k.n==='Морков'){for(let i=0;i<5;i++)c.fillRect(x-h*.5+i*s*.1,y-h*.5+i*s*.15,s*.3,s*.18);c.fillStyle='#3f8a24';c.fillRect(x-h*.7,y-h,s*.25,s*.2);}
+    else if(k.n==='Диня'){c.fillStyle='#3f8a24';c.fillRect(x-h,y,s,s*.2);c.fillStyle=k.c;c.fillRect(x-h*.85,y-h*.6,s*.85,s*.4);c.fillStyle='#000';c.fillRect(x-h*.4,y-h*.3,2,2);c.fillRect(x+h*.2,y-h*.4,2,2);}
+    else if(k.n==='Бисквитка'){c.fillRect(x-h*.8,y-h*.8,s*.8,s*.8);c.fillStyle='#4a2a10';c.fillRect(x-h*.4,y-h*.4,3,3);c.fillRect(x+h*.2,y-h*.1,3,3);c.fillRect(x-h*.2,y+h*.3,3,3);}
+    else if(k.n==='Пържола'){c.fillRect(x-h*.8,y-h*.5,s*.75,s*.6);c.fillStyle='#eee';c.fillRect(x+h*.5,y-h*.2,s*.3,s*.12);}
+    else{c.fillRect(x-h,y-h*.2,s,s*.6);c.fillStyle='#e53935';[-.6,-.1,.4].forEach(p=>c.fillRect(x+p*h,y-h*.4,s*.12,s*.12));c.fillStyle='#c8902e';c.fillRect(x-h,y+h*.3,s,s*.1);}
+  },
+  chest(x,label,t){A.block(x,265,120,'#9a6a3a',70);c.fillStyle='#6b4423';c.fillRect(x,287,120,4);c.fillStyle='#ccc';c.fillRect(x+54,282,12,12);
+    A.txt(label,x+60,318,14,'#ffd54f','center');this.pic(t==='ore'?HS_ITEMS[3]:HS_ITEMS[7],x+60,248,22);},
+  draw(g){c.save();if(g.shake>0)c.translate(A.rnd(-3,3),A.rnd(-3,3));
+    A.bg('#3a2f28');for(let y=0;y<360;y+=30)for(let x=0;x<480;x+=30){c.fillStyle=((x+y)/30)%2?'#40342c':'#3a2f28';c.fillRect(x,y,30,30);}
+    // фуния
+    for(let y=24;y<270;y+=20){A.block(196,y,20,'#7d7d7d');A.block(264,y,20,'#7d7d7d');}
+    c.fillStyle='#2a2a2a';c.fillRect(216,24,48,246);
+    for(let y=40;y<260;y+=26){c.fillStyle='rgba(255,255,255,.06)';c.fillRect(236,y,8,12);}
+    // лава
+    c.fillStyle='#ff6a00';c.fillRect(190,300,100,60);c.fillStyle='#ffd23f';for(let i=0;i<6;i++)c.fillRect(196+i*16+Math.sin(g.t*3+i)*4,306+((i*7)%20),8,6);
+    A.txt('TNT ↓',240,345,13,'#2a0f00','center');
+    this.chest(20,'← '+(g.left==='ore'?'РУДИ':'ХРАНА'),g.left);
+    this.chest(340,(g.left==='ore'?'ХРАНА':'РУДИ')+' →',g.left==='ore'?'food':'ore');
+    const lo=this.low(g);
+    for(const it of g.items){c.globalAlpha=it.a;this.pic(it.k,it.x,it.y,30);c.globalAlpha=1;
+      if(it===lo){c.strokeStyle='#ffd54f';c.lineWidth=2;c.strokeRect(it.x-19,it.y-19,38,38);}}
+    if(lo)A.txt(lo.k.n,240,286,13,'#fff','center');
+    for(const f of g.fx)A.txt(f.txt,f.x,f.y,18,f.col,'center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,24);
+    A.txt('❤'.repeat(g.lives),10,12,15,'#f55');A.txt('Серия: '+g.streak,470,12,14,'#ffd54f','right');
+    if(g.mt>0){c.fillStyle='rgba(0,0,0,.6)';c.fillRect(60,110,360,44);A.txt(g.msg,240,132,16,'#ffd54f','center');}
+    c.restore();}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ендър дупка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🕳️ Ендър дупка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 313. Ендър дупка
+const EH_KINDS=[
+  {n:'цвете',s:8,p:1,col:'#e53935',top:'#ffd23f'},
+  {n:'трева',s:12,p:2,col:'#7a5233',top:'#5aa13a'},
+  {n:'пиле',s:14,p:3,col:'#f2f2f2',top:'#f2a51d'},
+  {n:'тиква',s:18,p:4,col:'#e08a1e',top:'#3f8a24'},
+  {n:'прасе',s:22,p:5,col:'#f0a5a5',top:'#d77c7c'},
+  {n:'овца',s:24,p:6,col:'#eeeeee',top:'#d9c3a5'},
+  {n:'крава',s:30,p:8,col:'#4a3a2a',top:'#ffffff'},
+  {n:'дърво',s:38,p:12,col:'#3f8a24',top:'#2e6b1a'},
+  {n:'бала сено',s:46,p:16,col:'#d9b23a',top:'#a8841f'},
+  {n:'къща',s:60,p:25,col:'#9a6a3a',top:'#b5402f'},
+  {n:'кула',s:78,p:40,col:'#7d7d7d',top:'#5a5a5a'}];
+A.add({id:'endhole',cat:'action',icon:'🕳️',name:'Ендър дупка',desc:'Управлявай дупка към Края и гълтай блокове — колкото повече ядеш, толкова по-голяма ставаш',
+  help:'Стрелки / WASD — движи дупката. Мишка или пръст — дупката следва показалеца. Гълтай неща, по-малки от дупката: цветя, пилета, прасета, крави, дървета, къщи… С всяко глътнато нещо дупката расте и вече може да глътне по-големи неща. Имаш 75 секунди — събери колкото можеш повече точки!',
+  start(g){g.x=240;g.y=200;g.r=15;g.tx=null;g.ty=null;g.time=75;g.obj=[];g.pop=[];g.star=0;
+    for(let i=0;i<26;i++)this.spawn(g,true);},
+  pickKind(g){const ok=EH_KINDS.filter(k=>k.s<g.r*2.6);const w=ok.map(k=>k.s<g.r*1.5?3:1);let t=Math.random()*w.reduce((a,b)=>a+b,0);
+    for(let i=0;i<ok.length;i++){t-=w[i];if(t<=0)return ok[i];}return ok[0];},
+  spawn(g,first){const k=this.pickKind(g);
+    for(let a=0;a<12;a++){const x=A.rnd(k.s/2+4,476-k.s/2),y=A.rnd(30+k.s/2,356-k.s/2);
+      if(Math.hypot(x-g.x,y-g.y)<g.r+k.s+30)continue;
+      if(g.obj.some(o=>Math.abs(o.x-x)<(o.k.s+k.s)/2+2&&Math.abs(o.y-y)<(o.k.s+k.s)/2+2))continue;
+      g.obj.push({k,x,y,sink:0,sx:0,sy:0,ph:Math.random()*6});return;}},
+  move(g,x,y){g.tx=x;g.ty=y;},
+  click(g,x,y){g.tx=x;g.ty=y;},
+  update(g,dt){
+    g.time-=dt;if(g.time<=0){g.time=0;return A.over(g,'Времето изтече! Дупката стана '+Math.round(g.r*2)+' пиксела');}
+    const sp=(130+g.r*1.2)*dt;let kx=0,ky=0;
+    if(A.keys.ArrowLeft||A.keys.KeyA)kx--;if(A.keys.ArrowRight||A.keys.KeyD)kx++;
+    if(A.keys.ArrowUp||A.keys.KeyW)ky--;if(A.keys.ArrowDown||A.keys.KeyS)ky++;
+    if(kx||ky){g.tx=null;const l=Math.hypot(kx,ky);g.x+=kx/l*sp;g.y+=ky/l*sp;}
+    else if(g.tx!==null){const dx=g.tx-g.x,dy=g.ty-g.y,d=Math.hypot(dx,dy);if(d>2){const m=Math.min(d,sp);g.x+=dx/d*m;g.y+=dy/d*m;}}
+    g.x=A.clamp(g.x,g.r*.6,480-g.r*.6);g.y=A.clamp(g.y,24+g.r*.6,360-g.r*.6);
+    g.star+=dt;
+    for(const o of g.obj){
+      if(o.sink){o.sink+=dt*3;o.x+=(g.x-o.x)*Math.min(1,dt*8);o.y+=(g.y-o.y)*Math.min(1,dt*8);continue;}
+      const d=Math.hypot(o.x-g.x,o.y-g.y);
+      if(o.k.s<g.r*1.5&&d<g.r-o.k.s*.2){o.sink=0.001;g.score+=o.k.p;g.r=Math.min(95,Math.sqrt(g.r*g.r+o.k.s*o.k.s*.05));
+        g.pop.push({x:o.x,y:o.y,t:.8,txt:'+'+o.k.p});A.beep(200+o.k.s*12,.08,'triangle',.05);setTimeout(()=>A.beep(120+o.k.s*6,.1,'sine',.04),70);}
+      else if(d<g.r+o.k.s*.3&&o.k.s>=g.r*1.5)o.ph+=dt*25;
+    }
+    g.obj=g.obj.filter(o=>o.sink<1);
+    while(g.obj.length<26)this.spawn(g);
+    // твърде малките неща изчезват, за да има място за по-големи
+    if(g.r>40&&Math.random()<dt){const i=g.obj.findIndex(o=>!o.sink&&o.k.s<g.r*.25);if(i>=0)g.obj.splice(i,1);}
+    for(const p of g.pop){p.t-=dt;p.y-=30*dt;}g.pop=g.pop.filter(p=>p.t>0);
+  },
+  drawObj(o,s){const k=o.k,x=o.x-s/2,y=o.y-s/2;
+    if(k.n==='цвете'){c.fillStyle='#3f8a24';c.fillRect(o.x-1,o.y,2,s/2);c.fillStyle=k.col;c.fillRect(x,y,s,s*.6);c.fillStyle=k.top;c.fillRect(o.x-s/6,y+s*.15,s/3,s/3);return;}
+    if(k.n==='дърво'){A.block(x+s*.1,y+s*.1,s*.8,'#2e6b1a');A.block(x+s*.25,y+s*.25,s*.5,k.col);c.fillStyle='rgba(0,0,0,.18)';c.fillRect(x+s*.3,y+s*.6,s*.12,s*.12);c.fillRect(x+s*.55,y+s*.3,s*.12,s*.12);return;}
+    if(k.n==='къща'){A.block(x,y,s,'#9a6a3a');c.fillStyle=k.top;c.fillRect(x+s*.08,y+s*.08,s*.84,s*.84);c.fillStyle='#8a3426';c.fillRect(x+s*.47,y+s*.08,s*.06,s*.84);c.fillStyle='#444';c.fillRect(x+s*.62,y+s*.2,s*.14,s*.14);return;}
+    if(k.n==='кула'){A.block(x,y,s,k.col);A.block(x+s*.18,y+s*.18,s*.64,k.top);c.fillStyle='#ffd23f';c.fillRect(o.x-s*.08,o.y-s*.08,s*.16,s*.16);return;}
+    A.block(x,y,s,k.col);c.fillStyle=k.top;
+    if(k.n==='трева')c.fillRect(x+1,y+1,s-2,s*.55);
+    else if(k.n==='бала сено'){c.fillRect(x,y+s*.3,s,s*.08);c.fillRect(x,y+s*.62,s,s*.08);}
+    else if(k.n==='тиква'){c.fillRect(o.x-2,y-3,4,5);c.fillStyle='rgba(0,0,0,.2)';c.fillRect(x+s*.3,y,2,s);c.fillRect(x+s*.65,y,2,s);}
+    else{c.fillRect(x+s*.7,y+s*.3,s*.3,s*.4);c.fillStyle='#000';c.fillRect(x+s*.82,y+s*.36,2,2);c.fillRect(x+s*.82,y+s*.58,2,2);
+      if(k.n==='крава'){c.fillStyle='#fff';c.fillRect(x+s*.15,y+s*.2,s*.2,s*.2);c.fillRect(x+s*.4,y+s*.6,s*.2,s*.18);}}
+  },
+  draw(g){
+    for(let y=0;y<360;y+=24)for(let x=0;x<480;x+=24){c.fillStyle=((x+y)/24)%2?'#5aa13a':'#62ab40';c.fillRect(x,y,24,24);}
+    // дупката
+    c.fillStyle='#000';c.beginPath();c.arc(g.x,g.y,g.r,0,7);c.fill();
+    c.save();c.beginPath();c.arc(g.x,g.y,g.r,0,7);c.clip();
+    for(let i=0;i<14;i++){const a=i*2.4+g.star*.4,d=(i*37%100)/100*g.r;c.fillStyle=i%3?'#4de8f5':'#c56bff';c.fillRect(g.x+Math.cos(a)*d,g.y+Math.sin(a)*d,2,2);}
+    for(const o of g.obj)if(o.sink){c.globalAlpha=1-o.sink;this.drawObj(o,o.k.s*(1-o.sink*.8));c.globalAlpha=1;}
+    c.restore();
+    c.strokeStyle='#8e24aa';c.lineWidth=4;c.beginPath();c.arc(g.x,g.y,g.r,0,7);c.stroke();
+    c.strokeStyle='#2a0f3a';c.lineWidth=2;c.beginPath();c.arc(g.x,g.y,g.r+3,0,7);c.stroke();
+    for(const o of g.obj)if(!o.sink){c.save();if(o.ph>0&&o.k.s>=g.r*1.5&&Math.hypot(o.x-g.x,o.y-g.y)<g.r+o.k.s*.3)c.translate(Math.sin(o.ph)*1.5,0);
+      this.drawObj(o,o.k.s);c.restore();}
+    for(const p of g.pop)A.txt(p.txt,p.x,p.y,14,'#ffd54f','center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,24);
+    A.txt('⏱ '+Math.ceil(g.time),10,12,15,g.time<10?'#ff8a80':'#fff');
+    A.txt('Размер: '+Math.round(g.r*2),240,12,14,'#e1b3ff','center');
+    const nx=EH_KINDS.find(k=>k.s>=g.r*1.5);A.txt(nx?'Следва: '+nx.n:'Гълташ всичко!',470,12,13,'#b9c6d6','right');
+  }
+});
+</script>
+</body>
+</html>
