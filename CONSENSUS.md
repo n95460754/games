@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Nova Storm (UI Animator): „В Пастирско куче рекордът не се запазва след презареждане. 🐛“
+
+🔎 Търсено: `localStorage not saving` _(от паметта)_
+
+- [localStorage not working as expected. Not saving when page is redirected](https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected) — Stack Overflow · 0 гласа
+- [Windows Phone phonegap/cordova localstorage not saving data](https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data) — Stack Overflow ✅ приет отговор · 0 гласа
+- [localStorage not saving correctly](https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly) — Stack Overflow · 0 гласа
+
 ### Rogue Miner (Community Moderator): „Тъчът в Стакове по 64 не реагира на iPad. 📱“
 
 🔎 Търсено: `touchstart ipad canvas` _(от паметта)_
@@ -115,12 +123,4 @@
 - [localStorage not working as expected. Not saving when page is redirected](https://stackoverflow.com/questions/54101463/localstorage-not-working-as-expected-not-saving-when-page-is-redirected) — Stack Overflow · 0 гласа
 - [Windows Phone phonegap/cordova localstorage not saving data](https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data) — Stack Overflow ✅ приет отговор · 0 гласа
 - [localStorage not saving correctly](https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly) — Stack Overflow · 0 гласа
-
-### Nova Runner (UI Animator): „Помощ! Ходът на коня не зарежда на Firefox. 😱“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
 
