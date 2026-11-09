@@ -1,447 +1,16 @@
 {
- "next": 2682,
+ "next": 2720,
  "tasks": [
-  {
-   "id": "TASK-2549",
-   "team": "Team Gameplay",
-   "title": "Направи ново трудно ниво за Кран",
-   "assignee": "EMP-0031",
-   "assignee_name": "Byte Runner",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2550",
-   "team": "Team Release",
-   "title": "Почисти стария код в Колко пътя?",
-   "assignee": "EMP-0100",
-   "assignee_name": "Quark Forge",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2551",
-   "team": "Team Release",
-   "title": "Почисти стария код в Рудотрошач",
-   "assignee": "EMP-0011",
-   "assignee_name": "Glitch Walker",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2552",
-   "team": "Team Release",
-   "title": "Направи Рудотрошач да зарежда под 1 секунда",
-   "assignee": "EMP-0049",
-   "assignee_name": "Blaze Smith",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2553",
-   "team": "Team Experience",
-   "title": "Направи Обърни блоковете удобна за далтонисти",
-   "assignee": "Documentation-Bot",
-   "assignee_name": "Documentation-Bot",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2554",
-   "team": "Team Experience",
-   "title": "Направи Блоков бегач удобна за далтонисти",
-   "assignee": "EMP-0040",
-   "assignee_name": "Quark Coder",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2555",
-   "team": "Team Experience",
-   "title": "Добави управление само с клавиатура в Кръговете на Вен",
-   "assignee": "EMP-0073",
-   "assignee_name": "Neon Storm",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2556",
-   "team": "Team Data",
-   "title": "Подреди рекордите на Обърни блоковете в класация",
-   "assignee": "EMP-0019",
-   "assignee_name": "Zen Forge",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2557",
-   "team": "Team Data",
-   "title": "Подреди рекордите на Търкаляй блока в класация",
-   "assignee": "EMP-0064",
-   "assignee_name": "Blaze Miner",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2558",
-   "team": "Team Data",
-   "title": "Подреди рекордите на Книжка за оцветяване в класация",
-   "assignee": "Database-Admin-Bot",
-   "assignee_name": "Database-Admin-Bot",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2559",
-   "team": "Team Future Lab",
-   "title": "Измисли мултиплейър режим за Блоков волейбол",
-   "assignee": "EMP-0061",
-   "assignee_name": "Orbit Knight",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2560",
-   "team": "Team Future Lab",
-   "title": "Измисли мултиплейър режим за Блоков бегач",
-   "assignee": "EMP-0046",
-   "assignee_name": "Glitch Hawk",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2561",
-   "team": "Team Future Lab",
-   "title": "Измисли 3D версия на Строй числото",
-   "assignee": "EMP-0088",
-   "assignee_name": "Blaze Stone",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.077Z",
-   "updated": "2026-11-09T06:55:36.606Z"
-  },
-  {
-   "id": "TASK-2562",
-   "team": "Team Dev",
-   "title": "Подобри менюто на По-голямо/по-малко",
-   "assignee": "UX-UI-Bot",
-   "assignee_name": "UX-UI-Bot",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2563",
-   "team": "Team Dev",
-   "title": "Добави фонова мелодия в Полет с елитра",
-   "assignee": "Sound-Engineer-Bot",
-   "assignee_name": "Sound-Engineer-Bot",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2564",
-   "team": "Team Release",
-   "title": "Почисти стария код в Книжка за оцветяване",
-   "assignee": "Build-Master-Bot",
-   "assignee_name": "Build-Master-Bot",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2565",
-   "team": "Team DevOps",
-   "title": "Провери пътищата на Палачинки в GitHub Pages",
-   "assignee": "EMP-0014",
-   "assignee_name": "Spark Miner",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2566",
-   "team": "Team Dev",
-   "title": "Оптимизирай draw() в Пясъчник до 60 FPS",
-   "assignee": "EMP-0015",
-   "assignee_name": "Pixel Smith",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2567",
-   "team": "Team DevOps",
-   "title": "Провери пътищата на Цвят или дума? в GitHub Pages",
-   "assignee": "EMP-0018",
-   "assignee_name": "Orbit Coder",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2568",
-   "team": "Team DevOps",
-   "title": "Събери отзиви от играчите за Колко пътя?",
-   "assignee": "EMP-0025",
-   "assignee_name": "Neon Fox",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2569",
-   "team": "Team DevOps",
-   "title": "Ускори зареждането на По-голямо/по-малко",
-   "assignee": "EMP-0028",
-   "assignee_name": "Vector Runner",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2570",
-   "team": "Team DevOps",
-   "title": "Провери Играта на живота за XSS",
-   "assignee": "EMP-0034",
-   "assignee_name": "Turbo Knight",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2571",
-   "team": "Team Dev",
-   "title": "Добави бонус ниво в Боулинг",
-   "assignee": "EMP-0037",
-   "assignee_name": "Nova Forge",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2572",
-   "team": "Team DevOps",
-   "title": "Събери отзиви от играчите за Бомбаджия",
-   "assignee": "EMP-0043",
-   "assignee_name": "Echo Knight",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2573",
-   "team": "Team Dev",
-   "title": "Оправи колизиите в Търкаляй блока",
-   "assignee": "EMP-0052",
-   "assignee_name": "Echo Hawk",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2574",
-   "team": "Team Dev",
-   "title": "Подобри менюто на Подреди числата",
-   "assignee": "EMP-0055",
-   "assignee_name": "Frost Walker",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2575",
-   "team": "Team Dev",
-   "title": "Тествай Силомер на телефон",
-   "assignee": "EMP-0058",
-   "assignee_name": "Byte Miner",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2576",
-   "team": "Team Dev",
-   "title": "Добави фонова мелодия в Блоков бегач",
-   "assignee": "EMP-0067",
-   "assignee_name": "Orbit Walker",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2577",
-   "team": "Team Data",
-   "title": "Подреди рекордите на Колко време мина в класация",
-   "assignee": "EMP-0070",
-   "assignee_name": "Turbo Forge",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2578",
-   "team": "Team Dev",
-   "title": "Направи 8-bit звук за скок в Строй числото",
-   "assignee": "EMP-0076",
-   "assignee_name": "Echo Smith",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2579",
-   "team": "Team Release",
-   "title": "Подготви Рудотрошач за пускане",
-   "assignee": "EMP-0079",
-   "assignee_name": "Nova Smith",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2580",
-   "team": "Team DevOps",
-   "title": "Провери Змии за двама за XSS",
-   "assignee": "EMP-0082",
-   "assignee_name": "Orbit Walker",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2581",
-   "team": "Team Dev",
-   "title": "Махни глобалните променливи от Защита на замъка",
-   "assignee": "EMP-0085",
-   "assignee_name": "Nova Smith",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2582",
-   "team": "Team DevOps",
-   "title": "Провери дали Кръговете на Вен не зарежда външни скриптове",
-   "assignee": "EMP-0091",
-   "assignee_name": "Frost Coder",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2583",
-   "team": "Team Dev",
-   "title": "Оправи колизиите в Числова пирамида",
-   "assignee": "EMP-0094",
-   "assignee_name": "Orbit Forge",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2584",
-   "team": "Team Future Lab",
-   "title": "Измисли 3D версия на Дърпане на въже",
-   "assignee": "EMP-0097",
-   "assignee_name": "Neon Coder",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
-  {
-   "id": "TASK-2585",
-   "team": "Team Dev",
-   "title": "Добави анимация при победа в Змии за двама",
-   "assignee": "EMP-0103",
-   "assignee_name": "Rogue Coder",
-   "status": "review",
-   "created_round": 93,
-   "created": "2026-11-09T06:45:33.080Z",
-   "updated": "2026-11-09T06:55:36.606Z",
-   "assigned_by": "ChatGPT"
-  },
   {
    "id": "TASK-2586",
    "team": "Team Gameplay",
    "title": "Скрий тайно ниво в Деление 🥚",
    "assignee": "EMP-0068",
    "assignee_name": "Delta Storm",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2587",
@@ -449,10 +18,10 @@
    "title": "Почисти стария код в Полет с елитра",
    "assignee": "EMP-0038",
    "assignee_name": "Delta Forge",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2588",
@@ -460,10 +29,10 @@
    "title": "Направи Знаеш ли България? да зарежда под 1 секунда",
    "assignee": "EMP-0104",
    "assignee_name": "Zen Knight",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2589",
@@ -471,10 +40,10 @@
    "title": "Подготви Полет с елитра за пускане",
    "assignee": "EMP-0065",
    "assignee_name": "Frost Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2590",
@@ -482,10 +51,10 @@
    "title": "Добави управление само с клавиатура в Кран",
    "assignee": "EMP-0056",
    "assignee_name": "Orbit Volt",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2591",
@@ -493,10 +62,10 @@
    "title": "Добави плавни анимации в менюто на НОД и НОК",
    "assignee": "EMP-0077",
    "assignee_name": "Orbit Coder",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2592",
@@ -504,10 +73,10 @@
    "title": "Напиши инструкции за Календарни задачи",
    "assignee": "EMP-0035",
    "assignee_name": "Byte Stone",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2593",
@@ -515,10 +84,10 @@
    "title": "Преброй колко пъти се играе Факли срещу мобове",
    "assignee": "EMP-0047",
    "assignee_name": "Turbo Walker",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2594",
@@ -526,10 +95,10 @@
    "title": "Преброй колко пъти се играе Познай числото",
    "assignee": "EMP-0098",
    "assignee_name": "Rogue Forge",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2595",
@@ -537,10 +106,10 @@
    "title": "Подреди рекордите на Мини судоку в класация",
    "assignee": "EMP-0074",
    "assignee_name": "Frost Storm",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2596",
@@ -548,10 +117,10 @@
    "title": "Измисли система от значки за Цвят или дума? 🏅",
    "assignee": "EMP-0092",
    "assignee_name": "Glitch Walker",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.829Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2597",
@@ -559,10 +128,10 @@
    "title": "Оправи колизиите в Пикселно платно",
    "assignee": "Dev-Bot",
    "assignee_name": "Dev-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -571,10 +140,10 @@
    "title": "Направи regression тест на Мерник",
    "assignee": "QA-Tester-Bot",
    "assignee_name": "QA-Tester-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -583,10 +152,10 @@
    "title": "Провери пътищата на Цвят или дума? в GitHub Pages",
    "assignee": "DevOps-Master-Bot",
    "assignee_name": "DevOps-Master-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -595,10 +164,10 @@
    "title": "Напиши туториал за Числова мозайка",
    "assignee": "Community-Manager-Bot",
    "assignee_name": "Community-Manager-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -607,10 +176,10 @@
    "title": "Скрий тайно ниво в Познай числото 🥚",
    "assignee": "Game-Physics-Bot",
    "assignee_name": "Game-Physics-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -619,10 +188,10 @@
    "title": "Направи Деление да зарежда под 1 секунда",
    "assignee": "Release-Manager-Bot",
    "assignee_name": "Release-Manager-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -631,10 +200,10 @@
    "title": "Добави плавни анимации в менюто на Портал към Недъра",
    "assignee": "Accessibility-Bot",
    "assignee_name": "Accessibility-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -643,10 +212,10 @@
    "title": "Преброй колко пъти се играе Пирамида за маяк",
    "assignee": "Data-Analyst-Bot",
    "assignee_name": "Data-Analyst-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -655,10 +224,10 @@
    "title": "Измисли система от значки за Четири в ред 🏅",
    "assignee": "Chief-Visionary-Bot",
    "assignee_name": "Chief-Visionary-Bot",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -667,10 +236,10 @@
    "title": "Добави анимация при победа в Кука с въже",
    "assignee": "EMP-0001",
    "assignee_name": "Spark Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -679,10 +248,10 @@
    "title": "Оптимизирай draw() в Прилепче до 60 FPS",
    "assignee": "EMP-0005",
    "assignee_name": "Blaze Hawk",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -691,10 +260,10 @@
    "title": "Подобри менюто на Познай числото",
    "assignee": "EMP-0006",
    "assignee_name": "Nova Storm",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -703,10 +272,10 @@
    "title": "Напиши туториал за Календарни задачи",
    "assignee": "EMP-0007",
    "assignee_name": "Glitch Forge",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -715,10 +284,10 @@
    "title": "Оправи колизиите в Ято птици",
    "assignee": "EMP-0012",
    "assignee_name": "Echo Volt",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -727,10 +296,10 @@
    "title": "Провери дали Кран не зарежда външни скриптове",
    "assignee": "EMP-0013",
    "assignee_name": "Quark Miner",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -739,10 +308,10 @@
    "title": "Напиши туториал за Паркиране",
    "assignee": "EMP-0016",
    "assignee_name": "Turbo Storm",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -751,10 +320,10 @@
    "title": "Оправи колизиите в Познай числото",
    "assignee": "EMP-0017",
    "assignee_name": "Quark Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -763,10 +332,10 @@
    "title": "Преведи Пастирско куче на английски",
    "assignee": "EMP-0020",
    "assignee_name": "Echo Smith",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -775,10 +344,10 @@
    "title": "Провери дали рекордът в Жонгльор се пази",
    "assignee": "EMP-0021",
    "assignee_name": "Turbo Knight",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -787,10 +356,10 @@
    "title": "Провери пътищата на Кран в GitHub Pages",
    "assignee": "EMP-0022",
    "assignee_name": "Rogue Hawk",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -799,10 +368,10 @@
    "title": "Оптимизирай draw() в Полет с елитра до 60 FPS",
    "assignee": "EMP-0023",
    "assignee_name": "Quark Knight",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -811,10 +380,10 @@
    "title": "Преброй колко пъти се играе Числова мозайка",
    "assignee": "EMP-0024",
    "assignee_name": "Blaze Volt",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -823,10 +392,10 @@
    "title": "Направи звук при game over в НОД и НОК",
    "assignee": "EMP-0026",
    "assignee_name": "Zen Storm",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -835,10 +404,10 @@
    "title": "Провери дали Дартс не зарежда външни скриптове",
    "assignee": "EMP-0029",
    "assignee_name": "Neon Walker",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -847,10 +416,10 @@
    "title": "Направи 8-bit звук за скок в Мерник",
    "assignee": "EMP-0032",
    "assignee_name": "Delta Volt",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -859,10 +428,10 @@
    "title": "Напиши туториал за Мини судоку",
    "assignee": "EMP-0041",
    "assignee_name": "Rogue Knight",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -871,10 +440,10 @@
    "title": "Подобри менюто на Кука с въже",
    "assignee": "EMP-0044",
    "assignee_name": "Orbit Hawk",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -883,10 +452,10 @@
    "title": "Провери дали рекордът в Скуош се пази",
    "assignee": "EMP-0050",
    "assignee_name": "Vector Forge",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -895,10 +464,10 @@
    "title": "Провери дали рекордът в Числова мозайка се пази",
    "assignee": "EMP-0053",
    "assignee_name": "Vector Stone",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -907,10 +476,10 @@
    "title": "Оправи колизиите в Фантоми в нощта",
    "assignee": "EMP-0059",
    "assignee_name": "Zen Stone",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -919,10 +488,10 @@
    "title": "Направи звук при game over в Полет с елитра",
    "assignee": "EMP-0062",
    "assignee_name": "Pixel Storm",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -931,10 +500,10 @@
    "title": "Оправи колизиите в Кука с въже",
    "assignee": "EMP-0071",
    "assignee_name": "Byte Knight",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -943,10 +512,10 @@
    "title": "Добави бонус ниво в Пастирско куче",
    "assignee": "EMP-0080",
    "assignee_name": "Byte Runner",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -955,10 +524,10 @@
    "title": "Напиши туториал за Мерник",
    "assignee": "EMP-0083",
    "assignee_name": "Neon Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -967,10 +536,10 @@
    "title": "Събери отзиви от играчите за Ято птици",
    "assignee": "EMP-0086",
    "assignee_name": "Vector Volt",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -979,10 +548,10 @@
    "title": "Пробвай Паркиране на Firefox и Edge",
    "assignee": "EMP-0089",
    "assignee_name": "Zen Volt",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -991,10 +560,10 @@
    "title": "Махни глобалните променливи от Четири в ред",
    "assignee": "EMP-0095",
    "assignee_name": "Turbo Fox",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -1003,10 +572,10 @@
    "title": "Събери отзиви от играчите за Полет с елитра",
    "assignee": "EMP-0101",
    "assignee_name": "Rogue Hawk",
-   "status": "doing",
+   "status": "review",
    "created_round": 94,
    "created": "2026-11-09T06:50:34.832Z",
-   "updated": "2026-11-09T06:55:36.606Z",
+   "updated": "2026-11-09T07:00:38.270Z",
    "assigned_by": "Gemini"
   },
   {
@@ -1015,10 +584,10 @@
    "title": "Направи гравитацията в Воден асансьор по-реалистична",
    "assignee": "AI-Trainer-Bot",
    "assignee_name": "AI-Trainer-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2636",
@@ -1026,10 +595,10 @@
    "title": "Скрий тайно ниво в Наводнение 🥚",
    "assignee": "Level-Designer-Bot",
    "assignee_name": "Level-Designer-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2637",
@@ -1037,10 +606,10 @@
    "title": "Добави по-умни врагове в Вътрешен часовник",
    "assignee": "EMP-0048",
    "assignee_name": "Rogue Runner",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2638",
@@ -1048,10 +617,10 @@
    "title": "Хвани последните бъгове в Кръговете на Вен",
    "assignee": "EMP-0075",
    "assignee_name": "Nova Storm",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2639",
@@ -1059,10 +628,10 @@
    "title": "Подготви Паркиране за пускане",
    "assignee": "Refactoring-Bot",
    "assignee_name": "Refactoring-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2640",
@@ -1070,10 +639,10 @@
    "title": "Хвани последните бъгове в Змии и стълби",
    "assignee": "Performance-Optimizer-Bot",
    "assignee_name": "Performance-Optimizer-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2641",
@@ -1081,10 +650,10 @@
    "title": "Добави плавни анимации в менюто на Пирамидата",
    "assignee": "Asset-Manager-Bot",
    "assignee_name": "Asset-Manager-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2642",
@@ -1092,10 +661,10 @@
    "title": "Добави плавни анимации в менюто на Змии и стълби",
    "assignee": "UI-Animation-Bot",
    "assignee_name": "UI-Animation-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2643",
@@ -1103,10 +672,10 @@
    "title": "Направи Блоков бегач удобна за далтонисти",
    "assignee": "EMP-0027",
    "assignee_name": "Byte Runner",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2644",
@@ -1114,10 +683,10 @@
    "title": "Провери кои нива в Фигури са най-трудни",
    "assignee": "Growth-Hacker-Bot",
    "assignee_name": "Growth-Hacker-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2645",
@@ -1125,10 +694,10 @@
    "title": "Провери кои нива в Три в ред са най-трудни",
    "assignee": "EMP-0010",
    "assignee_name": "Rogue Runner",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2646",
@@ -1136,10 +705,10 @@
    "title": "Преброй колко пъти се играе Лунно кацане",
    "assignee": "API-Integration-Bot",
    "assignee_name": "API-Integration-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2647",
@@ -1147,10 +716,10 @@
    "title": "Измисли 3D версия на Квадрати и корени",
    "assignee": "Crypto-Tokenomics-Bot",
    "assignee_name": "Crypto-Tokenomics-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2648",
@@ -1158,10 +727,10 @@
    "title": "Измисли 3D версия на Часовник",
    "assignee": "EMP-0072",
    "assignee_name": "Turbo Runner",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-2649",
@@ -1169,10 +738,537 @@
    "title": "Измисли система от значки за Спийф 🏅",
    "assignee": "Metaverse-Architect-Bot",
    "assignee_name": "Metaverse-Architect-Bot",
-   "status": "todo",
+   "status": "doing",
    "created_round": 95,
    "created": "2026-11-09T06:55:36.606Z",
-   "updated": "2026-11-09T06:55:36.606Z"
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2650",
+   "team": "Team DevOps",
+   "title": "Провери Дузпи за XSS",
+   "assignee": "SecOps-Bot",
+   "assignee_name": "SecOps-Bot",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2651",
+   "team": "Team Gameplay",
+   "title": "Скрий тайно ниво в Фрактално дърво 🥚",
+   "assignee": "Easter-Egg-Hunter-Bot",
+   "assignee_name": "Easter-Egg-Hunter-Bot",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2652",
+   "team": "Team Release",
+   "title": "Подготви Хеликоптер спасител за пускане",
+   "assignee": "Bug-Hunter-Bot",
+   "assignee_name": "Bug-Hunter-Bot",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2653",
+   "team": "Team Experience",
+   "title": "Добави управление само с клавиатура в Кръговете на Вен",
+   "assignee": "Localization-Bot",
+   "assignee_name": "Localization-Bot",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2654",
+   "team": "Team DevOps",
+   "title": "Преведи Пирамидата на английски",
+   "assignee": "EMP-0002",
+   "assignee_name": "Rogue Miner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2655",
+   "team": "Team Dev",
+   "title": "Тествай Вътрешен часовник на телефон",
+   "assignee": "EMP-0003",
+   "assignee_name": "Neon Fox",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2656",
+   "team": "Team Dev",
+   "title": "Провери дали рекордът в Паркиране се пази",
+   "assignee": "EMP-0004",
+   "assignee_name": "Echo Runner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2657",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Стакове по 64",
+   "assignee": "EMP-0008",
+   "assignee_name": "Quark Miner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2658",
+   "team": "Team DevOps",
+   "title": "Преведи Фрактално дърво на английски",
+   "assignee": "EMP-0009",
+   "assignee_name": "Vector Fox",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2659",
+   "team": "Team Dev",
+   "title": "Подобри менюто на Кръговете на Вен",
+   "assignee": "EMP-0030",
+   "assignee_name": "Nova Runner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2660",
+   "team": "Team DevOps",
+   "title": "Напиши туториал за Часовник",
+   "assignee": "EMP-0033",
+   "assignee_name": "Nova Storm",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2661",
+   "team": "Team Dev",
+   "title": "Добави бонус ниво в Наводнение",
+   "assignee": "EMP-0036",
+   "assignee_name": "Byte Runner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2662",
+   "team": "Team Dev",
+   "title": "Добави фонова мелодия в Градче",
+   "assignee": "EMP-0039",
+   "assignee_name": "Quark Walker",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2663",
+   "team": "Team DevOps",
+   "title": "Добави анти-чийт за рекордите в Фигури",
+   "assignee": "EMP-0042",
+   "assignee_name": "Delta Stone",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2664",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Воден асансьор",
+   "assignee": "EMP-0045",
+   "assignee_name": "Orbit Coder",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2665",
+   "team": "Team Dev",
+   "title": "Добави анимация при победа в Блоков бегач",
+   "assignee": "EMP-0051",
+   "assignee_name": "Glitch Miner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2666",
+   "team": "Team Experience",
+   "title": "Направи Нарисувай кръг удобна за далтонисти",
+   "assignee": "EMP-0054",
+   "assignee_name": "Zen Coder",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2667",
+   "team": "Team Experience",
+   "title": "Напиши инструкции за Спирограф",
+   "assignee": "EMP-0057",
+   "assignee_name": "Byte Storm",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2668",
+   "team": "Team Dev",
+   "title": "Добави фонова мелодия в Ледена пързалка",
+   "assignee": "EMP-0060",
+   "assignee_name": "Delta Smith",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2669",
+   "team": "Team DevOps",
+   "title": "Събери отзиви от играчите за Блоков бегач",
+   "assignee": "EMP-0063",
+   "assignee_name": "Nova Volt",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2670",
+   "team": "Team Dev",
+   "title": "Направи тъмна тема за Десетични дроби",
+   "assignee": "EMP-0066",
+   "assignee_name": "Rogue Hawk",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2671",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Прости множители",
+   "assignee": "EMP-0069",
+   "assignee_name": "Glitch Volt",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2672",
+   "team": "Team Dev",
+   "title": "Провери дали рекордът в Стакове по 64 се пази",
+   "assignee": "EMP-0078",
+   "assignee_name": "Byte Forge",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2673",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Квадрати и корени",
+   "assignee": "EMP-0081",
+   "assignee_name": "Vector Runner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2674",
+   "team": "Team Dev",
+   "title": "Добави фонова мелодия в Логически схеми",
+   "assignee": "EMP-0084",
+   "assignee_name": "Glitch Fox",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2675",
+   "team": "Team DevOps",
+   "title": "Провери пътищата на Осем царици в GitHub Pages",
+   "assignee": "EMP-0087",
+   "assignee_name": "Byte Hawk",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2676",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Блоков бегач",
+   "assignee": "EMP-0090",
+   "assignee_name": "Delta Storm",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2677",
+   "team": "Team DevOps",
+   "title": "Добави анти-чийт за рекордите в Симетрия",
+   "assignee": "EMP-0093",
+   "assignee_name": "Frost Forge",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2678",
+   "team": "Team Dev",
+   "title": "Направи тъмна тема за Юмрукът на голема",
+   "assignee": "EMP-0096",
+   "assignee_name": "Spark Knight",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2679",
+   "team": "Team Dev",
+   "title": "Направи тъмна тема за Десетични дроби",
+   "assignee": "EMP-0099",
+   "assignee_name": "Frost Fox",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2680",
+   "team": "Team DevOps",
+   "title": "Напиши туториал за Часовник",
+   "assignee": "EMP-0102",
+   "assignee_name": "Turbo Fox",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2681",
+   "team": "Team DevOps",
+   "title": "Намали размера на Змии и стълби",
+   "assignee": "EMP-0105",
+   "assignee_name": "Orbit Miner",
+   "status": "doing",
+   "created_round": 95,
+   "created": "2026-11-09T06:55:36.609Z",
+   "updated": "2026-11-09T07:00:38.270Z",
+   "assigned_by": "Brave-AI"
+  },
+  {
+   "id": "TASK-2682",
+   "team": "Team Gameplay",
+   "title": "Направи ново трудно ниво за Бърз мост",
+   "assignee": "EMP-0031",
+   "assignee_name": "Byte Runner",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2683",
+   "team": "Team Release",
+   "title": "Подготви Три в ред за пускане",
+   "assignee": "EMP-0011",
+   "assignee_name": "Glitch Walker",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2684",
+   "team": "Team Release",
+   "title": "Направи Размяната на овцете да зарежда под 1 секунда",
+   "assignee": "EMP-0079",
+   "assignee_name": "Nova Smith",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2685",
+   "team": "Team Release",
+   "title": "Хвани последните бъгове в Без да вдигаш молива",
+   "assignee": "Build-Master-Bot",
+   "assignee_name": "Build-Master-Bot",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2686",
+   "team": "Team Experience",
+   "title": "Добави управление само с клавиатура в Дроби",
+   "assignee": "EMP-0040",
+   "assignee_name": "Quark Coder",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2687",
+   "team": "Team Experience",
+   "title": "Добави управление само с клавиатура в Рудни мехури",
+   "assignee": "EMP-0073",
+   "assignee_name": "Neon Storm",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2688",
+   "team": "Team Experience",
+   "title": "Добави плавни анимации в менюто на Колко пътя?",
+   "assignee": "Documentation-Bot",
+   "assignee_name": "Documentation-Bot",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2689",
+   "team": "Team Data",
+   "title": "Провери кои нива в Освободи вагонетката са най-трудни",
+   "assignee": "EMP-0064",
+   "assignee_name": "Blaze Miner",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2690",
+   "team": "Team Data",
+   "title": "Провери кои нива в Везни са най-трудни",
+   "assignee": "EMP-0070",
+   "assignee_name": "Turbo Forge",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2691",
+   "team": "Team Data",
+   "title": "Подреди рекордите на Дроби в класация",
+   "assignee": "Database-Admin-Bot",
+   "assignee_name": "Database-Admin-Bot",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2692",
+   "team": "Team Future Lab",
+   "title": "Измисли 3D версия на Бинго",
+   "assignee": "EMP-0046",
+   "assignee_name": "Glitch Hawk",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2693",
+   "team": "Team Future Lab",
+   "title": "Измисли 3D версия на Гравитация на планети",
+   "assignee": "EMP-0097",
+   "assignee_name": "Neon Coder",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
+  },
+  {
+   "id": "TASK-2694",
+   "team": "Team Future Lab",
+   "title": "Измисли система от значки за На око 🏅",
+   "assignee": "EMP-0061",
+   "assignee_name": "Orbit Knight",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.270Z",
+   "updated": "2026-11-09T07:00:38.270Z"
   },
   {
    "id": "TASK-0091",
@@ -2375,388 +2471,304 @@
    "done_round": 6
   },
   {
-   "id": "TASK-2650",
+   "id": "TASK-2695",
+   "team": "Team Dev",
+   "title": "Подобри менюто на Гравитация на планети",
+   "assignee": "UX-UI-Bot",
+   "assignee_name": "UX-UI-Bot",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2696",
+   "team": "Team Dev",
+   "title": "Добави фонова мелодия в Ритъм машина",
+   "assignee": "Sound-Engineer-Bot",
+   "assignee_name": "Sound-Engineer-Bot",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2697",
    "team": "Team DevOps",
-   "title": "Провери Дузпи за XSS",
-   "assignee": "SecOps-Bot",
-   "assignee_name": "SecOps-Bot",
+   "title": "Провери пътищата на Падащи камъни в GitHub Pages",
+   "assignee": "EMP-0014",
+   "assignee_name": "Spark Miner",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2651",
-   "team": "Team Gameplay",
-   "title": "Скрий тайно ниво в Фрактално дърво 🥚",
-   "assignee": "Easter-Egg-Hunter-Bot",
-   "assignee_name": "Easter-Egg-Hunter-Bot",
+   "id": "TASK-2698",
+   "team": "Team Dev",
+   "title": "Добави бонус ниво в Бинго",
+   "assignee": "EMP-0015",
+   "assignee_name": "Pixel Smith",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2652",
-   "team": "Team Release",
-   "title": "Подготви Хеликоптер спасител за пускане",
-   "assignee": "Bug-Hunter-Bot",
-   "assignee_name": "Bug-Hunter-Bot",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2653",
-   "team": "Team Experience",
-   "title": "Добави управление само с клавиатура в Кръговете на Вен",
-   "assignee": "Localization-Bot",
-   "assignee_name": "Localization-Bot",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2654",
+   "id": "TASK-2699",
    "team": "Team DevOps",
-   "title": "Преведи Пирамидата на английски",
-   "assignee": "EMP-0002",
-   "assignee_name": "Rogue Miner",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2655",
-   "team": "Team Dev",
-   "title": "Тествай Вътрешен часовник на телефон",
-   "assignee": "EMP-0003",
-   "assignee_name": "Neon Fox",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2656",
-   "team": "Team Dev",
-   "title": "Провери дали рекордът в Паркиране се пази",
-   "assignee": "EMP-0004",
-   "assignee_name": "Echo Runner",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2657",
-   "team": "Team Dev",
-   "title": "Нарисувай нови спрайтове за Стакове по 64",
-   "assignee": "EMP-0008",
-   "assignee_name": "Quark Miner",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2658",
-   "team": "Team DevOps",
-   "title": "Преведи Фрактално дърво на английски",
-   "assignee": "EMP-0009",
-   "assignee_name": "Vector Fox",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2659",
-   "team": "Team Dev",
-   "title": "Подобри менюто на Кръговете на Вен",
-   "assignee": "EMP-0030",
-   "assignee_name": "Nova Runner",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2660",
-   "team": "Team DevOps",
-   "title": "Напиши туториал за Часовник",
-   "assignee": "EMP-0033",
-   "assignee_name": "Nova Storm",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2661",
-   "team": "Team Dev",
-   "title": "Добави бонус ниво в Наводнение",
-   "assignee": "EMP-0036",
-   "assignee_name": "Byte Runner",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2662",
-   "team": "Team Dev",
-   "title": "Добави фонова мелодия в Градче",
-   "assignee": "EMP-0039",
-   "assignee_name": "Quark Walker",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2663",
-   "team": "Team DevOps",
-   "title": "Добави анти-чийт за рекордите в Фигури",
-   "assignee": "EMP-0042",
-   "assignee_name": "Delta Stone",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2664",
-   "team": "Team Dev",
-   "title": "Нарисувай нови спрайтове за Воден асансьор",
-   "assignee": "EMP-0045",
+   "title": "Провери пътищата на Падащи камъни в GitHub Pages",
+   "assignee": "EMP-0018",
    "assignee_name": "Orbit Coder",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2665",
-   "team": "Team Dev",
-   "title": "Добави анимация при победа в Блоков бегач",
-   "assignee": "EMP-0051",
-   "assignee_name": "Glitch Miner",
+   "id": "TASK-2700",
+   "team": "Team Data",
+   "title": "Подреди рекордите на Бинго в класация",
+   "assignee": "EMP-0019",
+   "assignee_name": "Zen Forge",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2666",
-   "team": "Team Experience",
-   "title": "Направи Нарисувай кръг удобна за далтонисти",
-   "assignee": "EMP-0054",
-   "assignee_name": "Zen Coder",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2667",
-   "team": "Team Experience",
-   "title": "Напиши инструкции за Спирограф",
-   "assignee": "EMP-0057",
-   "assignee_name": "Byte Storm",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2668",
-   "team": "Team Dev",
-   "title": "Добави фонова мелодия в Ледена пързалка",
-   "assignee": "EMP-0060",
-   "assignee_name": "Delta Smith",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2669",
+   "id": "TASK-2701",
    "team": "Team DevOps",
-   "title": "Събери отзиви от играчите за Блоков бегач",
-   "assignee": "EMP-0063",
-   "assignee_name": "Nova Volt",
+   "title": "Напиши туториал за Змии и стълби",
+   "assignee": "EMP-0025",
+   "assignee_name": "Neon Fox",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2670",
-   "team": "Team Dev",
-   "title": "Направи тъмна тема за Десетични дроби",
-   "assignee": "EMP-0066",
-   "assignee_name": "Rogue Hawk",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2671",
-   "team": "Team Dev",
-   "title": "Нарисувай нови спрайтове за Прости множители",
-   "assignee": "EMP-0069",
-   "assignee_name": "Glitch Volt",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2672",
-   "team": "Team Dev",
-   "title": "Провери дали рекордът в Стакове по 64 се пази",
-   "assignee": "EMP-0078",
-   "assignee_name": "Byte Forge",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2673",
-   "team": "Team Dev",
-   "title": "Нарисувай нови спрайтове за Квадрати и корени",
-   "assignee": "EMP-0081",
+   "id": "TASK-2702",
+   "team": "Team DevOps",
+   "title": "Провери пътищата на Бинго в GitHub Pages",
+   "assignee": "EMP-0028",
    "assignee_name": "Vector Runner",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2674",
-   "team": "Team Dev",
-   "title": "Добави фонова мелодия в Логически схеми",
-   "assignee": "EMP-0084",
-   "assignee_name": "Glitch Fox",
-   "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
-  },
-  {
-   "id": "TASK-2675",
+   "id": "TASK-2703",
    "team": "Team DevOps",
-   "title": "Провери пътищата на Осем царици в GitHub Pages",
-   "assignee": "EMP-0087",
-   "assignee_name": "Byte Hawk",
+   "title": "Добави анти-чийт за рекордите в Колко пътя?",
+   "assignee": "EMP-0034",
+   "assignee_name": "Turbo Knight",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2676",
+   "id": "TASK-2704",
    "team": "Team Dev",
-   "title": "Нарисувай нови спрайтове за Блоков бегач",
-   "assignee": "EMP-0090",
-   "assignee_name": "Delta Storm",
+   "title": "Добави бонус ниво в Колко пътя?",
+   "assignee": "EMP-0037",
+   "assignee_name": "Nova Forge",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2677",
+   "id": "TASK-2705",
    "team": "Team DevOps",
-   "title": "Добави анти-чийт за рекордите в Симетрия",
-   "assignee": "EMP-0093",
-   "assignee_name": "Frost Forge",
+   "title": "Напиши туториал за Тенис за двама",
+   "assignee": "EMP-0043",
+   "assignee_name": "Echo Knight",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2678",
+   "id": "TASK-2706",
+   "team": "Team Release",
+   "title": "Почисти стария код в Колко пътя?",
+   "assignee": "EMP-0049",
+   "assignee_name": "Blaze Smith",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2707",
    "team": "Team Dev",
-   "title": "Направи тъмна тема за Юмрукът на голема",
-   "assignee": "EMP-0096",
-   "assignee_name": "Spark Knight",
+   "title": "Добави бонус ниво в Освободи вагонетката",
+   "assignee": "EMP-0052",
+   "assignee_name": "Echo Hawk",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2679",
+   "id": "TASK-2708",
    "team": "Team Dev",
-   "title": "Направи тъмна тема за Десетични дроби",
-   "assignee": "EMP-0099",
-   "assignee_name": "Frost Fox",
+   "title": "Подобри менюто на Дроби",
+   "assignee": "EMP-0055",
+   "assignee_name": "Frost Walker",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2680",
-   "team": "Team DevOps",
-   "title": "Напиши туториал за Часовник",
-   "assignee": "EMP-0102",
-   "assignee_name": "Turbo Fox",
+   "id": "TASK-2709",
+   "team": "Team Dev",
+   "title": "Пробвай Везни на Firefox и Edge",
+   "assignee": "EMP-0058",
+   "assignee_name": "Byte Miner",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   },
   {
-   "id": "TASK-2681",
-   "team": "Team DevOps",
-   "title": "Намали размера на Змии и стълби",
-   "assignee": "EMP-0105",
-   "assignee_name": "Orbit Miner",
+   "id": "TASK-2710",
+   "team": "Team Dev",
+   "title": "Направи 8-bit звук за скок в Ракетна защита",
+   "assignee": "EMP-0067",
+   "assignee_name": "Orbit Walker",
    "status": "todo",
-   "created_round": 95,
-   "created": "2026-11-09T06:55:36.609Z",
-   "updated": "2026-11-09T06:55:36.609Z",
-   "assigned_by": "Brave-AI"
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2711",
+   "team": "Team Dev",
+   "title": "Направи звук при game over в Везни",
+   "assignee": "EMP-0076",
+   "assignee_name": "Echo Smith",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2712",
+   "team": "Team DevOps",
+   "title": "Провери Палатки за XSS",
+   "assignee": "EMP-0082",
+   "assignee_name": "Orbit Walker",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2713",
+   "team": "Team Dev",
+   "title": "Оптимизирай draw() в Тримино до 60 FPS",
+   "assignee": "EMP-0085",
+   "assignee_name": "Nova Smith",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2714",
+   "team": "Team Future Lab",
+   "title": "Измисли мултиплейър режим за Баскетбол",
+   "assignee": "EMP-0088",
+   "assignee_name": "Blaze Stone",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2715",
+   "team": "Team DevOps",
+   "title": "Добави анти-чийт за рекордите в Лавов дъжд",
+   "assignee": "EMP-0091",
+   "assignee_name": "Frost Coder",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2716",
+   "team": "Team Dev",
+   "title": "Оправи колизиите в Закръгли числото",
+   "assignee": "EMP-0094",
+   "assignee_name": "Orbit Forge",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2717",
+   "team": "Team Release",
+   "title": "Подготви Бърз мост за пускане",
+   "assignee": "EMP-0100",
+   "assignee_name": "Quark Forge",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2718",
+   "team": "Team Dev",
+   "title": "Направи тъмна тема за Змии и стълби",
+   "assignee": "EMP-0103",
+   "assignee_name": "Rogue Coder",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
+  },
+  {
+   "id": "TASK-2719",
+   "team": "Team Dev",
+   "title": "Нарисувай нови спрайтове за Палатки",
+   "assignee": "EMP-0106",
+   "assignee_name": "Pixel Fox",
+   "status": "todo",
+   "created_round": 96,
+   "created": "2026-11-09T07:00:38.278Z",
+   "updated": "2026-11-09T07:00:38.278Z",
+   "assigned_by": "Claude-CEO"
   }
  ]
 }
