@@ -286,7 +286,10 @@ const GAMES=[
   {"id": "beacon", "cat": "brain", "icon": "🔆", "name": "Пирамида за маяк", "desc": "Сметни колко блока трябват за пирамидата на маяка — квадрати и сбор", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "snowgolem", "cat": "action", "icon": "⛄", "name": "Снежен голем", "desc": "Пази селото от мобовете, които идват отвсякъде — замеряй ги със снежни топки", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "woolpaint", "cat": "puzzle", "icon": "🐑", "name": "Оцвети с вълна", "desc": "Овцата се плъзга до стената и оцветява пътя с вълна — боядисай всяко поле", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "dyemix", "cat": "brain", "icon": "🎨", "name": "Смеси боите", "desc": "Смесвай бои като в работната маса: червена + жълта = оранжева, синя + бяла = светлосиня", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "dyemix", "cat": "brain", "icon": "🎨", "name": "Смеси боите", "desc": "Смесвай бои като в работната маса: червена + жълта = оранжева, синя + бяла = светлосиня", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "blazerods", "cat": "action", "icon": "🪄", "name": "Пръчки от блейз", "desc": "Събирай пръчки от блейз в крепостта в Недъра и избягвай огнените топки", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "railcount", "cat": "puzzle", "icon": "🛤️", "name": "Релси по броя", "desc": "Положи релси от входа до изхода — числата казват колко релси има във всеки ред и колона", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "furnacefuel", "cat": "brain", "icon": "♨️", "name": "Гориво за пещта", "desc": "Колко въглища, пръчки от блейз или кофи лава трябват, за да изпечеш всичко?", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гориво за пещта</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">♨️ Гориво за пещта</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 306. Гориво за пещта
+const FF_KEYS=['1','2','3','4','5','6','7','8','9','0','⌫','✓'];
+const FF_ITEMS=['сурово желязо','сурово злато','пясък','картофа','сурово пилешко','калдъръм','глина','трупа'];
+const FF_COL=['#d8a07a','#ffd23f','#e0c068','#c8a050','#f0c0b0','#7d7d7d','#a0a8b8','#9a6a3a'];
+A.add({id:'furnacefuel',cat:'brain',icon:'♨️',name:'Гориво за пещта',desc:'Колко въглища, пръчки от блейз или кофи лава трябват, за да изпечеш всичко? Деление с остатък в пещта',
+  help:'В пещта: 1 въглища изпичат 8 предмета, 1 пръчка от блейз — 12, 1 кофа лава — 100, 2 дъски — 3. Всяко изпичане трае 10 сек. (в доменната пещ — 5 сек.). Ако гориво не стига, трябва още едно (закръгли нагоре)! Пиши отговора с цифрите + Enter или с бутоните долу. 90 секунди, верен отговор +1 (+1 бонус под 8 сек.), грешен −5 сек.',
+  start(g){g.time=90;g.inp='';g.msg='';g.mt=0;g.ok=0;this.next(g);},
+  next(g){const lv=Math.min(4,Math.floor(g.ok/3)),T=[0,2,3];if(lv>=1)T.push(1,5);if(lv>=2)T.push(6,9);if(lv>=3)T.push(4,7);if(lv>=4)T.push(8);
+    const t=A.pick(T),ii=A.ri(0,FF_ITEMS.length-1),it=FF_ITEMS[ii];g.col=FF_COL[ii];g.inp='';g.qt=0;g.kind=t;let n;
+    if(t===0){n=A.ri(2,8*(3+lv*2));if(Math.random()<.4)n=8*A.ri(1,4+lv);g.q='1 въглища = 8 предмета. Колко въглища за '+n+' '+it+'?';g.ans=Math.ceil(n/8);g.why=n+' : 8 → '+g.ans;g.fuel='coal';g.cnt=n;}
+    else if(t===1){n=A.ri(5,12*(3+lv));g.q='1 пръчка от блейз = 12 предмета. Колко пръчки за '+n+'?';g.ans=Math.ceil(n/12);g.why=n+' : 12 → '+g.ans;g.fuel='rod';g.cnt=n;}
+    else if(t===2){n=A.ri(2,6+lv*4);g.q='Всяко изпичане трае 10 сек. Колко секунди за '+n+' '+it+'?';g.ans=n*10;g.why=n+' × 10 = '+g.ans;g.fuel='coal';g.cnt=n;}
+    else if(t===3){const k=A.ri(2,5+lv*2);g.q='Колко предмета изпичат '+k+' въглища?';g.ans=k*8;g.why=k+' × 8 = '+g.ans;g.fuel='coal';g.cnt=k;}
+    else if(t===4){n=A.ri(120,640);g.q='1 кофа лава = 100 предмета. Колко кофи за '+n+'?';g.ans=Math.ceil(n/100);g.why=n+' : 100 → '+g.ans;g.fuel='lava';g.cnt=n;}
+    else if(t===5){const k=A.ri(1,5);n=k*8+A.ri(1,24);g.q='Имаш '+k+' въглища и '+n+' '+it+'. Колко остават неизпечени?';g.ans=Math.max(0,n-8*k);g.why=n+' − '+k+'×8 = '+g.ans;g.fuel='coal';g.cnt=n;}
+    else if(t===6){const a=A.ri(1,5),b=A.ri(1,4);g.q=a+' въглища + '+b+' пръчки от блейз изпичат колко предмета?';g.ans=8*a+12*b;g.why=a+'×8 + '+b+'×12 = '+g.ans;g.fuel='rod';g.cnt=a+b;}
+    else if(t===7){const k=A.ri(2,10);n=3*k;g.q='2 дъски = 3 предмета. Колко дъски за '+n+' предмета?';g.ans=2*k;g.why=n+' : 3 × 2 = '+g.ans;g.fuel='plank';g.cnt=n;}
+    else if(t===8){const k=A.ri(1,5);n=6*k;g.q='По 10 сек. на предмет. Колко минути за '+n+' '+it+'?';g.ans=k;g.why=n+' × 10 = '+(n*10)+' сек. = '+k+' мин.';g.fuel='coal';g.cnt=n;}
+    else{n=A.ri(4,16+lv*4);g.q='Доменната пещ е 2 пъти по-бърза (5 сек.). Колко сек. за '+n+'?';g.ans=n*5;g.why=n+' × 5 = '+g.ans;g.fuel='coal';g.cnt=n;g.blast=1;}
+    if(t!==9)g.blast=0;},
+  submit(g){if(!g.inp||g.mt>0)return;const ok=+g.inp===g.ans;flash(g,ok);
+    if(ok){const pts=1+(g.qt<8?1:0);g.score+=pts;g.ok++;g.good=1;g.msg='Вярно! +'+pts;g.mt=.8;}
+    else{g.good=0;g.time-=5;g.msg='Не! '+g.why;g.mt=2.6;}},
+  key(g,k,ch){if(g.mt>0)return;if(typeNum(g,k,ch))this.submit(g);},
+  click(g,mx,my){if(g.mt>0||my<272||my>356)return;const col=Math.floor((mx-12)/76),row=my<314?0:1;if(col<0||col>5)return;
+    const kk=FF_KEYS[row*6+col];if(!kk)return;if(kk==='⌫')g.inp=g.inp.slice(0,-1);else if(kk==='✓')this.submit(g);else if(g.inp.length<6){g.inp+=kk;A.beep(700,.02);}},
+  update(g,dt){if(g.fl)g.fl.t-=dt;g.qt+=dt;g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече! Верни: '+g.ok);
+    if(g.mt>0){g.mt-=dt;if(g.mt<=0){g.msg='';this.next(g);}}},
+  draw(g){A.bg('#2a2420');
+    // пещ
+    const fx=40,fy=44,on=Math.sin(g.t*10)>0;
+    A.block(fx,fy,96,g.blast?'#5a5a66':'#7d7d7d',96);c.fillStyle='#3a3a3a';c.fillRect(fx+18,fy+18,60,22);
+    c.fillStyle='#222';c.fillRect(fx+18,fy+56,60,26);c.fillStyle=on?'#ff6a00':'#ffb300';c.fillRect(fx+24,fy+64,48,14);c.fillStyle='#ffd23f';c.fillRect(fx+34+(on?4:0),fy+66,10,8);
+    A.txt(g.blast?'Доменна пещ':'Пещ',fx+48,fy+108,12,'#ddd','center');
+    // гориво
+    const gx=170,gy=60;
+    if(g.fuel==='coal'){A.block(gx,gy,40,'#2a2a2a');c.fillStyle='#555';c.fillRect(gx+8,gy+10,8,6);c.fillRect(gx+24,gy+22,8,6);A.txt('= 8',gx+70,gy+20,18,'#ffd54f','center');}
+    else if(g.fuel==='rod'){c.save();c.translate(gx+20,gy+20);c.rotate(.7);c.fillStyle='#ffb300';c.fillRect(-4,-20,8,40);c.fillStyle='#ffe082';c.fillRect(-1,-18,2,36);c.restore();A.txt('= 12',gx+72,gy+20,18,'#ffd54f','center');}
+    else if(g.fuel==='lava'){A.block(gx+4,gy+4,32,'#b0b0b0',32);c.fillStyle='#ff6a00';c.fillRect(gx+10,gy+8,20,10);A.txt('= 100',gx+76,gy+20,18,'#ffd54f','center');}
+    else{A.block(gx,gy+4,40,'#b8945a',16);A.block(gx,gy+22,40,'#b8945a',16);A.txt('2 = 3',gx+78,gy+20,18,'#ffd54f','center');}
+    // стрела и брой
+    A.txt('⏱ 10 с',gx+40,gy+66,13,'#cfd8dc','center');if(g.blast)A.txt('⏱ 5 с',gx+40,gy+86,13,'#80deea','center');
+    // купчина предмети (до 40 кубчета)
+    const show=Math.min(40,g.cnt||0);for(let i=0;i<show;i++)A.block(300+(i%8)*20,40+Math.floor(i/8)*20,18,g.kind===3||g.kind===6?'#2a2a2a':g.col);
+    if((g.cnt||0)>40)A.txt('…'+g.cnt,380,150,13,'#fff','center');
+    A.txt(g.q,240,170,g.q.length>54?11:g.q.length>44?13:15,'#fff','center');
+    c.fillStyle='#000';c.fillRect(170,188,140,42);c.strokeStyle=g.mt>0?(g.good?'#4caf50':'#f44336'):'#ffd54f';c.lineWidth=3;c.strokeRect(170,188,140,42);
+    A.txt(g.mt>0&&!g.good?String(g.ans):(g.inp+(g.mt<=0&&Math.sin(g.t*8)>0?'_':'')),240,209,24,'#fff','center');
+    A.txt(g.qt<8&&g.mt<=0?'⚡'+Math.ceil(8-g.qt):'',350,209,16,'#4dd0e1','center');
+    if(g.msg)A.txt(g.msg,240,250,g.msg.length>44?12:14,g.good?'#c8f7c5':'#ffccbc','center');
+    FF_KEYS.forEach((k,i)=>{const x=12+(i%6)*76,y=274+Math.floor(i/6)*42;A.block(x,y,72,k==='✓'?'#3f8a24':k==='⌫'?'#a84a3a':'#5a6b8c',38);A.txt(k,x+36,y+19,18,'#fff','center');});
+    c.fillStyle='#000';c.fillRect(0,0,480,28);
+    A.txt('⏱ '+Math.ceil(g.time),8,14,14,g.time<15?'#ff7043':'#fff');A.txt('Верни: '+g.ok,240,14,14,'#ffd54f','center');A.txt('Точки: '+g.score,472,14,14,'#fff','right');
+    drawFlash(g);}
+});
+</script>
+</body>
+</html>
