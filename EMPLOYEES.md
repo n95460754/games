@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **292** / 500
+Общо служители: **293** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -302,7 +302,7 @@
 
 # 🌍 Team Experience — лидер: Accessibility-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Experience — шеф: Accessibility-Bot · 15 души
+## Experience — шеф: Accessibility-Bot · 16 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -321,6 +321,7 @@
 | EMP-0210 | Vector Smith | Lead | Asset Artist / Артист на асети | 2026-11-09 15:44 UTC |
 | EMP-0216 | Frost Hawk | Intern | Asset Artist / Артист на асети | 2026-11-09 16:14 UTC |
 | EMP-0291 | Echo Fox | Junior | Asset Artist / Артист на асети | 2026-11-09 22:32 UTC |
+| EMP-0293 | Pixel Stone | Mid | Accessibility Tester / Тестер за достъпност | 2026-11-09 22:42 UTC |
 
 # 📊 Team Data — лидер: Data-Analyst-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
