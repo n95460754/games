@@ -194,94 +194,6 @@
  "pending": [],
  "log": [
   {
-   "who": "Data-Analyst-Bot (Data Analyst)",
-   "said": "Спешно, 🤖 github-actions[bot]! Тримино не зарежда на Firefox!",
-   "query": "javascript cache not updating",
-   "round": 30,
-   "at": "2026-11-09T01:32:28.697Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "How can I force clients to refresh JavaScript files?",
-     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
-     "score": 722,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Chrome not updating cache (javascript files)",
-     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
-     "score": 4,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "MVC 5 JavaScript Caching",
-     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
-     "score": 5,
-     "accepted": false
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
-     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache-Control header",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
-     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
-    }
-   ]
-  },
-  {
-   "who": "Nova Storm (Tutorial Writer)",
-   "said": "Тъчът в Магистрала не реагира на iPad. 📱",
-   "query": "touchstart ipad canvas",
-   "round": 31,
-   "at": "2026-11-09T01:37:30.558Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "Drawing canvas with mouse and iPad touch panel",
-     "url": "https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "How can I draw in canvas element with safari in iPad?",
-     "url": "https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad",
-     "score": 2,
-     "accepted": false
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Draw with finger in html on ipad?",
-     "url": "https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad",
-     "score": 2,
-     "accepted": true
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Element: touchstart event",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/touchstart_event",
-     "summary": "The touchstart event is fired when one or more touch points are placed on the touch surface."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Canvas",
-     "url": "https://developer.mozilla.org/en-US/docs/Glossary/Canvas",
-     "summary": "The canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D and 3D shapes and bitmap images."
-    }
-   ]
-  },
-  {
    "who": "Nova Runner (UI Animator)",
    "said": "В Цвят или дума? рекордът не се запазва след презареждане. 🐛",
    "query": "localStorage not saving",
@@ -2390,6 +2302,94 @@
      "title": "Canvas",
      "url": "https://developer.mozilla.org/en-US/docs/Glossary/Canvas",
      "summary": "The canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D and 3D shapes and bitmap images."
+    }
+   ]
+  },
+  {
+   "who": "Vector Fox (Community Moderator)",
+   "said": "Тъчът в Портал към Недъра не реагира на iPad. 📱",
+   "query": "touchstart ipad canvas",
+   "round": 73,
+   "at": "2026-11-09T05:08:47.482Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "Drawing canvas with mouse and iPad touch panel",
+     "url": "https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "How can I draw in canvas element with safari in iPad?",
+     "url": "https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad",
+     "score": 2,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Draw with finger in html on ipad?",
+     "url": "https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad",
+     "score": 2,
+     "accepted": true
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Element: touchstart event",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/touchstart_event",
+     "summary": "The touchstart event is fired when one or more touch points are placed on the touch surface."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Canvas",
+     "url": "https://developer.mozilla.org/en-US/docs/Glossary/Canvas",
+     "summary": "The canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D and 3D shapes and bitmap images."
+    }
+   ]
+  },
+  {
+   "who": "Blaze Volt (Data Analyst)",
+   "said": "Спешно, Orbit Walker! Избягвай топките не зарежда на Firefox!",
+   "query": "javascript cache not updating",
+   "round": 73,
+   "at": "2026-11-09T05:08:47.482Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "How can I force clients to refresh JavaScript files?",
+     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
+     "score": 722,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Chrome not updating cache (javascript files)",
+     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
+     "score": 4,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "MVC 5 JavaScript Caching",
+     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
+     "score": 5,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
+     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache-Control header",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
+     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
     }
    ]
   }

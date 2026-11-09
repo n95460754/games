@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **83** / 500
+Общо служители: **84** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -66,7 +66,7 @@
 | EMP-0069 | Glitch Volt | Lead | UI Animator / UI аниматор | 2026-11-09 03:53 UTC |
 | EMP-0081 | Vector Runner | Junior | Level Designer / Дизайнер на нива | 2026-11-09 04:53 UTC |
 
-## Audio — шеф: Sound-Engineer-Bot · 7 души
+## Audio — шеф: Sound-Engineer-Bot · 8 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -77,6 +77,7 @@
 | EMP-0062 | Pixel Storm | Senior | Chiptune Composer / Чиптюн композитор | 2026-11-09 03:18 UTC |
 | EMP-0067 | Orbit Walker | Intern | Sound Designer / Звуков дизайнер | 2026-11-09 03:43 UTC |
 | EMP-0076 | Echo Smith | Intern | Chiptune Composer / Чиптюн композитор | 2026-11-09 04:28 UTC |
+| EMP-0084 | Glitch Fox | Mid | Chiptune Composer / Чиптюн композитор | 2026-11-09 05:08 UTC |
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
