@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сливане на слузи</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🟩 Сливане на слузи</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 316. Сливане на слузи
+// Слузи с различен размер: два еднакви се сливат в по-голям (като "Suika")
+const SM_LV=[
+  {r:11,c:'#7ed957',n:'Мъниче'},{r:15,c:'#4fc43a',n:'Слузе'},{r:19,c:'#ff7a3d',n:'Магма'},{r:24,c:'#c94de0',n:'Ендър'},
+  {r:29,c:'#3fb6e8',n:'Ледено'},{r:35,c:'#ffd23f',n:'Златно'},{r:41,c:'#ff4f7a',n:'Розово'},{r:48,c:'#2ee8c0',n:'Диамант'},
+  {r:56,c:'#e8e8e8',n:'Кралско'},{r:64,c:'#ff2e55',n:'Гигант'}];
+const SM_L=120,SM_R=360,SM_B=344,SM_TOP=84;
+A.add({id:'slimemerge',cat:'puzzle',icon:'🟩',name:'Сливане на слузи',desc:'Пускай слузи в кутията — два еднакви се сливат в по-голям. Стигни до Слуза-гигант!',
+  help:'Местиш пускачката с ← → / A D или с мишката / пръста. Space, ↓ или клик/докосване — пусни слузето. Две еднакви слузета се сливат в по-голямо и получаваш точки (по-голямо = повече точки). Две слуза-гиганта изчезват с бонус 200! Ако слузета стоят над червената линия 2 секунди — край.',
+  start(g){g.balls=[];g.x=240;g.cur=this.rndLv();g.nxt=this.rndLv();g.cd=0;g.danger=0;g.fx=[];g.maxLv=0;g.uid=0;},
+  rndLv(){return A.pick([0,0,0,1,1,1,2,2,3,4]);},
+  drop(g){if(g.cd>0||A.state!=='play')return;const r=SM_LV[g.cur].r;g.x=A.clamp(g.x,SM_L+r,SM_R-r);
+    g.balls.push({x:g.x+A.rnd(-.5,.5),y:62,vx:0,vy:60,lv:g.cur,age:0,id:g.uid++,sq:0});g.cur=g.nxt;g.nxt=this.rndLv();g.cd=.55;A.beep(330,.05,'triangle',.04);},
+  key(g,k){if(k==='Space'||k==='ArrowDown'||k==='KeyS')this.drop(g);},
+  move(g,x){g.x=x;},
+  click(g,x){g.x=x;this.drop(g);},
+  merge(g,a,b){a.dead=b.dead=1;const lv=a.lv+1,x=(a.x+b.x)/2,y=(a.y+b.y)/2;
+    if(lv>=SM_LV.length){g.score+=200;g.fx.push({x,y,t:1.2,txt:'+200 МЕГА!',col:'#ffd54f'});A.tune([523,659,784,1046]);return;}
+    const pts=(lv+1)*(lv+2)/2;g.score+=pts;g.maxLv=Math.max(g.maxLv,lv);
+    g.balls.push({x,y,vx:(a.vx+b.vx)/2,vy:(a.vy+b.vy)/2-40,lv,age:1,id:g.uid++,sq:.25});
+    g.fx.push({x,y,t:.8,txt:'+'+pts,col:'#fff'});A.beep(300+lv*80,.1,'triangle',.06);},
+  update(g,dt){g.cd=Math.max(0,g.cd-dt);
+    if(A.keys.ArrowLeft||A.keys.KeyA)g.x-=260*dt;if(A.keys.ArrowRight||A.keys.KeyD)g.x+=260*dt;
+    const cr=SM_LV[g.cur].r;g.x=A.clamp(g.x,SM_L+cr,SM_R-cr);
+    const N=4,h=dt/N;
+    for(let s=0;s<N;s++){const B=g.balls;
+      for(const o of B){o.vy+=900*h;o.x+=o.vx*h;o.y+=o.vy*h;o.vx*=.996;const r=SM_LV[o.lv].r;
+        if(o.x-r<SM_L){o.x=SM_L+r;o.vx=Math.abs(o.vx)*.3;}if(o.x+r>SM_R){o.x=SM_R-r;o.vx=-Math.abs(o.vx)*.3;}
+        if(o.y+r>SM_B){o.y=SM_B-r;if(o.vy>0)o.vy*=-.15;o.vx*=.95;}}
+      for(let i=0;i<B.length;i++){const a=B[i];if(a.dead)continue;const ra=SM_LV[a.lv].r;
+        for(let j=i+1;j<B.length;j++){const b=B[j];if(b.dead)continue;const rb=SM_LV[b.lv].r;
+          const dx=b.x-a.x,dy=b.y-a.y,rr=ra+rb;if(dx*dx+dy*dy>=rr*rr)continue;
+          if(a.lv===b.lv){this.merge(g,a,b);break;}
+          const d=Math.sqrt(dx*dx+dy*dy)||.01,nx=dx/d,ny=dy/d,ov=rr-d,ma=ra*ra,mb=rb*rb,t=ma+mb;
+          a.x-=nx*ov*mb/t;a.y-=ny*ov*mb/t;b.x+=nx*ov*ma/t;b.y+=ny*ov*ma/t;
+          const rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+          if(rv<0){const j2=-1.1*rv/(1/ma+1/mb);a.vx-=j2*nx/ma;a.vy-=j2*ny/ma;b.vx+=j2*nx/mb;b.vy+=j2*ny/mb;}}}
+      if(g.balls.some(o=>o.dead))g.balls=g.balls.filter(o=>!o.dead);}
+    this.update2(g,dt);},
+  update2(g,dt){let over=false;
+    for(const o of g.balls){o.age+=dt;o.sq=Math.max(0,o.sq-dt);if(o.age>1.2&&o.y-SM_LV[o.lv].r<SM_TOP)over=true;}
+    g.danger=over?g.danger+dt:Math.max(0,g.danger-dt*2);
+    if(g.danger>2)return A.over(g,'Кутията преля! Най-голям: '+SM_LV[g.maxLv].n);
+    for(const f of g.fx){f.t-=dt;f.y-=30*dt;}g.fx=g.fx.filter(f=>f.t>0);},
+  slime(x,y,lv,sq,R){const L=SM_LV[lv],r=R||L.r*(1+sq*.4),st=Math.max(2,Math.round(r/5));
+    for(let yy=-r;yy<r;yy+=st){const m=yy+st/2,w=Math.floor(Math.sqrt(Math.max(0,r*r-m*m))/st)*st;if(w<=0)continue;
+      c.fillStyle=L.c;c.fillRect(x-w,y+yy,w*2,st);}
+    c.fillStyle='rgba(255,255,255,.25)';c.fillRect(x-r*.55,y-r*.6,r*.35,r*.25);
+    c.fillStyle='rgba(0,0,0,.18)';c.fillRect(x-r*.4,y-r*.4,r*.8,r*.8);
+    const e=Math.max(2,r*.18);c.fillStyle='#1a1a1a';c.fillRect(x-r*.38,y-r*.2,e,e);c.fillRect(x+r*.38-e,y-r*.2,e,e);
+    c.fillRect(x-r*.12,y+r*.2,r*.24,Math.max(2,r*.1));
+    if(lv===SM_LV.length-1&&!R){c.fillStyle='#ffd23f';for(let i=0;i<3;i++)c.fillRect(x-r*.4+i*r*.32,y-r-6-(i===1?4:0),r*.16,8+(i===1?4:0));}},
+  draw(g){A.bg('#1c2a1e');for(let y=0;y<360;y+=24)for(let x=0;x<480;x+=24){c.fillStyle=((x+y)/24)%2?'#203222':'#1c2a1e';c.fillRect(x,y,24,24);}
+    // кутия
+    c.fillStyle='rgba(120,180,255,.10)';c.fillRect(SM_L,SM_TOP-14,SM_R-SM_L,SM_B-SM_TOP+14);
+    for(let y=SM_TOP-14;y<SM_B+16;y+=16){A.block(SM_L-16,y,16,'#7d7d7d');A.block(SM_R,y,16,'#7d7d7d');}
+    for(let x=SM_L;x<SM_R;x+=16)A.block(x,SM_B,16,'#7d7d7d');
+    c.fillStyle=g.danger>0&&Math.sin(g.t*20)>0?'#ff2e55':'rgba(255,60,60,.6)';for(let x=SM_L;x<SM_R;x+=12)c.fillRect(x,SM_TOP,7,3);
+    // пускачка
+    const cr=SM_LV[g.cur].r;c.fillStyle='rgba(255,255,255,.15)';for(let y=70;y<SM_B;y+=14)c.fillRect(g.x-1,y,2,7);
+    A.block(g.x-14,20,28,'#555',12);c.fillStyle='#333';c.fillRect(g.x-4,32,8,10);
+    if(g.cd<=0)this.slime(g.x,58,g.cur,0);
+    for(const o of g.balls)this.slime(o.x,o.y,o.lv,o.sq);
+    for(const f of g.fx)A.txt(f.txt,f.x,f.y,16,f.col,'center');
+    // странични панели
+    A.txt('Следващо:',60,30,13,'#b9c6d6','center');A.block(28,44,64,'#2a3a2c',64);this.slime(60,76,g.nxt,0);
+    A.txt('Еволюция:',420,24,12,'#b9c6d6','center');
+    SM_LV.forEach((L,i)=>{const y=44+i*30;c.globalAlpha=i<=g.maxLv+1?1:.3;this.slime(398,y,i,0,5+i*.9);c.globalAlpha=1;
+      A.txt(i<=g.maxLv+1?L.n:'???',414,y,9,i<=g.maxLv?'#fff':'#8a9a8c');});
+    if(g.danger>0)A.txt('⚠ '+(2-g.danger).toFixed(1),240,SM_TOP+16,16,'#ff5a5a','center');}
+});
+</script>
+</body>
+</html>

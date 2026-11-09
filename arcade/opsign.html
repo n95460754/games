@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Липсващият знак</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">➗ Липсващият знак</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 318. Липсващият знак
+// Познай кой знак (+ − × ÷) липсва в сметката. После идват сметки с два знака!
+const OS_OPS=['+','−','×','÷'];
+function osCalc(a,o,b){if(o==='+')return a+b;if(o==='−')return a-b;if(o==='×')return a*b;return b&&a%b===0?a/b:NaN;}
+function osEval(n,ops){// първо × и ÷, после + и −
+  let v=[n[0]],o=[];for(let i=0;i<ops.length;i++){if(ops[i]==='×'||ops[i]==='÷'){const r=osCalc(v.pop(),ops[i],n[i+1]);if(isNaN(r))return NaN;v.push(r);}else{o.push(ops[i]);v.push(n[i+1]);}}
+  let r=v[0];for(let i=0;i<o.length;i++)r=osCalc(r,o[i],v[i+1]);return r;}
+A.add(choiceGame({id:'opsign',cat:'brain',icon:'➗',name:'Липсващият знак',desc:'Кой знак липсва: +, −, × или ÷? Запали правилната редстоун лампа! После идват сметки с два знака',time:60,
+  help:'В сметката липсва знак (+ − × ÷). Избери верния с клик или 1–4. След 6 точки липсват ДВА знака — помни, че × и ÷ се смятат преди + и −! Серия от 5 верни = +5 секунди. 60 секунди.',
+  next(g){g.streak=g.streak||0;const two=g.score>=6;let n,ops,r,tries=0;
+    while(tries++<300){
+      if(!two){n=[A.ri(2,12),A.ri(2,12)];const o=A.pick(OS_OPS);if(o==='÷')n=[n[1]*A.ri(2,9),n[1]];ops=[o];}
+      else{n=[A.ri(2,10),A.ri(2,9),A.ri(2,9)];ops=[A.pick(OS_OPS),A.pick(OS_OPS)];if(ops[1]==='÷')n[2]=A.pick([2,3,4]),n[1]=n[2]*A.ri(1,5);if(ops[0]==='÷'&&ops[1]!=='÷')n[0]=n[1]*A.ri(2,6);}
+      r=osEval(n,ops);if(isNaN(r)||r<0||r>200||r!==Math.floor(r))continue;
+      // всички възможни отговори с еднакъв резултат правят задачата нееднозначна
+      const all=two?[].concat(...OS_OPS.map(a=>OS_OPS.map(b=>[a,b]))):OS_OPS.map(a=>[a]);
+      const same=all.filter(x=>osEval(n,x)===r);if(same.length!==1)continue;
+      const wrong=A.shuffle(all.filter(x=>x.join(' ')!==ops.join(' '))).slice(0,3);
+      g.opts=A.shuffle([ops,...wrong].map(x=>x.join('  ')));g.ans=ops.join('  ');break;}
+    g.n=n;g.r=r;g.two=two;g.lit=0;},
+  pick2(g,i){const ok=g.opts[i]===g.ans;flash(g,ok);
+    if(ok){g.score++;g.streak=(g.streak||0)+1;if(g.streak%5===0){g.time+=5;g.why='Серия '+g.streak+'! +5 сек';}else g.why='';}
+    else{g.streak=0;g.why='Беше: '+g.n.map((v,j)=>v+(j<g.n.length-1?' '+g.ans.split('  ')[j]+' ':'')).join('')+' = '+g.r;}
+    this.next(g);},
+  pic(g){A.bg('#2a1e1e');for(let y=0;y<250;y+=30)for(let x=0;x<480;x+=30){c.fillStyle=((x+y)/30)%2?'#2f2222':'#2a1e1e';c.fillRect(x,y,30,30);}
+    A.txt(g.two?'Липсват ДВА знака! (× и ÷ първо)':'Кой знак липсва?',240,40,17,'#ffd54f','center');
+    const items=[];g.n.forEach((v,j)=>{items.push(['n',v]);if(j<g.n.length-1)items.push(['?']);});items.push(['=']);items.push(['n',g.r]);
+    const W=items.map(it=>it[0]==='n'?62:it[0]==='?'?50:30),tot=W.reduce((a,b)=>a+b+8,-8);let x=240-tot/2;const y=110;
+    items.forEach((it,j)=>{const w=W[j];
+      if(it[0]==='n'){A.block(x,y,w,'#7d7d7d',56);A.txt(''+it[1],x+w/2,y+29,(''+it[1]).length>2?20:26,'#fff','center');}
+      else if(it[0]==='?'){const glow=.5+.5*Math.sin(g.t*5+j);A.block(x,y+3,w,'rgb('+Math.floor(120+100*glow)+',60,30)',50);
+        c.fillStyle='rgba(255,200,80,'+(.25*glow)+')';c.fillRect(x-4,y-1,w+8,58);A.txt('?',x+w/2,y+29,28,'#ffe9a8','center');}
+      else A.txt('=',x+w/2,y+29,28,'#fff','center');
+      x+=w+8;});
+    // редстоун жица към лампите
+    c.fillStyle='#b01818';c.fillRect(40,205,400,6);for(let i=0;i<4;i++)c.fillRect(i*120+58,211,6,40);
+    A.txt('🔥 Серия: '+(g.streak||0),470,70,12,'#ffb3a0','right');}
+}));
+</script>
+</body>
+</html>

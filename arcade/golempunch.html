@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Юмрукът на голема</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🥊 Юмрукът на голема</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 317. Юмрукът на голема
+// Железният голем пази селото: удряй мобовете отляво и отдясно, но не и селяните!
+const GP_X=240,GP_Y=290,GP_RANGE=84;
+const GP_MOBS={
+  zombie:{c:'#3f8a3a',b:'#2f6fb0',hp:1,sp:1,pts:1,n:'Зомби'},
+  pillager:{c:'#8a8f96',b:'#4a3a5a',hp:2,sp:.85,pts:2,n:'Разбойник'},
+  spider:{c:'#3a2a2a',b:'#2a1a1a',hp:1,sp:1.75,pts:2,n:'Паяк'},
+  villager:{c:'#c58c5c',b:'#7b5a3a',hp:1,sp:.9,pts:0,n:'Селянин'}};
+A.add({id:'golempunch',cat:'action',icon:'🥊',name:'Юмрукът на голема',desc:'Железният голем пази селото — удряй мобовете отляво и отдясно точно навреме, но пускай селяните!',
+  help:'Мобове идват от двете страни. ← / A или клик/докосване в лявата половина = удар наляво, → / D или дясната половина = удар надясно. Удряй само когато мобът е в жълтата зона! Удар в празното те зашеметява за миг. Разбойниците с щит искат 2 удара, паяците са бързи. 🧑 Селяните НЕ ги удряй — пусни ги да минат за +3. Моб, който те стигне = −1 сърце (имаш 3).',
+  start(g){g.mobs=[];g.lives=3;g.sp=1;g.stun=0;g.punch=null;g.combo=0;g.fx=[];g.parts=[];g.face=1;g.kills=0;g.hurt=0;g.msg='';g.mt=0;},
+  spawn(g){const lvl=g.kills,r=Math.random();let k='zombie';
+    if(lvl>6&&r<.22)k='pillager';else if(lvl>12&&r<.4)k='spider';else if(lvl>4&&r<.55)k='villager';
+    const side=Math.random()<.5?-1:1,M=GP_MOBS[k];
+    g.mobs.push({k,side,x:side<0?-20:500,hp:M.hp,v:(55+Math.min(110,lvl*2.4))*M.sp*A.rnd(.9,1.1),kb:0,passed:0,anim:Math.random()*6});},
+  punchSide(g,side){if(A.state!=='play')return;g.face=side;
+    if(g.stun>0){A.beep(120,.04);return;}
+    g.punch={side,t:.14};
+    let best=null,bd=1e9;
+    for(const m of g.mobs){if(m.dead||m.passed||m.kb>0)continue;const d=(m.x-GP_X)*side;if(d>0&&d<=GP_RANGE&&d<bd){bd=d;best=m;}}
+    if(!best){g.stun=.4;g.combo=0;A.beep(160,.12,'sawtooth',.04);g.fx.push({x:GP_X+side*50,y:GP_Y-70,t:.5,txt:'мимо!',col:'#bbb'});return;}
+    if(best.k==='villager'){best.dead=1;this.hurt(g,'Удари селянин! 😢');this.burst(g,best.x,'#c58c5c');return;}
+    best.hp--;A.beep(220+g.combo*20,.07,'square',.06);g.shake=.12;
+    if(best.hp>0){best.x+=side*55;best.kb=.25;g.fx.push({x:best.x,y:GP_Y-60,t:.5,txt:'щитът падна!',col:'#ddd'});return;}
+    best.dead=1;g.kills++;g.combo++;const pts=GP_MOBS[best.k].pts+Math.floor(g.combo/5);g.score+=pts;
+    g.fx.push({x:best.x,y:GP_Y-60,t:.6,txt:'+'+pts+(g.combo>=5?' x'+g.combo:''),col:'#ffd54f'});
+    g.parts.push({k:best.k,x:best.x,y:GP_Y-24,vx:side*A.rnd(260,380),vy:-A.rnd(240,340),rot:0,vr:side*12,t:1.2});
+    if(g.combo%10===0){g.msg='Комбо '+g.combo+'!';g.mt=1;A.tune([660,880,1100]);}},
+  burst(g,x,col){for(let i=0;i<10;i++)g.fx.push({x:x+A.rnd(-10,10),y:GP_Y-30+A.rnd(-10,10),t:.5,txt:'■',col});},
+  hurt(g,why){g.lives--;g.combo=0;g.hurt=.5;g.shake=.35;g.msg=why;g.mt=1.3;A.beep(100,.3,'sawtooth',.07);if(g.lives<=0)A.over(g,why);},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')this.punchSide(g,-1);else if(k==='ArrowRight'||k==='KeyD')this.punchSide(g,1);},
+  click(g,x){this.punchSide(g,x<GP_X?-1:1);},
+  update(g,dt){g.stun=Math.max(0,g.stun-dt);g.hurt=Math.max(0,g.hurt-dt);g.mt=Math.max(0,g.mt-dt);g.shake=Math.max(0,(g.shake||0)-dt);
+    if(g.punch){g.punch.t-=dt;if(g.punch.t<=0)g.punch=null;}
+    g.sp-=dt;if(g.sp<=0){this.spawn(g);g.sp=Math.max(.42,1.5-g.kills*.018)*A.rnd(.7,1.3);}
+    for(const m of g.mobs){if(m.dead)continue;m.anim+=dt*8;
+      if(m.kb>0){m.kb-=dt;continue;}
+      m.x-=m.side*m.v*dt;const d=(m.x-GP_X)*m.side;
+      if(m.k==='villager'){if(!m.passed&&d<0){m.passed=1;g.score+=3;g.fx.push({x:GP_X,y:GP_Y-110,t:.8,txt:'+3 спасен',col:'#8f8'});A.beep(990,.08,'triangle',.05);}
+        if(m.x<-30||m.x>510)m.dead=1;continue;}
+      if(d<22){m.dead=1;this.burst(g,m.x,GP_MOBS[m.k].c);this.hurt(g,GP_MOBS[m.k].n+' те удари!');if(A.state!=='play')return;}}
+    g.mobs=g.mobs.filter(m=>!m.dead);
+    for(const p of g.parts){p.vy+=900*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;p.t-=dt;}g.parts=g.parts.filter(p=>p.t>0);
+    for(const f of g.fx){f.t-=dt;f.y-=40*dt;}g.fx=g.fx.filter(f=>f.t>0);},
+  mob(k,x,y,side,anim,shield){const M=GP_MOBS[k],w=Math.sin(anim)*4;
+    if(k==='spider'){A.block(x-20,y+6,40,M.c,16);A.block(x-10*side-8,y+2,16,M.c,16);c.fillStyle='#f22';c.fillRect(x-side*14-3,y+7,3,3);c.fillRect(x-side*14+2,y+11,3,3);
+      c.fillStyle='#222';for(let i=0;i<4;i++){c.fillRect(x-18+i*11,y+20+(i%2?w:-w)*.5,3,10);}return;}
+    // крака
+    A.block(x-9,y+24+(w>0?0:2),8,M.b,16);A.block(x+1,y+24+(w>0?2:0),8,M.b,16);
+    // тяло
+    A.block(x-10,y,20,k==='villager'?'#7b5a3a':k==='zombie'?'#2aa3a3':'#5a4a3a',26);
+    if(k==='villager'){A.block(x-12,y+6,24,'#6a4a2e',8);}
+    else{A.block(x-side*10-4,y+6,8,M.c,6);A.block(x-side*16-4,y+6,10,M.c,6);}
+    // глава
+    A.block(x-10,y-20,20,M.c,20);c.fillStyle='#111';c.fillRect(x-side*6-2,y-13,3,3);c.fillRect(x-side*1-1,y-13,3,3);
+    if(k==='villager'){A.block(x-side*10-3,y-10,6,'#b07a4a',10);c.fillStyle='#3b2a1a';c.fillRect(x-10,y-20,20,4);}
+    if(k==='pillager'&&shield){A.block(x-side*16-6,y-4,12,'#e8e8e8',26);c.fillStyle='#d84a3a';c.fillRect(x-side*16-2,y+2,4,14);}},
+  golem(g){const x=GP_X,y=GP_Y,f=g.face,hs=g.hurt>0&&Math.sin(g.t*40)>0;
+    const body=hs?'#ffb0b0':'#d8d4cc';
+    A.block(x-14,y-10,12,'#c8c2b8',40);A.block(x+2,y-10,12,'#c8c2b8',40);
+    A.block(x-22,y-56,44,body,48);c.fillStyle='#6a8a3a';c.fillRect(x-16,y-44,8,14);c.fillRect(x+6,y-30,10,6);
+    A.block(x-12,y-82,24,body,26);c.fillStyle='#b01818';c.fillRect(x-7,y-72,4,4);c.fillRect(x+3,y-72,4,4);A.block(x-3,y-66,6,'#bdb6aa',10);
+    // ръце
+    const p=g.punch;
+    for(const s of [-1,1]){const ext=p&&p.side===s?(1-Math.abs(p.t-.07)/.07)*46+20:0;
+      if(ext>0){A.block(s<0?x-22-ext:x+22,y-46,ext,'#c8c2b8',14);A.block(s<0?x-34-ext+10:x+12+ext,y-50,22,'#bdb6aa',22);}
+      else A.block(s<0?x-34:x+22,y-54,12,'#c8c2b8',58);}
+    if(g.stun>0){for(let i=0;i<3;i++){const a=g.t*6+i*2.1;A.txt('★',x+Math.cos(a)*20,y-96+Math.sin(a)*5,12,'#ffd54f','center');}}},
+  draw(g){c.save();if(g.shake>0)c.translate(A.rnd(-3,3),A.rnd(-3,3));
+    const sky=c.createLinearGradient(0,0,0,300);sky.addColorStop(0,'#1a2550');sky.addColorStop(1,'#5a4a7a');c.fillStyle=sky;c.fillRect(0,0,480,320);
+    c.fillStyle='#eef';c.fillRect(400,30,22,22);
+    // къщи на селото
+    for(const hx of [30,140,300,410]){A.block(hx,210,50,'#9a6a3a',50);c.fillStyle='#6b4423';c.fillRect(hx-4,200,58,12);c.fillStyle='#ffd23f';c.fillRect(hx+18,226,14,14);}
+    for(let x=0;x<480;x+=20){A.block(x,GP_Y+30,20,'#5aa13a',10);A.block(x,GP_Y+40,20,'#7a5233',30);}
+    // зони за удар
+    c.fillStyle='rgba(255,213,79,.16)';c.fillRect(GP_X-GP_RANGE,GP_Y-100,GP_RANGE-22,130);c.fillRect(GP_X+22,GP_Y-100,GP_RANGE-22,130);
+    c.fillStyle='rgba(255,213,79,.6)';c.fillRect(GP_X-GP_RANGE,GP_Y+28,GP_RANGE-22,3);c.fillRect(GP_X+22,GP_Y+28,GP_RANGE-22,3);
+    for(const m of g.mobs)this.mob(m.k,m.x,GP_Y-14,m.side,m.anim,m.k==='pillager'&&m.hp>1);
+    this.golem(g);
+    for(const p of g.parts){c.save();c.translate(p.x,p.y);c.rotate(p.rot);c.globalAlpha=Math.min(1,p.t*2);this.mob(p.k,0,-10,1,0,false);c.restore();}
+    for(const f of g.fx)A.txt(f.txt,f.x,f.y,15,f.col,'center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,24);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,12,15,'#f55');A.txt('Комбо: '+g.combo,470,12,14,'#ffd54f','right');
+    A.txt('←  удар',90,340,13,'#fff','center');A.txt('удар  →',390,340,13,'#fff','center');
+    if(g.mt>0){c.fillStyle='rgba(0,0,0,.6)';c.fillRect(90,70,300,40);A.txt(g.msg,240,90,16,'#ffd54f','center');}
+    c.restore();}
+});
+</script>
+</body>
+</html>

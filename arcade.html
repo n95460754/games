@@ -298,7 +298,10 @@ const GAMES=[
   {"id": "photosafari", "cat": "skill", "icon": "📸", "name": "Фото сафари", "desc": "Снимай мобовете точно в центъра на обектива — редките носят повече точки", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "endhole", "cat": "action", "icon": "🕳️", "name": "Ендър дупка", "desc": "Управлявай дупка към Края и гълтай блокове — колкото повече ядеш, толкова по-голяма ставаш", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "woolroll", "cat": "puzzle", "icon": "🧶", "name": "Вълнен валяк", "desc": "Търкаляй блок вълна до стената и оцвети целия под с възможно най-малко ходове", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "hoppersort", "cat": "skill", "icon": "📦", "name": "Фуния за сортиране", "desc": "Сортирай падащите руди и храна в правилния сандък, а TNT пусни в лавата", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "hoppersort", "cat": "skill", "icon": "📦", "name": "Фуния за сортиране", "desc": "Сортирай падащите руди и храна в правилния сандък, а TNT пусни в лавата", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "slimemerge", "cat": "puzzle", "icon": "🟩", "name": "Сливане на слузи", "desc": "Пускай слузи в кутията — два еднакви се сливат в по-голям. Стигни до Слуза-гигант!", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "golempunch", "cat": "action", "icon": "🥊", "name": "Юмрукът на голема", "desc": "Железният голем пази селото — удряй мобовете отляво и отдясно, но пускай селяните", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "opsign", "cat": "brain", "icon": "➗", "name": "Липсващият знак", "desc": "Кой знак липсва: +, −, × или ÷? После идват сметки с два знака", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
