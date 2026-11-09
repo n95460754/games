@@ -2229,6 +2229,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T07:55:58.098Z"
+    },
+    {
+      "id": "EMP-0118",
+      "name": "Delta Knight",
+      "level": "Senior",
+      "role": "Physics Programmer",
+      "role_bg": "Програмист на физика",
+      "department": "Gameplay",
+      "manager": "Game-Physics-Bot",
+      "team": "Team Gameplay",
+      "team_leader": "Game-Physics-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T08:00:59.902Z"
     }
   ],
   "chairman": {
