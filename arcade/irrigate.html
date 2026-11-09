@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Напои нивата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌾 Напои нивата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 350. Напои нивата
+// Пъзел с течаща вода като в Minecraft: водата пада надолу, а когато стигне твърд
+// блок, се разлива на 3 блока наляво и надясно. Сложи няколко блока калдъръм така,
+// че водата да докосне всяка нива — но да не залее нито една факла!
+A.add({id:'irrigate',cat:'puzzle',icon:'🌾',name:'Напои нивата',desc:'Насочи течащата вода с блокове, така че да напои всички ниви и да не загаси факлите',
+  help:'Клик / докосване на празно поле — сложи или махни блок калдъръм. Стрелки / WASD — курсор, Space — блок, Enter (или бутона „Пусни водата“) — пусни водата. Водата пада надолу и се разлива на 3 блока встрани. Трябва да докосне всяка нива 🟫 и да не стигне до факла 🔥. 8 нива; по-малко опити и неизползвани блокове дават бонус.',
+  GW:10,GH:7,CS:36,OX:60,OY:58,SPREAD:3,
+  // . въздух  # камък  F нива (суха)  S извор  t факла ; число = блокове за слагане
+  LV:[
+    {n:1,m:['.....S....','###.......','..........','..####.###','..........','..........','##FF######']},
+    {n:1,m:['...S......','..........','......###.','..F.......','..........','..t.......','###.###F#.']},
+    {n:2,m:['.......S..','.##.......','.....####.','.F..###...','..........','..t.......','.####.F.#F']},
+    {n:2,m:['.......S..','..........','..........','...t.F....','..###.....','.F........','###F#####.']},
+    {n:2,m:['.......S..','..........','.##.##....','.......##.','..........','.t...t....','#######FF.']},
+    {n:3,m:['...S......','..........','..........','.....##F..','..........','t.........','##F#..###.']},
+    {n:3,m:['.S........','...#####..','..........','..........','..........','..t....Ft.','#.##FF###.']},
+    {n:3,m:['...S......','..t.......','####......','..t..##...','####......','..........','#F#.F#.#.#']},
+  ],
+  start(g){g.lv=0;g.cur=[4,3];g.tries=0;this.load(g);},
+  load(g){const L=this.LV[g.lv];g.left=L.n;g.grid=L.m.map(r=>r.split(''));g.run=null;g.res=null;g.tries=0;g.flash=0;},
+  // симулация: връща подредени клетки с вода и резултата
+  sim(grid){const W=this.GW,H=this.GH,R=this.SPREAD,solid=ch=>ch==='#'||ch==='F'||ch==='B';
+    let sx=0,sy=0;for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(grid[y][x]==='S'){sx=x;sy=y;}
+    const lvl={},order=[],q=[[sx,sy,R,0]];let torch=false;
+    const put=(x,y,s,st)=>{if(x<0||x>=W||y<0||y>=H)return;const ch=grid[y][x];if(solid(ch))return;const k=x+','+y;
+      if(lvl[k]!==undefined&&lvl[k]>=s)return;if(lvl[k]===undefined)order.push([x,y,st]);lvl[k]=s;if(ch==='t')torch=true;q.push([x,y,s,st]);};
+    lvl[sx+','+sy]=R;order.push([sx,sy,0]);
+    while(q.length){q.sort((a,b)=>a[3]-b[3]);const [x,y,s,st]=q.shift();
+      if(lvl[x+','+y]>s)continue;
+      if(y+1>=H)continue;const below=grid[y+1][x];
+      if(!solid(below)){put(x,y+1,R,st+1);continue;}
+      if(s>0){put(x-1,y,s-1,st+1);put(x+1,y,s-1,st+1);}}
+    let farms=0,wet=0;const wetSet={};
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++)if(grid[y][x]==='F'){farms++;
+      if([[0,-1],[-1,0],[1,0]].some(([dx,dy])=>lvl[(x+dx)+','+(y+dy)]!==undefined)){wet++;wetSet[x+','+y]=1;}}
+    return {order,wet,farms,wetSet,torch,ok:!torch&&wet===farms};},
+  toggle(g,x,y){if(g.run)return;const ch=g.grid[y][x];
+    if(ch==='B'){g.grid[y][x]='.';g.left++;A.beep(330,.05);}
+    else if(ch==='.'){if(g.left<=0){A.beep(150,.15,'sawtooth');g.flash=.4;return;}g.grid[y][x]='B';g.left--;A.beep(440,.05);}},
+  go(g){if(g.run){if(g.run.done)this.after(g);return;}g.tries++;g.res=this.sim(g.grid);g.run={k:0,tm:0,done:false};A.beep(520,.1,'triangle');},
+  after(g){if(g.res.ok){const pts=Math.max(20,100+20*g.left-25*(g.tries-1));g.score+=pts;
+      if(g.lv+1>=this.LV.length){g.run=null;return A.over(g,'Всички ниви са напоени! 🌾');}
+      g.lv++;this.load(g);A.tune([523,659,784,1046]);}
+    else{g.run=null;g.res=null;}},
+  key(g,k){
+    if(k==='Enter'||k==='NumpadEnter'){this.go(g);return;}
+    if(g.run&&g.run.done&&k==='Space'){this.after(g);return;}
+    const d={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[k];
+    if(d){g.cur[0]=A.clamp(g.cur[0]+d[0],0,this.GW-1);g.cur[1]=A.clamp(g.cur[1]+d[1],0,this.GH-1);return;}
+    if(k==='Space')this.toggle(g,g.cur[0],g.cur[1]);
+    if(k==='Backspace'&&!g.run){const t=g.tries;this.load(g);g.tries=t;}
+  },
+  click(g,mx,my){
+    if(my>322&&mx>300){this.go(g);return;}
+    if(my>322&&mx<150&&!g.run){const t=g.tries;this.load(g);g.tries=t;return;}
+    if(g.run){if(g.run.done)this.after(g);return;}
+    const x=Math.floor((mx-this.OX)/this.CS),y=Math.floor((my-this.OY)/this.CS);
+    if(x>=0&&x<this.GW&&y>=0&&y<this.GH){g.cur=[x,y];this.toggle(g,x,y);}
+  },
+  update(g,dt){g.flash=Math.max(0,g.flash-dt);const r=g.run;if(!r||r.done)return;r.tm+=dt;
+    const maxSt=r.tm/.07;while(r.k<g.res.order.length&&g.res.order[r.k][2]<=maxSt){const [x,y]=g.res.order[r.k];r.k++;
+      if(g.grid[y][x]==='t')A.beep(120,.25,'sawtooth');else if(r.k%3===0)A.beep(260+y*30,.03,'sine',.02);}
+    if(r.k>=g.res.order.length&&r.tm>(g.res.order.length?g.res.order[g.res.order.length-1][2]*.07:0)+.4){r.done=true;
+      if(g.res.ok)A.tune([660,880]);else A.beep(150,.3,'sawtooth',.05);}
+  },
+  draw(g){
+    const CS=this.CS,OX=this.OX,OY=this.OY;
+    A.bg('#6fb3e8');c.fillStyle='#8ac4ee';c.fillRect(0,0,480,30);
+    const shown={};if(g.run)for(let i=0;i<g.run.k;i++){const [x,y]=g.res.order[i];shown[x+','+y]=1;}
+    const wet=g.run&&g.run.done?g.res.wetSet:{};
+    for(let y=0;y<this.GH;y++)for(let x=0;x<this.GW;x++){const ch=g.grid[y][x],px=OX+x*CS,py=OY+y*CS;
+      c.fillStyle=(x+y)%2?'#7aa8cc':'#82b0d4';c.fillRect(px,py,CS,CS);
+      if(ch==='#'){A.block(px,py,CS,C.stone);c.fillStyle='#6a6a6a';c.fillRect(px+6,py+8,8,6);c.fillRect(px+20,py+20,9,7);}
+      else if(ch==='B'){A.block(px,py,CS,'#8f8f8f');c.fillStyle='#5f5f5f';for(const [a,b] of [[4,4],[18,6],[8,18],[22,22]])c.fillRect(px+a,py+b,10,8);}
+      else if(ch==='F'){const w=wet[x+','+y];A.block(px,py,CS,w?'#4a2c18':'#8b5a2b');c.fillStyle=w?'#3a2010':'#6e4420';for(let i=0;i<4;i++)c.fillRect(px+3+i*9,py+3,4,CS-6);
+        c.fillStyle=w?'#7ccf3a':'#c9a93a';c.fillRect(px+6,py-6,3,7);c.fillRect(px+16,py-8,3,9);c.fillRect(px+26,py-6,3,7);}
+      else if(ch==='t'){c.fillStyle='#7a5233';c.fillRect(px+15,py+12,6,22);c.fillStyle=shown[x+','+y]?'#555':'#ffd23f';c.fillRect(px+13,py+6,10,8);
+        if(!shown[x+','+y]){c.fillStyle='#ff6a00';c.fillRect(px+15,py+2,6,6);}}
+      if(ch==='S'){A.block(px,py,CS,'#2f6fd0');c.fillStyle='#9fd0ff';c.fillRect(px+6,py+6,8,4);c.fillRect(px+18,py+16,10,4);}
+      else if(shown[x+','+y]){c.fillStyle='rgba(47,111,208,.82)';c.fillRect(px,py,CS,CS);c.fillStyle='rgba(160,210,255,.6)';c.fillRect(px+((g.t*30+y*7)%28),py+6,8,3);}
+    }
+    // курсор
+    if(!g.run){const px=OX+g.cur[0]*CS,py=OY+g.cur[1]*CS;c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(px+1,py+1,CS-2,CS-2);}
+    c.strokeStyle='#000';c.lineWidth=3;c.strokeRect(OX,OY,this.GW*CS,this.GH*CS);
+    A.txt('Ниво '+(g.lv+1)+'/'+this.LV.length,10,14,14,'#fff');
+    A.txt('Блокове: '+g.left,240,14,14,g.flash>0?'#ff5252':'#ffd54f','center');
+    A.txt('Опит '+Math.max(1,g.tries+(g.run?0:1)),470,14,14,'#fff','right');
+    A.txt('Напои всяка нива, без да гасиш факли!',240,42,12,'#0d2a4a','center');
+    // бутони
+    A.block(8,326,130,'#7a5233',28);A.txt('↺ Отначало',73,340,13,'#fff','center');
+    const lab=g.run?(g.run.done?(g.res.ok?'✔ Напред!':'✖ Пак'):'… тече'):'💧 Пусни водата';
+    A.block(310,326,162,g.run&&g.run.done&&g.res.ok?'#43a047':'#2f6fd0',28);A.txt(lab,391,340,13,'#fff','center');
+    if(g.run&&g.run.done){const r=g.res,msg=r.ok?'Браво! Всички ниви са напоени 🌾':r.torch?'Водата загаси факла! 🔥':'Напоени: '+r.wet+' от '+r.farms+' ниви';
+      c.fillStyle='rgba(0,0,0,.55)';c.fillRect(110,150,260,50);A.txt(msg,240,175,13,r.ok?'#b9f6ca':'#ffcdd2','center');}
+  }
+});
+</script>
+</body>
+</html>

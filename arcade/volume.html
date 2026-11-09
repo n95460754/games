@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Обем в блокове</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">📦 Обем в блокове</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 351. Обем в блокове
+// Колко блока има в постройката? Дължина × ширина × височина! После идват кухи кули,
+// недовършени басейни и постройки без надписи, в които трябва да преброиш ръбовете сам.
+A.add(Object.assign(choiceGame({time:90,bg:'#1a2a3c',
+  next(g){
+    const lv=Math.min(4,Math.floor(g.score/3)),type=A.ri(0,[0,1,2,3,4][lv]);
+    const a=A.ri(2,lv<1?4:6),b=A.ri(2,lv<1?3:5),h=A.ri(lv<1?1:2,lv<2?3:5);
+    g.type=type;g.a=a;g.b=b;g.h=h;g.fill=h;g.hollow=false;g.labels=true;g.mat=A.pick([['#9a6a3a','дърво'],['#7d7d7d','камък'],['#c84a3a','тухли'],['#e0c068','пясък'],['#4de8f5','диамант']]);
+    const V=a*b*h,mk=x=>Math.max(1,x);
+    if(type===0){g.q='Колко блока има в постройката?';g.ans=V;
+      g.opts=opts4(V,()=>mk(A.pick([a*b+h,(a+b)*h,a*b*(h+1),a*b*(h-1),2*(a*b+b*h+a*h),V+A.pick([-2,-1,1,2,a,b])])));}
+    else if(type===1){const k=A.ri(1,h-1||1);g.fill=Math.min(k,h-1);if(h<2){g.h=h+1;}const H=g.h;g.fill=Math.max(1,Math.min(g.fill,H-1));
+      g.q='Басейн '+a+'×'+b+'×'+H+'. Колко блока вода още липсват?';g.ans=a*b*(H-g.fill);
+      g.opts=opts4(g.ans,()=>mk(A.pick([a*b*g.fill,a*b*H,a*b*(H-g.fill)+A.pick([-a,a,-b,b,1,-1]),a*b,(a+b)*(H-g.fill)])));}
+    else if(type===2){const s=A.ri(3,5),H=A.ri(2,4);g.a=s;g.b=s;g.h=H;g.hollow=true;
+      g.q='Куха кула (стени от 1 блок). Колко блока?';g.ans=(s*s-(s-2)*(s-2))*H;
+      g.opts=opts4(g.ans,()=>mk(A.pick([s*s*H,4*s*H,(4*s-4)*H+A.pick([-4,4,H]),(s-2)*(s-2)*H,s*s*H-(s-2)*(s-2)])));}
+    else if(type===3){g.labels=false;g.a=A.ri(2,4);g.b=A.ri(2,4);g.h=A.ri(1,4);const v=g.a*g.b*g.h;
+      g.q='Без надписи! Преброй ръбовете — колко блока?';g.ans=v;
+      g.opts=opts4(v,()=>mk(v+A.pick([-g.a*g.b,g.a*g.b,-g.b*g.h,g.a*g.h,-2,2,-1,1])));}
+    else{const n=A.ri(2,4),l=A.ri(3,6),w=A.ri(2,4),H=A.ri(2,4),V2=l*w*H;g.a=l;g.b=w;g.h=H;g.n=n;
+      g.q=n+' еднакви къщи '+l+'×'+w+'×'+H+'. Колко блока общо?';g.ans=V2*n;
+      g.opts=opts4(g.ans,()=>mk(A.pick([V2,V2*(n+1),V2*(n-1),(l*w+H)*n,g.ans+A.pick([-n,n,-10,10])])));}
+  },
+  pic(g){
+    A.txt(g.q,240,40,g.q.length>44?13:g.q.length>36?15:17,'#fff','center');
+    const a=g.a,b=g.b,h=g.h,k=.866,s=Math.floor(Math.min(22,300/((a+b)*k),170/((a+b)*.5+h)));
+    const ox=240-(a-b)*s*k/2,oy=150-((a+b)*s*.5-h*s)/2;
+    const P=(x,y,z)=>[ox+(x-y)*s*k,oy+(x+y)*s*.5-z*s];
+    const col=g.mat[0];
+    const shade=(hex,f)=>{const n=parseInt(hex.slice(1),16),r=n>>16,gg=n>>8&255,bb=n&255;return 'rgb('+Math.round(r*f)+','+Math.round(gg*f)+','+Math.round(bb*f)+')';};
+    const poly=(pts,fill)=>{c.beginPath();c.moveTo(pts[0][0],pts[0][1]);for(const p of pts.slice(1))c.lineTo(p[0],p[1]);c.closePath();c.fillStyle=fill;c.fill();c.strokeStyle='rgba(0,0,0,.45)';c.lineWidth=1;c.stroke();};
+    const cube=(x,y,z,cl)=>{
+      poly([P(x,y,z+1),P(x+1,y,z+1),P(x+1,y+1,z+1),P(x,y+1,z+1)],cl);
+      poly([P(x,y+1,z),P(x+1,y+1,z),P(x+1,y+1,z+1),P(x,y+1,z+1)],shade(cl,.72));
+      poly([P(x+1,y,z),P(x+1,y+1,z),P(x+1,y+1,z+1),P(x+1,y,z+1)],shade(cl,.86));};
+    const solidAt=(x,y,z)=>{if(g.hollow)return x===0||y===0||x===a-1||y===b-1;if(g.type===1)return z<g.fill;return true;};
+    for(let sum=0;sum<=a+b+h;sum++)for(let z=0;z<h;z++)for(let x=0;x<a;x++){const y=sum-x-z;if(y<0||y>=b)continue;
+      if(!solidAt(x,y,z))continue;
+      // скрий кубове, напълно закрити отпред, отдясно и отгоре
+      if(!g.hollow&&g.type!==1&&x<a-1&&y<b-1&&z<h-1)continue;
+      cube(x,y,z,g.type===1?'#3b7bd6':col);}
+    if(g.type===1){c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=1.5;c.setLineDash([4,3]);
+      const E=[[[0,0,h],[a,0,h]],[[a,0,h],[a,b,h]],[[a,b,h],[0,b,h]],[[0,b,h],[0,0,h]],[[a,0,0],[a,0,h]],[[a,b,0],[a,b,h]],[[0,b,0],[0,b,h]]];
+      for(const [p,q] of E){const A1=P(...p),B1=P(...q);c.beginPath();c.moveTo(A1[0],A1[1]);c.lineTo(B1[0],B1[1]);c.stroke();}c.setLineDash([]);}
+    if(g.labels){const m1=P(a/2,b,0),m2=P(a,b/2,0),m3=P(a,0,h/2);
+      A.txt(String(a),m1[0]-10,m1[1]+12,14,'#ffd54f','center');A.txt(String(b),m2[0]+12,m2[1]+12,14,'#ffd54f','center');A.txt(String(h),m3[0]+14,m3[1],14,'#ffd54f','center');}
+    if(g.type===4)A.txt('× '+g.n+' къщи',420,140,16,'#b9f6ca','center');
+    if(g.type!==1)A.txt(g.mat[1],60,240,11,'#b9c6d6','center');
+  }
+}),{id:'volume',cat:'brain',icon:'📦',name:'Обем в блокове',desc:'Дължина × ширина × височина — сметни колко блока има в постройката, кухата кула или басейна',
+  help:'Обемът = дължина × ширина × височина. Избери верния отговор с 1–4 или с клик / докосване. Има басейни (колко вода липсва), кухи кули (само стени) и постройки без надписи — преброй ръбовете! 90 секунди, въпросите стават по-трудни.'}));
+</script>
+</body>
+</html>

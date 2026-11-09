@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тризъбецът</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔱 Тризъбецът</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 349. Тризъбецът
+// Стив стои на малко островче насред океана, а удавници (drowned) плуват към него
+// от всички страни. Хвърляй тризъбеца — с омагьосването „Вярност“ той се връща сам!
+A.add({id:'trident',cat:'action',icon:'🔱',name:'Тризъбецът',desc:'Хвърляй тризъбеца по удавниците, преди да стигнат островчето — той винаги се връща при теб!',
+  help:'Мишка / пръст — цели се, клик / докосване — хвърли. Клавиатура: ← → (A / D) — завърти мерника, Space — хвърли. Тризъбецът се връща сам („Вярност“) и минава през няколко врага наведнъж. Пазачите имат 3 живота. Не уцелвай рибата-балон! 3 сърца.',
+  CX:240,CY:196,
+  start(g){g.ang=-Math.PI/2;g.tr=null;g.mob=[];g.spawn=1.2;g.hp=3;g.parts=[];g.combo=0;g.msg=null;g.waves=[];g.hurt=0;
+    for(let i=0;i<26;i++)g.waves.push([A.ri(0,470),A.ri(30,350),Math.random()*6]);},
+  throwT(g){if(g.tr)return;const s=430;g.tr={x:this.CX,y:this.CY,vx:Math.cos(g.ang)*s,vy:Math.sin(g.ang)*s,back:false,d:0,hit:[],ang:g.ang,kills:0};A.beep(520,.08,'triangle');},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.throwT(g);},
+  move(g,x,y){g.ang=Math.atan2(y-this.CY,x-this.CX);},
+  click(g,x,y){g.ang=Math.atan2(y-this.CY,x-this.CX);this.throwT(g);},
+  add(g){
+    const lvl=g.t/30,r=Math.random(),a=Math.random()*Math.PI*2,R=290;
+    let m={x:this.CX+Math.cos(a)*R,y:this.CY+Math.sin(a)*R*.85,sp:A.rnd(26,38)+lvl*7,hp:1,kind:'drowned',ph:Math.random()*6,fl:0};
+    if(r<Math.min(.25,.05+lvl*.06)){m.kind='guardian';m.hp=3;m.sp*=.7;}
+    else if(r>.88){m.kind='puffer';m.sp*=.8;m.life=9;}
+    g.mob.push(m);
+  },
+  boom(g,x,y,col,n){for(let i=0;i<(n||8);i++)g.parts.push({x,y,vx:A.rnd(-90,90),vy:A.rnd(-90,90),t:.5,col});},
+  update(g,dt){
+    const K=A.keys,CX=this.CX,CY=this.CY;
+    if(K.ArrowLeft||K.KeyA)g.ang-=3*dt;if(K.ArrowRight||K.KeyD)g.ang+=3*dt;
+    g.hurt=Math.max(0,g.hurt-dt);
+    // поява на мобове
+    g.spawn-=dt;if(g.spawn<=0){this.add(g);g.spawn=Math.max(.45,1.9-g.t/45)*A.rnd(.7,1.2);}
+    // тризъбецът
+    const t=g.tr;
+    if(t){
+      if(!t.back){t.x+=t.vx*dt;t.y+=t.vy*dt;t.d+=Math.hypot(t.vx,t.vy)*dt;
+        if(t.d>250||t.x<-10||t.x>490||t.y<-10||t.y>370){t.back=true;}}
+      else{const dx=CX-t.x,dy=CY-t.y,d=Math.hypot(dx,dy),sp=560*dt;t.ang=Math.atan2(-dy,-dx);
+        if(d<=sp+6){if(t.kills>=2){g.score+=t.kills;g.msg={s:'КОМБО ×'+t.kills+'  +'+t.kills,t:1.2};A.tune([660,880,1100]);}g.tr=null;}
+        else{t.x+=dx/d*sp;t.y+=dy/d*sp;}}
+      if(g.tr)for(const m of g.mob){if(m.dead||t.hit.includes(m))continue;
+        if(Math.hypot(m.x-t.x,m.y-t.y)<(m.kind==='guardian'?20:15)){t.hit.push(m);m.hp--;m.fl=.2;
+          if(m.kind==='puffer'){m.dead=true;g.hp--;g.hurt=.5;g.score=Math.max(0,g.score-2);this.boom(g,m.x,m.y,'#ffd23f',12);A.beep(140,.3,'sawtooth',.06);
+            g.msg={s:'Отрова от рибата-балон! −2',t:1.3};if(g.hp<=0)return A.over(g,'Рибата-балон те отрови! 🐡');continue;}
+          if(m.hp<=0){m.dead=true;const pts=m.kind==='guardian'?3:1;g.score+=pts;t.kills++;this.boom(g,m.x,m.y,m.kind==='guardian'?'#7fc8a9':'#3f9a8a');A.beep(m.kind==='guardian'?330:440,.08);}
+          else{A.beep(260,.06);if(!t.back&&m.kind==='guardian')t.back=true;}}}
+    }
+    // мобове
+    for(const m of g.mob){if(m.dead)continue;m.ph+=dt*5;m.fl=Math.max(0,m.fl-dt);
+      if(m.kind==='puffer'){m.life-=dt;const a=Math.atan2(m.y-CY,m.x-CX)+1.2;m.x+=Math.cos(a)*m.sp*dt;m.y+=Math.sin(a)*m.sp*dt;
+        if(m.life<=0||Math.hypot(m.x-CX,m.y-CY)>320)m.dead=true;continue;}
+      const dx=CX-m.x,dy=CY-m.y,d=Math.hypot(dx,dy);
+      if(d<34){m.dead=true;g.hp--;g.hurt=.5;this.boom(g,m.x,m.y,'#d84a3a',10);A.beep(110,.35,'sawtooth',.07);
+        if(g.hp<=0)return A.over(g,'Удавниците превзеха островчето! 🧟');continue;}
+      m.x+=dx/d*m.sp*dt;m.y+=dy/d*m.sp*dt;}
+    g.mob=g.mob.filter(m=>!m.dead);
+    g.parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.t-=dt;});g.parts=g.parts.filter(p=>p.t>0);
+    if(g.msg){g.msg.t-=dt;if(g.msg.t<=0)g.msg=null;}
+  },
+  drawTrident(x,y,a,col){c.save();c.translate(x,y);c.rotate(a);
+    c.fillStyle='#2f6f6a';c.fillRect(-22,-2,30,4);c.fillStyle=col||'#7fe0d0';
+    c.fillRect(8,-8,4,16);c.fillRect(12,-8,8,3);c.fillRect(12,-1.5,12,3);c.fillRect(12,5,8,3);c.restore();},
+  draw(g){
+    const CX=this.CX,CY=this.CY;
+    A.bg('#1f5aa8');
+    for(let x=0;x<24;x++)for(let y=0;y<18;y++)if((x+y)%2){c.fillStyle='#2262b2';c.fillRect(x*20,y*20,20,20);}
+    c.fillStyle='rgba(255,255,255,.25)';g.waves.forEach(([x,y,p])=>{const o=Math.sin(g.t*1.5+p)*6;c.fillRect(x+o,y,12,2);});
+    // островче
+    c.fillStyle='#e0c068';c.fillRect(CX-40,CY-30,80,60);c.fillRect(CX-30,CY-40,60,80);
+    A.block(CX-30,CY-30,20,C.sand);A.block(CX+10,CY+10,20,C.sand);A.block(CX-30,CY+10,20,'#d4b45c');A.block(CX+10,CY-30,20,'#d4b45c');
+    A.block(CX-10,CY-10,20,C.grass);
+    // мерник
+    if(!g.tr){c.fillStyle='rgba(255,255,255,.35)';for(let i=1;i<8;i++){const r=26+i*28;c.fillRect(CX+Math.cos(g.ang)*r-2,CY+Math.sin(g.ang)*r-2,4,4);}}
+    // мобове
+    for(const m of g.mob){const bob=Math.sin(m.ph)*2;
+      if(m.kind==='drowned'){A.block(m.x-9,m.y-14+bob,18,m.fl>0?'#fff':'#4f9a8c');c.fillStyle='#1d4d47';c.fillRect(m.x-9,m.y-14+bob,18,5);
+        c.fillStyle='#9ff6ff';c.fillRect(m.x-6,m.y-6+bob,3,3);c.fillRect(m.x+3,m.y-6+bob,3,3);
+        A.block(m.x-10,m.y+4+bob,20,'#5b8bb0',7);}
+      else if(m.kind==='guardian'){const s=26;A.block(m.x-s/2,m.y-s/2+bob,s,m.fl>0?'#fff':'#6fa88e');
+        c.fillStyle='#d8743a';for(const [ox,oy] of [[-16,-4],[13,-4],[-3,-17],[-3,12]])c.fillRect(m.x+ox,m.y+oy+bob,4,4);
+        c.fillStyle='#fff';c.fillRect(m.x-5,m.y-5+bob,10,10);c.fillStyle='#d84a3a';c.fillRect(m.x-2,m.y-2+bob,4,4);
+        for(let i=0;i<m.hp;i++){c.fillStyle='#f55';c.fillRect(m.x-8+i*6,m.y-20+bob,4,3);}}
+      else{const s=14+Math.sin(g.t*4+m.ph)*3;A.block(m.x-s/2,m.y-s/2+bob,s,'#ffd23f');c.fillStyle='#e08a00';
+        c.fillRect(m.x-s/2-3,m.y-1+bob,3,3);c.fillRect(m.x+s/2,m.y-1+bob,3,3);c.fillRect(m.x-1,m.y-s/2-3+bob,3,3);
+        c.fillStyle='#000';c.fillRect(m.x-3,m.y-3+bob,2,2);c.fillRect(m.x+2,m.y-3+bob,2,2);}}
+    // Стив
+    const hx=CX,hy=CY-6;A.block(hx-8,hy-22,16,g.hurt>0?'#ff8a80':'#c68e5a');c.fillStyle='#4a2f1a';c.fillRect(hx-8,hy-22,16,5);
+    c.fillStyle='#fff';c.fillRect(hx-5,hy-14,3,3);c.fillRect(hx+2,hy-14,3,3);A.block(hx-8,hy-6,16,'#2aa7b8',14);
+    if(!g.tr)this.drawTrident(CX+Math.cos(g.ang)*14,CY+Math.sin(g.ang)*14,g.ang);
+    else this.drawTrident(g.tr.x,g.tr.y,g.tr.back?g.tr.ang+Math.PI:g.tr.ang,g.tr.back?'#c9a0ff':null);
+    g.parts.forEach(p=>{c.fillStyle=p.col;c.fillRect(p.x-2,p.y-2,4,4);});
+    A.txt('❤'.repeat(Math.max(0,g.hp))+'🖤'.repeat(Math.max(0,3-g.hp)),10,14,14,'#f55');
+    A.txt(g.tr?(g.tr.back?'↩ връща се…':'➶ лети!'):'🔱 готов',470,14,13,g.tr?'#c9a0ff':'#7fe0d0','right');
+    if(g.msg)A.txt(g.msg.s,240,48,16,'#ffd54f','center');
+    if(g.t<4)A.txt('Цели се и хвърляй тризъбеца!',240,330,15,'#fff','center');
+  }
+});
+</script>
+</body>
+</html>
