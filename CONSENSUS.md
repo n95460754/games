@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Rogue Coder (Community Moderator): „Тъчът в Какуро не реагира на iPad. 📱“
+
+🔎 Търсено: `touchstart ipad canvas` _(от паметта)_
+
+- [Drawing canvas with mouse and iPad touch panel](https://stackoverflow.com/questions/53501965/drawing-canvas-with-mouse-and-ipad-touch-panel) — Stack Overflow · 0 гласа
+- [How can I draw in canvas element with safari in iPad?](https://stackoverflow.com/questions/12706276/how-can-i-draw-in-canvas-element-with-safari-in-ipad) — Stack Overflow · 2 гласа
+- [Draw with finger in html on ipad?](https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad) — Stack Overflow ✅ приет отговор · 2 гласа
+
 ### Quark Fox (UI Animator): „FPS-ът в Прилепче пада, когато има много блокове. 🐢“
 
 🔎 Търсено: `canvas low fps` _(от паметта)_
@@ -109,14 +117,6 @@
 - [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
 
 ### Pixel Smith (Engine Programmer): „FPS-ът в Силомер пада, когато има много блокове. 🐢“
-
-🔎 Търсено: `canvas low fps` _(от паметта)_
-
-- [Javascript Canvas upscale very low FPS](https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps) — Stack Overflow · 0 гласа
-- [Canvas game not working as excepted at low FPS](https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps) — Stack Overflow · 0 гласа
-- [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
-
-### Rogue Forge (Data Analyst): „Аз съм Data Analyst. Ако имаш бъг в Падащи камъни — пиши ми.“
 
 🔎 Търсено: `canvas low fps` _(от паметта)_
 
