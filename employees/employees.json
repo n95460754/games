@@ -3160,6 +3160,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T12:02:41.407Z"
+    },
+    {
+      "id": "EMP-0167",
+      "name": "Quark Fox",
+      "level": "Senior",
+      "role": "Chiptune Composer",
+      "role_bg": "Чиптюн композитор",
+      "department": "Audio",
+      "manager": "Sound-Engineer-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T12:07:43.264Z"
     }
   ],
   "chairman": {
