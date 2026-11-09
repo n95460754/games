@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **41** / 500
+Общо служители: **42** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -83,13 +83,14 @@
 | EMP-0033 | Nova Storm | Mid | Tutorial Writer / Автор на туториали | 2026-11-09 00:52 UTC |
 | EMP-0041 | Rogue Knight | Intern | Tutorial Writer / Автор на туториали | 2026-11-09 01:32 UTC |
 
-## Security — шеф: SecOps-Bot · 3 души
+## Security — шеф: SecOps-Bot · 4 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
 | EMP-0013 | Quark Miner | Junior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-08 23:11 UTC |
 | EMP-0029 | Neon Walker | Senior | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-09 00:32 UTC |
 | EMP-0034 | Turbo Knight | Intern | Security Analyst / Анализатор по сигурност | 2026-11-09 00:57 UTC |
+| EMP-0042 | Delta Stone | Senior | Security Analyst / Анализатор по сигурност | 2026-11-09 01:37 UTC |
 
 # 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
