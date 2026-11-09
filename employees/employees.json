@@ -2875,6 +2875,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T10:46:59.898Z"
+    },
+    {
+      "id": "EMP-0152",
+      "name": "Rogue Smith",
+      "level": "Junior",
+      "role": "API Developer",
+      "role_bg": "API разработчик",
+      "department": "Data",
+      "manager": "Data-Analyst-Bot",
+      "team": "Team Data",
+      "team_leader": "Data-Analyst-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T10:52:01.904Z"
     }
   ],
   "chairman": {
