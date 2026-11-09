@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скок със засилка</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🦘 Скок със засилка</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 340. Скок със засилка
+// Задръж, за да събереш сила, и пусни, за да скочиш до следващата колона от блокове.
+// Кацане точно в средата = двойни точки и комбо. Колоните стават по-тесни и по-далечни.
+A.add({id:'chargejump',cat:'skill',icon:'🦘',name:'Скок със засилка',desc:'Задръж, за да събереш сила, и скочи точно до следващата колона — в средата е двойно!',
+  help:'Задръж Space (или натисни и задръж с мишката/пръста), за да се засилиш — лентата показва силата. Пусни, за да скочиш. Кацнеш ли на колоната = 1 точка; точно в средата (жълтата плочка) = 2 точки и комбо (+1 за всяко поредно). Изумруд на колоната = +3. Паднеш ли между колоните — край!',
+  start(g){g.px=60;g.py=0;g.pl=[{x:30,w:60,h:120}];g.cam=0;g.ch=0;g.charging=false;g.jump=null;g.combo=0;g.fx=[];g.msg='';g.msgT=0;g.fall=0;g.wasDown=false;g.cur=0;
+    for(let i=0;i<4;i++)this.addP(g);g.py=this.top(g.pl[0]);},
+  top(p){return 300-p.h;},
+  addP(g){const l=g.pl[g.pl.length-1],n=g.pl.length,w=Math.max(22,62-n*1.4)+A.ri(-6,6),gap=A.ri(40,Math.min(200,90+n*6));
+    g.pl.push({x:l.x+l.w+gap,w,h:A.ri(90,170),gem:n>2&&Math.random()<.22});},
+  click(g){},
+  held(){return !!(A.keys.Space||A.keys.ArrowUp||A.keys.Enter||A.mouse.down);},
+  update(g,dt){g.fx=g.fx.filter(f=>(f.t-=dt)>0);if(g.msgT>0)g.msgT-=dt;
+    const target=g.px-110;g.cam+=(target-g.cam)*Math.min(1,dt*4);
+    if(g.fall){g.py+=g.fall*dt;g.fall+=900*dt;if(g.py>420)A.over(g,'Падна между колоните!');return;}
+    const down=this.held();
+    if(g.jump){const j=g.jump;j.t+=dt;const k=Math.min(1,j.t/j.T);g.px=j.x0+(j.x1-j.x0)*k;
+      g.py=j.y0+(j.y1-j.y0)*k-Math.sin(Math.PI*k)*j.hgt;
+      if(k>=1){g.jump=null;this.land(g);}g.wasDown=down;return;}
+    if(down&&!g.wasDown){g.charging=true;g.ch=0;}
+    if(g.charging){if(down){g.ch=Math.min(1,g.ch+dt*.85);if(Math.random()<.5)A.beep(200+g.ch*500,.02,'square',.015);}
+      else{g.charging=false;this.go(g);}}
+    g.wasDown=down;},
+  go(g){const d=20+g.ch*300;g.ch0=g.ch;g.ch=0;const cur=this.on(g,g.px);
+    const x1=g.px+d;let y1=300;const p=this.on(g,x1);y1=p?this.top(p):Math.max(g.py,170);
+    g.jump={x0:g.px,y0:g.py,x1,y1,t:0,T:.45+g.ch0*.25,hgt:40+g.ch0*80};A.beep(330,.08,'triangle');},
+  on(g,x){return g.pl.find(p=>x>=p.x-3&&x<=p.x+p.w+3);},
+  land(g){const p=this.on(g,g.px);
+    if(!p){g.fall=60;A.beep(140,.4,'sawtooth');return;}
+    g.py=this.top(p);const idx=g.pl.indexOf(p);
+    if(idx===g.cur){g.cur=idx;A.beep(220,.05);return;}
+    g.cur=idx;const c0=p.x+p.w/2,off=Math.abs(g.px-c0);let pts=1;
+    if(off<=6){g.combo++;pts=2+(g.combo-1);g.msg=g.combo>1?'ТОЧНО В ЦЕЛТА! ×'+g.combo:'ТОЧНО В ЦЕЛТА!';g.msgT=1;A.tune([660,880,1046]);g.px=c0;}
+    else{g.combo=0;A.beep(520,.06,'triangle');}
+    if(p.gem){p.gem=false;pts+=3;A.beep(1200,.1,'triangle');g.fx.push({x:g.px,y:g.py-30,t:.8,s:'+3 💎'});}
+    g.score+=pts;g.fx.push({x:g.px,y:g.py-50,t:.8,s:'+'+pts});
+    while(g.pl.length<idx+5)this.addP(g);},
+  drawPlayer(g,x,y){const sq=g.charging?g.ch*7:0,h=26-sq,w=14+sq*.6;
+    c.fillStyle='#2b4ea8';c.fillRect(x-w/2,y-h*.45,w,h*.45);// крака
+    c.fillStyle='#29a0a8';c.fillRect(x-w/2,y-h*.85,w,h*.42);// тяло
+    A.block(x-7,y-h-10+sq*.2,14,'#d8a07a',12);c.fillStyle='#4a2f1a';c.fillRect(x-7,y-h-10+sq*.2,14,4);
+    c.fillStyle='#fff';c.fillRect(x-4,y-h-4+sq*.2,3,2);c.fillRect(x+2,y-h-4+sq*.2,3,2);},
+  draw(g){const gr=c.createLinearGradient(0,0,0,360);gr.addColorStop(0,'#5fa8e8');gr.addColorStop(1,'#bfe2ff');c.fillStyle=gr;c.fillRect(0,0,480,360);
+    // облаци
+    c.fillStyle='rgba(255,255,255,.85)';for(let i=0;i<5;i++){const x=((i*170-g.cam*.3)%850+850)%850-120;c.fillRect(x,40+i*18%60,70,14);c.fillRect(x+14,30+i*18%60,40,10);}
+    // вода долу
+    c.fillStyle='#2d5fb0';c.fillRect(0,330,480,30);c.fillStyle='rgba(255,255,255,.25)';for(let x=0;x<480;x+=32)c.fillRect((x-g.cam*.8%32+32)%512-16,334,14,3);
+    c.save();c.translate(-Math.round(g.cam),0);
+    for(const p of g.pl){if(p.x-g.cam>520||p.x+p.w-g.cam<-40)continue;const ty=this.top(p);
+      c.save();c.beginPath();c.rect(p.x,ty,p.w,340-ty);c.clip();for(let y=ty;y<340;y+=16)for(let x=p.x;x<p.x+p.w;x+=16)A.block(x,y,16,y===ty?C.grass:(y<ty+32?C.dirt:C.stone));c.restore();
+      c.fillStyle='rgba(0,0,0,.25)';c.fillRect(p.x+p.w-3,ty,3,340-ty);
+      c.fillStyle='#ffd23f';c.fillRect(p.x+p.w/2-6,ty-2,12,3);
+      if(p.gem){const gx=p.x+p.w/2,gy=ty-14+Math.sin(g.t*4)*2;c.fillStyle='#2ee86a';c.beginPath();c.moveTo(gx,gy-7);c.lineTo(gx+6,gy);c.lineTo(gx,gy+7);c.lineTo(gx-6,gy);c.fill();c.fillStyle='#b8ffd0';c.fillRect(gx-2,gy-3,2,3);}}
+    this.drawPlayer(g,g.px,g.py);
+    // помощна точка: къде ще кацнеш при текущата сила (само първите 3 скока)
+    if(g.charging&&g.score<4){const tx=g.px+20+g.ch*300;c.fillStyle='rgba(255,255,255,.6)';c.fillRect(tx-2,this.top(this.on(g,tx)||{h:60})-6,4,4);}
+    for(const f of g.fx)A.txt(f.s,f.x,f.y-(.8-f.t)*30,16,'#ffd54f','center');
+    c.restore();
+    // лента за сила
+    c.fillStyle='#000';c.fillRect(10,10,124,16);c.fillStyle=g.ch>.8?'#ff5a3a':g.ch>.5?'#ffd23f':'#5ad84a';c.fillRect(12,12,120*g.ch,12);
+    A.txt('Сила',72,36,12,'#fff','center');
+    A.txt('Комбо ×'+g.combo,470,18,14,g.combo?'#ffd54f':'#fff','right');
+    if(g.msgT>0)A.txt(g.msg,240,80,22,'#ffd54f','center');
+    if(g.score===0&&!g.jump&&!g.charging)A.txt('Задръж Space / мишката и пусни!',240,120,16,'#fff','center');}
+});
+</script>
+</body>
+</html>

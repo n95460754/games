@@ -322,7 +322,10 @@ const GAMES=[
    {"id": "cartspeed", "cat": "brain", "icon": "🚃", "name": "Скорост, време, път", "desc": "Път = скорост × време! Колко блока ще измине вагонетката, за колко секунди и колко бързо?", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "breadrun", "cat": "action", "icon": "🍞", "name": "Хлебният куриер", "desc": "Язди коня през селото и хвърляй хляб на гладните селяни — пази се от зомбитата!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "lavatubes", "cat": "puzzle", "icon": "🌋", "name": "Лавови тръби", "desc": "Напълни стъклените тръби с лава от котела — числата казват колко лава има във всеки ред и колона", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "morris", "cat": "board", "icon": "⚪", "name": "Мелница", "desc": "Класическата „Мелница“ срещу робота: нареди 3 блока в линия и махни негов блок", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "morris", "cat": "board", "icon": "⚪", "name": "Мелница", "desc": "Класическата „Мелница“ срещу робота: нареди 3 блока в линия и махни негов блок", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "chargejump", "cat": "skill", "icon": "🦘", "name": "Скок със засилка", "desc": "Задръж, за да събереш сила, и скочи точно до следващата колона — в средата е двойно!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "kakurasu", "cat": "puzzle", "icon": "🔐", "name": "Диамантен трезор", "desc": "Скрий диамантите така, че сборовете на тежестите по редове и колони да излязат точно", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "isolation", "cat": "board", "icon": "⛰️", "name": "Рушащият се остров", "desc": "Блокът зад теб пада в лавата — заклещи Крийпъра, преди той да заклещи теб!", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

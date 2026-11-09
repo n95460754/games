@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Диамантен трезор</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔐 Диамантен трезор</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 341. Диамантен трезор
+// Логически пъзел „Какурасу“: всяка колона и всеки ред има тежест 1, 2, 3…
+// Числото вдясно = сбор от тежестите на колоните, в които има диамант в този ред;
+// числото отдолу = сбор от тежестите на редовете с диамант в тази колона.
+A.add({id:'kakurasu',cat:'puzzle',icon:'🔐',name:'Диамантен трезор',desc:'Скрий диамантите в трезора така, че сборовете на тежестите по редове и колони да излязат точно',
+  help:'Всяка колона има тежест (жълтите числа отгоре: 1, 2, 3…), всеки ред — също (отляво). Числото ВДЯСНО = сборът от тежестите на колоните, където в реда има диамант. Числото ОТДОЛУ = сборът от тежестите на редовете с диамант в колоната. Цъкни клетка: празно → 💎 → ✕ (знам, че е празно). Стрелки + Space/X също. Зелено = точно, червено = прекалено много. Решен трезор = точки и +40 сек.',
+  start(g){g.time=150;g.lvl=0;g.cx=0;g.cy=0;g.win=0;this.make(g);},
+  make(g){const N=g.lvl<2?4:g.lvl<4?5:g.lvl<7?6:7;g.N=N;let sol;
+    do{sol=Array(N*N).fill(0).map(()=>Math.random()<.42?1:0);}while(sol.filter(v=>v).length<N);
+    g.rc=[];g.cc=[];for(let y=0;y<N;y++){let s=0;for(let x=0;x<N;x++)if(sol[y*N+x])s+=x+1;g.rc.push(s);}
+    for(let x=0;x<N;x++){let s=0;for(let y=0;y<N;y++)if(sol[y*N+x])s+=y+1;g.cc.push(s);}
+    g.b=Array(N*N).fill(0);g.cx=Math.min(g.cx,N-1);g.cy=Math.min(g.cy,N-1);
+    g.S=Math.floor(Math.min(250/N,46));g.ox=Math.floor(240-g.S*N/2);g.oy=Math.floor(178-g.S*N/2);},
+  rowSum(g,y){let s=0;for(let x=0;x<g.N;x++)if(g.b[y*g.N+x]===1)s+=x+1;return s;},
+  colSum(g,x){let s=0;for(let y=0;y<g.N;y++)if(g.b[y*g.N+x]===1)s+=y+1;return s;},
+  solved(g){for(let i=0;i<g.N;i++)if(this.rowSum(g,i)!==g.rc[i]||this.colSum(g,i)!==g.cc[i])return false;return true;},
+  tog(g,x,y,mode){if(g.win)return;const i=y*g.N+x;
+    if(mode==='x')g.b[i]=g.b[i]===2?0:2;else if(mode==='gem')g.b[i]=g.b[i]===1?0:1;else g.b[i]=(g.b[i]+1)%3;
+    A.beep(g.b[i]===1?700:g.b[i]===2?300:200,.04,'triangle');
+    if(this.solved(g)){g.win=1.4;const p=g.N*2+5;g.score+=p;g.time+=40;g.gain=p;A.tune([523,659,784,1046,1318]);}},
+  key(g,k){const d={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(d){g.cx=A.clamp(g.cx+d[0],0,g.N-1);g.cy=A.clamp(g.cy+d[1],0,g.N-1);}
+    else if(k==='Space'||k==='Enter')this.tog(g,g.cx,g.cy,'gem');
+    else if(k==='KeyX'||k==='Backspace')this.tog(g,g.cx,g.cy,'x');},
+  click(g,mx,my,btn){const x=Math.floor((mx-g.ox)/g.S),y=Math.floor((my-g.oy)/g.S);
+    if(x>=0&&y>=0&&x<g.N&&y<g.N){g.cx=x;g.cy=y;this.tog(g,x,y,btn===2?'x':null);}},
+  update(g,dt){if(g.win){g.win-=dt;if(g.win<=0){g.win=0;g.lvl++;this.make(g);}return;}
+    g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени трезори: '+g.lvl);},
+  draw(g){A.bg('#1b1b24');const N=g.N,S=g.S,ox=g.ox,oy=g.oy;
+    // стена от каменни тухли
+    for(let y=0;y<360;y+=24)for(let x=-(y/24%2)*24;x<480;x+=48){c.fillStyle='#262632';c.fillRect(x+1,y+1,46,22);}
+    c.fillStyle='#55555f';c.fillRect(ox-6,oy-6,S*N+12,S*N+12);
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){const v=g.b[y*N+x],px=ox+x*S,py=oy+y*S;
+      A.block(px,py,S,'#7d7d7d');c.fillStyle='rgba(0,0,0,.18)';c.fillRect(px+S*.3,py+S*.3,S*.18,S*.12);
+      if(v===1){const cx=px+S/2,cy=py+S/2,r=S*.32;c.fillStyle='#4de8f5';c.beginPath();c.moveTo(cx,cy-r);c.lineTo(cx+r,cy);c.lineTo(cx,cy+r);c.lineTo(cx-r,cy);c.fill();
+        c.fillStyle='#c8fbff';c.fillRect(cx-r*.4,cy-r*.45,r*.35,r*.35);c.fillStyle='#1aa3b8';c.fillRect(cx+r*.1,cy+r*.1,r*.3,r*.3);}
+      else if(v===2){c.strokeStyle='#3a3a44';c.lineWidth=3;c.beginPath();c.moveTo(px+S*.3,py+S*.3);c.lineTo(px+S*.7,py+S*.7);c.moveTo(px+S*.7,py+S*.3);c.lineTo(px+S*.3,py+S*.7);c.stroke();}}
+    const fs=Math.max(12,Math.floor(S*.38));
+    for(let i=0;i<N;i++){A.txt(''+(i+1),ox+i*S+S/2,oy-16,fs-2,'#ffd54f','center');A.txt(''+(i+1),ox-18,oy+i*S+S/2,fs-2,'#ffd54f','center');
+      const rs=this.rowSum(g,i),cs=this.colSum(g,i);
+      const rcol=rs===g.rc[i]?'#7dff7a':rs>g.rc[i]?'#ff6a6a':'#fff',ccol=cs===g.cc[i]?'#7dff7a':cs>g.cc[i]?'#ff6a6a':'#fff';
+      A.block(ox+N*S+10,oy+i*S+4,S-8,'#5a3d22');A.txt(''+g.rc[i],ox+N*S+10+(S-8)/2,oy+i*S+S/2,fs,rcol,'center');
+      A.block(ox+i*S+4,oy+N*S+10,S-8,'#5a3d22');A.txt(''+g.cc[i],ox+i*S+S/2,oy+N*S+10+(S-8)/2,fs,ccol,'center');}
+    c.strokeStyle='#4de8f5';c.lineWidth=3;c.strokeRect(ox+g.cx*S+1,oy+g.cy*S+1,S-2,S-2);
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14,g.time<20?'#ff6a6a':'#fff');A.txt('Трезор '+(g.lvl+1),470,14,14,'#ffd54f','right');
+    if(g.win){c.fillStyle='rgba(0,0,0,.5)';c.fillRect(0,150,480,60);A.txt('ТРЕЗОРЪТ Е ОТКЛЮЧЕН! +'+g.gain+' точки, +40 сек',240,180,17,'#7dff7a','center');}}
+});
+</script>
+</body>
+</html>
