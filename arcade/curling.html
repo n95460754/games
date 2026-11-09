@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кърлинг на леда</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🥌 Кърлинг на леда</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 330. Кърлинг на леда
+// Плъзни блоковия камък по леда и го спри в центъра на мишената. Червените камъни пречат — избий ги!
+const CU={hx:380,hy:180,y0:72,y1:288,R:10,sx:40,sy:180,RINGS:[[12,10],[28,6],[44,3],[60,1]]};
+A.add({id:'curling',cat:'skill',icon:'🥌',name:'Кърлинг на леда',desc:'Плъзгай камъни по леда към центъра на мишената, търкай леда и избивай червените камъни',
+  help:'Мишка / пръст: дръпни назад от камъка (като прашка) и пусни — посоката и силата зависят от дръпването. Клавиатура: ↑ ↓ = посока, задръж Space = сила, пусни = хвърли. Докато камъкът се плъзга, задръж Space / мишката = търкай леда, за да стигне по-далеч. Център = 10 т., 6, 3, 1. Избит червен камък = +2. 5 рунда по 6 камъка.',
+  start(g){g.rnd=0;g.st=[];g.pops=[];this.newEnd(g);},
+  newEnd(g){g.rnd++;g.left=6;g.st=[];g.phase='aim';g.ang=0;g.pow=0;g.cur=null;g.msg='Рунд '+g.rnd+' / 5';g.msgT=1.8;
+    const n=Math.min(6,g.rnd+1);for(let i=0;i<n;i++)for(let k=0;k<50;k++){const x=A.ri(240,410),y=A.ri(115,245);
+      if(g.st.every(s=>Math.hypot(s.x-x,s.y-y)>26)){g.st.push({x,y,vx:0,vy:0,mine:false});break;}}},
+  throw(g){const v=110+190*g.pow;g.cur={x:CU.sx,y:CU.sy,vx:Math.cos(g.ang)*v,vy:Math.sin(g.ang)*v,mine:true};g.st.push(g.cur);g.left--;g.phase='move';A.beep(220,.15,'triangle');},
+  key(g,k){if(g.phase==='aim'&&k==='Space'){g.phase='charge';g.pow=0;g.pd=1;}},
+  click(g){if(g.phase==='aim'){g.phase='drag';g.pow=0;}},
+  release(g){if(g.phase==='drag'){if(g.pow<.06)g.phase='aim';else this.throw(g);}},
+  score(g){let sum=0;for(const s of g.st)if(s.mine){const d=Math.hypot(s.x-CU.hx,s.y-CU.hy)-CU.R;
+      for(const [r,p] of CU.RINGS)if(d<=r){sum+=p;g.pops.push({x:s.x,y:s.y,s:'+'+p,t:1.6});break;}}
+    g.score+=sum;g.phase='score';g.msg='Рунд '+g.rnd+': +'+sum+' точки';g.msgT=2.2;A.tune(sum?[523,659,784]:[300,250]);},
+  update(g,dt){g.msgT-=dt;g.pops=g.pops.filter(p=>(p.t-=dt)>0);const K=A.keys;
+    if(g.phase==='aim'){if(K.ArrowUp||K.KeyW)g.ang-=dt*.6;if(K.ArrowDown||K.KeyS)g.ang+=dt*.6;g.ang=A.clamp(g.ang,-.35,.35);return;}
+    if(g.phase==='charge'){if(K.ArrowUp||K.KeyW)g.ang-=dt*.6;if(K.ArrowDown||K.KeyS)g.ang+=dt*.6;g.ang=A.clamp(g.ang,-.35,.35);
+      g.pow+=g.pd*dt*.9;if(g.pow>1){g.pow=1;g.pd=-1;}if(g.pow<0){g.pow=0;g.pd=1;}if(!K.Space)this.throw(g);return;}
+    if(g.phase==='drag'){const dx=CU.sx-A.mouse.x,dy=CU.sy-A.mouse.y;g.pow=A.clamp(Math.hypot(dx,dy)/140,0,1);
+      if(dx>5)g.ang=A.clamp(Math.atan2(dy,dx),-.35,.35);return;}
+    if(g.phase==='score'){if(g.msgT<=0){if(g.rnd<5)this.newEnd(g);else A.over(g,'Мачът свърши!');}return;}
+    // плъзгане
+    const sweep=K.Space||A.mouse.down;g.sweep=sweep&&g.cur&&Math.hypot(g.cur.vx,g.cur.vy)>1;let moving=false;
+    for(const s of g.st){const sp=Math.hypot(s.vx,s.vy);if(sp<=0)continue;const a=(s===g.cur&&g.sweep)?42:85,ns=Math.max(0,sp-a*dt);
+      s.vx*=ns/sp;s.vy*=ns/sp;s.x+=s.vx*dt;s.y+=s.vy*dt;if(ns>0)moving=true;
+      if(s.y<CU.y0+CU.R){s.y=CU.y0+CU.R;s.vy=Math.abs(s.vy)*.6;}if(s.y>CU.y1-CU.R){s.y=CU.y1-CU.R;s.vy=-Math.abs(s.vy)*.6;}
+      if(s.x>480+CU.R||s.x<-CU.R){s.out=true;s.vx=s.vy=0;if(!s.mine){g.score+=2;g.pops.push({x:460,y:s.y,s:'+2',t:1.2});}else g.pops.push({x:450,y:s.y,s:'Аут!',t:1.2});}}
+    for(let i=0;i<g.st.length;i++)for(let j=i+1;j<g.st.length;j++){const a=g.st[i],b=g.st[j];if(a.out||b.out)continue;
+      const x=b.x-a.x,y=b.y-a.y,d=Math.hypot(x,y);if(d>=CU.R*2||d===0)continue;const nx=x/d,ny=y/d,o=(CU.R*2-d)/2;
+      a.x-=nx*o;a.y-=ny*o;b.x+=nx*o;b.y+=ny*o;const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+      if(rel>0){const im=rel*.95;a.vx-=im*nx;a.vy-=im*ny;b.vx+=im*nx;b.vy+=im*ny;moving=true;A.beep(140,.06,'square',.05);}}
+    g.st=g.st.filter(s=>!s.out);
+    if(!moving){g.st.forEach(s=>{s.vx=s.vy=0;});g.cur=null;if(g.left>0){g.phase='aim';g.pow=0;}else this.score(g);}},
+  stone(s){A.block(s.x-CU.R,s.y-CU.R,CU.R*2,'#8a8f96');c.fillStyle=s.mine?'#2e7dd1':'#d84a3a';c.fillRect(s.x-6,s.y-6,12,12);c.fillStyle='#222';c.fillRect(s.x-2,s.y-8,4,6);},
+  draw(g){A.bg('#1d2b3a');c.fillStyle='#dceefa';c.fillRect(0,CU.y0,480,CU.y1-CU.y0);
+    c.fillStyle='#cfe5f4';for(let x=0;x<480;x+=40)for(let y=CU.y0;y<CU.y1;y+=40)c.fillRect(x+((y/40|0)%2)*20,y,20,20);
+    for(let x=0;x<480;x+=20){A.block(x,CU.y0-20,20,C.snow);A.block(x,CU.y1,20,C.snow);}
+    [[60,'#3b7bd6'],[44,'#f4f8ff'],[28,'#d84a3a'],[12,'#f4f8ff']].forEach(([r,col])=>{c.fillStyle=col;c.beginPath();c.arc(CU.hx,CU.hy,r,0,7);c.fill();});
+    c.fillStyle='rgba(0,0,0,.25)';c.fillRect(CU.hx-1,CU.y0,2,CU.y1-CU.y0);c.fillRect(0,CU.hy-1,480,2);c.fillStyle='#d84a3a';c.fillRect(230,CU.y0,3,CU.y1-CU.y0);
+    if(g.phase==='aim'||g.phase==='charge'||g.phase==='drag'){const L=60+g.pow*160;c.fillStyle='rgba(30,60,120,.6)';
+      for(let i=16;i<L;i+=12)c.fillRect(CU.sx+Math.cos(g.ang)*i-2,CU.sy+Math.sin(g.ang)*i-2,4,4);
+      this.stone({x:CU.sx,y:CU.sy,mine:true});
+      c.fillStyle='#000';c.fillRect(8,310,104,16);c.fillStyle=g.pow>.8?'#e8463a':g.pow>.5?'#ffd23f':'#7ed957';c.fillRect(10,312,g.pow*100,12);A.txt('Сила',120,318,12,'#fff');}
+    for(const s of g.st)this.stone(s);
+    if(g.sweep&&g.cur){const s=g.cur,w=Math.sin(g.t*30)*6;A.block(s.x+16,s.y-12+w,6,'#9a6a3a',18);A.block(s.x+14,s.y+6+w,10,C.gold,5);}
+    for(const p of g.pops)A.txt(p.s,p.x,p.y-16-(1.6-p.t)*12,14,'#ffd54f','center');
+    A.txt('Рунд '+g.rnd+'/5',10,14,14);A.txt('Камъни: '+'●'.repeat(Math.max(0,g.left)),470,14,14,'#8cc8ff','right');
+    if(g.phase==='move')A.txt('Задръж Space / мишката = търкай леда!',240,340,12,'#b9c6d6','center');
+    if(g.msgT>0)A.txt(g.msg,240,40,20,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

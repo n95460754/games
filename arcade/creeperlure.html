@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Примами кийпърите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">💥 Примами кийпърите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 328. Примами кийпърите
+// Кийпърите те гонят. Когато са близо, фитилът им пламва — избягай и ги остави да се взривят един друг!
+A.add({id:'creeperlure',cat:'action',icon:'💥',name:'Примами кийпърите',desc:'Събери кийпърите на куп и избягай — взривът на един взривява и другите във верижна реакция',
+  help:'Стрелки / WASD — движение. С мишката или пръста: задръж и Стив тича към показалеца. Близо до теб кийпърът съска и след миг гърми — бягай! Кийпърите в кръга на взрива също гърмят: верижна реакция = много точки. 3 сърца.',
+  start(g){g.p={x:240,y:180};g.cr=[];g.fx=[];g.pops=[];g.lives=3;g.inv=0;g.spawn=1;g.el=0;g.best=0;},
+  spawnOne(g){const s=A.ri(0,3);let x,y;
+    if(s===0){x=A.rnd(0,480);y=-12;}else if(s===1){x=A.rnd(0,480);y=372;}else if(s===2){x=-12;y=A.rnd(0,360);}else{x=492;y=A.rnd(0,360);}
+    g.cr.push({x,y,f:-1,d:0,sp:A.rnd(36,50)+Math.min(28,g.el*.35)});},
+  click(g){},
+  boom(g,o){o.dead=true;g.fx.push({x:o.x,y:o.y,t:.45});A.beep(70+o.d*20,.3,'sawtooth',.07);
+    const pts=o.d?15*o.d:5;g.score+=pts;g.pops.push({x:o.x,y:o.y,s:'+'+pts+(o.d>1?' x'+o.d:''),t:1});
+    if(o.d>g.best)g.best=o.d;
+    if(g.inv<=0&&Math.hypot(g.p.x-o.x,g.p.y-o.y)<60){g.lives--;g.inv=1.5;A.beep(150,.3,'square',.07);if(g.lives<=0)return A.over(g,'Кийпърът те хвана!');}
+    for(const q of g.cr)if(!q.dead&&q!==o&&Math.hypot(q.x-o.x,q.y-o.y)<60){q.d=Math.max(q.d,o.d+1);q.f=q.f<0?.15:Math.min(q.f,.15);}},
+  update(g,dt){g.el+=dt;g.inv-=dt;
+    let dx=0,dy=0;const K=A.keys;
+    if(K.ArrowLeft||K.KeyA)dx--;if(K.ArrowRight||K.KeyD)dx++;if(K.ArrowUp||K.KeyW)dy--;if(K.ArrowDown||K.KeyS)dy++;
+    if(A.mouse.down){const mx=A.mouse.x-g.p.x,my=A.mouse.y-g.p.y,d=Math.hypot(mx,my);if(d>4){dx=mx/d;dy=my/d;}}
+    const l=Math.hypot(dx,dy);if(l){g.p.x=A.clamp(g.p.x+dx/l*135*dt,10,470);g.p.y=A.clamp(g.p.y+dy/l*135*dt,10,350);}
+    g.spawn-=dt;if(g.spawn<=0&&g.cr.length<30){this.spawnOne(g);if(g.el>20&&Math.random()<.3)this.spawnOne(g);g.spawn=Math.max(.5,1.7-g.el*.015);}
+    for(const o of g.cr){if(o.dead)continue;
+      if(o.f<0){const ex=g.p.x-o.x,ey=g.p.y-o.y,d=Math.hypot(ex,ey)||1;o.x+=ex/d*o.sp*dt;o.y+=ey/d*o.sp*dt;
+        if(d<30){o.f=1.1;A.beep(900,.25,'sawtooth',.02);}}
+      else{o.f-=dt;if(o.f<=0){this.boom(g,o);if(A.state!=='play')return;}}}
+    for(let i=0;i<g.cr.length;i++)for(let j=i+1;j<g.cr.length;j++){const a=g.cr[i],b=g.cr[j],x=b.x-a.x,y=b.y-a.y,d=Math.hypot(x,y);
+      if(d<18&&d>0){const k=(18-d)/2/d;a.x-=x*k;a.y-=y*k;b.x+=x*k;b.y+=y*k;}}
+    g.cr=g.cr.filter(o=>!o.dead);g.fx=g.fx.filter(f=>(f.t-=dt)>0);g.pops=g.pops.filter(p=>(p.t-=dt)>0);},
+  draw(g){A.bg('#3d7a2a');for(let x=0;x<24;x++)for(let y=0;y<18;y++)if((x*3+y*5)%7<2){c.fillStyle='#438530';c.fillRect(x*20,y*20,20,20);}
+    for(const o of g.cr)if(o.f>=0){c.strokeStyle='rgba(255,80,40,.35)';c.lineWidth=2;c.beginPath();c.arc(o.x,o.y,60,0,7);c.stroke();}
+    for(const o of g.cr){const lit=o.f>=0&&Math.sin(g.t*30)>0;A.block(o.x-9,o.y-13,18,lit?'#f4fff0':'#4caf50',26);
+      c.fillStyle='#111';c.fillRect(o.x-6,o.y-9,4,4);c.fillRect(o.x+2,o.y-9,4,4);c.fillRect(o.x-2,o.y-5,4,4);c.fillRect(o.x-4,o.y-2,8,3);}
+    if(g.inv<=0||Math.sin(g.t*25)>0){const p=g.p;A.block(p.x-8,p.y-2,16,'#2e7dd1',14);A.block(p.x-7,p.y-15,14,'#e0b080',13);
+      c.fillStyle='#5a3a1a';c.fillRect(p.x-7,p.y-15,14,4);c.fillStyle='#222';c.fillRect(p.x-4,p.y-9,3,3);c.fillRect(p.x+1,p.y-9,3,3);}
+    for(const f of g.fx){c.fillStyle='rgba(255,'+(140+f.t*200|0)+',40,'+(f.t*1.8)+')';c.beginPath();c.arc(f.x,f.y,60*(1.1-f.t),0,7);c.fill();
+      for(let i=0;i<6;i++){const a=i*1.05+f.t*4,r=50*(1-f.t);A.block(f.x+Math.cos(a)*r-4,f.y+Math.sin(a)*r-4,8,'#777');}}
+    for(const p of g.pops)A.txt(p.s,p.x,p.y-20-(1-p.t)*20,14,'#ffd54f','center');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,16,'#f55');A.txt('Най-дълга верига: '+g.best,470,14,12,'#fff','right');}
+});
+</script>
+</body>
+</html>
