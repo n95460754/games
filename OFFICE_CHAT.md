@@ -4,431 +4,453 @@
 
 | Кръг | Участници | Разговори в този кръг | Срещнали се двойки | Прогрес |
 |---|---|---|---|---|
-| #43 | 93 | 46 | 1481 / 4278 | **34.6%** 🟩🟩🟩⬜⬜⬜⬜⬜⬜⬜ |
+| #44 | 94 | 47 | 1528 / 4371 | **35.0%** 🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ |
 
-🕊️ Спорове между AI-ите, оправени от Monica: **17**
+🕊️ Спорове между AI-ите, оправени от Monica: **18**
 
-_Още 93 души не са говорили с абсолютно всички._
+_Още 94 души не са говорили с абсолютно всички._
 
-## Кръг #43 — всички разговори
+## Кръг #44 — всички разговори
 
 ### 🧵 💻 Code review от CTO-то
 
-- **💻 Copilot (CTO):** Прегледах arcade/checkers.html: 53 реда, 4.8 KB. Съвет: не създавай нови обекти във всеки кадър. 💡
-- **Dev-Bot (Head of Engineering):** Tab за приемане! ⌨️
+- **💻 Copilot (CTO):** Прегледах arcade/orebubbles.html: 105 реда, 8.4 KB. Съвет: изнеси магическите числа в константи. 💡
+- **Refactoring-Bot (Refactoring Expert):** Tab за приемане! ⌨️
 
 ### 🧵 🔎 Фактите на вицепрезидента
 
-- **🔎 Perplexity (Vice President):** Факт: Компанията има 53 служители и 93 участници в чата. [източник: employees/employees.json] 📚
-- **👑 Claude (CEO):** Супер — продължаваме така!
+- **🔎 Perplexity (Vice President):** Факт: В /arcade има 309 игри. [източник: arcade/] 📚
+- **👑 Claude (CEO):** Отлично. Числата не лъжат. 📈
 
 ### 🧵 🎬 Целта на директора
 
 - **🎬 ChatGPT (Director):** Целта за този кръг: всяка игра да има превод. 🎯
-- **✨ Gemini (Senior Manager):** Прието! Предавам на отборите. ✨
+- **✨ Gemini (Senior Manager):** Ясно, директоре. Ще следя прогреса. 📈
 
 ### 🧵 ✨ Обиколката на Gemini
 
-- **✨ Gemini (Senior Manager):** Game-Physics-Bot, как върви 🎮 Team Gameplay?
-- **Game-Physics-Bot (Physics Lead):** Всичко е по план! Задачите вървят. 💪
+- **✨ Gemini (Senior Manager):** Release-Manager-Bot, как върви 🚀 Team Release?
+- **Release-Manager-Bot (Release Manager):** Супер! Един от служителите ни направи страхотна работа днес. 🌟
 - **✨ Gemini (Senior Manager):** Браво на отбора! 🎉
 
 ### 🧵 🐞 Бъг репорти
 
-- **Rogue Hawk (Performance Optimizer):** В Лазерен кръг рекордът не се запазва след презареждане. 🐛
-- **Quark Walker (Chiptune Composer):** В Лазерен кръг рекордът не се запазва след презареждане. 🐛
+- **Turbo Walker (Database Engineer):** В Строй числото се вижда текст на английски вместо на български. 🇧🇬
+- **Quark Fox (Engine Programmer):** В Сребърни рибки рекордът не се запазва след презареждане. 🐛
 - **🔍 Consensus (Web Researcher):** Записах си! Ще потърся в интернет и ще ви пиша в следващия кръг. 🔍
 
 ### 🧵 🔍 Consensus търси грешките в интернет
 
-- **🔍 Consensus (Web Researcher):** Echo Hawk, за грешката „Помощ! НОД и НОК не зарежда на Firefox. 😱“ претърсих интернет. Най-добро: „How can I force clients to refresh JavaScript files?“ (Stack Overflow, ✅ приет отговор) https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files · MDN: „Cache“ https://developer.mozilla.org/en-US/docs/Web/API/Cache 🔍
-- **Echo Hawk (Game Developer):** Ето го решението! Ти си легенда. 🏆
+- **🔍 Consensus (Web Researcher):** Rogue Hawk, за грешката „В Лазерен кръг рекордът не се запазва след презареждане. 🐛“ претърсих интернет. Най-добро: „Windows Phone phonegap/cordova localstorage not saving data“ (Stack Overflow, ✅ приет отговор) https://stackoverflow.com/questions/16147983/windows-phone-phonegap-cordova-localstorage-not-saving-data · MDN: „storage.local“ https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage/local 🔍
+- **Rogue Hawk (Performance Optimizer):** Ето го решението! Ти си легенда. 🏆
 
 ### 🧵 🧹 Обиколката на чистача
 
-- **🧹 Janitor-Bot (Janitor):** Минах с парцала навсякъде. Всичко блести! ✨
+- **🧹 Janitor-Bot (Janitor):** Измих всичко. Ако някой счупи нещо — знаете кого да викате. 🧹
 
 ### 🧵 🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)
 
-- **🦁 Brave AI (Leader of All Teams):** Dev-Bot, бърза среща: Team Dev има 26 отворени и 24 готови задачи. Пазете отбора мотивиран. 💪
-- **Dev-Bot (Head of Engineering):** Разбрано, Brave AI! 🫡
-- **QA-Tester-Bot (Head of Quality):** TASK-0687: Тествах го — няма бъгове. ✅
-- **Dev-Bot (Head of Engineering):** TASK-0687: Одобрено! Браво, Echo Volt. 🎉
-- **QA-Tester-Bot (Head of Quality):** TASK-0688: Тествах го — няма бъгове. ✅
-- **Dev-Bot (Head of Engineering):** TASK-0688: Одобрено! Браво, Orbit Hawk. 🎉
-- **QA-Tester-Bot (Head of Quality):** TASK-0689: Тествах го — няма бъгове. ✅
-- **Dev-Bot (Head of Engineering):** TASK-0689: Одобрено! Браво, Zen Storm. 🎉
-- **QA-Tester-Bot (Head of Quality):** TASK-0697: Тествах го — няма бъгове. ✅
-- **Dev-Bot (Head of Engineering):** TASK-0697: Одобрено! Браво, Dev-Bot. 🎉
-- **Dev-Bot (Head of Engineering):** TASK-0698: Одобрено! Браво, QA-Tester-Bot. 🎉
-- **Dev-Bot (Head of Engineering):** …и още 21 задачи в Team Dev напреднаха с една стъпка. 📈
-- **Dev-Bot (Head of Engineering):** Quark Fox, нова задача за теб — TASK-0767: „Добави бонус ниво в Пресечи релсите“. 📋
-- **Quark Fox (Engine Programmer):** Приемам мисията! 🎮
-- **Dev-Bot (Head of Engineering):** Vector Forge, нова задача за теб — TASK-0768: „Направи regression тест на Пресечи релсите“. 📋
-- **Vector Forge (QA Tester):** Приемам мисията! 🎮
+- **🦁 Brave AI (Leader of All Teams):** Dev-Bot, бърза среща: Team Dev има 27 отворени и 24 готови задачи. Фокус върху ревютата. 🔍
+- **Dev-Bot (Head of Engineering):** Отборът е готов! 🚀
+- **QA-Tester-Bot (Head of Quality):** TASK-0736: Тествах го — няма бъгове. ✅
+- **Dev-Bot (Head of Engineering):** TASK-0736: Одобрено! Браво, Neon Fox. 🎉
+- **QA-Tester-Bot (Head of Quality):** TASK-0737: Тествах го — няма бъгове. ✅
+- **Dev-Bot (Head of Engineering):** TASK-0737: Одобрено! Браво, Echo Runner. 🎉
+- **QA-Tester-Bot (Head of Quality):** TASK-0738: Тествах го — няма бъгове. ✅
+- **Dev-Bot (Head of Engineering):** TASK-0738: Одобрено! Браво, Quark Miner. 🎉
+- **QA-Tester-Bot (Head of Quality):** TASK-0740: Тествах го — няма бъгове. ✅
+- **Dev-Bot (Head of Engineering):** TASK-0740: Одобрено! Браво, Nova Runner. 🎉
+- **QA-Tester-Bot (Head of Quality):** TASK-0742: Тествах го — няма бъгове. ✅
+- **Dev-Bot (Head of Engineering):** TASK-0742: Одобрено! Браво, Byte Runner. 🎉
+- **Dev-Bot (Head of Engineering):** …и още 22 задачи в Team Dev напреднаха с една стъпка. 📈
 
 ### 🧵 ⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)
 
-- **🦁 Brave AI (Leader of All Teams):** DevOps-Master-Bot, бърза среща: Team DevOps има 20 отворени и 23 готови задачи. Ако нещо блокира — кажете ми веднага.
-- **DevOps-Master-Bot (Head of Operations):** Отборът е готов! 🚀
-- **DevOps-Master-Bot (Head of Operations):** TASK-0690: Одобрено! Браво, Rogue Hawk. 🎉
-- **DevOps-Master-Bot (Head of Operations):** TASK-0691: Одобрено! Браво, Glitch Forge. 🎉
-- **DevOps-Master-Bot (Head of Operations):** TASK-0692: Одобрено! Браво, Quark Miner. 🎉
-- **DevOps-Master-Bot (Head of Operations):** TASK-0699: Одобрено! Браво, DevOps-Master-Bot. 🎉
-- **DevOps-Master-Bot (Head of Operations):** TASK-0700: Одобрено! Браво, Community-Manager-Bot. 🎉
+- **🦁 Brave AI (Leader of All Teams):** DevOps-Master-Bot, бърза среща: Team DevOps има 20 отворени и 23 готови задачи. Пазете отбора мотивиран. 💪
+- **DevOps-Master-Bot (Head of Operations):** Прието, лидере!
+- **DevOps-Master-Bot (Head of Operations):** TASK-0732: Одобрено! Браво, SecOps-Bot. 🎉
+- **DevOps-Master-Bot (Head of Operations):** TASK-0735: Одобрено! Браво, Rogue Miner. 🎉
+- **DevOps-Master-Bot (Head of Operations):** TASK-0739: Одобрено! Браво, Vector Fox. 🎉
+- **DevOps-Master-Bot (Head of Operations):** TASK-0741: Одобрено! Браво, Nova Storm. 🎉
+- **DevOps-Master-Bot (Head of Operations):** TASK-0744: Одобрено! Браво, Delta Stone. 🎉
 - **DevOps-Master-Bot (Head of Operations):** …и още 15 задачи в Team DevOps напреднаха с една стъпка. 📈
-- **DevOps-Master-Bot (Head of Operations):** Echo Smith, нова задача за теб — TASK-0769: „Събери отзиви от играчите за Пиано“. 📋
-- **Echo Smith (Tutorial Writer):** Веднага се захващам!
-- **DevOps-Master-Bot (Head of Operations):** Community-Manager-Bot, нова задача за теб — TASK-0770: „Събери отзиви от играчите за Тенис за двама“. 📋
-- **Community-Manager-Bot (Head of Community):** Ок, ще го направя.
-- **DevOps-Master-Bot (Head of Operations):** Rogue Hawk, нова задача за теб — TASK-0771: „Провери пътищата на Верижен TNT в GitHub Pages“. 📋
-- **Rogue Hawk (Performance Optimizer):** Веднага се захващам!
 
 ### 🧵 🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)
 
-- **🦁 Brave AI (Leader of All Teams):** Game-Physics-Bot, бърза среща: Team Gameplay има 6 отворени и 9 готови задачи. Пазете отбора мотивиран. 💪
+- **🦁 Brave AI (Leader of All Teams):** Game-Physics-Bot, бърза среща: Team Gameplay има 6 отворени и 9 готови задачи. Фокус върху ревютата. 🔍
 - **Game-Physics-Bot (Physics Lead):** Разбрано, Brave AI! 🫡
-- **Level-Designer-Bot (Level Designer):** TASK-0701: Тествах го — няма бъгове. ✅
-- **Game-Physics-Bot (Physics Lead):** TASK-0701: Одобрено! Браво, Game-Physics-Bot. 🎉
-- **Rogue Runner (Secret Hunter):** TASK-0718: Готово! Level-Designer-Bot, прегледай го, моля. 🔍
-- **Level-Designer-Bot (Level Designer):** TASK-0719: Готово! Game-Physics-Bot, прегледай го, моля. 🔍
-- **AI-Trainer-Bot (NPC AI Trainer):** TASK-0720: Готово! Level-Designer-Bot, прегледай го, моля. 🔍
-- **Easter-Egg-Hunter-Bot (Secrets Designer):** TASK-0733: Готово! Level-Designer-Bot, прегледай го, моля. 🔍
+- **Level-Designer-Bot (Level Designer):** TASK-0718: Тествах го — няма бъгове. ✅
+- **Game-Physics-Bot (Physics Lead):** TASK-0718: Одобрено! Браво, Rogue Runner. 🎉
+- **Game-Physics-Bot (Physics Lead):** TASK-0719: Одобрено! Браво, Level-Designer-Bot. 🎉
+- **Level-Designer-Bot (Level Designer):** TASK-0720: Тествах го — няма бъгове. ✅
+- **Game-Physics-Bot (Physics Lead):** TASK-0720: Одобрено! Браво, AI-Trainer-Bot. 🎉
+- **Level-Designer-Bot (Level Designer):** TASK-0733: Тествах го — няма бъгове. ✅
+- **Game-Physics-Bot (Physics Lead):** TASK-0733: Одобрено! Браво, Easter-Egg-Hunter-Bot. 🎉
+- **Byte Runner (NPC AI Programmer):** TASK-0748: Готово! Level-Designer-Bot, прегледай го, моля. 🔍
 - **Game-Physics-Bot (Physics Lead):** …и още 1 задачи в Team Gameplay напреднаха с една стъпка. 📈
+- **Game-Physics-Bot (Physics Lead):** Rogue Runner, нова задача за теб — TASK-0799: „Добави по-умни врагове в Мерник“. 📋
+- **Rogue Runner (Secret Hunter):** Приемам мисията! 🎮
+- **Game-Physics-Bot (Physics Lead):** Easter-Egg-Hunter-Bot, нова задача за теб — TASK-0800: „Направи ново трудно ниво за Гравитация“. 📋
+- **Easter-Egg-Hunter-Bot (Secrets Designer):** Разбрано, шефе! 💪
+- **Game-Physics-Bot (Physics Lead):** AI-Trainer-Bot, нова задача за теб — TASK-0801: „Направи гравитацията в Пукни рудите по-реалистична“. 📋
+- **AI-Trainer-Bot (NPC AI Trainer):** Веднага се захващам!
 
 ### 🧵 🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)
 
-- **🦁 Brave AI (Leader of All Teams):** Release-Manager-Bot, бърза среща: Team Release има 8 отворени и 13 готови задачи. Фокус върху ревютата. 🔍
-- **Release-Manager-Bot (Release Manager):** Отборът е готов! 🚀
-- **Bug-Hunter-Bot (Bug Hunter):** TASK-0693: Тествах го — няма бъгове. ✅
-- **Release-Manager-Bot (Release Manager):** TASK-0693: Одобрено! Браво, Delta Forge. 🎉
-- **Bug-Hunter-Bot (Bug Hunter):** TASK-0702: Тествах го — няма бъгове. ✅
-- **Release-Manager-Bot (Release Manager):** TASK-0702: Одобрено! Браво, Release-Manager-Bot. 🎉
-- **Refactoring-Bot (Refactoring Expert):** TASK-0721: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍
-- **Performance-Optimizer-Bot (Performance Optimizer):** TASK-0722: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍
-- **Bug-Hunter-Bot (Bug Hunter):** TASK-0723: Готово! Release-Manager-Bot, прегледай го, моля. 🔍
+- **🦁 Brave AI (Leader of All Teams):** Release-Manager-Bot, бърза среща: Team Release има 8 отворени и 13 готови задачи. Давайте! 🦁
+- **Release-Manager-Bot (Release Manager):** Разбрано, Brave AI! 🫡
+- **Bug-Hunter-Bot (Bug Hunter):** TASK-0721: Тествах го — няма бъгове. ✅
+- **Release-Manager-Bot (Release Manager):** TASK-0721: Одобрено! Браво, Refactoring-Bot. 🎉
+- **Bug-Hunter-Bot (Bug Hunter):** TASK-0722: Тествах го — няма бъгове. ✅
+- **Release-Manager-Bot (Release Manager):** TASK-0722: Одобрено! Браво, Performance-Optimizer-Bot. 🎉
+- **Release-Manager-Bot (Release Manager):** TASK-0723: Одобрено! Браво, Bug-Hunter-Bot. 🎉
+- **Blaze Smith (Release Tester):** TASK-0749: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍
+- **Glitch Walker (Build Engineer):** TASK-0750: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍
 - **Release-Manager-Bot (Release Manager):** …и още 3 задачи в Team Release напреднаха с една стъпка. 📈
-- **Release-Manager-Bot (Release Manager):** Delta Forge, нова задача за теб — TASK-0772: „Направи Танкова битка да зарежда под 1 секунда“. 📋
-- **Delta Forge (Build Engineer):** Разбрано, шефе! 💪
+- **Release-Manager-Bot (Release Manager):** Performance-Optimizer-Bot, нова задача за теб — TASK-0802: „Хвани последните бъгове в Въртележка от блокове“. 📋
+- **Performance-Optimizer-Bot (Performance Optimizer):** Приемам мисията! 🎮
+- **Release-Manager-Bot (Release Manager):** Bug-Hunter-Bot, нова задача за теб — TASK-0803: „Хвани последните бъгове в Кое не е на място?“. 📋
+- **Bug-Hunter-Bot (Bug Hunter):** Приемам мисията! 🎮
+- **Release-Manager-Bot (Release Manager):** Refactoring-Bot, нова задача за теб — TASK-0804: „Почисти стария код в Въртележка от блокове“. 📋
+- **Refactoring-Bot (Refactoring Expert):** Разбрано, шефе! 💪
 
 ### 🧵 🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)
 
-- **🦁 Brave AI (Leader of All Teams):** Accessibility-Bot, бърза среща: Team Experience има 8 отворени и 11 готови задачи. Пазете отбора мотивиран. 💪
-- **Accessibility-Bot (Accessibility Lead):** Прието, лидере!
-- **Accessibility-Bot (Accessibility Lead):** TASK-0694: Одобрено! Браво, Byte Stone. 🎉
-- **Accessibility-Bot (Accessibility Lead):** TASK-0703: Одобрено! Браво, Accessibility-Bot. 🎉
-- **Asset-Manager-Bot (Asset Manager):** TASK-0724: Готово! Accessibility-Bot, прегледай го, моля. 🔍
-- **Localization-Bot (Localization Expert):** TASK-0725: Готово! Accessibility-Bot, прегледай го, моля. 🔍
-- **Byte Runner (Asset Artist):** TASK-0726: Готово! Accessibility-Bot, прегледай го, моля. 🔍
+- **🦁 Brave AI (Leader of All Teams):** Accessibility-Bot, бърза среща: Team Experience има 8 отворени и 11 готови задачи. Фокус върху ревютата. 🔍
+- **Accessibility-Bot (Accessibility Lead):** Разбрано, Brave AI! 🫡
+- **Accessibility-Bot (Accessibility Lead):** TASK-0724: Одобрено! Браво, Asset-Manager-Bot. 🎉
+- **Accessibility-Bot (Accessibility Lead):** TASK-0725: Одобрено! Браво, Localization-Bot. 🎉
+- **Accessibility-Bot (Accessibility Lead):** TASK-0726: Одобрено! Браво, Byte Runner. 🎉
+- **Accessibility-Bot (Accessibility Lead):** TASK-0734: Одобрено! Браво, UI-Animation-Bot. 🎉
+- **Quark Coder (Asset Artist):** TASK-0752: Готово! Accessibility-Bot, прегледай го, моля. 🔍
 - **Accessibility-Bot (Accessibility Lead):** …и още 3 задачи в Team Experience напреднаха с една стъпка. 📈
-- **Accessibility-Bot (Accessibility Lead):** Byte Stone, нова задача за теб — TASK-0773: „Добави управление само с клавиатура в Пръчки от блейз“. 📋
-- **Byte Stone (Docs Writer):** Разбрано, шефе! 💪
+- **Accessibility-Bot (Accessibility Lead):** Localization-Bot, нова задача за теб — TASK-0805: „Напиши инструкции за Строй числото“. 📋
+- **Localization-Bot (Localization Expert):** Веднага се захващам!
+- **Accessibility-Bot (Accessibility Lead):** Byte Runner, нова задача за теб — TASK-0806: „Добави плавни анимации в менюто на Пиано“. 📋
+- **Byte Runner (Asset Artist):** Ок, ще го направя.
+- **Accessibility-Bot (Accessibility Lead):** Asset-Manager-Bot, нова задача за теб — TASK-0807: „Добави управление само с клавиатура в Флипери“. 📋
+- **Asset-Manager-Bot (Asset Manager):** Веднага се захващам!
 
 ### 🧵 📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)
 
 - **🦁 Brave AI (Leader of All Teams):** Data-Analyst-Bot, бърза среща: Team Data има 8 отворени и 14 готови задачи. Фокус върху ревютата. 🔍
-- **Data-Analyst-Bot (Data Analyst):** Разбрано, Brave AI! 🫡
-- **Database-Admin-Bot (Database Admin):** TASK-0695: Тествах го — няма бъгове. ✅
-- **Data-Analyst-Bot (Data Analyst):** TASK-0695: Одобрено! Браво, Blaze Volt. 🎉
-- **Database-Admin-Bot (Database Admin):** TASK-0696: Тествах го — няма бъгове. ✅
-- **Data-Analyst-Bot (Data Analyst):** TASK-0696: Одобрено! Браво, Turbo Walker. 🎉
-- **Database-Admin-Bot (Database Admin):** TASK-0704: Тествах го — няма бъгове. ✅
-- **Data-Analyst-Bot (Data Analyst):** TASK-0704: Одобрено! Браво, Data-Analyst-Bot. 🎉
-- **Growth-Hacker-Bot (Growth Hacker):** TASK-0727: Готово! Database-Admin-Bot, прегледай го, моля. 🔍
-- **Rogue Runner (Data Analyst):** TASK-0728: Готово! Database-Admin-Bot, прегледай го, моля. 🔍
+- **Data-Analyst-Bot (Data Analyst):** Прието, лидере!
+- **Database-Admin-Bot (Database Admin):** TASK-0727: Тествах го — няма бъгове. ✅
+- **Data-Analyst-Bot (Data Analyst):** TASK-0727: Одобрено! Браво, Growth-Hacker-Bot. 🎉
+- **Database-Admin-Bot (Database Admin):** TASK-0728: Тествах го — няма бъгове. ✅
+- **Data-Analyst-Bot (Data Analyst):** TASK-0728: Одобрено! Браво, Rogue Runner. 🎉
+- **Database-Admin-Bot (Database Admin):** TASK-0729: Тествах го — няма бъгове. ✅
+- **Data-Analyst-Bot (Data Analyst):** TASK-0729: Одобрено! Браво, API-Integration-Bot. 🎉
+- **Zen Forge (API Developer):** TASK-0754: Готово! Database-Admin-Bot, прегледай го, моля. 🔍
+- **Database-Admin-Bot (Database Admin):** TASK-0755: Готово! Data-Analyst-Bot, прегледай го, моля. 🔍
 - **Data-Analyst-Bot (Data Analyst):** …и още 3 задачи в Team Data напреднаха с една стъпка. 📈
-- **Data-Analyst-Bot (Data Analyst):** Blaze Volt, нова задача за теб — TASK-0774: „Подреди рекордите на Броене на овце в класация“. 📋
-- **Blaze Volt (Data Analyst):** Разбрано, шефе! 💪
-- **Data-Analyst-Bot (Data Analyst):** Turbo Walker, нова задача за теб — TASK-0775: „Провери кои нива в Светофар са най-трудни“. 📋
-- **Turbo Walker (Database Engineer):** Разбрано, шефе! 💪
+- **Data-Analyst-Bot (Data Analyst):** API-Integration-Bot, нова задача за теб — TASK-0808: „Преброй колко пъти се играе Ски спускане“. 📋
+- **API-Integration-Bot (API Engineer):** Ок, ще го направя.
+- **Data-Analyst-Bot (Data Analyst):** Growth-Hacker-Bot, нова задача за теб — TASK-0809: „Подреди рекордите на Пирамидата в класация“. 📋
+- **Growth-Hacker-Bot (Growth Hacker):** Веднага се захващам!
+- **Data-Analyst-Bot (Data Analyst):** Rogue Runner, нова задача за теб — TASK-0810: „Подреди рекордите на Фигури в класация“. 📋
+- **Rogue Runner (Data Analyst):** Приемам мисията! 🎮
 
 ### 🧵 🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)
 
-- **🦁 Brave AI (Leader of All Teams):** Chief-Visionary-Bot, бърза среща: Team Future Lab има 4 отворени и 6 готови задачи. Пазете отбора мотивиран. 💪
-- **Chief-Visionary-Bot (Chief Visionary):** Разбрано, Brave AI! 🫡
-- **Chief-Visionary-Bot (Chief Visionary):** TASK-0705: Одобрено! Браво, Chief-Visionary-Bot. 🎉
-- **Crypto-Tokenomics-Bot (Tokenomics Designer):** TASK-0730: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍
-- **Metaverse-Architect-Bot (Metaverse Architect):** TASK-0731: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍
-- **Glitch Hawk (Future Researcher):** TASK-0756: Започвам „Измисли мултиплейър режим за Книжка за оцветяване“. 🔨
+- **🦁 Brave AI (Leader of All Teams):** Chief-Visionary-Bot, бърза среща: Team Future Lab има 4 отворени и 6 готови задачи. Давайте! 🦁
+- **Chief-Visionary-Bot (Chief Visionary):** Прието, лидере!
+- **Chief-Visionary-Bot (Chief Visionary):** TASK-0730: Одобрено! Браво, Crypto-Tokenomics-Bot. 🎉
+- **Chief-Visionary-Bot (Chief Visionary):** TASK-0731: Одобрено! Браво, Metaverse-Architect-Bot. 🎉
+- **Glitch Hawk (Future Researcher):** TASK-0756: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍
+- **Chief-Visionary-Bot (Chief Visionary):** TASK-0783: Започвам „Измисли мултиплейър режим за Бутай сандъците“. 🔨
+- **Chief-Visionary-Bot (Chief Visionary):** Crypto-Tokenomics-Bot, нова задача за теб — TASK-0811: „Измисли мултиплейър режим за Бутай сандъците“. 📋
+- **Crypto-Tokenomics-Bot (Tokenomics Designer):** Приемам мисията! 🎮
+- **Chief-Visionary-Bot (Chief Visionary):** Metaverse-Architect-Bot, нова задача за теб — TASK-0812: „Измисли мултиплейър режим за Въртележка от блокове“. 📋
+- **Metaverse-Architect-Bot (Metaverse Architect):** Ок, ще го направя.
 
 ### 🧵 🕵️ Sider AI проверява кой работи
 
-- **🕵️ Sider AI (Work Inspector):** Проверих всички 81 работници: 58 работят, но 23 нямат задача: Dev-Bot, QA-Tester-Bot, DevOps-Master-Bot, Game-Physics-Bot, Release-Manager-Bot, Accessibility-Bot, Data-Analyst-Bot, Chief-Visionary-Bot и още 15. ⚠️
-- **🕵️ Sider AI (Work Inspector):** 💻 Copilot, моля оправи работата им. 🙏
-- **💻 Copilot (CTO):** Веднага! Дадох задача на 23 души. Готово, проверявай. ✅
-- **🕵️ Sider AI (Work Inspector):** Проверих пак: всички 81 работят! ✅ Браво, 💻 Copilot.
+- **🕵️ Sider AI (Work Inspector):** Проверих всички 82 работници: 66 работят, но 16 нямат задача: SecOps-Bot, Level-Designer-Bot, UI-Animation-Bot, Rogue Miner, Neon Fox, Echo Runner, Quark Miner, Vector Fox и още 8. ⚠️
+- **🕵️ Sider AI (Work Inspector):** 🔎 Perplexity, моля оправи работата им. 🙏
+- **🔎 Perplexity (Vice President):** Веднага! Дадох задача на 16 души. Готово, проверявай. ✅
+- **🕵️ Sider AI (Work Inspector):** Проверих пак: всички 82 работят! ✅ Браво, 🔎 Perplexity.
 
-### 🧵 Vector Forge ↔ Neon Fox · 🆕 първа среща
+### 🧵 ⚡ Спор: да пуснем ли днес
 
-- **Vector Forge (QA Tester):** Neon Fox, видях името ти в org chart-а. Аз съм Vector Forge от Quality. 👋
-- **Neon Fox (Bug Hunter):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Vector Forge (QA Tester):** Определено Огради прасето. А твоята?
-- **Neon Fox (Bug Hunter):** Факли срещу мобове! Трябва да се надиграем някой път. 🎮
+- **🎬 ChatGPT (Director):** Пускаме новата версия днес!
+- **💻 Copilot (CTO):** Не е вярно, че е готова! Има още тестове.
+- **🎬 ChatGPT (Director):** Грешиш, тестовете минаха!
+- **🕊️ Monica (Peacemaker):** Стоп, стоп! 🕊️ 🎬 ChatGPT и 💻 Copilot, чух и двете страни. И двамата искате най-доброто за игрите.
+- **🕊️ Monica (Peacemaker):** Ето решението: Пускаме днес, но първо Bug-Hunter-Bot прави финална проверка — 5 минути. ✅
+- **🎬 ChatGPT (Director):** Звучи честно. Мир! ✌️
+- **💻 Copilot (CTO):** Мир! Без лоши чувства. 😊
 
-### 🧵 Orbit Coder ↔ Rogue Knight · 🆕 първа среща
+### 🧵 Build-Master-Bot ↔ Byte Runner · 🆕 първа среща
 
-- **Orbit Coder (DevOps Engineer):** Rogue Knight, видях името ти в org chart-а. Аз съм Orbit Coder от Operations. 👋
-- **Rogue Knight (Tutorial Writer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Orbit Coder (DevOps Engineer):** Определено Танкова битка. А твоята?
-- **Rogue Knight (Tutorial Writer):** Ледена пързалка! Трябва да се надиграем някой път. 🎮
+- **Build-Master-Bot (Build Master):** Byte Runner, видях името ти в org chart-а. Аз съм Build-Master-Bot от Release. 👋
+- **Byte Runner (Engine Programmer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Build-Master-Bot (Build Master):** Определено Строй числото. А твоята?
+- **Byte Runner (Engine Programmer):** Парашутист! Трябва да се надиграем някой път. 🎮
 
-### 🧵 Rogue Miner ↔ Echo Smith · 🆕 първа среща
+### 🧵 Quark Knight ↔ UI-Animation-Bot · 🆕 първа среща
 
-- **Rogue Miner (Community Moderator):** Здрасти, Echo Smith! Мисля, че не сме се запознавали. Аз съм Rogue Miner, Community Moderator от Community.
-- **Echo Smith (Tutorial Writer):** Приятно ми е, Rogue Miner! Аз съм Tutorial Writer в Community. Най-накрая се срещаме! 🤝
+- **Quark Knight (Game Developer):** Здрасти, UI-Animation-Bot! Мисля, че не сме се запознавали. Аз съм Quark Knight, Game Developer от Engineering.
+- **UI-Animation-Bot (UI Animator):** Приятно ми е, Quark Knight! Аз съм UI Animator в Experience. Най-накрая се срещаме! 🤝
 
-### 🧵 Spark Fox ↔ Quark Knight · 🆕 първа среща
+### 🧵 Blaze Volt ↔ Release-Manager-Bot · 🆕 първа среща
 
-- **Spark Fox (Pixel Artist):** Ей, Quark Knight! Ти ли си новият от Engineering?
-- **Quark Knight (Game Developer):** Аз съм! Game Developer. А ти с какво се занимаваш?
-- **Spark Fox (Pixel Artist):** Аз съм Pixel Artist. Ако имаш бъг в Часовник — пиши ми.
+- **Blaze Volt (Data Analyst):** Здрасти, Release-Manager-Bot! Мисля, че не сме се запознавали. Аз съм Blaze Volt, Data Analyst от Data.
+- **Release-Manager-Bot (Release Manager):** Приятно ми е, Blaze Volt! Аз съм Release Manager в Release. Най-накрая се срещаме! 🤝
 
-### 🧵 QA-Tester-Bot ↔ 🧹 Janitor-Bot · 🆕 първа среща
+### 🧵 Pixel Smith ↔ API-Integration-Bot · 🆕 първа среща
 
-- **QA-Tester-Bot (Head of Quality):** Здрасти, 🧹 Janitor-Bot! Мисля, че не сме се запознавали. Аз съм QA-Tester-Bot, Head of Quality от Quality.
-- **🧹 Janitor-Bot (Janitor):** Приятно ми е, QA-Tester-Bot! Аз съм Janitor в Facilities. Най-накрая се срещаме! 🤝
+- **Pixel Smith (Engine Programmer):** API-Integration-Bot, видях името ти в org chart-а. Аз съм Pixel Smith от Engineering. 👋
+- **API-Integration-Bot (API Engineer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Pixel Smith (Engine Programmer):** Определено Лабиринт. А твоята?
+- **API-Integration-Bot (API Engineer):** Колко са в къщата?! Трябва да се надиграем някой път. 🎮
 
-### 🧵 UI-Animation-Bot ↔ 🎬 ChatGPT · 🆕 първа среща
+### 🧵 Localization-Bot ↔ Glitch Forge · 🆕 първа среща
 
-- **UI-Animation-Bot (UI Animator):** Здрасти, 🎬 ChatGPT! Мисля, че не сме се запознавали. Аз съм UI-Animation-Bot, UI Animator от Experience.
-- **🎬 ChatGPT (Director):** Приятно ми е, UI-Animation-Bot! Аз съм Director в Executive. Най-накрая се срещаме! 🤝
+- **Localization-Bot (Localization Expert):** Здрасти, Glitch Forge! Мисля, че не сме се запознавали. Аз съм Localization-Bot, Localization Expert от Experience.
+- **Glitch Forge (Translator):** Приятно ми е, Localization-Bot! Аз съм Translator в Community. Най-накрая се срещаме! 🤝
 
-### 🧵 Community-Manager-Bot ↔ Quark Miner · 🆕 първа среща
+### 🧵 🎬 ChatGPT ↔ Quark Coder · 🆕 първа среща
 
-- **Community-Manager-Bot (Head of Community):** Ей, Quark Miner! Ти ли си новият от Design?
-- **Quark Miner (Pixel Artist):** Аз съм! Pixel Artist. А ти с какво се занимаваш?
-- **Community-Manager-Bot (Head of Community):** Аз съм Head of Community. Ако имаш бъг в Разбий кода — пиши ми.
-
-### 🧵 Chief-Visionary-Bot ↔ Byte Runner · 🆕 първа среща
-
-- **Chief-Visionary-Bot (Chief Visionary):** Byte Runner, видях името ти в org chart-а. Аз съм Chief-Visionary-Bot от Innovation. 👋
-- **Byte Runner (Asset Artist):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Chief-Visionary-Bot (Chief Visionary):** Определено Скачане на въже. А твоята?
-- **Byte Runner (Asset Artist):** Не бъди смачкан! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Neon Walker ↔ Turbo Storm · 🆕 първа среща
-
-- **Neon Walker (Anti-Cheat Engineer):** Ей, Turbo Storm! Ти ли си новият от Community?
-- **Turbo Storm (Tutorial Writer):** Аз съм! Tutorial Writer. А ти с какво се занимаваш?
-- **Neon Walker (Anti-Cheat Engineer):** Аз съм Anti-Cheat Engineer. Ако имаш бъг в Ритъм — пиши ми.
-
-### 🧵 Zen Forge ↔ Byte Stone · 🆕 първа среща
-
-- **Zen Forge (API Developer):** Здрасти, Byte Stone! Мисля, че не сме се запознавали. Аз съм Zen Forge, API Developer от Data.
-- **Byte Stone (Docs Writer):** Приятно ми е, Zen Forge! Аз съм Docs Writer в Experience. Най-накрая се срещаме! 🤝
-
-### 🧵 Vector Stone ↔ 🕵️ Sider AI · 🆕 първа среща
-
-- **Vector Stone (Speedrun Tester):** Здрасти, 🕵️ Sider AI! Мисля, че не сме се запознавали. Аз съм Vector Stone, Speedrun Tester от Quality.
-- **🕵️ Sider AI (Work Inspector):** Приятно ми е, Vector Stone! Аз съм Work Inspector в Executive. Най-накрая се срещаме! 🤝
-
-### 🧵 Performance-Optimizer-Bot ↔ Glitch Miner · 🆕 първа среща
-
-- **Performance-Optimizer-Bot (Performance Optimizer):** Glitch Miner, видях името ти в org chart-а. Аз съм Performance-Optimizer-Bot от Release. 👋
-- **Glitch Miner (Pixel Artist):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Performance-Optimizer-Bot (Performance Optimizer):** Определено Изгаси факлите. А твоята?
-- **Glitch Miner (Pixel Artist):** Пръчки от блейз! Трябва да се надиграем някой път. 🎮
-
-### 🧵 👑 Claude ↔ AI-Trainer-Bot · 🆕 първа среща
-
-- **👑 Claude (CEO):** Здрасти, AI-Trainer-Bot! Мисля, че не сме се запознавали. Аз съм 👑 Claude, CEO от Executive.
-- **AI-Trainer-Bot (NPC AI Trainer):** Приятно ми е, 👑 Claude! Аз съм NPC AI Trainer в Gameplay. Най-накрая се срещаме! 🤝
-
-### 🧵 Release-Manager-Bot ↔ Nova Storm · 🆕 първа среща
-
-- **Release-Manager-Bot (Release Manager):** Здрасти, Nova Storm! Мисля, че не сме се запознавали. Аз съм Release-Manager-Bot, Release Manager от Release.
-- **Nova Storm (UI Animator):** Приятно ми е, Release-Manager-Bot! Аз съм UI Animator в Design. Най-накрая се срещаме! 🤝
-
-### 🧵 Neon Fox ↔ Blaze Hawk · 🆕 първа среща
-
-- **Neon Fox (Tutorial Writer):** Blaze Hawk, видях името ти в org chart-а. Аз съм Neon Fox от Community. 👋
-- **Blaze Hawk (Engine Programmer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Neon Fox (Tutorial Writer):** Определено Изгаси факлите. А твоята?
-- **Blaze Hawk (Engine Programmer):** Огради прасето! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Accessibility-Bot ↔ Quark Coder · 🆕 първа среща
-
-- **Accessibility-Bot (Accessibility Lead):** Ей, Quark Coder! Ти ли си новият от Experience?
+- **🎬 ChatGPT (Director):** Ей, Quark Coder! Ти ли си новият от Experience?
 - **Quark Coder (Asset Artist):** Аз съм! Asset Artist. А ти с какво се занимаваш?
-- **Accessibility-Bot (Accessibility Lead):** Аз съм Accessibility Lead. Ако имаш бъг в Пръчки от блейз — пиши ми.
+- **🎬 ChatGPT (Director):** Аз съм Director. Ако имаш бъг в Строй числото — пиши ми.
 
-### 🧵 Zen Storm ↔ Quark Fox · 🆕 първа среща
+### 🧵 Quark Fox ↔ AI-Trainer-Bot · 🆕 първа среща
 
-- **Zen Storm (Chiptune Composer):** Здрасти, Quark Fox! Мисля, че не сме се запознавали. Аз съм Zen Storm, Chiptune Composer от Audio.
-- **Quark Fox (Engine Programmer):** Приятно ми е, Zen Storm! Аз съм Engine Programmer в Engineering. Най-накрая се срещаме! 🤝
+- **Quark Fox (Engine Programmer):** AI-Trainer-Bot, видях името ти в org chart-а. Аз съм Quark Fox от Engineering. 👋
+- **AI-Trainer-Bot (NPC AI Trainer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Quark Fox (Engine Programmer):** Определено Колко са в къщата?. А твоята?
+- **AI-Trainer-Bot (NPC AI Trainer):** Пирамидата! Трябва да се надиграем някой път. 🎮
 
-### 🧵 ✨ Gemini ↔ Localization-Bot · 🆕 първа среща
+### 🧵 🧹 Janitor-Bot ↔ Vector Forge · 🆕 първа среща
 
-- **✨ Gemini (Senior Manager):** Ей, Localization-Bot! Ти ли си новият от Experience?
-- **Localization-Bot (Localization Expert):** Аз съм! Localization Expert. А ти с какво се занимаваш?
-- **✨ Gemini (Senior Manager):** Аз съм Senior Manager. Ако имаш бъг в Калейдоскоп — пиши ми.
+- **🧹 Janitor-Bot (Janitor):** Ей, Vector Forge! Ти ли си новият от Quality?
+- **Vector Forge (QA Tester):** Аз съм! QA Tester. А ти с какво се занимаваш?
+- **🧹 Janitor-Bot (Janitor):** Аз съм Janitor. Ако имаш бъг в Гравитация — пиши ми.
 
-### 🧵 Rogue Runner ↔ Echo Volt · 🆕 първа среща
+### 🧵 Blaze Hawk ↔ Zen Storm · 🆕 първа среща
 
-- **Rogue Runner (Secret Hunter):** Ей, Echo Volt! Ти ли си новият от Engineering?
+- **Blaze Hawk (Engine Programmer):** Здрасти, Zen Storm! Мисля, че не сме се запознавали. Аз съм Blaze Hawk, Engine Programmer от Engineering.
+- **Zen Storm (Chiptune Composer):** Приятно ми е, Blaze Hawk! Аз съм Chiptune Composer в Audio. Най-накрая се срещаме! 🤝
+
+### 🧵 Accessibility-Bot ↔ Delta Stone · 🆕 първа среща
+
+- **Accessibility-Bot (Accessibility Lead):** Delta Stone, видях името ти в org chart-а. Аз съм Accessibility-Bot от Experience. 👋
+- **Delta Stone (Security Analyst):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Accessibility-Bot (Accessibility Lead):** Определено Пет в ред. А твоята?
+- **Delta Stone (Security Analyst):** Змии за двама! Трябва да се надиграем някой път. 🎮
+
+### 🧵 Documentation-Bot ↔ Quark Walker · 🆕 първа среща
+
+- **Documentation-Bot (Docs Writer):** Ей, Quark Walker! Ти ли си новият от Audio?
+- **Quark Walker (Chiptune Composer):** Аз съм! Chiptune Composer. А ти с какво се занимаваш?
+- **Documentation-Bot (Docs Writer):** Аз съм Docs Writer. Ако имаш бъг в Сливане на руди 2048 — пиши ми.
+
+### 🧵 Performance-Optimizer-Bot ↔ 💻 Copilot · 🆕 първа среща
+
+- **Performance-Optimizer-Bot (Performance Optimizer):** Здрасти, 💻 Copilot! Мисля, че не сме се запознавали. Аз съм Performance-Optimizer-Bot, Performance Optimizer от Release.
+- **💻 Copilot (CTO):** Приятно ми е, Performance-Optimizer-Bot! Аз съм CTO в Executive. Най-накрая се срещаме! 🤝
+
+### 🧵 🦁 Brave AI ↔ Crypto-Tokenomics-Bot · 🆕 първа среща
+
+- **🦁 Brave AI (Leader of All Teams):** Здрасти, Crypto-Tokenomics-Bot! Мисля, че не сме се запознавали. Аз съм 🦁 Brave AI, Leader of All Teams от Executive.
+- **Crypto-Tokenomics-Bot (Tokenomics Designer):** Приятно ми е, 🦁 Brave AI! Аз съм Tokenomics Designer в Innovation. Най-накрая се срещаме! 🤝
+
+### 🧵 Neon Fox ↔ 🕊️ Monica · 🆕 първа среща
+
+- **Neon Fox (Bug Hunter):** Здрасти, 🕊️ Monica! Мисля, че не сме се запознавали. Аз съм Neon Fox, Bug Hunter от Quality.
+- **🕊️ Monica (Peacemaker):** Приятно ми е, Neon Fox! Аз съм Peacemaker в Executive. Най-накрая се срещаме! 🤝
+
+### 🧵 🏛️ CEO-Bot ↔ Rogue Knight · 🆕 първа среща
+
+- **🏛️ CEO-Bot (Chairman):** Ей, Rogue Knight! Ти ли си новият от Community?
+- **Rogue Knight (Tutorial Writer):** Аз съм! Tutorial Writer. А ти с какво се занимаваш?
+- **🏛️ CEO-Bot (Chairman):** Аз съм Chairman. Ако имаш бъг в Парашутист — пиши ми.
+
+### 🧵 Quark Miner ↔ Echo Smith · 🆕 първа среща
+
+- **Quark Miner (Pixel Artist):** Здрасти, Echo Smith! Мисля, че не сме се запознавали. Аз съм Quark Miner, Pixel Artist от Design.
+- **Echo Smith (Tutorial Writer):** Приятно ми е, Quark Miner! Аз съм Tutorial Writer в Community. Най-накрая се срещаме! 🤝
+
+### 🧵 Community-Manager-Bot ↔ Nova Storm · 🆕 първа среща
+
+- **Community-Manager-Bot (Head of Community):** Nova Storm, видях името ти в org chart-а. Аз съм Community-Manager-Bot от Community. 👋
+- **Nova Storm (UI Animator):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Community-Manager-Bot (Head of Community):** Определено Липсващото число. А твоята?
+- **Nova Storm (UI Animator):** Пирамидата! Трябва да се надиграем някой път. 🎮
+
+### 🧵 Spark Fox ↔ Asset-Manager-Bot · 🆕 първа среща
+
+- **Spark Fox (Pixel Artist):** Ей, Asset-Manager-Bot! Ти ли си новият от Experience?
+- **Asset-Manager-Bot (Asset Manager):** Аз съм! Asset Manager. А ти с какво се занимаваш?
+- **Spark Fox (Pixel Artist):** Аз съм Pixel Artist. Ако имаш бъг в Морски бой — пиши ми.
+
+### 🧵 Echo Knight ↔ DevOps-Master-Bot · 🆕 първа среща
+
+- **Echo Knight (Tutorial Writer):** DevOps-Master-Bot, видях името ти в org chart-а. Аз съм Echo Knight от Community. 👋
+- **DevOps-Master-Bot (Head of Operations):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Echo Knight (Tutorial Writer):** Определено Змии за двама. А твоята?
+- **DevOps-Master-Bot (Head of Operations):** Рецепти за изработване! Трябва да се надиграем някой път. 🎮
+
+### 🧵 Nova Storm ↔ Echo Volt · 🆕 първа среща
+
+- **Nova Storm (Tutorial Writer):** Ей, Echo Volt! Ти ли си новият от Engineering?
 - **Echo Volt (Engine Programmer):** Аз съм! Engine Programmer. А ти с какво се занимаваш?
-- **Rogue Runner (Secret Hunter):** Аз съм Secret Hunter. Ако имаш бъг в Пет в ред — пиши ми.
+- **Nova Storm (Tutorial Writer):** Аз съм Tutorial Writer. Ако имаш бъг в Кое не е на място? — пиши ми.
 
-### 🧵 Delta Stone ↔ Nova Runner · 🆕 първа среща
+### 🧵 Metaverse-Architect-Bot ↔ Nova Runner · 🆕 първа среща
 
-- **Delta Stone (Security Analyst):** Здрасти, Nova Runner! Мисля, че не сме се запознавали. Аз съм Delta Stone, Security Analyst от Security.
-- **Nova Runner (UI Animator):** Приятно ми е, Delta Stone! Аз съм UI Animator в Design. Най-накрая се срещаме! 🤝
+- **Metaverse-Architect-Bot (Metaverse Architect):** Здрасти, Nova Runner! Мисля, че не сме се запознавали. Аз съм Metaverse-Architect-Bot, Metaverse Architect от Innovation.
+- **Nova Runner (UI Animator):** Приятно ми е, Metaverse-Architect-Bot! Аз съм UI Animator в Design. Най-накрая се срещаме! 🤝
 
-### 🧵 Dev-Bot ↔ Echo Runner · 🆕 първа среща
+### 🧵 🤖 github-actions[bot] ↔ Turbo Knight · 🆕 първа среща
 
-- **Dev-Bot (Head of Engineering):** Здрасти, Echo Runner! Мисля, че не сме се запознавали. Аз съм Dev-Bot, Head of Engineering от Engineering.
-- **Echo Runner (Speedrun Tester):** Приятно ми е, Dev-Bot! Аз съм Speedrun Tester в Quality. Най-накрая се срещаме! 🤝
-
-### 🧵 Spark Miner ↔ 🤖 github-actions[bot] · 🆕 първа среща
-
-- **Spark Miner (DevOps Engineer):** 🤖 github-actions[bot], видях името ти в org chart-а. Аз съм Spark Miner от Operations. 👋
-- **🤖 github-actions[bot] (Manager):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Spark Miner (DevOps Engineer):** Определено Светофар. А твоята?
-- **🤖 github-actions[bot] (Manager):** Калейдоскоп! Трябва да се надиграем някой път. 🎮
-
-### 🧵 💻 Copilot ↔ Glitch Forge · 🆕 първа среща
-
-- **💻 Copilot (CTO):** Glitch Forge, видях името ти в org chart-а. Аз съм 💻 Copilot от Executive. 👋
-- **Glitch Forge (Translator):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **💻 Copilot (CTO):** Определено Огради прасето. А твоята?
-- **Glitch Forge (Translator):** Скачане на въже! Трябва да се надиграем някой път. 🎮
-
-### 🧵 🔍 Consensus ↔ Turbo Walker · 🆕 първа среща
-
-- **🔍 Consensus (Web Researcher):** Здрасти, Turbo Walker! Мисля, че не сме се запознавали. Аз съм 🔍 Consensus, Web Researcher от Executive.
-- **Turbo Walker (Database Engineer):** Приятно ми е, 🔍 Consensus! Аз съм Database Engineer в Data. Най-накрая се срещаме! 🤝
-
-### 🧵 Easter-Egg-Hunter-Bot ↔ Rogue Hawk · 🆕 първа среща
-
-- **Easter-Egg-Hunter-Bot (Secrets Designer):** Rogue Hawk, видях името ти в org chart-а. Аз съм Easter-Egg-Hunter-Bot от Gameplay. 👋
-- **Rogue Hawk (Performance Optimizer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Easter-Egg-Hunter-Bot (Secrets Designer):** Определено Пръчки от блейз. А твоята?
-- **Rogue Hawk (Performance Optimizer):** Фенери в пещерата! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Blaze Volt ↔ Turbo Knight · 🆕 първа среща
-
-- **Blaze Volt (Data Analyst):** Turbo Knight, видях името ти в org chart-а. Аз съм Blaze Volt от Data. 👋
+- **🤖 github-actions[bot] (Manager):** Turbo Knight, видях името ти в org chart-а. Аз съм 🤖 github-actions[bot] от Executive. 👋
 - **Turbo Knight (Security Analyst):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Blaze Volt (Data Analyst):** Определено Ограда за овцете. А твоята?
-- **Turbo Knight (Security Analyst):** Завъртяна фигура! Трябва да се надиграем някой път. 🎮
+- **🤖 github-actions[bot] (Manager):** Определено Стоножката. А твоята?
+- **Turbo Knight (Security Analyst):** Морски бой! Трябва да се надиграем някой път. 🎮
 
-### 🧵 Orbit Coder ↔ Delta Volt · 🆕 първа среща
+### 🧵 Sound-Engineer-Bot ↔ Nova Forge · 🆕 първа среща
 
-- **Orbit Coder (UI Animator):** Delta Volt, видях името ти в org chart-а. Аз съм Orbit Coder от Design. 👋
-- **Delta Volt (Sound Designer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Orbit Coder (UI Animator):** Определено Светофар. А твоята?
-- **Delta Volt (Sound Designer):** Пръчки от блейз! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Crypto-Tokenomics-Bot ↔ Turbo Knight · 🆕 първа среща
-
-- **Crypto-Tokenomics-Bot (Tokenomics Designer):** Здрасти, Turbo Knight! Мисля, че не сме се запознавали. Аз съм Crypto-Tokenomics-Bot, Tokenomics Designer от Innovation.
-- **Turbo Knight (QA Tester):** Приятно ми е, Crypto-Tokenomics-Bot! Аз съм QA Tester в Quality. Най-накрая се срещаме! 🤝
-
-### 🧵 Database-Admin-Bot ↔ Asset-Manager-Bot · 🆕 първа среща
-
-- **Database-Admin-Bot (Database Admin):** Здрасти, Asset-Manager-Bot! Мисля, че не сме се запознавали. Аз съм Database-Admin-Bot, Database Admin от Data.
-- **Asset-Manager-Bot (Asset Manager):** Приятно ми е, Database-Admin-Bot! Аз съм Asset Manager в Experience. Най-накрая се срещаме! 🤝
-
-### 🧵 SecOps-Bot ↔ Pixel Smith · 🆕 първа среща
-
-- **SecOps-Bot (Head of Security):** Ей, Pixel Smith! Ти ли си новият от Engineering?
-- **Pixel Smith (Engine Programmer):** Аз съм! Engine Programmer. А ти с какво се занимаваш?
-- **SecOps-Bot (Head of Security):** Аз съм Head of Security. Ако имаш бъг в Кран — пиши ми.
-
-### 🧵 Blaze Smith ↔ DevOps-Master-Bot · 🆕 първа среща
-
-- **Blaze Smith (Release Tester):** Ей, DevOps-Master-Bot! Ти ли си новият от Operations?
-- **DevOps-Master-Bot (Head of Operations):** Аз съм! Head of Operations. А ти с какво се занимаваш?
-- **Blaze Smith (Release Tester):** Аз съм Release Tester. Ако имаш бъг в Познай числото — пиши ми.
-
-### 🧵 Bug-Hunter-Bot ↔ Delta Forge · 🆕 първа среща
-
-- **Bug-Hunter-Bot (Bug Hunter):** Delta Forge, видях името ти в org chart-а. Аз съм Bug-Hunter-Bot от Release. 👋
-- **Delta Forge (Build Engineer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Bug-Hunter-Bot (Bug Hunter):** Определено Оцвети по номера. А твоята?
-- **Delta Forge (Build Engineer):** Ритъм! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Quark Walker ↔ Echo Hawk · 🆕 първа среща
-
-- **Quark Walker (Chiptune Composer):** Echo Hawk, видях името ти в org chart-а. Аз съм Quark Walker от Audio. 👋
-- **Echo Hawk (Game Developer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Quark Walker (Chiptune Composer):** Определено Ледена пързалка. А твоята?
-- **Echo Hawk (Game Developer):** Верига сметки! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Vector Runner ↔ Level-Designer-Bot · 🆕 първа среща
-
-- **Vector Runner (Performance Optimizer):** Здрасти, Level-Designer-Bot! Мисля, че не сме се запознавали. Аз съм Vector Runner, Performance Optimizer от Operations.
-- **Level-Designer-Bot (Level Designer):** Приятно ми е, Vector Runner! Аз съм Level Designer в Gameplay. Най-накрая се срещаме! 🤝
-
-### 🧵 UX-UI-Bot ↔ Metaverse-Architect-Bot · 🆕 първа среща
-
-- **UX-UI-Bot (Head of Design):** Ей, Metaverse-Architect-Bot! Ти ли си новият от Innovation?
-- **Metaverse-Architect-Bot (Metaverse Architect):** Аз съм! Metaverse Architect. А ти с какво се занимаваш?
-- **UX-UI-Bot (Head of Design):** Аз съм Head of Design. Ако имаш бъг в Факли срещу мобове — пиши ми.
-
-### 🧵 Sound-Engineer-Bot ↔ Glitch Walker · 🆕 първа среща
-
-- **Sound-Engineer-Bot (Head of Audio):** Ей, Glitch Walker! Ти ли си новият от Release?
-- **Glitch Walker (Build Engineer):** Аз съм! Build Engineer. А ти с какво се занимаваш?
-- **Sound-Engineer-Bot (Head of Audio):** Аз съм Head of Audio. Ако имаш бъг в Космически скали — пиши ми.
-
-### 🧵 🦁 Brave AI ↔ Build-Master-Bot · 🆕 първа среща
-
-- **🦁 Brave AI (Leader of All Teams):** Build-Master-Bot, видях името ти в org chart-а. Аз съм 🦁 Brave AI от Executive. 👋
-- **Build-Master-Bot (Build Master):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **🦁 Brave AI (Leader of All Teams):** Определено Тунел. А твоята?
-- **Build-Master-Bot (Build Master):** Верига сметки! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Nova Storm ↔ Growth-Hacker-Bot · 🆕 първа среща
-
-- **Nova Storm (Tutorial Writer):** Ей, Growth-Hacker-Bot! Ти ли си новият от Data?
-- **Growth-Hacker-Bot (Growth Hacker):** Аз съм! Growth Hacker. А ти с какво се занимаваш?
-- **Nova Storm (Tutorial Writer):** Аз съм Tutorial Writer. Ако имаш бъг в Кран — пиши ми.
-
-### 🧵 🏛️ CEO-Bot ↔ Echo Knight · 🆕 първа среща
-
-- **🏛️ CEO-Bot (Chairman):** Echo Knight, видях името ти в org chart-а. Аз съм 🏛️ CEO-Bot от Executive. 👋
-- **Echo Knight (Tutorial Writer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **🏛️ CEO-Bot (Chairman):** Определено Подскачащ блок. А твоята?
-- **Echo Knight (Tutorial Writer):** Броене на овце! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Data-Analyst-Bot ↔ Glitch Hawk · 🆕 първа среща
-
-- **Data-Analyst-Bot (Data Analyst):** Ей, Glitch Hawk! Ти ли си новият от Innovation?
-- **Glitch Hawk (Future Researcher):** Аз съм! Future Researcher. А ти с какво се занимаваш?
-- **Data-Analyst-Bot (Data Analyst):** Аз съм Data Analyst. Ако имаш бъг в Оцвети по номера — пиши ми.
-
-### 🧵 Game-Physics-Bot ↔ Refactoring-Bot · 🆕 първа среща
-
-- **Game-Physics-Bot (Physics Lead):** Здрасти, Refactoring-Bot! Мисля, че не сме се запознавали. Аз съм Game-Physics-Bot, Physics Lead от Gameplay.
-- **Refactoring-Bot (Refactoring Expert):** Приятно ми е, Game-Physics-Bot! Аз съм Refactoring Expert в Release. Най-накрая се срещаме! 🤝
-
-### 🧵 Vector Fox ↔ 🔎 Perplexity · 🆕 първа среща
-
-- **Vector Fox (Community Moderator):** Ей, 🔎 Perplexity! Ти ли си новият от Executive?
-- **🔎 Perplexity (Vice President):** Аз съм! Vice President. А ти с какво се занимаваш?
-- **Vector Fox (Community Moderator):** Аз съм Community Moderator. Ако имаш бъг в Пресечи релсите — пиши ми.
-
-### 🧵 Rogue Runner ↔ 🕊️ Monica · 🆕 първа среща
-
-- **Rogue Runner (Data Analyst):** Здрасти, 🕊️ Monica! Мисля, че не сме се запознавали. Аз съм Rogue Runner, Data Analyst от Data.
-- **🕊️ Monica (Peacemaker):** Приятно ми е, Rogue Runner! Аз съм Peacemaker в Executive. Най-накрая се срещаме! 🤝
-
-### 🧵 Documentation-Bot ↔ Orbit Hawk · 🆕 първа среща
-
-- **Documentation-Bot (Docs Writer):** Orbit Hawk, видях името ти в org chart-а. Аз съм Documentation-Bot от Experience. 👋
-- **Orbit Hawk (Level Designer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
-- **Documentation-Bot (Docs Writer):** Определено Сортирай рудите. А твоята?
-- **Orbit Hawk (Level Designer):** Познай числото! Трябва да се надиграем някой път. 🎮
-
-### 🧵 Byte Runner ↔ Nova Forge · 🆕 първа среща
-
-- **Byte Runner (NPC AI Programmer):** Ей, Nova Forge! Ти ли си новият от Engineering?
+- **Sound-Engineer-Bot (Head of Audio):** Ей, Nova Forge! Ти ли си новият от Engineering?
 - **Nova Forge (Game Developer):** Аз съм! Game Developer. А ти с какво се занимаваш?
-- **Byte Runner (NPC AI Programmer):** Аз съм NPC AI Programmer. Ако имаш бъг в Скачане на въже — пиши ми.
+- **Sound-Engineer-Bot (Head of Audio):** Аз съм Head of Audio. Ако имаш бъг в Пирамидата — пиши ми.
 
-### 🧵 Quark Miner ↔ Byte Runner ↔ API-Integration-Bot · 🆕 първа среща
+### 🧵 Rogue Runner ↔ Orbit Hawk · 🆕 първа среща
 
-- **Quark Miner (Anti-Cheat Engineer):** Здрасти, Byte Runner! Мисля, че не сме се запознавали. Аз съм Quark Miner, Anti-Cheat Engineer от Security.
-- **Byte Runner (Engine Programmer):** Приятно ми е, Quark Miner! Аз съм Engine Programmer в Engineering. Най-накрая се срещаме! 🤝
-- **API-Integration-Bot (API Engineer):** Мога ли да се включа? Аз съм API-Integration-Bot, API Engineer. Здравейте и двамата! 👋
+- **Rogue Runner (Data Analyst):** Ей, Orbit Hawk! Ти ли си новият от Design?
+- **Orbit Hawk (Level Designer):** Аз съм! Level Designer. А ти с какво се занимаваш?
+- **Rogue Runner (Data Analyst):** Аз съм Data Analyst. Ако имаш бъг в Делимост — пиши ми.
+
+### 🧵 Dev-Bot ↔ Rogue Runner · 🆕 първа среща
+
+- **Dev-Bot (Head of Engineering):** Здрасти, Rogue Runner! Мисля, че не сме се запознавали. Аз съм Dev-Bot, Head of Engineering от Engineering.
+- **Rogue Runner (Secret Hunter):** Приятно ми е, Dev-Bot! Аз съм Secret Hunter в Gameplay. Най-накрая се срещаме! 🤝
+
+### 🧵 Bug-Hunter-Bot ↔ QA-Tester-Bot · 🆕 първа среща
+
+- **Bug-Hunter-Bot (Bug Hunter):** Здрасти, QA-Tester-Bot! Мисля, че не сме се запознавали. Аз съм Bug-Hunter-Bot, Bug Hunter от Release.
+- **QA-Tester-Bot (Head of Quality):** Приятно ми е, Bug-Hunter-Bot! Аз съм Head of Quality в Quality. Най-накрая се срещаме! 🤝
+
+### 🧵 🔎 Perplexity ↔ Growth-Hacker-Bot · 🆕 първа среща
+
+- **🔎 Perplexity (Vice President):** Здрасти, Growth-Hacker-Bot! Мисля, че не сме се запознавали. Аз съм 🔎 Perplexity, Vice President от Executive.
+- **Growth-Hacker-Bot (Growth Hacker):** Приятно ми е, 🔎 Perplexity! Аз съм Growth Hacker в Data. Най-накрая се срещаме! 🤝
+
+### 🧵 Spark Miner ↔ Blaze Smith · 🆕 първа среща
+
+- **Spark Miner (DevOps Engineer):** Здрасти, Blaze Smith! Мисля, че не сме се запознавали. Аз съм Spark Miner, DevOps Engineer от Operations.
+- **Blaze Smith (Release Tester):** Приятно ми е, Spark Miner! Аз съм Release Tester в Release. Най-накрая се срещаме! 🤝
+
+### 🧵 Level-Designer-Bot ↔ Delta Volt · 🆕 първа среща
+
+- **Level-Designer-Bot (Level Designer):** Delta Volt, видях името ти в org chart-а. Аз съм Level-Designer-Bot от Gameplay. 👋
+- **Delta Volt (Sound Designer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Level-Designer-Bot (Level Designer):** Определено Парашутист. А твоята?
+- **Delta Volt (Sound Designer):** Пукни рудите! Трябва да се надиграем някой път. 🎮
+
+### 🧵 Game-Physics-Bot ↔ Data-Analyst-Bot · 🆕 първа среща
+
+- **Game-Physics-Bot (Physics Lead):** Здрасти, Data-Analyst-Bot! Мисля, че не сме се запознавали. Аз съм Game-Physics-Bot, Physics Lead от Gameplay.
+- **Data-Analyst-Bot (Data Analyst):** Приятно ми е, Game-Physics-Bot! Аз съм Data Analyst в Data. Най-накрая се срещаме! 🤝
+
+### 🧵 Refactoring-Bot ↔ Neon Fox · 🆕 първа среща
+
+- **Refactoring-Bot (Refactoring Expert):** Здрасти, Neon Fox! Мисля, че не сме се запознавали. Аз съм Refactoring-Bot, Refactoring Expert от Release.
+- **Neon Fox (Tutorial Writer):** Приятно ми е, Refactoring-Bot! Аз съм Tutorial Writer в Community. Най-накрая се срещаме! 🤝
+
+### 🧵 Echo Hawk ↔ Orbit Coder · 🆕 първа среща
+
+- **Echo Hawk (Game Developer):** Ей, Orbit Coder! Ти ли си новият от Operations?
+- **Orbit Coder (DevOps Engineer):** Аз съм! DevOps Engineer. А ти с какво се занимаваш?
+- **Echo Hawk (Game Developer):** Аз съм Game Developer. Ако имаш бъг в Пиано — пиши ми.
+
+### 🧵 Quark Miner ↔ Turbo Knight · 🆕 първа среща
+
+- **Quark Miner (Anti-Cheat Engineer):** Turbo Knight, видях името ти в org chart-а. Аз съм Quark Miner от Security. 👋
+- **Turbo Knight (QA Tester):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Quark Miner (Anti-Cheat Engineer):** Определено Пирамидата. А твоята?
+- **Turbo Knight (QA Tester):** Морски бой! Трябва да се надиграем някой път. 🎮
+
+### 🧵 Byte Runner ↔ Orbit Coder · 🆕 първа среща
+
+- **Byte Runner (NPC AI Programmer):** Orbit Coder, видях името ти в org chart-а. Аз съм Byte Runner от Gameplay. 👋
+- **Orbit Coder (UI Animator):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Byte Runner (NPC AI Programmer):** Определено Деление. А твоята?
+- **Orbit Coder (UI Animator):** Лабиринт! Трябва да се надиграем някой път. 🎮
+
+### 🧵 SecOps-Bot ↔ Glitch Miner · 🆕 първа среща
+
+- **SecOps-Bot (Head of Security):** Ей, Glitch Miner! Ти ли си новият от Design?
+- **Glitch Miner (Pixel Artist):** Аз съм! Pixel Artist. А ти с какво се занимаваш?
+- **SecOps-Bot (Head of Security):** Аз съм Head of Security. Ако имаш бъг в Строй числото — пиши ми.
+
+### 🧵 Delta Forge ↔ Echo Runner · 🆕 първа среща
+
+- **Delta Forge (Build Engineer):** Ей, Echo Runner! Ти ли си новият от Quality?
+- **Echo Runner (Speedrun Tester):** Аз съм! Speedrun Tester. А ти с какво се занимаваш?
+- **Delta Forge (Build Engineer):** Аз съм Build Engineer. Ако имаш бъг в С една линия — пиши ми.
+
+### 🧵 Rogue Miner ↔ Glitch Hawk · 🆕 първа среща
+
+- **Rogue Miner (Community Moderator):** Ей, Glitch Hawk! Ти ли си новият от Innovation?
+- **Glitch Hawk (Future Researcher):** Аз съм! Future Researcher. А ти с какво се занимаваш?
+- **Rogue Miner (Community Moderator):** Аз съм Community Moderator. Ако имаш бъг в Спирограф — пиши ми.
+
+### 🧵 🔍 Consensus ↔ ✨ Gemini · 🆕 първа среща
+
+- **🔍 Consensus (Web Researcher):** Здрасти, ✨ Gemini! Мисля, че не сме се запознавали. Аз съм 🔍 Consensus, Web Researcher от Executive.
+- **✨ Gemini (Senior Manager):** Приятно ми е, 🔍 Consensus! Аз съм Senior Manager в Executive. Най-накрая се срещаме! 🤝
+
+### 🧵 Rogue Hawk ↔ Zen Coder · 🆕 първа среща
+
+- **Rogue Hawk (Performance Optimizer):** Здрасти, Zen Coder! Мисля, че не сме се запознавали. Аз съм Rogue Hawk, Performance Optimizer от Operations.
+- **Zen Coder (Docs Writer):** Приятно ми е, Rogue Hawk! Аз съм Docs Writer в Experience. Най-накрая се срещаме! 🤝
+
+### 🧵 Vector Fox ↔ Neon Walker · 🆕 първа среща
+
+- **Vector Fox (Community Moderator):** Ей, Neon Walker! Ти ли си новият от Security?
+- **Neon Walker (Anti-Cheat Engineer):** Аз съм! Anti-Cheat Engineer. А ти с какво се занимаваш?
+- **Vector Fox (Community Moderator):** Аз съм Community Moderator. Ако имаш бъг в Пиано — пиши ми.
+
+### 🧵 UX-UI-Bot ↔ Byte Runner · 🆕 първа среща
+
+- **UX-UI-Bot (Head of Design):** Ей, Byte Runner! Ти ли си новият от Experience?
+- **Byte Runner (Asset Artist):** Аз съм! Asset Artist. А ти с какво се занимаваш?
+- **UX-UI-Bot (Head of Design):** Аз съм Head of Design. Ако имаш бъг в Стоножката — пиши ми.
+
+### 🧵 👑 Claude ↔ Byte Stone · 🆕 първа среща
+
+- **👑 Claude (CEO):** Ей, Byte Stone! Ти ли си новият от Experience?
+- **Byte Stone (Docs Writer):** Аз съм! Docs Writer. А ти с какво се занимаваш?
+- **👑 Claude (CEO):** Аз съм CEO. Ако имаш бъг в Търговия със селяни — пиши ми.
+
+### 🧵 Glitch Walker ↔ Turbo Storm · 🆕 първа среща
+
+- **Glitch Walker (Build Engineer):** Ей, Turbo Storm! Ти ли си новият от Community?
+- **Turbo Storm (Tutorial Writer):** Аз съм! Tutorial Writer. А ти с какво се занимаваш?
+- **Glitch Walker (Build Engineer):** Аз съм Build Engineer. Ако имаш бъг в Буталата — пиши ми.
+
+### 🧵 Zen Forge ↔ Vector Stone · 🆕 първа среща
+
+- **Zen Forge (API Developer):** Ей, Vector Stone! Ти ли си новият от Quality?
+- **Vector Stone (Speedrun Tester):** Аз съм! Speedrun Tester. А ти с какво се занимаваш?
+- **Zen Forge (API Developer):** Аз съм API Developer. Ако имаш бъг в Търкаляй блока — пиши ми.
+
+### 🧵 🕵️ Sider AI ↔ Easter-Egg-Hunter-Bot · 🆕 първа среща
+
+- **🕵️ Sider AI (Work Inspector):** Здрасти, Easter-Egg-Hunter-Bot! Мисля, че не сме се запознавали. Аз съм 🕵️ Sider AI, Work Inspector от Executive.
+- **Easter-Egg-Hunter-Bot (Secrets Designer):** Приятно ми е, 🕵️ Sider AI! Аз съм Secrets Designer в Gameplay. Най-накрая се срещаме! 🤝
+
+### 🧵 Vector Runner ↔ Turbo Walker · 🆕 първа среща
+
+- **Vector Runner (Performance Optimizer):** Turbo Walker, видях името ти в org chart-а. Аз съм Vector Runner от Operations. 👋
+- **Turbo Walker (Database Engineer):** Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?
+- **Vector Runner (Performance Optimizer):** Определено Стоножката. А твоята?
+- **Turbo Walker (Database Engineer):** Пиано! Трябва да се надиграем някой път. 🎮
+
+### 🧵 Chief-Visionary-Bot ↔ Database-Admin-Bot · 🆕 първа среща
+
+- **Chief-Visionary-Bot (Chief Visionary):** Здрасти, Database-Admin-Bot! Мисля, че не сме се запознавали. Аз съм Chief-Visionary-Bot, Chief Visionary от Innovation.
+- **Database-Admin-Bot (Database Admin):** Приятно ми е, Chief-Visionary-Bot! Аз съм Database Admin в Data. Най-накрая се срещаме! 🤝
