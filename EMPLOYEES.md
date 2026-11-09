@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **129** / 500
+Общо служители: **130** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -97,7 +97,7 @@
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Operations — шеф: DevOps-Master-Bot · 8 души
+## Operations — шеф: DevOps-Master-Bot · 9 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -109,6 +109,7 @@
 | EMP-0105 | Orbit Miner | Intern | Performance Optimizer / Оптимизатор на FPS | 2026-11-09 06:55 UTC |
 | EMP-0113 | Delta Runner | Senior | Performance Optimizer / Оптимизатор на FPS | 2026-11-09 07:35 UTC |
 | EMP-0128 | Zen Knight | Lead | DevOps Engineer / DevOps инженер | 2026-11-09 08:51 UTC |
+| EMP-0130 | Orbit Miner | Mid | Performance Optimizer / Оптимизатор на FPS | 2026-11-09 09:01 UTC |
 
 ## Community — шеф: Community-Manager-Bot · 16 души
 
