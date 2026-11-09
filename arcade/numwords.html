@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числа с думи</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔤 Числа с думи</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 321. Числа с думи
+// Прочети числото, написано с думи на табелата, и избери как се пише с цифри.
+const NW_1=['','едно','две','три','четири','пет','шест','седем','осем','девет','десет','единадесет','дванадесет','тринадесет','четиринадесет','петнадесет','шестнадесет','седемнадесет','осемнадесет','деветнадесет'];
+const NW_10=['','','двадесет','тридесет','четиридесет','петдесет','шестдесет','седемдесет','осемдесет','деветдесет'];
+const NW_100=['','сто','двеста','триста','четиристотин','петстотин','шестстотин','седемстотин','осемстотин','деветстотин'];
+function nwWords(n){if(n===0)return 'нула';const p=[],th=Math.floor(n/1000),h=Math.floor(n/100)%10,r=n%100;
+  if(th)p.push(th===1?'хиляда':(th===2?'две':NW_1[th])+' хиляди');if(h)p.push(NW_100[h]);
+  if(r){if(r<20)p.push(NW_1[r]);else{if(r>=20)p.push(NW_10[Math.floor(r/10)]);if(r%10)p.push(NW_1[r%10]);}}
+  if(p.length>1)p.splice(p.length-1,0,'и');return p.join(' ');}
+function nwNear(n){const s=''+n,f=[()=>+s.split('').reverse().join(''),()=>n+A.pick([1,-1,10,-10,100,-100]),()=>{const a=s.split('');const i=A.ri(0,a.length-1);a.splice(i,0,'0');return +a.join('');},
+  ()=>+s.replace('0',''),()=>{const a=s.split('');if(a.length<2)return n+2;const i=A.ri(0,a.length-2);[a[i],a[i+1]]=[a[i+1],a[i]];return +a.join('');}];
+  let v=A.pick(f)();if(!(v>0)||v===n||v>99999)v=n+A.ri(2,9)*(A.ri(0,1)?1:-1);return Math.abs(v)||n+3;}
+A.add(choiceGame({id:'numwords',cat:'brain',icon:'🔤',name:'Числа с думи',desc:'Прочети числото, написано с думи, и избери правилния запис с цифри — внимавай с нулите!',time:60,
+  help:'На табелата пише число с думи (напр. „триста и две“). Избери същото число с цифри — клик или 1–4. Първо до 100, после до 1000, после хиляди. Серия от 5 верни = +5 секунди. 60 секунди.',
+  next(g){const m=g.score<5?100:g.score<12?1000:9999;let n=A.ri(m===100?11:m===1000?101:1001,m);
+    if(Math.random()<.35){const s=(''+n).split('');s[A.ri(1,s.length-1)]='0';n=+s.join('');}
+    g.n=n;g.w=nwWords(n);g.ans=''+n;g.opts=opts4(g.ans,()=>''+nwNear(n));},
+  pick2(g,i){const ok=g.opts[i]===g.ans;flash(g,ok);
+    if(ok){g.score++;g.streak=(g.streak||0)+1;if(g.streak%5===0){g.time+=5;g.why='Серия '+g.streak+'! +5 сек';}else g.why='';}
+    else{g.streak=0;g.why='Беше '+g.ans;}this.next(g);},
+  pic(g){A.bg('#1e2a1e');for(let y=0;y<250;y+=30)for(let x=0;x<480;x+=30){c.fillStyle=((x+y)/30)%2?'#233223':'#1e2a1e';c.fillRect(x,y,30,30);}
+    A.txt('Кое число пише на табелата?',240,30,16,'#ffd54f','center');
+    // дървена табела
+    c.fillStyle='#3a2208';c.fillRect(36,56,408,138);for(let i=0;i<4;i++){c.fillStyle=i%2?'#c08850':'#c8945a';c.fillRect(40,60+i*32.5,400,32.5);}c.fillStyle='rgba(0,0,0,.18)';for(let i=1;i<4;i++)c.fillRect(40,60+i*32.5,400,2);c.fillStyle='#7a5233';c.fillRect(232,190,16,50);
+    const ws=g.w.split(' '),lines=[];let cur='';for(const w of ws){if((cur+' '+w).trim().length>22){lines.push(cur.trim());cur=w;}else cur+=' '+w;}lines.push(cur.trim());
+    const sz=lines.length>2?18:22;lines.forEach((l,i)=>A.txt(l,240,125+(i-(lines.length-1)/2)*30,sz,'#2a1a08','center'));
+    A.txt('🔥 Серия: '+(g.streak||0),470,236,12,'#ffb3a0','right');}
+}));
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Огледални близнаци</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🪞 Огледални близнаци</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 320. Огледални близнаци
+// Стийв и Алекс се движат едновременно, но Алекс е огледален: ← за Стийв е → за Алекс. Заведи и двамата до леглата им!
+const TW_N=7,TW_S=28,TW_X=[22,262],TW_Y=64,TW_D={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1],KeyA:[-1,0],KeyD:[1,0],KeyW:[0,-1],KeyS:[0,1]};
+function twFree(m,x,y){return x>=0&&y>=0&&x<TW_N&&y<TW_N&&m[y][x]===0;}
+function twStep(lv,p,dx,dy){// p=[x1,y1,x2,y2]; връща новото положение или null при лава
+  const r=p.slice();const a=[[0,dx],[1,-dx]];
+  for(const [i,ddx] of a){const nx=p[i*2]+ddx,ny=p[i*2+1]+dy,m=lv.m[i];
+    if(nx>=0&&ny>=0&&nx<TW_N&&ny<TW_N&&m[ny][nx]!==1){r[i*2]=nx;r[i*2+1]=ny;}}
+  if(lv.m[0][r[1]][r[0]]===2||lv.m[1][r[3]][r[2]]===2)return null;return r;}
+function twBFS(lv){const key=p=>p.join(','),seen=new Set([key(lv.s)]);let q=[lv.s],d=0;
+  while(q.length){const nq=[];for(const p of q){if(p[0]===lv.g[0]&&p[1]===lv.g[1]&&p[2]===lv.g[2]&&p[3]===lv.g[3])return d;
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const r=twStep(lv,p,dx,dy);if(!r)continue;const k=key(r);if(!seen.has(k)){seen.add(k);nq.push(r);}}}
+    q=nq;d++;}return -1;}
+function twMake(L){const lo=Math.min(5+L,16),lava=Math.min(Math.max(0,L-2),4);let best=null;
+  for(let t=0;t<600;t++){const m=[0,1].map(()=>{const g=[];for(let y=0;y<TW_N;y++){g.push([]);for(let x=0;x<TW_N;x++)g[y].push(Math.random()<.24?1:0);}
+      for(let k=0;k<lava;k++)g[A.ri(0,TW_N-1)][A.ri(0,TW_N-1)]=2;return g;});
+    const cell=i=>{let x,y,n=0;do{x=A.ri(0,TW_N-1);y=A.ri(0,TW_N-1);}while(m[i][y][x]!==0&&n++<99);return m[i][y][x]===0?[x,y]:null;};
+    const a=cell(0),b=cell(1),ga=cell(0),gb=cell(1);if(!a||!b||!ga||!gb)continue;
+    const lv={m,s:[a[0],a[1],b[0],b[1]],g:[ga[0],ga[1],gb[0],gb[1]]};const d=twBFS(lv);
+    if(d>=lo&&d<=lo+5)return Object.assign(lv,{opt:d});if(d>2&&(!best||d>best.opt))best=Object.assign(lv,{opt:d});}
+  return best||twMake(Math.max(1,L-2));}
+A.add({id:'twinmaze',cat:'puzzle',icon:'🪞',name:'Огледални близнаци',desc:'Стийв и Алекс вървят заедно, но Алекс е огледален — заведи и двамата до леглата им едновременно',
+  help:'Стрелки/WASD или бутоните долу движат И ДВАМАТА: ↑↓ са еднакви, но ← за Стийв е → за Алекс! Стена спира само този, който се удари в нея — използвай това. Не стъпвай в лава. R/↺ — отначало. Ниво = +1, с най-малко ходове = +1 бонус. 3 минути.',
+  start(g){g.time=180;g.L=0;this.next(g);},
+  next(g){g.L++;g.lv=twMake(g.L);g.p=g.lv.s.slice();g.moves=0;g.msg='';},
+  reset(g){g.p=g.lv.s.slice();g.moves=0;},
+  move(g,dx,dy){const r=twStep(g.lv,g.p,dx,dy);g.moves++;
+    if(!r){A.beep(120,.25,'sawtooth');g.msg='Лава! 🔥 Отначало';this.reset(g);return;}
+    if(r.join()===g.p.join()){A.beep(160,.05);}else A.beep(420+g.moves%5*40,.04,'triangle');g.p=r;
+    if(r.join()===g.lv.g.join()){const bonus=g.moves<=g.lv.opt?1:0;g.score+=1+bonus;g.msg=bonus?'Перфектно! +2':'Браво! +1';A.tune([523,659,784]);this.next(g);}},
+  key(g,k){if(TW_D[k])this.move(g,...TW_D[k]);else if(k==='KeyR')this.reset(g);},
+  click(g,mx,my){if(my<290)return;const i=Math.floor((mx-40)/80);const B=[[-1,0],[0,-1],[0,1],[1,0]];
+    if(i>=0&&i<4)this.move(g,...B[i]);else if(i===4)this.reset(g);},
+  update(g,dt){g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Нива: '+(g.L-1));},
+  draw(g){A.bg('#20283a');const lv=g.lv;
+    A.txt('Ниво '+g.L+' · ходове '+g.moves+' (най-малко '+lv.opt+')',240,40,14,'#ffd54f','center');
+    for(let i=0;i<2;i++){const ox=TW_X[i];c.fillStyle='#000';c.fillRect(ox-3,TW_Y-3,TW_N*TW_S+6,TW_N*TW_S+6);
+      for(let y=0;y<TW_N;y++)for(let x=0;x<TW_N;x++){const v=lv.m[i][y][x],px=ox+x*TW_S,py=TW_Y+y*TW_S;
+        if(v===1)A.block(px,py,TW_S,'#7d7d7d');else if(v===2){A.block(px,py,TW_S,(Math.sin(g.t*4+x+y)>0)?'#ff6a00':'#ff8a20');}
+        else{c.fillStyle=(x+y)%2?'#5aa13a':'#4f9334';c.fillRect(px,py,TW_S,TW_S);}}
+      // легло
+      const gx=ox+lv.g[i*2]*TW_S,gy=TW_Y+lv.g[i*2+1]*TW_S;c.fillStyle=i?'#e0873a':'#d84a3a';c.fillRect(gx+2,gy+8,TW_S-4,TW_S-12);c.fillStyle='#fff';c.fillRect(gx+2,gy+8,8,TW_S-12);
+      // герой
+      const px=ox+g.p[i*2]*TW_S,py=TW_Y+g.p[i*2+1]*TW_S;A.block(px+4,py+2,TW_S-8,i?'#e8a060':'#d9a066',12);A.block(px+4,py+14,TW_S-8,i?'#3e9a3e':'#2f7fd0',12);
+      c.fillStyle=i?'#c05a10':'#4a2a10';c.fillRect(px+4,py+2,TW_S-8,4);c.fillStyle='#000';c.fillRect(px+8,py+8,3,3);c.fillRect(px+17,py+8,3,3);
+      A.txt(i?'Алекс (огледален)':'Стийв',ox+TW_N*TW_S/2,TW_Y+TW_N*TW_S+12,12,'#cfd8e3','center');}
+    // огледало по средата
+    c.fillStyle='#9fd8ff';c.fillRect(238,TW_Y,4,TW_N*TW_S);
+    ['◀','▲','▼','▶','↺'].forEach((s,i)=>{A.block(40+i*80+4,296,72,i===4?'#8c5a5a':'#5a6b8c',48);A.txt(s,40+i*80+40,320,22,'#fff','center');});
+    A.txt('⏱ '+Math.ceil(g.time),10,14,14);if(g.msg)A.txt(g.msg,470,14,12,'#bfe8b0','right');}
+});
+</script>
+</body>
+</html>

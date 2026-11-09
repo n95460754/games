@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Селската пекарна</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🍞 Селската пекарна</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 319. Селската пекарна
+// Селяните идват по 4 тезгяха — плъзни им хляб, преди да стигнат до теб! Без хляб на празен тезгях.
+const BK_Y=[78,148,218,288];
+A.add({id:'bakery',cat:'action',icon:'🍞',name:'Селската пекарна',desc:'Селяните идват по 4 тезгяха — плъзгай им хляб, преди да стигнат до теб, но не хаби хляба!',
+  help:'↑/↓ (или W/S) — смени тезгяха, Space или → — плъзни хляб. С мишка/пръст: докосни тезгях и хлябът полита по него. Нахранен селянин = +1 (+2 ако е далеч). Ако селянин стигне до теб или хляб падне от празния край — губиш сърце. 3 сърца.',
+  start(g){g.lane=1;g.lives=3;g.vil=[];g.bread=[];g.fx=[];g.spawn=1;g.cd=0;g.hurt=0;},
+  throw(g){if(g.cd>0)return;g.cd=.16;g.bread.push({lane:g.lane,x:405});A.beep(520,.04,'square');},
+  lose(g,msg){g.lives--;g.hurt=.4;A.beep(140,.25,'sawtooth');if(g.lives<=0)A.over(g,msg);},
+  key(g,k){if(k==='ArrowUp'||k==='KeyW'){g.lane=Math.max(0,g.lane-1);A.beep(330,.03);}
+    else if(k==='ArrowDown'||k==='KeyS'){g.lane=Math.min(3,g.lane+1);A.beep(330,.03);}
+    else if(k==='Space'||k==='ArrowRight'||k==='ArrowLeft'||k==='KeyD')this.throw(g);},
+  click(g,mx,my){let best=0;for(let i=1;i<4;i++)if(Math.abs(my-BK_Y[i]-20)<Math.abs(my-BK_Y[best]-20))best=i;g.lane=best;this.throw(g);},
+  update(g,dt){g.cd-=dt;g.hurt-=dt;const lvl=1+g.t/40;
+    g.spawn-=dt;if(g.spawn<=0){g.spawn=A.rnd(1.6,2.8)/Math.min(2.6,lvl);
+      g.vil.push({lane:A.ri(0,3),x:-20,sp:A.rnd(16,26)*Math.min(2.2,.8+lvl*.25),fed:false,skin:A.pick(['#7a4a2a','#3d6b3a','#6a3d7a','#a07040'])});}
+    for(const b of g.bread){b.x-=290*dt;
+      const v=g.vil.filter(v=>!v.fed&&v.lane===b.lane&&v.x+22>=b.x&&v.x<=b.x+10).sort((p,q)=>q.x-p.x)[0];
+      if(v){v.fed=true;b.dead=true;const pts=v.x<170?2:1;g.score+=pts;g.fx.push({x:v.x+10,y:BK_Y[v.lane]-10,s:'+'+pts,t:.8});A.beep(780,.07,'triangle');}
+      else if(b.x<0){b.dead=true;this.lose(g,'Хлябът падна на пода! 🍞');}}
+    g.bread=g.bread.filter(b=>!b.dead);
+    for(const v of g.vil){if(v.fed)v.x-=140*dt;else{v.x+=v.sp*dt;if(v.x>385){v.gone=true;this.lose(g,'Гладен селянин стигна до теб! 😠');}}}
+    g.vil=g.vil.filter(v=>!v.gone&&v.x>-40);
+    for(const f of g.fx){f.t-=dt;f.y-=30*dt;}g.fx=g.fx.filter(f=>f.t>0);},
+  draw(g){A.bg('#4a3020');for(let y=0;y<360;y+=20)for(let x=(y/20%2)*20;x<480;x+=40){c.fillStyle='#553826';c.fillRect(x,y,40,20);}
+    // врата отляво
+    A.block(0,40,30,'#6b4a2a',300);
+    BK_Y.forEach((y,i)=>{for(let x=30;x<420;x+=26)A.block(x,y+26,26,'#9a6a3a',18);
+      if(i===g.lane){c.fillStyle='rgba(255,213,79,.12)';c.fillRect(30,y-6,410,52);}});
+    for(const v of g.vil){const y=BK_Y[v.lane];// селянин
+      A.block(v.x,y-4,22,v.skin,30);A.block(v.x+2,y-24,18,'#c8916a',20);c.fillStyle='#000';c.fillRect(v.x+5,y-18,3,3);c.fillRect(v.x+14,y-18,3,3);
+      c.fillStyle='#a06a4a';c.fillRect(v.x+9,y-14,5,8);if(v.fed)A.txt('🍞',v.x+11,y-34,14,'#fff','center');}
+    for(const b of g.bread){const y=BK_Y[b.lane]+16;c.fillStyle='#c98a3a';c.fillRect(b.x,y,22,10);c.fillStyle='#e8b060';c.fillRect(b.x+2,y+1,18,4);c.fillStyle='#8a5a20';c.fillRect(b.x+6,y+2,2,6);c.fillRect(b.x+13,y+2,2,6);}
+    // Стийв пекарят
+    const y=BK_Y[g.lane];A.block(420,y-6,26,g.hurt>0?'#e53935':'#2f7fd0',34);A.block(422,y-28,22,'#d9a066',22);c.fillStyle='#fff';c.fillRect(420,y-34,26,8);
+    c.fillStyle='#3a2a8a';c.fillRect(427,y-20,4,4);c.fillRect(435,y-20,4,4);
+    for(const f of g.fx)A.txt(f.s,f.x,f.y,16,'#ffd54f','center');
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,14,16,'#f55');A.txt('🍞 Пекарна',470,14,13,'#ffe0b2','right');}
+});
+</script>
+</body>
+</html>
