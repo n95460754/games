@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вълкът и овцете</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐺 Вълкът и овцете</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 352. Вълкът и овцете
+// Стара настолна игра на шахматна дъска: 4 овце срещу 1 вълк. Овцете вървят само напред
+// по диагонал, вълкът — във всички посоки. Обградете вълка, преди да избяга зад овцете!
+const WN=8,WS=40,WX=80,WY=8;
+A.add({id:'wolfsheep',cat:'board',icon:'🐺',name:'Вълкът и овцете',desc:'4 овце срещу хитър вълк: обградете го, преди да се промъкне зад вас!',
+  help:'Ти играеш с 4-те овце. Цъкни овца, после тъмно поле по диагонал надолу (или стрелки + Space). Овцете вървят само напред, вълкът — накъдето си иска. Ако вълкът няма ход — печелиш! Ако мине зад всички овце — губиш. Всяка победа = по-умен вълк.',
+  start(g){g.round=1;g.cur=[1,0];this.reset(g);},
+  reset(g){g.s=[[1,0],[3,0],[5,0],[7,0]];g.w=[A.pick([0,2,4,6]),7];g.sel=-1;g.turn=1;g.wait=0;g.end=0;g.moves=0;g.lastW=null;g.msg='Ти си овцете: цъкни овца';},
+  occ(s,w,x,y){return (w[0]===x&&w[1]===y)||s.some(p=>p[0]===x&&p[1]===y);},
+  wMoves(s,w){const r=[];for(const d of [[-1,-1],[1,-1],[-1,1],[1,1]]){const x=w[0]+d[0],y=w[1]+d[1];if(x>=0&&y>=0&&x<WN&&y<WN&&!this.occ(s,w,x,y))r.push([x,y]);}return r;},
+  sMoves(s,w){const r=[];s.forEach((p,i)=>{for(const dx of [-1,1]){const x=p[0]+dx,y=p[1]+1;if(x>=0&&x<WN&&y<WN&&!this.occ(s,w,x,y))r.push([i,x,y]);}});return r;},
+  top(s){return Math.min(s[0][1],s[1][1],s[2][1],s[3][1]);},
+  escaped(s,w){return w[1]<=this.top(s);},
+  // колко хода му трябват на вълка, за да мине зад овцете (ако овцете стоят)
+  dist(s,w){const t=this.top(s),seen=new Set([w[0]+w[1]*8]);let q=[w],d=0;
+    while(q.length){const nq=[];for(const p of q){if(p[1]<=t)return d;for(const m of this.wMoves(s,p)){const k=m[0]+m[1]*8;if(!seen.has(k)){seen.add(k);nq.push(m);}}}q=nq;d++;}return 99;},
+  ev(s,w){const d=this.dist(s,w);return d===99?-300+this.wMoves(s,w).length*5:-d*10+this.wMoves(s,w).length;},
+  search(s,w,depth,wolf,a,b){
+    if(this.escaped(s,w))return 1000+depth;
+    if(wolf){const ms=this.wMoves(s,w);if(!ms.length)return -1000-depth;if(!depth)return this.ev(s,w);
+      let v=-1e9;for(const m of ms){v=Math.max(v,this.search(s,m,depth-1,false,a,b));a=Math.max(a,v);if(a>=b)break;}return v;}
+    const ms=this.sMoves(s,w);if(!ms.length)return 1000+depth;if(!depth)return this.ev(s,w);
+    let v=1e9;for(const m of ms){const s2=s.map(p=>p.slice());s2[m[0]]=[m[1],m[2]];v=Math.min(v,this.search(s2,w,depth-1,true,a,b));b=Math.min(b,v);if(a>=b)break;}return v;},
+  ai(g){const ms=this.wMoves(g.s,g.w);if(!ms.length)return this.finish(g,true);
+    const depth=[2,3,5,7][Math.min(g.round-1,3)],err=Math.max(0,.3-.1*(g.round-1));
+    let best=ms[0],bv=-1e9;for(const m of A.shuffle(ms.slice())){const v=this.search(g.s,m,depth-1,false,-1e9,1e9)+Math.random()*(g.round<3?4:.5);if(v>bv){bv=v;best=m;}}
+    if(Math.random()<err)best=A.pick(ms);
+    g.lastW=g.w;g.w=best;A.beep(180,.08,'sawtooth');
+    if(this.escaped(g.s,g.w))return this.finish(g,false,'Вълкът се промъкна зад овцете!');
+    if(!this.sMoves(g.s,g.w).length)return this.finish(g,false,'Овцете нямат ход!');
+    g.turn=1;g.msg='Твой ред · вълкът е на '+this.dist(g.s,g.w)+' хода от бягство';},
+  finish(g,win,why){g.end=2.2;g.won=win;g.sel=-1;
+    if(win){const p=10*g.round+Math.max(0,20-g.moves);g.score+=p;g.msg='ВЪЛКЪТ Е ОБГРАДЕН! +'+p+' точки';A.tune([523,659,784,1046]);}
+    else{g.why=why;g.msg=why;A.beep(140,.4,'sawtooth',.06);}},
+  sheepAt(g,x,y){return g.s.findIndex(p=>p[0]===x&&p[1]===y);},
+  act(g,x,y){if(g.end||g.turn!==1||g.wait>0)return;
+    const i=this.sheepAt(g,x,y);if(i>=0){g.sel=i;A.beep(600,.03);g.msg='Сега цъкни поле по диагонал надолу';return;}
+    if(g.sel<0)return;const p=g.s[g.sel];
+    if(y===p[1]+1&&Math.abs(x-p[0])===1&&!this.occ(g.s,g.w,x,y)){
+      g.s[g.sel]=[x,y];g.sel=-1;g.moves++;A.beep(440,.05,'triangle');
+      if(!this.wMoves(g.s,g.w).length)return this.finish(g,true);
+      if(this.escaped(g.s,g.w))return this.finish(g,false,'Овцете минаха покрай вълка!');
+      g.turn=2;g.wait=.45;g.msg='Вълкът мисли…';}
+    else A.beep(120,.05);},
+  key(g,k){const d={ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0],ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1]}[k];
+    if(d){g.cur=[A.clamp(g.cur[0]+d[0],0,WN-1),A.clamp(g.cur[1]+d[1],0,WN-1)];}
+    else if(k==='Space'||k==='Enter')this.act(g,g.cur[0],g.cur[1]);},
+  click(g,mx,my){const x=Math.floor((mx-WX)/WS),y=Math.floor((my-WY)/WS);if(x<0||y<0||x>=WN||y>=WN)return;g.cur=[x,y];this.act(g,x,y);},
+  update(g,dt){if(g.end){g.end-=dt;if(g.end<=0){g.end=0;if(g.won){g.round++;this.reset(g);g.msg='Рунд '+g.round+' — вълкът е по-хитър!';}else A.over(g,g.why);}return;}
+    if(g.wait>0){g.wait-=dt;if(g.wait<=0&&g.turn===2)this.ai(g);}},
+  draw(g){A.bg('#1c2a18');
+    for(let y=0;y<WN;y++)for(let x=0;x<WN;x++){const px=WX+x*WS,py=WY+y*WS;
+      if((x+y)%2){A.block(px,py,WS,'#7a5233');c.fillStyle='rgba(0,0,0,.12)';c.fillRect(px+8,py+12,6,4);c.fillRect(px+24,py+26,8,4);}
+      else{A.block(px,py,WS,'#5aa13a');c.fillStyle='#4a8a2e';c.fillRect(px+6,py+8,4,4);c.fillRect(px+26,py+20,4,4);}}
+    // вълкът стига до тук, ако овцете не мърдат
+    const T=performance.now()/200;
+    if(g.sel>=0&&g.turn===1&&!g.end){const p=g.s[g.sel];for(const dx of [-1,1]){const x=p[0]+dx,y=p[1]+1;if(x>=0&&x<WN&&y<WN&&!this.occ(g.s,g.w,x,y)){c.fillStyle='rgba(120,255,120,'+(.35+.15*Math.sin(T))+')';c.fillRect(WX+x*WS+4,WY+y*WS+4,WS-8,WS-8);}}}
+    if(g.lastW){c.strokeStyle='rgba(255,90,90,.5)';c.lineWidth=2;c.setLineDash([4,3]);c.strokeRect(WX+g.lastW[0]*WS+6,WY+g.lastW[1]*WS+6,WS-12,WS-12);c.setLineDash([]);}
+    g.s.forEach((p,i)=>{const x=WX+p[0]*WS,y=WY+p[1]*WS;A.block(x+4,y+4,32,'#eeeeee');c.fillStyle='#d9d9d9';c.fillRect(x+8,y+8,6,6);c.fillRect(x+24,y+22,6,6);
+      c.fillStyle='#d6b48c';c.fillRect(x+12,y+16,16,14);c.fillStyle='#222';c.fillRect(x+14,y+19,3,3);c.fillRect(x+23,y+19,3,3);c.fillStyle='#e89aa0';c.fillRect(x+17,y+25,6,3);
+      if(i===g.sel){c.strokeStyle='#7dff7a';c.lineWidth=3;c.strokeRect(x+2,y+2,36,36);}});
+    {const x=WX+g.w[0]*WS,y=WY+g.w[1]*WS;A.block(x+4,y+6,32,'#8d8d8d',30);c.fillStyle='#8d8d8d';c.fillRect(x+6,y+1,7,7);c.fillRect(x+27,y+1,7,7);
+      c.fillStyle='#d8d8d8';c.fillRect(x+13,y+22,14,10);c.fillStyle='#222';c.fillRect(x+17,y+22,6,4);
+      c.fillStyle=g.turn===2||g.end&&!g.won?'#ff3b3b':'#111';c.fillRect(x+11,y+14,5,4);c.fillRect(x+24,y+14,5,4);}
+    const cx=WX+g.cur[0]*WS,cy=WY+g.cur[1]*WS;c.strokeStyle='#4de8f5';c.lineWidth=2;c.strokeRect(cx+1,cy+1,WS-2,WS-2);
+    A.txt('Рунд',40,30,13,'#ffd54f','center');A.txt(String(g.round),40,52,22,'#fff','center');
+    A.txt('Ходове',40,100,12,'#b9c6d6','center');A.txt(String(g.moves),40,120,18,'#fff','center');
+    A.txt('🐑 ×4',440,30,13,'#fff','center');A.txt('🐺 ×1',440,56,13,'#fff','center');
+    A.txt('Цел:',440,110,12,'#ffd54f','center');A.txt('обгради',440,128,11,'#b9c6d6','center');A.txt('вълка',440,144,11,'#b9c6d6','center');
+    const m=g.msg;c.fillStyle='rgba(0,0,0,.7)';c.fillRect(0,333,480,27);A.txt(m,240,346,m.length>50?12:14,g.end&&!g.won?'#ff8a8a':g.end?'#b9f6ca':'#fff','center');}
+});
+</script>
+</body>
+</html>

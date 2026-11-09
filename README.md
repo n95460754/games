@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**361 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 351 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**364 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 354 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-361-5aa13a)
+![Games](https://img.shields.io/badge/games-364-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 351 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 354 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -496,8 +496,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 349 | 🔱 Trident Throw (Тризъбецът) | [`trident.html`](arcade/trident.html) | Steve is stranded on a tiny island and drowned zombies swim in from every side. Aim with the mouse (or ← →) and throw the trident — it pierces several mobs and comes back on its own thanks to Loyalty. Guardians take 3 hits; don't hit the pufferfish! 3 hearts. |
 | 350 | 🌾 Water the Farm (Напои нивата) | [`irrigate.html`](arcade/irrigate.html) | A flowing-water puzzle: water falls down and spreads 3 blocks sideways when it lands. Place a few cobblestone blocks so the water touches every farmland without washing away any torch. 8 levels, each checked to be solvable with exactly the blocks you get. |
 | 351 | 📦 Block Volume (Обем в блокове) | [`volume.html`](arcade/volume.html) | Length × width × height: how many blocks are in the building? Then pools that are only partly full, hollow towers with 1-block walls, rows of identical houses and boxes with no labels where you count the edges yourself. 4 answers, 90 seconds. |
+| 352 | 🐺 Wolf and Sheep (Вълкът и овцете) | [`wolfsheep.html`](arcade/wolfsheep.html) | The old board game on a checkerboard: your 4 sheep step only forward diagonally, the wolf goes any diagonal way. Trap the wolf so it can't move before it sneaks behind your line. Every win makes the wolf think further ahead. |
+| 353 | 🟩 Sweep Line (Метящата линия) | [`sweepline.html`](arcade/sweepline.html) | 2×2 blocks of grass and brick fall and split as they land. Make 2×2 squares of one colour — they light up and the sweep line moving across the board erases them. 16+ blocks in one sweep = combo. Keyboard, mouse drag or touch. |
+| 354 | 🗺️ Map Scale (Мащаб на картата) | [`mapscale.html`](arcade/mapscale.html) | Count the gravel blocks on a blocky map and use the scale (1 block = 50 m) to find the real distance. Then reverse questions, scales like 1 : 1000, walking time and kilometres. 4 answers, 90 seconds. |
 
-All 351 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 354 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -525,8 +528,8 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–350
-│   └── volume.html         # 351. Block Volume
+│   ├── ...                 # games 51–353
+│   └── mapscale.html       # 354. Map Scale
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

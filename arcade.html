@@ -334,7 +334,10 @@ const GAMES=[
    {"id": "campfires", "cat": "skill", "icon": "🔥", "name": "Пази огньовете", "desc": "Тичай между лагерните огньове и ги поддържай с дърва — ако угаснат, мобовете идват!", "unit": " с", "dec": 0, "low": false, "noScore": false},
    {"id": "trident", "cat": "action", "icon": "🔱", "name": "Тризъбецът", "desc": "Хвърляй тризъбеца по удавниците, преди да стигнат островчето — той винаги се връща при теб!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "irrigate", "cat": "puzzle", "icon": "🌾", "name": "Напои нивата", "desc": "Насочи течащата вода с блокове, така че да напои всички ниви и да не загаси факлите", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "volume", "cat": "brain", "icon": "📦", "name": "Обем в блокове", "desc": "Дължина × ширина × височина — сметни колко блока има в постройката, кухата кула или басейна", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "volume", "cat": "brain", "icon": "📦", "name": "Обем в блокове", "desc": "Дължина × ширина × височина — сметни колко блока има в постройката, кухата кула или басейна", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "wolfsheep", "cat": "board", "icon": "🐺", "name": "Вълкът и овцете", "desc": "4 овце срещу хитър вълк: обградете го, преди да се промъкне зад вас!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "sweepline", "cat": "action", "icon": "🟩", "name": "Метящата линия", "desc": "Падащи 2×2 блока трева и тухли: събери квадрати от един цвят, а линията ги изтрива!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "mapscale", "cat": "brain", "icon": "🗺️", "name": "Мащаб на картата", "desc": "Преброй блоковете на пътя и сметни истинското разстояние по мащаба на картата", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

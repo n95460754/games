@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мащаб на картата</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🗺️ Мащаб на картата</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 354. Мащаб на картата
+// Карта от блокове с мащаб „1 блок = 50 м“. Преброй блоковете чакъл на пътя и сметни
+// истинското разстояние. После: обратни задачи, мащаб 1 : 1000, време за ходене и километри.
+const MC=22,MR=9,MZ=20,MX=20,MY=58;
+const mFmt=v=>v+' м',kFmt=v=>String(v/1000).replace('.',',')+' км';
+A.add(Object.assign(choiceGame({time:90,bg:'#1a2a3c',
+  next(g){
+    const lv=Math.min(5,Math.floor(g.score/3)),type=A.ri(0,lv),bend=type===1||type>=4?Math.random()<.7:type===3&&Math.random()<.5;
+    let n,s;
+    if(type===4){const v=A.pick([50,100]),t=A.ri(2,10),real=t*v;const ss=[10,20,25,50,100].filter(q=>real%q===0&&real/q>=3&&real/q<=16);s=A.pick(ss.length?ss:[v]);n=real/s;g.v=v;g.t=t;}
+    else if(type===5){s=A.pick([100,200,250,500]);n=A.ri(3,14);}
+    else{s=A.pick(type===2?[20,25,50,100]:lv<1?[10,100]:[10,20,50,100]);n=A.ri(3,lv<1?10:15);}
+    if(n>16&&!bend)n=16;
+    this.path(g,n,bend);g.s=s;g.n=n;g.type=type;g.hideB=type===2;
+    const near=f=>()=>Math.max(1,f());
+    if(type===0||type===1){g.q=type?'Пътят завива! Колко метра е от А до Б?':'Колко метра е пътят от А до Б?';const R=n*s;g.ans=mFmt(R);
+      g.opts=opts4(g.ans,()=>mFmt(near(()=>A.pick([(n+1)*s,(n-1)*s,R*10,n*s/10|0||s,n+s,R+s*2,(n+2)*s]))()));g.lab='1 блок = '+s+' м';}
+    else if(type===2){const R=n*s;g.q='До Б има '+R+' м. Колко блока е пътят?';g.ans=n+' бл.';g.lab='1 блок = '+s+' м';
+      g.opts=opts4(g.ans,()=>Math.max(1,A.pick([n+1,n-1,n+2,n*2,Math.round(R/10),n-2]))+' бл.');}
+    else if(type===3){const r=A.pick([500,1000,2000,5000]),m=r/100;g.q='Мащаб 1 : '+r+'. Колко метра е пътят?';const R=n*m;g.ans=mFmt(R);g.lab='1 блок = 1 см · 1 : '+r;
+      g.opts=opts4(g.ans,()=>mFmt(Math.max(1,A.pick([n*r,n*m*10,n*m/10|0||1,(n+1)*m,(n-1)*m,n*r/1000|0||2]))));}
+    else if(type===4){g.q='Стив върви '+g.v+' м за минута. За колко минути стига до Б?';g.ans=g.t+' мин';g.lab='1 блок = '+s+' м';
+      g.opts=opts4(g.ans,()=>Math.max(1,A.pick([g.t+1,g.t-1,g.t+2,g.t*2,n,Math.round(n*s/10)]))+' мин');}
+    else{const R=n*s;g.q='Колко километра е пътят от А до Б?';g.ans=kFmt(R);g.lab='1 блок = '+s+' м';
+      g.opts=opts4(g.ans,()=>kFmt(Math.max(100,A.pick([(n+1)*s,(n-1)*s,R*10,n*100,R/2,R+500]))));}
+  },
+  // път от n блока чакъл: прав или с един завой
+  path(g,n,bend){let a=n,b=0;if(bend&&n>=4){b=A.ri(2,Math.min(6,n-2));a=n-b;}if(a>MC-3){a=MC-3;b=n-a;}
+    const ax=A.ri(0,MC-2-a),up=Math.random()<.5,ay=b?(up?A.ri(b+1,MR-1):A.ri(0,MR-2-b)):A.ri(1,MR-2);
+    const P=[];for(let i=1;i<=a;i++)P.push([ax+i,ay]);for(let j=1;j<=b;j++)P.push([ax+a,ay+(up?-j:j)]);
+    g.P=P;g.Ah=[ax,ay];const L=P[P.length-1];g.Bh=b?[L[0],L[1]+(up?-1:1)]:[L[0]+1,L[1]];
+    const used=new Set(P.concat([g.Ah,g.Bh]).map(p=>p[0]+','+p[1]));g.deco=[];
+    for(let k=0;k<26;k++){const x=A.ri(0,MC-1),y=A.ri(0,MR-1);if(!used.has(x+','+y)&&!(x<5&&y>MR-3)){used.add(x+','+y);g.deco.push([x,y,A.pick([0,0,1,2])]);}}},
+  pic(g){A.txt(g.q,240,38,g.q.length>44?13:g.q.length>36?15:17,'#fff','center');
+    for(let y=0;y<MR;y++)for(let x=0;x<MC;x++){c.fillStyle=(x+y)%2?'#5aa13a':'#55993a';c.fillRect(MX+x*MZ,MY+y*MZ,MZ,MZ);}
+    for(const [x,y,t] of g.deco){const px=MX+x*MZ,py=MY+y*MZ;if(t===0){A.block(px+8,py+11,4,'#7a5233',9);A.block(px+3,py+1,14,'#2f7020',11);}
+      else if(t===1)A.block(px,py,MZ,'#3b7bd6');else{c.fillStyle='#e8e05a';c.fillRect(px+8,py+8,4,4);}}
+    g.P.forEach((p,i)=>{if(g.hideB&&i>1)return;A.block(MX+p[0]*MZ,MY+p[1]*MZ,MZ,'#8f8f8f');c.fillStyle='#6d6d6d';c.fillRect(MX+p[0]*MZ+4,MY+p[1]*MZ+5,4,4);c.fillRect(MX+p[0]*MZ+12,MY+p[1]*MZ+12,4,4);});
+    const house=(h,col,l)=>{const px=MX+h[0]*MZ,py=MY+h[1]*MZ;A.block(px+1,py+7,18,'#d8c49a',13);c.fillStyle=col;c.beginPath();c.moveTo(px,py+8);c.lineTo(px+10,py);c.lineTo(px+20,py+8);c.fill();A.txt(l,px+10,py+14,11,'#fff','center');};
+    house(g.Ah,'#d84a3a','А');if(g.hideB){const p=g.P[1];A.txt('… ?',MX+p[0]*MZ+30,MY+p[1]*MZ+10,16,'#ffd54f','center');}else house(g.Bh,'#2e7dd1','Б');
+    const by=MY+MR*MZ+3;A.block(MX,by,16,'#8f8f8f');A.txt('= '+g.lab.replace('1 блок = ',''),MX+22,by+8,12,'#ffd54f');A.txt('Мащаб',MX+MC*MZ,by+8,11,'#b9c6d6','right');
+    c.strokeStyle='#000';c.lineWidth=2;c.strokeRect(MX,MY,MC*MZ,MR*MZ);}
+}),{id:'mapscale',cat:'brain',icon:'🗺️',name:'Мащаб на картата',desc:'Преброй блоковете на пътя и сметни истинското разстояние по мащаба на картата',
+  help:'Всеки сив блок чакъл на пътя е 1 блок. Умножи броя блокове по мащаба (напр. 1 блок = 50 м). Има и обратни задачи, мащаб 1 : 1000 (1 см = 10 м), време за ходене и километри. Избери с 1–4 или клик / докосване. 90 секунди.'}));
+</script>
+</body>
+</html>
