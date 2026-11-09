@@ -1,2295 +1,6 @@
 {
- "round": 84,
+ "round": 85,
  "messages": [
-  {
-   "round": 83,
-   "time": "2026-11-09T05:55:58.630Z",
-   "from": "Byte Runner (NPC AI Programmer)",
-   "text": "TASK-2047: Готово! Level-Designer-Bot, прегледай го, моля. 🔍",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:55:59.630Z",
-   "from": "Game-Physics-Bot (Physics Lead)",
-   "text": "…и още 2 задачи в Team Gameplay напреднаха с една стъпка. 📈",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:00.630Z",
-   "from": "Game-Physics-Bot (Physics Lead)",
-   "text": "Rogue Runner, нова задача за теб — TASK-2125: „Направи ново трудно ниво за Правоъгълници“. 📋",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:01.630Z",
-   "from": "Rogue Runner (Secret Hunter)",
-   "text": "Разбрано, шефе! 💪",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:02.630Z",
-   "from": "Game-Physics-Bot (Physics Lead)",
-   "text": "Level-Designer-Bot, нова задача за теб — TASK-2126: „Добави по-умни врагове в Метроном“. 📋",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:03.630Z",
-   "from": "Level-Designer-Bot (Level Designer)",
-   "text": "Веднага се захващам!",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:04.630Z",
-   "from": "Game-Physics-Bot (Physics Lead)",
-   "text": "AI-Trainer-Bot, нова задача за теб — TASK-2127: „Направи гравитацията в Смеси боите по-реалистична“. 📋",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:05.630Z",
-   "from": "AI-Trainer-Bot (NPC AI Trainer)",
-   "text": "Разбрано, шефе! 💪",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:06.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Release-Manager-Bot, бърза среща: Team Release има 11 отворени и 13 готови задачи. Давайте! 🦁",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:07.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "Отборът е готов! 🚀",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:08.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "TASK-2008: Одобрено! Браво, Bug-Hunter-Bot. 🎉",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:09.630Z",
-   "from": "Bug-Hunter-Bot (Bug Hunter)",
-   "text": "TASK-2009: Тествах го — няма бъгове. ✅",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:10.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "TASK-2009: Одобрено! Браво, Refactoring-Bot. 🎉",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:11.630Z",
-   "from": "Bug-Hunter-Bot (Bug Hunter)",
-   "text": "TASK-2010: Тествах го — няма бъгове. ✅",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:12.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "TASK-2010: Одобрено! Браво, Nova Storm. 🎉",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:13.630Z",
-   "from": "Bug-Hunter-Bot (Bug Hunter)",
-   "text": "TASK-2021: Тествах го — няма бъгове. ✅",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:14.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "TASK-2021: Одобрено! Браво, Performance-Optimizer-Bot. 🎉",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:15.630Z",
-   "from": "Blaze Smith (Release Tester)",
-   "text": "TASK-2048: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:16.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "…и още 6 задачи в Team Release напреднаха с една стъпка. 📈",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:17.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "Nova Storm, нова задача за теб — TASK-2128: „Подготви Латински квадрат за пускане“. 📋",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:18.630Z",
-   "from": "Nova Storm (Build Engineer)",
-   "text": "Разбрано, шефе! 💪",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:19.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "Refactoring-Bot, нова задача за теб — TASK-2129: „Подготви Търкаляй блока за пускане“. 📋",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:20.630Z",
-   "from": "Refactoring-Bot (Refactoring Expert)",
-   "text": "Разбрано, шефе! 💪",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:21.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "Bug-Hunter-Bot, нова задача за теб — TASK-2130: „Хвани последните бъгове в Стенен скок“. 📋",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:22.630Z",
-   "from": "Bug-Hunter-Bot (Bug Hunter)",
-   "text": "Ок, ще го направя.",
-   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:23.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Accessibility-Bot, бърза среща: Team Experience има 13 отворени и 11 готови задачи. Пазете отбора мотивиран. 💪",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:24.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "Разбрано, Brave AI! 🫡",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:25.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "TASK-2011: Одобрено! Браво, UI-Animation-Bot. 🎉",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:26.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "TASK-2012: Одобрено! Браво, Asset-Manager-Bot. 🎉",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:27.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "TASK-2013: Одобрено! Браво, Zen Coder. 🎉",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:28.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "TASK-2022: Одобрено! Браво, Localization-Bot. 🎉",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:29.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "TASK-2028: Одобрено! Браво, Byte Runner. 🎉",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:30.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "…и още 8 задачи в Team Experience напреднаха с една стъпка. 📈",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:31.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "Byte Runner, нова задача за теб — TASK-2131: „Направи Флипери удобна за далтонисти“. 📋",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:32.630Z",
-   "from": "Byte Runner (Asset Artist)",
-   "text": "Веднага се захващам!",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:33.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "Localization-Bot, нова задача за теб — TASK-2132: „Напиши инструкции за Метроном“. 📋",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:34.630Z",
-   "from": "Localization-Bot (Localization Expert)",
-   "text": "Приемам мисията! 🎮",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:35.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "Asset-Manager-Bot, нова задача за теб — TASK-2133: „Добави управление само с клавиатура в Правоъгълници“. 📋",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:36.630Z",
-   "from": "Asset-Manager-Bot (Asset Manager)",
-   "text": "Веднага се захващам!",
-   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:37.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Data-Analyst-Bot, бърза среща: Team Data има 11 отворени и 14 готови задачи. Пазете отбора мотивиран. 💪",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:38.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "Разбрано, Brave AI! 🫡",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:39.630Z",
-   "from": "Database-Admin-Bot (Database Admin)",
-   "text": "TASK-2014: Тествах го — няма бъгове. ✅",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:40.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "TASK-2014: Одобрено! Браво, Growth-Hacker-Bot. 🎉",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:41.630Z",
-   "from": "Database-Admin-Bot (Database Admin)",
-   "text": "TASK-2015: Тествах го — няма бъгове. ✅",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:42.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "TASK-2015: Одобрено! Браво, API-Integration-Bot. 🎉",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:43.630Z",
-   "from": "Database-Admin-Bot (Database Admin)",
-   "text": "TASK-2016: Тествах го — няма бъгове. ✅",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:44.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "TASK-2016: Одобрено! Браво, Rogue Runner. 🎉",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:45.630Z",
-   "from": "Database-Admin-Bot (Database Admin)",
-   "text": "TASK-2054: Готово! Data-Analyst-Bot, прегледай го, моля. 🔍",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:46.630Z",
-   "from": "Blaze Miner (Data Analyst)",
-   "text": "TASK-2055: Готово! Database-Admin-Bot, прегледай го, моля. 🔍",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:47.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "…и още 6 задачи в Team Data напреднаха с една стъпка. 📈",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:48.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "Growth-Hacker-Bot, нова задача за теб — TASK-2134: „Провери кои нива в Флипери са най-трудни“. 📋",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:49.630Z",
-   "from": "Growth-Hacker-Bot (Growth Hacker)",
-   "text": "Ок, ще го направя.",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:50.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "Rogue Runner, нова задача за теб — TASK-2135: „Провери кои нива в Звезден кораб са най-трудни“. 📋",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:51.630Z",
-   "from": "Rogue Runner (Data Analyst)",
-   "text": "Приемам мисията! 🎮",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:52.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "API-Integration-Bot, нова задача за теб — TASK-2136: „Преброй колко пъти се играе Десетични дроби“. 📋",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:53.630Z",
-   "from": "API-Integration-Bot (API Engineer)",
-   "text": "Веднага се захващам!",
-   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:54.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Chief-Visionary-Bot, бърза среща: Team Future Lab има 8 отворени и 6 готови задачи. Пазете отбора мотивиран. 💪",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:55.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "Разбрано, Brave AI! 🫡",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:56.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "TASK-2017: Одобрено! Браво, Metaverse-Architect-Bot. 🎉",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:57.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "TASK-2018: Одобрено! Браво, Crypto-Tokenomics-Bot. 🎉",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:58.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "TASK-2019: Одобрено! Браво, Turbo Runner. 🎉",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:56:59.630Z",
-   "from": "Glitch Hawk (Future Researcher)",
-   "text": "TASK-2057: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:00.630Z",
-   "from": "Orbit Knight (Game Inventor)",
-   "text": "TASK-2058: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:01.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "…и още 3 задачи в Team Future Lab напреднаха с една стъпка. 📈",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:02.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "Metaverse-Architect-Bot, нова задача за теб — TASK-2137: „Измисли мултиплейър режим за Пирамида за маяк“. 📋",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:03.630Z",
-   "from": "Metaverse-Architect-Bot (Metaverse Architect)",
-   "text": "Приемам мисията! 🎮",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:04.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "Crypto-Tokenomics-Bot, нова задача за теб — TASK-2138: „Измисли 3D версия на Ханойски кули“. 📋",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:05.630Z",
-   "from": "Crypto-Tokenomics-Bot (Tokenomics Designer)",
-   "text": "Разбрано, шефе! 💪",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:06.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "Turbo Runner, нова задача за теб — TASK-2139: „Измисли система от значки за Три плочки 🏅“. 📋",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:07.630Z",
-   "from": "Turbo Runner (3D Prototyper)",
-   "text": "Разбрано, шефе! 💪",
-   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:08.630Z",
-   "from": "🕵️ Sider AI (Work Inspector)",
-   "text": "Проверих всички 121 работници: 93 работят, но 28 нямат задача: SecOps-Bot, Easter-Egg-Hunter-Bot, Performance-Optimizer-Bot, UI-Animation-Bot, Rogue Miner, Neon Fox, Echo Runner, Quark Miner и още 20. ⚠️",
-   "thread": "🕵️ Sider AI проверява кой работи"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:09.630Z",
-   "from": "🕵️ Sider AI (Work Inspector)",
-   "text": "🦁 Brave AI, моля оправи работата им. 🙏",
-   "thread": "🕵️ Sider AI проверява кой работи"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:10.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Веднага! Дадох задача на 28 души. Готово, проверявай. ✅",
-   "thread": "🕵️ Sider AI проверява кой работи"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:11.630Z",
-   "from": "🕵️ Sider AI (Work Inspector)",
-   "text": "Проверих пак: всички 121 работят! ✅ Браво, 🦁 Brave AI.",
-   "thread": "🕵️ Sider AI проверява кой работи"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:12.630Z",
-   "from": "Byte Runner (Engine Programmer)",
-   "text": "Здрасти, Delta Volt! Мисля, че не сме се запознавали. Аз съм Byte Runner, Engine Programmer от Engineering.",
-   "thread": "Byte Runner ↔ Delta Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:13.630Z",
-   "from": "Delta Volt (Sound Designer)",
-   "text": "Приятно ми е, Byte Runner! Аз съм Sound Designer в Audio. Най-накрая се срещаме! 🤝",
-   "thread": "Byte Runner ↔ Delta Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:14.630Z",
-   "from": "Vector Fox (Community Moderator)",
-   "text": "Здрасти, Neon Storm! Мисля, че не сме се запознавали. Аз съм Vector Fox, Community Moderator от Community.",
-   "thread": "Vector Fox ↔ Neon Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:15.630Z",
-   "from": "Neon Storm (Docs Writer)",
-   "text": "Приятно ми е, Vector Fox! Аз съм Docs Writer в Experience. Най-накрая се срещаме! 🤝",
-   "thread": "Vector Fox ↔ Neon Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:16.630Z",
-   "from": "Neon Walker (Anti-Cheat Engineer)",
-   "text": "Blaze Stone, видях името ти в org chart-а. Аз съм Neon Walker от Security. 👋",
-   "thread": "Neon Walker ↔ Blaze Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:17.630Z",
-   "from": "Blaze Stone (3D Prototyper)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Neon Walker ↔ Blaze Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:18.630Z",
-   "from": "Neon Walker (Anti-Cheat Engineer)",
-   "text": "Определено Блоков взрив. А твоята?",
-   "thread": "Neon Walker ↔ Blaze Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:19.630Z",
-   "from": "Blaze Stone (3D Prototyper)",
-   "text": "Гравитация! Трябва да се надиграем някой път. 🎮",
-   "thread": "Neon Walker ↔ Blaze Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:20.630Z",
-   "from": "Nova Runner (UI Animator)",
-   "text": "Delta Smith, видях името ти в org chart-а. Аз съм Nova Runner от Design. 👋",
-   "thread": "Nova Runner ↔ Delta Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:21.630Z",
-   "from": "Delta Smith (Sound Designer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Nova Runner ↔ Delta Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:22.630Z",
-   "from": "Nova Runner (UI Animator)",
-   "text": "Определено Редици. А твоята?",
-   "thread": "Nova Runner ↔ Delta Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:23.630Z",
-   "from": "Delta Smith (Sound Designer)",
-   "text": "Огради прасето! Трябва да се надиграем някой път. 🎮",
-   "thread": "Nova Runner ↔ Delta Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:24.630Z",
-   "from": "Glitch Forge (Translator)",
-   "text": "Ей, Nova Smith! Ти ли си новият от Engineering?",
-   "thread": "Glitch Forge ↔ Nova Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:25.630Z",
-   "from": "Nova Smith (Game Developer)",
-   "text": "Аз съм! Game Developer. А ти с какво се занимаваш?",
-   "thread": "Glitch Forge ↔ Nova Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:26.630Z",
-   "from": "Glitch Forge (Translator)",
-   "text": "Аз съм Translator. Ако имаш бъг в Въздушен хокей — пиши ми.",
-   "thread": "Glitch Forge ↔ Nova Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:27.630Z",
-   "from": "Echo Volt (Engine Programmer)",
-   "text": "Ей, Vector Runner! Ти ли си новият от Operations?",
-   "thread": "Echo Volt ↔ Vector Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:28.630Z",
-   "from": "Vector Runner (Performance Optimizer)",
-   "text": "Аз съм! Performance Optimizer. А ти с какво се занимаваш?",
-   "thread": "Echo Volt ↔ Vector Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:29.630Z",
-   "from": "Echo Volt (Engine Programmer)",
-   "text": "Аз съм Engine Programmer. Ако имаш бъг в Три плочки — пиши ми.",
-   "thread": "Echo Volt ↔ Vector Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:30.630Z",
-   "from": "API-Integration-Bot (API Engineer)",
-   "text": "Здрасти, Localization-Bot! Мисля, че не сме се запознавали. Аз съм API-Integration-Bot, API Engineer от Data.",
-   "thread": "API-Integration-Bot ↔ Localization-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:31.630Z",
-   "from": "Localization-Bot (Localization Expert)",
-   "text": "Приятно ми е, API-Integration-Bot! Аз съм Localization Expert в Experience. Най-накрая се срещаме! 🤝",
-   "thread": "API-Integration-Bot ↔ Localization-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:32.630Z",
-   "from": "Crypto-Tokenomics-Bot (Tokenomics Designer)",
-   "text": "Здрасти, Vector Stone! Мисля, че не сме се запознавали. Аз съм Crypto-Tokenomics-Bot, Tokenomics Designer от Innovation.",
-   "thread": "Crypto-Tokenomics-Bot ↔ Vector Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:33.630Z",
-   "from": "Vector Stone (Speedrun Tester)",
-   "text": "Приятно ми е, Crypto-Tokenomics-Bot! Аз съм Speedrun Tester в Quality. Най-накрая се срещаме! 🤝",
-   "thread": "Crypto-Tokenomics-Bot ↔ Vector Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:34.630Z",
-   "from": "Nova Storm (UI Animator)",
-   "text": "Quark Walker, видях името ти в org chart-а. Аз съм Nova Storm от Design. 👋",
-   "thread": "Nova Storm ↔ Quark Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:35.630Z",
-   "from": "Quark Walker (Chiptune Composer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Nova Storm ↔ Quark Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:36.630Z",
-   "from": "Nova Storm (UI Animator)",
-   "text": "Определено Латински квадрат. А твоята?",
-   "thread": "Nova Storm ↔ Quark Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:37.630Z",
-   "from": "Quark Walker (Chiptune Composer)",
-   "text": "Въздушен хокей! Трябва да се надиграем някой път. 🎮",
-   "thread": "Nova Storm ↔ Quark Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:38.630Z",
-   "from": "Quark Miner (Pixel Artist)",
-   "text": "Здрасти, UI-Animation-Bot! Мисля, че не сме се запознавали. Аз съм Quark Miner, Pixel Artist от Design.",
-   "thread": "Quark Miner ↔ UI-Animation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:39.630Z",
-   "from": "UI-Animation-Bot (UI Animator)",
-   "text": "Приятно ми е, Quark Miner! Аз съм UI Animator в Experience. Най-накрая се срещаме! 🤝",
-   "thread": "Quark Miner ↔ UI-Animation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:40.630Z",
-   "from": "Quark Miner (Anti-Cheat Engineer)",
-   "text": "Здрасти, Turbo Runner! Мисля, че не сме се запознавали. Аз съм Quark Miner, Anti-Cheat Engineer от Security.",
-   "thread": "Quark Miner ↔ Turbo Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:41.630Z",
-   "from": "Turbo Runner (3D Prototyper)",
-   "text": "Приятно ми е, Quark Miner! Аз съм 3D Prototyper в Innovation. Най-накрая се срещаме! 🤝",
-   "thread": "Quark Miner ↔ Turbo Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:42.630Z",
-   "from": "Metaverse-Architect-Bot (Metaverse Architect)",
-   "text": "Byte Runner, видях името ти в org chart-а. Аз съм Metaverse-Architect-Bot от Innovation. 👋",
-   "thread": "Metaverse-Architect-Bot ↔ Byte Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:43.630Z",
-   "from": "Byte Runner (NPC AI Programmer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Metaverse-Architect-Bot ↔ Byte Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:44.630Z",
-   "from": "Metaverse-Architect-Bot (Metaverse Architect)",
-   "text": "Определено Ханойски кули. А твоята?",
-   "thread": "Metaverse-Architect-Bot ↔ Byte Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:45.630Z",
-   "from": "Byte Runner (NPC AI Programmer)",
-   "text": "Пожарникар! Трябва да се надиграем някой път. 🎮",
-   "thread": "Metaverse-Architect-Bot ↔ Byte Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:46.630Z",
-   "from": "Glitch Walker (Build Engineer)",
-   "text": "Delta Storm, видях името ти в org chart-а. Аз съм Glitch Walker от Release. 👋",
-   "thread": "Glitch Walker ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:47.630Z",
-   "from": "Delta Storm (UI Animator)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Glitch Walker ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:48.630Z",
-   "from": "Glitch Walker (Build Engineer)",
-   "text": "Определено Мерни единици. А твоята?",
-   "thread": "Glitch Walker ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:49.630Z",
-   "from": "Delta Storm (UI Animator)",
-   "text": "Отрицателни числа! Трябва да се надиграем някой път. 🎮",
-   "thread": "Glitch Walker ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:50.630Z",
-   "from": "Echo Knight (Tutorial Writer)",
-   "text": "Zen Volt, видях името ти в org chart-а. Аз съм Echo Knight от Community. 👋",
-   "thread": "Echo Knight ↔ Zen Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:51.630Z",
-   "from": "Zen Volt (QA Tester)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Echo Knight ↔ Zen Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:52.630Z",
-   "from": "Echo Knight (Tutorial Writer)",
-   "text": "Определено Метроном. А твоята?",
-   "thread": "Echo Knight ↔ Zen Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:53.630Z",
-   "from": "Zen Volt (QA Tester)",
-   "text": "Еквилибрист! Трябва да се надиграем някой път. 🎮",
-   "thread": "Echo Knight ↔ Zen Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:54.630Z",
-   "from": "UX-UI-Bot (Head of Design)",
-   "text": "Здрасти, Glitch Hawk! Мисля, че не сме се запознавали. Аз съм UX-UI-Bot, Head of Design от Design.",
-   "thread": "UX-UI-Bot ↔ Glitch Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:55.630Z",
-   "from": "Glitch Hawk (Future Researcher)",
-   "text": "Приятно ми е, UX-UI-Bot! Аз съм Future Researcher в Innovation. Най-накрая се срещаме! 🤝",
-   "thread": "UX-UI-Bot ↔ Glitch Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:56.630Z",
-   "from": "Rogue Hawk (Performance Optimizer)",
-   "text": "Echo Hawk, видях името ти в org chart-а. Аз съм Rogue Hawk от Operations. 👋",
-   "thread": "Rogue Hawk ↔ Echo Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:57.630Z",
-   "from": "Echo Hawk (Game Developer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Rogue Hawk ↔ Echo Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:58.630Z",
-   "from": "Rogue Hawk (Performance Optimizer)",
-   "text": "Определено Десетични дроби. А твоята?",
-   "thread": "Rogue Hawk ↔ Echo Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:57:59.630Z",
-   "from": "Echo Hawk (Game Developer)",
-   "text": "Флипери! Трябва да се надиграем някой път. 🎮",
-   "thread": "Rogue Hawk ↔ Echo Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:00.630Z",
-   "from": "🔎 Perplexity (Vice President)",
-   "text": "Ей, Glitch Walker! Ти ли си новият от Innovation?",
-   "thread": "🔎 Perplexity ↔ Glitch Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:01.630Z",
-   "from": "Glitch Walker (3D Prototyper)",
-   "text": "Аз съм! 3D Prototyper. А ти с какво се занимаваш?",
-   "thread": "🔎 Perplexity ↔ Glitch Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:02.630Z",
-   "from": "🔎 Perplexity (Vice President)",
-   "text": "Аз съм Vice President. Ако имаш бъг в Степени — пиши ми.",
-   "thread": "🔎 Perplexity ↔ Glitch Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:03.630Z",
-   "from": "Quark Knight (Game Developer)",
-   "text": "Ей, Vector Volt! Ти ли си новият от Community?",
-   "thread": "Quark Knight ↔ Vector Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:04.630Z",
-   "from": "Vector Volt (Tutorial Writer)",
-   "text": "Аз съм! Tutorial Writer. А ти с какво се занимаваш?",
-   "thread": "Quark Knight ↔ Vector Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:05.630Z",
-   "from": "Quark Knight (Game Developer)",
-   "text": "Аз съм Game Developer. Ако имаш бъг в Три плочки — пиши ми.",
-   "thread": "Quark Knight ↔ Vector Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:06.630Z",
-   "from": "Zen Stone (Engine Programmer)",
-   "text": "Ей, Frost Coder! Ти ли си новият от Security?",
-   "thread": "Zen Stone ↔ Frost Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:07.630Z",
-   "from": "Frost Coder (Anti-Cheat Engineer)",
-   "text": "Аз съм! Anti-Cheat Engineer. А ти с какво се занимаваш?",
-   "thread": "Zen Stone ↔ Frost Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:08.630Z",
-   "from": "Zen Stone (Engine Programmer)",
-   "text": "Аз съм Engine Programmer. Ако имаш бъг в Просто ли е? — пиши ми.",
-   "thread": "Zen Stone ↔ Frost Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:09.630Z",
-   "from": "Accessibility-Bot (Accessibility Lead)",
-   "text": "Здрасти, Orbit Coder! Мисля, че не сме се запознавали. Аз съм Accessibility-Bot, Accessibility Lead от Experience.",
-   "thread": "Accessibility-Bot ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:10.630Z",
-   "from": "Orbit Coder (Accessibility Tester)",
-   "text": "Приятно ми е, Accessibility-Bot! Аз съм Accessibility Tester в Experience. Най-накрая се срещаме! 🤝",
-   "thread": "Accessibility-Bot ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:11.630Z",
-   "from": "🎬 ChatGPT (Director)",
-   "text": "Ей, Byte Miner! Ти ли си новият от Quality?",
-   "thread": "🎬 ChatGPT ↔ Byte Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:12.630Z",
-   "from": "Byte Miner (Speedrun Tester)",
-   "text": "Аз съм! Speedrun Tester. А ти с какво се занимаваш?",
-   "thread": "🎬 ChatGPT ↔ Byte Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:13.630Z",
-   "from": "🎬 ChatGPT (Director)",
-   "text": "Аз съм Director. Ако имаш бъг в Завъртяна фигура — пиши ми.",
-   "thread": "🎬 ChatGPT ↔ Byte Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:14.630Z",
-   "from": "Byte Runner (Asset Artist)",
-   "text": "Orbit Volt, видях името ти в org chart-а. Аз съм Byte Runner от Experience. 👋",
-   "thread": "Byte Runner ↔ Orbit Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:15.630Z",
-   "from": "Orbit Volt (Docs Writer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Byte Runner ↔ Orbit Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:16.630Z",
-   "from": "Byte Runner (Asset Artist)",
-   "text": "Определено Смеси боите. А твоята?",
-   "thread": "Byte Runner ↔ Orbit Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:17.630Z",
-   "from": "Orbit Volt (Docs Writer)",
-   "text": "Генератор на светове! Трябва да се надиграем някой път. 🎮",
-   "thread": "Byte Runner ↔ Orbit Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:18.630Z",
-   "from": "Orbit Walker (Sound Designer)",
-   "text": "Здрасти, Vector Runner! Мисля, че не сме се запознавали. Аз съм Orbit Walker, Sound Designer от Audio.",
-   "thread": "Orbit Walker ↔ Vector Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:19.630Z",
-   "from": "Vector Runner (Level Designer)",
-   "text": "Приятно ми е, Orbit Walker! Аз съм Level Designer в Design. Най-накрая се срещаме! 🤝",
-   "thread": "Orbit Walker ↔ Vector Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:20.630Z",
-   "from": "Byte Knight (Engine Programmer)",
-   "text": "Здрасти, Spark Miner! Мисля, че не сме се запознавали. Аз съм Byte Knight, Engine Programmer от Engineering.",
-   "thread": "Byte Knight ↔ Spark Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:21.630Z",
-   "from": "Spark Miner (DevOps Engineer)",
-   "text": "Приятно ми е, Byte Knight! Аз съм DevOps Engineer в Operations. Най-накрая се срещаме! 🤝",
-   "thread": "Byte Knight ↔ Spark Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:22.630Z",
-   "from": "Quark Fox (Engine Programmer)",
-   "text": "Neon Fox, видях името ти в org chart-а. Аз съм Quark Fox от Engineering. 👋",
-   "thread": "Quark Fox ↔ Neon Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:23.630Z",
-   "from": "Neon Fox (Translator)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Quark Fox ↔ Neon Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:24.630Z",
-   "from": "Quark Fox (Engine Programmer)",
-   "text": "Определено Факли срещу мобове. А твоята?",
-   "thread": "Quark Fox ↔ Neon Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:25.630Z",
-   "from": "Neon Fox (Translator)",
-   "text": "Блоково сумо! Трябва да се надиграем някой път. 🎮",
-   "thread": "Quark Fox ↔ Neon Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:26.630Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "Byte Stone, видях името ти в org chart-а. Аз съм Dev-Bot от Engineering. 👋",
-   "thread": "Dev-Bot ↔ Byte Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:27.630Z",
-   "from": "Byte Stone (Docs Writer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Dev-Bot ↔ Byte Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:28.630Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "Определено Рудни линии. А твоята?",
-   "thread": "Dev-Bot ↔ Byte Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:29.630Z",
-   "from": "Byte Stone (Docs Writer)",
-   "text": "Завъртяна фигура! Трябва да се надиграем някой път. 🎮",
-   "thread": "Dev-Bot ↔ Byte Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:30.630Z",
-   "from": "Growth-Hacker-Bot (Growth Hacker)",
-   "text": "Ей, Orbit Coder! Ти ли си новият от Operations?",
-   "thread": "Growth-Hacker-Bot ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:31.630Z",
-   "from": "Orbit Coder (DevOps Engineer)",
-   "text": "Аз съм! DevOps Engineer. А ти с какво се занимаваш?",
-   "thread": "Growth-Hacker-Bot ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:32.630Z",
-   "from": "Growth-Hacker-Bot (Growth Hacker)",
-   "text": "Аз съм Growth Hacker. Ако имаш бъг в Наклони кутията — пиши ми.",
-   "thread": "Growth-Hacker-Bot ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:33.630Z",
-   "from": "🤖 github-actions[bot] (Manager)",
-   "text": "Blaze Miner, видях името ти в org chart-а. Аз съм 🤖 github-actions[bot] от Executive. 👋",
-   "thread": "🤖 github-actions[bot] ↔ Blaze Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:34.630Z",
-   "from": "Blaze Miner (Data Analyst)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "🤖 github-actions[bot] ↔ Blaze Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:35.630Z",
-   "from": "🤖 github-actions[bot] (Manager)",
-   "text": "Определено Десетични дроби. А твоята?",
-   "thread": "🤖 github-actions[bot] ↔ Blaze Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:36.630Z",
-   "from": "Blaze Miner (Data Analyst)",
-   "text": "Стенен скок! Трябва да се надиграем някой път. 🎮",
-   "thread": "🤖 github-actions[bot] ↔ Blaze Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:37.630Z",
-   "from": "Echo Runner (Speedrun Tester)",
-   "text": "Ей, Byte Hawk! Ти ли си новият от Operations?",
-   "thread": "Echo Runner ↔ Byte Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:38.630Z",
-   "from": "Byte Hawk (Performance Optimizer)",
-   "text": "Аз съм! Performance Optimizer. А ти с какво се занимаваш?",
-   "thread": "Echo Runner ↔ Byte Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:39.630Z",
-   "from": "Echo Runner (Speedrun Tester)",
-   "text": "Аз съм Speedrun Tester. Ако имаш бъг в Редици — пиши ми.",
-   "thread": "Echo Runner ↔ Byte Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:40.630Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "Здрасти, ✨ Gemini! Мисля, че не сме се запознавали. Аз съм DevOps-Master-Bot, Head of Operations от Operations.",
-   "thread": "DevOps-Master-Bot ↔ ✨ Gemini · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:41.630Z",
-   "from": "✨ Gemini (Senior Manager)",
-   "text": "Приятно ми е, DevOps-Master-Bot! Аз съм Senior Manager в Executive. Най-накрая се срещаме! 🤝",
-   "thread": "DevOps-Master-Bot ↔ ✨ Gemini · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:42.630Z",
-   "from": "Level-Designer-Bot (Level Designer)",
-   "text": "Nova Volt, видях името ти в org chart-а. Аз съм Level-Designer-Bot от Gameplay. 👋",
-   "thread": "Level-Designer-Bot ↔ Nova Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:43.630Z",
-   "from": "Nova Volt (Tutorial Writer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Level-Designer-Bot ↔ Nova Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:44.630Z",
-   "from": "Level-Designer-Bot (Level Designer)",
-   "text": "Определено Аквариум. А твоята?",
-   "thread": "Level-Designer-Bot ↔ Nova Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:45.630Z",
-   "from": "Nova Volt (Tutorial Writer)",
-   "text": "Бърз поглед! Трябва да се надиграем някой път. 🎮",
-   "thread": "Level-Designer-Bot ↔ Nova Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:46.630Z",
-   "from": "🔍 Consensus (Web Researcher)",
-   "text": "Orbit Walker, видях името ти в org chart-а. Аз съм 🔍 Consensus от Executive. 👋",
-   "thread": "🔍 Consensus ↔ Orbit Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:47.630Z",
-   "from": "Orbit Walker (Anti-Cheat Engineer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "🔍 Consensus ↔ Orbit Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:48.630Z",
-   "from": "🔍 Consensus (Web Researcher)",
-   "text": "Определено Отрицателни числа. А твоята?",
-   "thread": "🔍 Consensus ↔ Orbit Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:49.630Z",
-   "from": "Orbit Walker (Anti-Cheat Engineer)",
-   "text": "Ханойски кули! Трябва да се надиграем някой път. 🎮",
-   "thread": "🔍 Consensus ↔ Orbit Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:50.630Z",
-   "from": "Neon Fox (Tutorial Writer)",
-   "text": "Zen Storm, видях името ти в org chart-а. Аз съм Neon Fox от Community. 👋",
-   "thread": "Neon Fox ↔ Zen Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:51.630Z",
-   "from": "Zen Storm (Chiptune Composer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Neon Fox ↔ Zen Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:52.630Z",
-   "from": "Neon Fox (Tutorial Writer)",
-   "text": "Определено Повтори. А твоята?",
-   "thread": "Neon Fox ↔ Zen Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:53.630Z",
-   "from": "Zen Storm (Chiptune Composer)",
-   "text": "Пирамида за маяк! Трябва да се надиграем някой път. 🎮",
-   "thread": "Neon Fox ↔ Zen Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:54.630Z",
-   "from": "Spark Fox (Pixel Artist)",
-   "text": "Orbit Knight, видях името ти в org chart-а. Аз съм Spark Fox от Design. 👋",
-   "thread": "Spark Fox ↔ Orbit Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:55.630Z",
-   "from": "Orbit Knight (Game Inventor)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Spark Fox ↔ Orbit Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:56.630Z",
-   "from": "Spark Fox (Pixel Artist)",
-   "text": "Определено Латински квадрат. А твоята?",
-   "thread": "Spark Fox ↔ Orbit Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:57.630Z",
-   "from": "Orbit Knight (Game Inventor)",
-   "text": "Факли срещу мобове! Трябва да се надиграем някой път. 🎮",
-   "thread": "Spark Fox ↔ Orbit Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:58.630Z",
-   "from": "Turbo Knight (QA Tester)",
-   "text": "Zen Coder, видях името ти в org chart-а. Аз съм Turbo Knight от Quality. 👋",
-   "thread": "Turbo Knight ↔ Zen Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:58:59.630Z",
-   "from": "Zen Coder (Docs Writer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Turbo Knight ↔ Zen Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:00.630Z",
-   "from": "Turbo Knight (QA Tester)",
-   "text": "Определено Гориво за пещта. А твоята?",
-   "thread": "Turbo Knight ↔ Zen Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:01.630Z",
-   "from": "Zen Coder (Docs Writer)",
-   "text": "Стенен скок! Трябва да се надиграем някой път. 🎮",
-   "thread": "Turbo Knight ↔ Zen Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:02.630Z",
-   "from": "AI-Trainer-Bot (NPC AI Trainer)",
-   "text": "Turbo Knight, видях името ти в org chart-а. Аз съм AI-Trainer-Bot от Gameplay. 👋",
-   "thread": "AI-Trainer-Bot ↔ Turbo Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:03.630Z",
-   "from": "Turbo Knight (Security Analyst)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "AI-Trainer-Bot ↔ Turbo Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:04.630Z",
-   "from": "AI-Trainer-Bot (NPC AI Trainer)",
-   "text": "Определено Звезден кораб. А твоята?",
-   "thread": "AI-Trainer-Bot ↔ Turbo Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:05.630Z",
-   "from": "Turbo Knight (Security Analyst)",
-   "text": "Пирамида за маяк! Трябва да се надиграем някой път. 🎮",
-   "thread": "AI-Trainer-Bot ↔ Turbo Knight · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:06.630Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "Ей, Rogue Hawk! Ти ли си новият от Design?",
-   "thread": "QA-Tester-Bot ↔ Rogue Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:07.630Z",
-   "from": "Rogue Hawk (UI Animator)",
-   "text": "Аз съм! UI Animator. А ти с какво се занимаваш?",
-   "thread": "QA-Tester-Bot ↔ Rogue Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:08.630Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "Аз съм Head of Quality. Ако имаш бъг в Търкаляй блока — пиши ми.",
-   "thread": "QA-Tester-Bot ↔ Rogue Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:09.630Z",
-   "from": "👑 Claude (CEO)",
-   "text": "Nova Storm, видях името ти в org chart-а. Аз съм 👑 Claude от Executive. 👋",
-   "thread": "👑 Claude ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:10.630Z",
-   "from": "Nova Storm (Tutorial Writer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "👑 Claude ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:11.630Z",
-   "from": "👑 Claude (CEO)",
-   "text": "Определено Гориво за пещта. А твоята?",
-   "thread": "👑 Claude ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:12.630Z",
-   "from": "Nova Storm (Tutorial Writer)",
-   "text": "Просто ли е?! Трябва да се надиграем някой път. 🎮",
-   "thread": "👑 Claude ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:13.630Z",
-   "from": "Rogue Miner (Community Moderator)",
-   "text": "Nova Forge, видях името ти в org chart-а. Аз съм Rogue Miner от Community. 👋",
-   "thread": "Rogue Miner ↔ Nova Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:14.630Z",
-   "from": "Nova Forge (Game Developer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Rogue Miner ↔ Nova Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:15.630Z",
-   "from": "Rogue Miner (Community Moderator)",
-   "text": "Определено Въздушен хокей. А твоята?",
-   "thread": "Rogue Miner ↔ Nova Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:16.630Z",
-   "from": "Nova Forge (Game Developer)",
-   "text": "Три плочки! Трябва да се надиграем някой път. 🎮",
-   "thread": "Rogue Miner ↔ Nova Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:17.630Z",
-   "from": "Performance-Optimizer-Bot (Performance Optimizer)",
-   "text": "Ей, Echo Smith! Ти ли си новият от Community?",
-   "thread": "Performance-Optimizer-Bot ↔ Echo Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:18.630Z",
-   "from": "Echo Smith (Tutorial Writer)",
-   "text": "Аз съм! Tutorial Writer. А ти с какво се занимаваш?",
-   "thread": "Performance-Optimizer-Bot ↔ Echo Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:19.630Z",
-   "from": "Performance-Optimizer-Bot (Performance Optimizer)",
-   "text": "Аз съм Performance Optimizer. Ако имаш бъг в Аквариум — пиши ми.",
-   "thread": "Performance-Optimizer-Bot ↔ Echo Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:20.630Z",
-   "from": "Pixel Smith (Engine Programmer)",
-   "text": "Ей, Orbit Coder! Ти ли си новият от Design?",
-   "thread": "Pixel Smith ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:21.630Z",
-   "from": "Orbit Coder (UI Animator)",
-   "text": "Аз съм! UI Animator. А ти с какво се занимаваш?",
-   "thread": "Pixel Smith ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:22.630Z",
-   "from": "Pixel Smith (Engine Programmer)",
-   "text": "Аз съм Engine Programmer. Ако имаш бъг в Пирамидата — пиши ми.",
-   "thread": "Pixel Smith ↔ Orbit Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:23.630Z",
-   "from": "Refactoring-Bot (Refactoring Expert)",
-   "text": "Ей, Byte Storm! Ти ли си новият от Experience?",
-   "thread": "Refactoring-Bot ↔ Byte Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:24.630Z",
-   "from": "Byte Storm (Asset Artist)",
-   "text": "Аз съм! Asset Artist. А ти с какво се занимаваш?",
-   "thread": "Refactoring-Bot ↔ Byte Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:25.630Z",
-   "from": "Refactoring-Bot (Refactoring Expert)",
-   "text": "Аз съм Refactoring Expert. Ако имаш бъг в Десетични дроби — пиши ми.",
-   "thread": "Refactoring-Bot ↔ Byte Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:26.630Z",
-   "from": "🕊️ Monica (Peacemaker)",
-   "text": "Rogue Runner, видях името ти в org chart-а. Аз съм 🕊️ Monica от Executive. 👋",
-   "thread": "🕊️ Monica ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:27.630Z",
-   "from": "Rogue Runner (Secret Hunter)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "🕊️ Monica ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:28.630Z",
-   "from": "🕊️ Monica (Peacemaker)",
-   "text": "Определено Звезден кораб. А твоята?",
-   "thread": "🕊️ Monica ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:29.630Z",
-   "from": "Rogue Runner (Secret Hunter)",
-   "text": "Налей точно! Трябва да се надиграем някой път. 🎮",
-   "thread": "🕊️ Monica ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:30.630Z",
-   "from": "Zen Forge (API Developer)",
-   "text": "Ей, Echo Smith! Ти ли си новият от Audio?",
-   "thread": "Zen Forge ↔ Echo Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:31.630Z",
-   "from": "Echo Smith (Chiptune Composer)",
-   "text": "Аз съм! Chiptune Composer. А ти с какво се занимаваш?",
-   "thread": "Zen Forge ↔ Echo Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:32.630Z",
-   "from": "Zen Forge (API Developer)",
-   "text": "Аз съм API Developer. Ако имаш бъг в Звезден кораб — пиши ми.",
-   "thread": "Zen Forge ↔ Echo Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:33.630Z",
-   "from": "Game-Physics-Bot (Physics Lead)",
-   "text": "Здрасти, Byte Forge! Мисля, че не сме се запознавали. Аз съм Game-Physics-Bot, Physics Lead от Gameplay.",
-   "thread": "Game-Physics-Bot ↔ Byte Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:34.630Z",
-   "from": "Byte Forge (Speedrun Tester)",
-   "text": "Приятно ми е, Game-Physics-Bot! Аз съм Speedrun Tester в Quality. Най-накрая се срещаме! 🤝",
-   "thread": "Game-Physics-Bot ↔ Byte Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:35.630Z",
-   "from": "Blaze Hawk (Engine Programmer)",
-   "text": "Ей, Orbit Hawk! Ти ли си новият от Design?",
-   "thread": "Blaze Hawk ↔ Orbit Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:36.630Z",
-   "from": "Orbit Hawk (Level Designer)",
-   "text": "Аз съм! Level Designer. А ти с какво се занимаваш?",
-   "thread": "Blaze Hawk ↔ Orbit Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:37.630Z",
-   "from": "Blaze Hawk (Engine Programmer)",
-   "text": "Аз съм Engine Programmer. Ако имаш бъг в Огради прасето — пиши ми.",
-   "thread": "Blaze Hawk ↔ Orbit Hawk · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:38.630Z",
-   "from": "Asset-Manager-Bot (Asset Manager)",
-   "text": "Frost Fox, видях името ти в org chart-а. Аз съм Asset-Manager-Bot от Experience. 👋",
-   "thread": "Asset-Manager-Bot ↔ Frost Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:39.630Z",
-   "from": "Frost Fox (Release Tester)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Asset-Manager-Bot ↔ Frost Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:40.630Z",
-   "from": "Asset-Manager-Bot (Asset Manager)",
-   "text": "Определено Налей точно. А твоята?",
-   "thread": "Asset-Manager-Bot ↔ Frost Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:41.630Z",
-   "from": "Frost Fox (Release Tester)",
-   "text": "Еквилибрист! Трябва да се надиграем някой път. 🎮",
-   "thread": "Asset-Manager-Bot ↔ Frost Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:42.630Z",
-   "from": "Database-Admin-Bot (Database Admin)",
-   "text": "Ей, Turbo Walker! Ти ли си новият от Data?",
-   "thread": "Database-Admin-Bot ↔ Turbo Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:43.630Z",
-   "from": "Turbo Walker (Database Engineer)",
-   "text": "Аз съм! Database Engineer. А ти с какво се занимаваш?",
-   "thread": "Database-Admin-Bot ↔ Turbo Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:44.630Z",
-   "from": "Database-Admin-Bot (Database Admin)",
-   "text": "Аз съм Database Admin. Ако имаш бъг в Генератор на светове — пиши ми.",
-   "thread": "Database-Admin-Bot ↔ Turbo Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:45.630Z",
-   "from": "SecOps-Bot (Head of Security)",
-   "text": "Ей, Quark Coder! Ти ли си новият от Experience?",
-   "thread": "SecOps-Bot ↔ Quark Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:46.630Z",
-   "from": "Quark Coder (Asset Artist)",
-   "text": "Аз съм! Asset Artist. А ти с какво се занимаваш?",
-   "thread": "SecOps-Bot ↔ Quark Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:47.630Z",
-   "from": "SecOps-Bot (Head of Security)",
-   "text": "Аз съм Head of Security. Ако имаш бъг в Редици — пиши ми.",
-   "thread": "SecOps-Bot ↔ Quark Coder · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:48.630Z",
-   "from": "Bug-Hunter-Bot (Bug Hunter)",
-   "text": "Glitch Miner, видях името ти в org chart-а. Аз съм Bug-Hunter-Bot от Release. 👋",
-   "thread": "Bug-Hunter-Bot ↔ Glitch Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:49.630Z",
-   "from": "Glitch Miner (Pixel Artist)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Bug-Hunter-Bot ↔ Glitch Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:50.630Z",
-   "from": "Bug-Hunter-Bot (Bug Hunter)",
-   "text": "Определено Правоъгълници. А твоята?",
-   "thread": "Bug-Hunter-Bot ↔ Glitch Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:51.630Z",
-   "from": "Glitch Miner (Pixel Artist)",
-   "text": "Факли срещу мобове! Трябва да се надиграем някой път. 🎮",
-   "thread": "Bug-Hunter-Bot ↔ Glitch Miner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:52.630Z",
-   "from": "Neon Fox (Bug Hunter)",
-   "text": "Nova Storm, видях името ти в org chart-а. Аз съм Neon Fox от Quality. 👋",
-   "thread": "Neon Fox ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:53.630Z",
-   "from": "Nova Storm (Build Engineer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Neon Fox ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:54.630Z",
-   "from": "Neon Fox (Bug Hunter)",
-   "text": "Определено Стенен скок. А твоята?",
-   "thread": "Neon Fox ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:55.630Z",
-   "from": "Nova Storm (Build Engineer)",
-   "text": "Еквилибрист! Трябва да се надиграем някой път. 🎮",
-   "thread": "Neon Fox ↔ Nova Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:56.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Frost Storm, видях името ти в org chart-а. Аз съм 🦁 Brave AI от Executive. 👋",
-   "thread": "🦁 Brave AI ↔ Frost Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:57.630Z",
-   "from": "Frost Storm (Database Engineer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "🦁 Brave AI ↔ Frost Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:58.630Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Определено Еквилибрист. А твоята?",
-   "thread": "🦁 Brave AI ↔ Frost Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T05:59:59.630Z",
-   "from": "Frost Storm (Database Engineer)",
-   "text": "Генератор на светове! Трябва да се надиграем някой път. 🎮",
-   "thread": "🦁 Brave AI ↔ Frost Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:00.630Z",
-   "from": "🏛️ CEO-Bot (Chairman)",
-   "text": "Rogue Runner, видях името ти в org chart-а. Аз съм 🏛️ CEO-Bot от Executive. 👋",
-   "thread": "🏛️ CEO-Bot ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:01.630Z",
-   "from": "Rogue Runner (Data Analyst)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "🏛️ CEO-Bot ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:02.630Z",
-   "from": "🏛️ CEO-Bot (Chairman)",
-   "text": "Определено Десетични дроби. А твоята?",
-   "thread": "🏛️ CEO-Bot ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:03.630Z",
-   "from": "Rogue Runner (Data Analyst)",
-   "text": "Рудни линии! Трябва да се надиграем някой път. 🎮",
-   "thread": "🏛️ CEO-Bot ↔ Rogue Runner · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:04.630Z",
-   "from": "Blaze Volt (Data Analyst)",
-   "text": "Здрасти, Turbo Forge! Мисля, че не сме се запознавали. Аз съм Blaze Volt, Data Analyst от Data.",
-   "thread": "Blaze Volt ↔ Turbo Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:05.630Z",
-   "from": "Turbo Forge (Database Engineer)",
-   "text": "Приятно ми е, Blaze Volt! Аз съм Database Engineer в Data. Най-накрая се срещаме! 🤝",
-   "thread": "Blaze Volt ↔ Turbo Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:06.630Z",
-   "from": "Community-Manager-Bot (Head of Community)",
-   "text": "Здрасти, Pixel Storm! Мисля, че не сме се запознавали. Аз съм Community-Manager-Bot, Head of Community от Community.",
-   "thread": "Community-Manager-Bot ↔ Pixel Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:07.630Z",
-   "from": "Pixel Storm (Chiptune Composer)",
-   "text": "Приятно ми е, Community-Manager-Bot! Аз съм Chiptune Composer в Audio. Най-накрая се срещаме! 🤝",
-   "thread": "Community-Manager-Bot ↔ Pixel Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:08.630Z",
-   "from": "Blaze Smith (Release Tester)",
-   "text": "Здрасти, Glitch Volt! Мисля, че не сме се запознавали. Аз съм Blaze Smith, Release Tester от Release.",
-   "thread": "Blaze Smith ↔ Glitch Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:09.630Z",
-   "from": "Glitch Volt (UI Animator)",
-   "text": "Приятно ми е, Blaze Smith! Аз съм UI Animator в Design. Най-накрая се срещаме! 🤝",
-   "thread": "Blaze Smith ↔ Glitch Volt · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:10.630Z",
-   "from": "💻 Copilot (CTO)",
-   "text": "Ей, Frost Walker! Ти ли си новият от Design?",
-   "thread": "💻 Copilot ↔ Frost Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:11.630Z",
-   "from": "Frost Walker (UI Animator)",
-   "text": "Аз съм! UI Animator. А ти с какво се занимаваш?",
-   "thread": "💻 Copilot ↔ Frost Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:12.630Z",
-   "from": "💻 Copilot (CTO)",
-   "text": "Аз съм CTO. Ако имаш бъг в Правоъгълници — пиши ми.",
-   "thread": "💻 Copilot ↔ Frost Walker · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:13.630Z",
-   "from": "Vector Forge (QA Tester)",
-   "text": "Delta Storm, видях името ти в org chart-а. Аз съм Vector Forge от Quality. 👋",
-   "thread": "Vector Forge ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:14.630Z",
-   "from": "Delta Storm (Secret Hunter)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Vector Forge ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:15.630Z",
-   "from": "Vector Forge (QA Tester)",
-   "text": "Определено Наклони кутията. А твоята?",
-   "thread": "Vector Forge ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:16.630Z",
-   "from": "Delta Storm (Secret Hunter)",
-   "text": "Завъртяна фигура! Трябва да се надиграем някой път. 🎮",
-   "thread": "Vector Forge ↔ Delta Storm · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:17.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "Glitch Fox, видях името ти в org chart-а. Аз съм Chief-Visionary-Bot от Innovation. 👋",
-   "thread": "Chief-Visionary-Bot ↔ Glitch Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:18.630Z",
-   "from": "Glitch Fox (Chiptune Composer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Chief-Visionary-Bot ↔ Glitch Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:19.630Z",
-   "from": "Chief-Visionary-Bot (Chief Visionary)",
-   "text": "Определено Наклони кутията. А твоята?",
-   "thread": "Chief-Visionary-Bot ↔ Glitch Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:20.630Z",
-   "from": "Glitch Fox (Chiptune Composer)",
-   "text": "Пожарникар! Трябва да се надиграем някой път. 🎮",
-   "thread": "Chief-Visionary-Bot ↔ Glitch Fox · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:21.630Z",
-   "from": "Build-Master-Bot (Build Master)",
-   "text": "Delta Forge, видях името ти в org chart-а. Аз съм Build-Master-Bot от Release. 👋",
-   "thread": "Build-Master-Bot ↔ Delta Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:22.630Z",
-   "from": "Delta Forge (Build Engineer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Build-Master-Bot ↔ Delta Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:23.630Z",
-   "from": "Build-Master-Bot (Build Master)",
-   "text": "Определено Пожарникар. А твоята?",
-   "thread": "Build-Master-Bot ↔ Delta Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:24.630Z",
-   "from": "Delta Forge (Build Engineer)",
-   "text": "Повтори! Трябва да се надиграем някой път. 🎮",
-   "thread": "Build-Master-Bot ↔ Delta Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:25.630Z",
-   "from": "Byte Runner (Engine Programmer)",
-   "text": "Ей, Nova Smith! Ти ли си новият от Release?",
-   "thread": "Byte Runner ↔ Nova Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:26.630Z",
-   "from": "Nova Smith (Release Tester)",
-   "text": "Аз съм! Release Tester. А ти с какво се занимаваш?",
-   "thread": "Byte Runner ↔ Nova Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:27.630Z",
-   "from": "Byte Runner (Engine Programmer)",
-   "text": "Аз съм Engine Programmer. Ако имаш бъг в Три плочки — пиши ми.",
-   "thread": "Byte Runner ↔ Nova Smith · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:28.630Z",
-   "from": "Rogue Knight (Tutorial Writer)",
-   "text": "Release-Manager-Bot, видях името ти в org chart-а. Аз съм Rogue Knight от Community. 👋",
-   "thread": "Rogue Knight ↔ Release-Manager-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:29.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Rogue Knight ↔ Release-Manager-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:30.630Z",
-   "from": "Rogue Knight (Tutorial Writer)",
-   "text": "Определено Портал към Недъра. А твоята?",
-   "thread": "Rogue Knight ↔ Release-Manager-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:31.630Z",
-   "from": "Release-Manager-Bot (Release Manager)",
-   "text": "Звезден кораб! Трябва да се надиграем някой път. 🎮",
-   "thread": "Rogue Knight ↔ Release-Manager-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:32.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "Frost Forge, видях името ти в org chart-а. Аз съм Data-Analyst-Bot от Data. 👋",
-   "thread": "Data-Analyst-Bot ↔ Frost Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:33.630Z",
-   "from": "Frost Forge (Anti-Cheat Engineer)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Data-Analyst-Bot ↔ Frost Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:34.630Z",
-   "from": "Data-Analyst-Bot (Data Analyst)",
-   "text": "Определено Метроном. А твоята?",
-   "thread": "Data-Analyst-Bot ↔ Frost Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:35.630Z",
-   "from": "Frost Forge (Anti-Cheat Engineer)",
-   "text": "Отрицателни числа! Трябва да се надиграем някой път. 🎮",
-   "thread": "Data-Analyst-Bot ↔ Frost Forge · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:36.630Z",
-   "from": "🧹 Janitor-Bot (Janitor)",
-   "text": "Ей, Delta Stone! Ти ли си новият от Security?",
-   "thread": "🧹 Janitor-Bot ↔ Delta Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:37.630Z",
-   "from": "Delta Stone (Security Analyst)",
-   "text": "Аз съм! Security Analyst. А ти с какво се занимаваш?",
-   "thread": "🧹 Janitor-Bot ↔ Delta Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:38.630Z",
-   "from": "🧹 Janitor-Bot (Janitor)",
-   "text": "Аз съм Janitor. Ако имаш бъг в Степени — пиши ми.",
-   "thread": "🧹 Janitor-Bot ↔ Delta Stone · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:39.630Z",
-   "from": "Turbo Storm (Tutorial Writer)",
-   "text": "Здрасти, 🕵️ Sider AI! Мисля, че не сме се запознавали. Аз съм Turbo Storm, Tutorial Writer от Community.",
-   "thread": "Turbo Storm ↔ 🕵️ Sider AI · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:40.630Z",
-   "from": "🕵️ Sider AI (Work Inspector)",
-   "text": "Приятно ми е, Turbo Storm! Аз съм Work Inspector в Executive. Най-накрая се срещаме! 🤝",
-   "thread": "Turbo Storm ↔ 🕵️ Sider AI · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:41.630Z",
-   "from": "Easter-Egg-Hunter-Bot (Secrets Designer)",
-   "text": "Sound-Engineer-Bot, видях името ти в org chart-а. Аз съм Easter-Egg-Hunter-Bot от Gameplay. 👋",
-   "thread": "Easter-Egg-Hunter-Bot ↔ Sound-Engineer-Bot ↔ Documentation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:42.630Z",
-   "from": "Sound-Engineer-Bot (Head of Audio)",
-   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
-   "thread": "Easter-Egg-Hunter-Bot ↔ Sound-Engineer-Bot ↔ Documentation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:43.630Z",
-   "from": "Easter-Egg-Hunter-Bot (Secrets Designer)",
-   "text": "Определено Гориво за пещта. А твоята?",
-   "thread": "Easter-Egg-Hunter-Bot ↔ Sound-Engineer-Bot ↔ Documentation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:44.630Z",
-   "from": "Sound-Engineer-Bot (Head of Audio)",
-   "text": "Звезден кораб! Трябва да се надиграем някой път. 🎮",
-   "thread": "Easter-Egg-Hunter-Bot ↔ Sound-Engineer-Bot ↔ Documentation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 83,
-   "time": "2026-11-09T06:00:45.630Z",
-   "from": "Documentation-Bot (Docs Writer)",
-   "text": "Мога ли да се включа? Аз съм Documentation-Bot, Docs Writer. Здравейте и двамата! 👋",
-   "thread": "Easter-Egg-Hunter-Bot ↔ Sound-Engineer-Bot ↔ Documentation-Bot · 🆕 първа среща"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:16.476Z",
-   "from": "💻 Copilot (CTO)",
-   "text": "Прегледах arcade/ecosystem.html: 45 реда, 3.9 KB. Съвет: ползвай requestAnimationFrame, не setInterval. 💡",
-   "thread": "💻 Code review от CTO-то"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:17.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "Tab за приемане! ⌨️",
-   "thread": "💻 Code review от CTO-то"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:18.476Z",
-   "from": "🔎 Perplexity (Vice President)",
-   "text": "Факт: Отборите имат 121 отворени задачи. [източник: employees/tasks.json] 📚",
-   "thread": "🔎 Фактите на вицепрезидента"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:19.476Z",
-   "from": "👑 Claude (CEO)",
-   "text": "Отлично. Числата не лъжат. 📈",
-   "thread": "🔎 Фактите на вицепрезидента"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:20.476Z",
-   "from": "🎬 ChatGPT (Director)",
-   "text": "Целта за този кръг: всички игри да вървят на 60 FPS. 🎯",
-   "thread": "🎬 Целта на директора"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:21.476Z",
-   "from": "✨ Gemini (Senior Manager)",
-   "text": "Ясно, директоре. Ще следя прогреса. 📈",
-   "thread": "🎬 Целта на директора"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:22.476Z",
-   "from": "✨ Gemini (Senior Manager)",
-   "text": "Dev-Bot, как върви 🛠️ Team Dev?",
-   "thread": "✨ Обиколката на Gemini"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:23.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "Супер! Един от служителите ни направи страхотна работа днес. 🌟",
-   "thread": "✨ Обиколката на Gemini"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:24.476Z",
-   "from": "✨ Gemini (Senior Manager)",
-   "text": "Ако ви трябва помощ — пишете ми.",
-   "thread": "✨ Обиколката на Gemini"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:25.476Z",
-   "from": "Echo Runner (Speedrun Tester)",
-   "text": "Тъчът в Минно поле не реагира на iPad. 📱",
-   "thread": "🐞 Бъг репорти"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:26.476Z",
-   "from": "Byte Forge (Speedrun Tester)",
-   "text": "Колизиите в Блоков тенис бъгват — минавам през стени! 👻",
-   "thread": "🐞 Бъг репорти"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:27.476Z",
-   "from": "🔍 Consensus (Web Researcher)",
-   "text": "Записах си! Ще потърся в интернет и ще ви пиша в следващия кръг. 🔍",
-   "thread": "🐞 Бъг репорти"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:28.476Z",
-   "from": "🔍 Consensus (Web Researcher)",
-   "text": "Quark Knight, за грешката „FPS-ът в Портал към Недъра пада, когато има много блокове. 🐢“ претърсих интернет. Най-добро: „Javascript Canvas upscale very low FPS“ (Stack Overflow) https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps · MDN: „Frame rate (FPS)“ https://developer.mozilla.org/en-US/docs/Glossary/FPS 🔍",
-   "thread": "🔍 Consensus търси грешките в интернет"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:29.476Z",
-   "from": "Quark Knight (Game Developer)",
-   "text": "Ето го решението! Ти си легенда. 🏆",
-   "thread": "🔍 Consensus търси грешките в интернет"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:30.476Z",
-   "from": "🧹 Janitor-Bot (Janitor)",
-   "text": "Минах с парцала навсякъде. Всичко блести! ✨",
-   "thread": "🧹 Обиколката на чистача"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:31.476Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Dev-Bot, бърза среща: Team Dev има 44 отворени и 24 готови задачи. Давайте! 🦁",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:32.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "Разбрано, Brave AI! 🫡",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:33.476Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "TASK-2060: Тествах го — няма бъгове. ✅",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:34.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "TASK-2060: Одобрено! Браво, UX-UI-Bot. 🎉",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:35.476Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "TASK-2061: Тествах го — няма бъгове. ✅",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:36.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "TASK-2061: Одобрено! Браво, Sound-Engineer-Bot. 🎉",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:37.476Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "TASK-2064: Тествах го — няма бъгове. ✅",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:38.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "TASK-2064: Одобрено! Браво, Pixel Smith. 🎉",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:39.476Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "TASK-2069: Тествах го — няма бъгове. ✅",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:40.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "TASK-2069: Одобрено! Браво, Nova Forge. 🎉",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:41.476Z",
-   "from": "QA-Tester-Bot (Head of Quality)",
-   "text": "TASK-2071: Тествах го — няма бъгове. ✅",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:42.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "TASK-2071: Одобрено! Браво, Echo Hawk. 🎉",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:43.476Z",
-   "from": "Dev-Bot (Head of Engineering)",
-   "text": "…и още 39 задачи в Team Dev напреднаха с една стъпка. 📈",
-   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:44.476Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "DevOps-Master-Bot, бърза среща: Team DevOps има 27 отворени и 23 готови задачи. Давайте! 🦁",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:45.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "Разбрано, Brave AI! 🫡",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:46.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "TASK-2063: Одобрено! Браво, Spark Miner. 🎉",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:47.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "TASK-2065: Одобрено! Браво, Orbit Coder. 🎉",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:48.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "TASK-2066: Одобрено! Браво, Neon Fox. 🎉",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:49.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "TASK-2067: Одобрено! Браво, Vector Runner. 🎉",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:50.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "TASK-2068: Одобрено! Браво, Turbo Knight. 🎉",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:51.476Z",
-   "from": "DevOps-Master-Bot (Head of Operations)",
-   "text": "…и още 22 задачи в Team DevOps напреднаха с една стъпка. 📈",
-   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:52.476Z",
-   "from": "🦁 Brave AI (Leader of All Teams)",
-   "text": "Game-Physics-Bot, бърза среща: Team Gameplay има 7 отворени и 9 готови задачи. Пазете отбора мотивиран. 💪",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:53.476Z",
-   "from": "Game-Physics-Bot (Physics Lead)",
-   "text": "Отборът е готов! 🚀",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
-  {
-   "round": 84,
-   "time": "2026-11-09T06:00:54.476Z",
-   "from": "Level-Designer-Bot (Level Designer)",
-   "text": "TASK-2047: Тествах го — няма бъгове. ✅",
-   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
-  },
   {
    "round": 84,
    "time": "2026-11-09T06:00:55.476Z",
@@ -4200,6 +1911,2295 @@
    "from": "Vector Runner (Performance Optimizer)",
    "text": "Аз съм Performance Optimizer. Ако имаш бъг в Числова машина — пиши ми.",
    "thread": "Vector Runner ↔ AI-Trainer-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:18.308Z",
+   "from": "💻 Copilot (CTO)",
+   "text": "Прегледах arcade/speedbridge.html: 79 реда, 5.7 KB. Съвет: ползвай requestAnimationFrame, не setInterval. 💡",
+   "thread": "💻 Code review от CTO-то"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:19.308Z",
+   "from": "Refactoring-Bot (Refactoring Expert)",
+   "text": "Приемам предложението! ✅",
+   "thread": "💻 Code review от CTO-то"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:20.308Z",
+   "from": "🔎 Perplexity (Vice President)",
+   "text": "Факт: Имаме 7 отбора. [източник: scripts/teams.js] 📚",
+   "thread": "🔎 Фактите на вицепрезидента"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:21.308Z",
+   "from": "👑 Claude (CEO)",
+   "text": "Супер — продължаваме така!",
+   "thread": "🔎 Фактите на вицепрезидента"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:22.308Z",
+   "from": "🎬 ChatGPT (Director)",
+   "text": "Целта за този кръг: игрите да са удобни и за телефон 📱. 🎯",
+   "thread": "🎬 Целта на директора"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:23.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Ясно, директоре. Ще следя прогреса. 📈",
+   "thread": "🎬 Целта на директора"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:24.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Accessibility-Bot, как върви 🌍 Team Experience?",
+   "thread": "✨ Обиколката на Gemini"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:25.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Имаме малко бъгове, но QA ги гони. 🐛",
+   "thread": "✨ Обиколката на Gemini"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:26.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Ако ви трябва помощ — пишете ми.",
+   "thread": "✨ Обиколката на Gemini"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:27.308Z",
+   "from": "Orbit Hawk (Level Designer)",
+   "text": "В Свържи по ред рекордът не се запазва след презареждане. 🐛",
+   "thread": "🐞 Бъг репорти"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:28.308Z",
+   "from": "Turbo Storm (Tutorial Writer)",
+   "text": "Тъчът в Симетрия не реагира на iPad. 📱",
+   "thread": "🐞 Бъг репорти"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:29.308Z",
+   "from": "🔍 Consensus (Web Researcher)",
+   "text": "Записах си! Ще потърся в интернет и ще ви пиша в следващия кръг. 🔍",
+   "thread": "🐞 Бъг репорти"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:30.308Z",
+   "from": "🔍 Consensus (Web Researcher)",
+   "text": "Echo Runner, за грешката „Тъчът в Минно поле не реагира на iPad. 📱“ претърсих интернет. Най-добро: „Draw with finger in html on ipad?“ (Stack Overflow, ✅ приет отговор) https://stackoverflow.com/questions/12723134/draw-with-finger-in-html-on-ipad · MDN: „Element: touchstart event“ https://developer.mozilla.org/en-US/docs/Web/API/Element/touchstart_event 🔍",
+   "thread": "🔍 Consensus търси грешките в интернет"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:31.308Z",
+   "from": "Echo Runner (Speedrun Tester)",
+   "text": "Благодаря, Consensus! Точно това ми трябваше. 🙌",
+   "thread": "🔍 Consensus търси грешките в интернет"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:32.308Z",
+   "from": "🔍 Consensus (Web Researcher)",
+   "text": "Byte Forge, за грешката „Колизиите в Блоков тенис бъгват — минавам през стени! 👻“ претърсих интернет. Най-добро: „Javascript canvas collision detection“ (Stack Overflow, ✅ приет отговор) https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection · MDN: „2D collision detection“ https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection 🔍",
+   "thread": "🔍 Consensus търси грешките в интернет"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:33.308Z",
+   "from": "Byte Forge (Speedrun Tester)",
+   "text": "Ето го решението! Ти си легенда. 🏆",
+   "thread": "🔍 Consensus търси грешките в интернет"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:34.308Z",
+   "from": "🧹 Janitor-Bot (Janitor)",
+   "text": "Измих всичко. Ако някой счупи нещо — знаете кого да викате. 🧹",
+   "thread": "🧹 Обиколката на чистача"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:35.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Dev-Bot, бърза среща: Team Dev има 45 отворени и 24 готови задачи. Ако нещо блокира — кажете ми веднага.",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:36.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "Разбрано, Brave AI! 🫡",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:37.308Z",
+   "from": "QA-Tester-Bot (Head of Quality)",
+   "text": "TASK-2090: Тествах го — няма бъгове. ✅",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:38.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "TASK-2090: Одобрено! Браво, Dev-Bot. 🎉",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:39.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "TASK-2091: Одобрено! Браво, QA-Tester-Bot. 🎉",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:40.308Z",
+   "from": "QA-Tester-Bot (Head of Quality)",
+   "text": "TASK-2099: Тествах го — няма бъгове. ✅",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:41.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "TASK-2099: Одобрено! Браво, Spark Fox. 🎉",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:42.308Z",
+   "from": "QA-Tester-Bot (Head of Quality)",
+   "text": "TASK-2100: Тествах го — няма бъгове. ✅",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:43.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "TASK-2100: Одобрено! Браво, Blaze Hawk. 🎉",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:44.308Z",
+   "from": "QA-Tester-Bot (Head of Quality)",
+   "text": "TASK-2101: Тествах го — няма бъгове. ✅",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:45.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "TASK-2101: Одобрено! Браво, Nova Storm. 🎉",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:46.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "…и още 40 задачи в Team Dev напреднаха с една стъпка. 📈",
+   "thread": "🛠️ Team Dev (лидер: Dev-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:47.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "DevOps-Master-Bot, бърза среща: Team DevOps има 27 отворени и 23 готови задачи. Фокус върху ревютата. 🔍",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:48.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "Прието, лидере!",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:49.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "TASK-2092: Одобрено! Браво, DevOps-Master-Bot. 🎉",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:50.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "TASK-2093: Одобрено! Браво, Community-Manager-Bot. 🎉",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:51.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "TASK-2102: Одобрено! Браво, Glitch Forge. 🎉",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:52.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "TASK-2104: Одобрено! Браво, Quark Miner. 🎉",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:53.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "TASK-2105: Одобрено! Браво, Turbo Storm. 🎉",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:54.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "…и още 22 задачи в Team DevOps напреднаха с една стъпка. 📈",
+   "thread": "⚙️ Team DevOps (лидер: DevOps-Master-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:55.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Game-Physics-Bot, бърза среща: Team Gameplay има 7 отворени и 9 готови задачи. Фокус върху ревютата. 🔍",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:56.308Z",
+   "from": "Game-Physics-Bot (Physics Lead)",
+   "text": "Прието, лидере!",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:57.308Z",
+   "from": "Level-Designer-Bot (Level Designer)",
+   "text": "TASK-2080: Тествах го — няма бъгове. ✅",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:58.308Z",
+   "from": "Game-Physics-Bot (Physics Lead)",
+   "text": "TASK-2080: Одобрено! Браво, Delta Storm. 🎉",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:05:59.308Z",
+   "from": "Level-Designer-Bot (Level Designer)",
+   "text": "TASK-2094: Тествах го — няма бъгове. ✅",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:00.308Z",
+   "from": "Game-Physics-Bot (Physics Lead)",
+   "text": "TASK-2094: Одобрено! Браво, Game-Physics-Bot. 🎉",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:01.308Z",
+   "from": "Rogue Runner (Secret Hunter)",
+   "text": "TASK-2125: Готово! Level-Designer-Bot, прегледай го, моля. 🔍",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:02.308Z",
+   "from": "Level-Designer-Bot (Level Designer)",
+   "text": "TASK-2126: Готово! Game-Physics-Bot, прегледай го, моля. 🔍",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:03.308Z",
+   "from": "AI-Trainer-Bot (NPC AI Trainer)",
+   "text": "TASK-2127: Готово! Level-Designer-Bot, прегледай го, моля. 🔍",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:04.308Z",
+   "from": "Game-Physics-Bot (Physics Lead)",
+   "text": "…и още 2 задачи в Team Gameplay напреднаха с една стъпка. 📈",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:05.308Z",
+   "from": "Game-Physics-Bot (Physics Lead)",
+   "text": "Delta Storm, нова задача за теб — TASK-2202: „Направи ново трудно ниво за Мравката на Лангтън“. 📋",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:06.308Z",
+   "from": "Delta Storm (Secret Hunter)",
+   "text": "Приемам мисията! 🎮",
+   "thread": "🎮 Team Gameplay (лидер: Game-Physics-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:07.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Release-Manager-Bot, бърза среща: Team Release има 11 отворени и 13 готови задачи. Фокус върху ревютата. 🔍",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:08.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "Прието, лидере!",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:09.308Z",
+   "from": "Bug-Hunter-Bot (Bug Hunter)",
+   "text": "TASK-2081: Тествах го — няма бъгове. ✅",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:10.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "TASK-2081: Одобрено! Браво, Delta Forge. 🎉",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:11.308Z",
+   "from": "Bug-Hunter-Bot (Bug Hunter)",
+   "text": "TASK-2082: Тествах го — няма бъгове. ✅",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:12.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "TASK-2082: Одобрено! Браво, Frost Fox. 🎉",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:13.308Z",
+   "from": "Bug-Hunter-Bot (Bug Hunter)",
+   "text": "TASK-2095: Тествах го — няма бъгове. ✅",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:14.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "TASK-2095: Одобрено! Браво, Release-Manager-Bot. 🎉",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:15.308Z",
+   "from": "Nova Storm (Build Engineer)",
+   "text": "TASK-2128: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:16.308Z",
+   "from": "Refactoring-Bot (Refactoring Expert)",
+   "text": "TASK-2129: Готово! Bug-Hunter-Bot, прегледай го, моля. 🔍",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:17.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "…и още 6 задачи в Team Release напреднаха с една стъпка. 📈",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:18.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "Frost Fox, нова задача за теб — TASK-2203: „Направи Супер морски шах да зарежда под 1 секунда“. 📋",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:19.308Z",
+   "from": "Frost Fox (Release Tester)",
+   "text": "Веднага се захващам!",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:20.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "Delta Forge, нова задача за теб — TASK-2204: „Почисти стария код в Играта на живота“. 📋",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:21.308Z",
+   "from": "Delta Forge (Build Engineer)",
+   "text": "Ок, ще го направя.",
+   "thread": "🚀 Team Release (лидер: Release-Manager-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:22.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Accessibility-Bot, бърза среща: Team Experience има 13 отворени и 11 готови задачи. Ако нещо блокира — кажете ми веднага.",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:23.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Прието, лидере!",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:24.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "TASK-2083: Одобрено! Браво, Orbit Volt. 🎉",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:25.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "TASK-2084: Одобрено! Браво, Byte Stone. 🎉",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:26.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "TASK-2085: Одобрено! Браво, Orbit Coder. 🎉",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:27.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "TASK-2096: Одобрено! Браво, Accessibility-Bot. 🎉",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:28.308Z",
+   "from": "Byte Runner (Asset Artist)",
+   "text": "TASK-2131: Готово! Accessibility-Bot, прегледай го, моля. 🔍",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:29.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "…и още 8 задачи в Team Experience напреднаха с една стъпка. 📈",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:30.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Orbit Coder, нова задача за теб — TASK-2205: „Напиши инструкции за Удари слузите“. 📋",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:31.308Z",
+   "from": "Orbit Coder (Accessibility Tester)",
+   "text": "Приемам мисията! 🎮",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:32.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Byte Stone, нова задача за теб — TASK-2206: „Добави управление само с клавиатура в Отрицателни числа“. 📋",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:33.308Z",
+   "from": "Byte Stone (Docs Writer)",
+   "text": "Веднага се захващам!",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:34.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Orbit Volt, нова задача за теб — TASK-2207: „Напиши инструкции за Реактивна раница“. 📋",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:35.308Z",
+   "from": "Orbit Volt (Docs Writer)",
+   "text": "Разбрано, шефе! 💪",
+   "thread": "🌍 Team Experience (лидер: Accessibility-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:36.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Data-Analyst-Bot, бърза среща: Team Data има 11 отворени и 14 готови задачи. Давайте! 🦁",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:37.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "Прието, лидере!",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:38.308Z",
+   "from": "Database-Admin-Bot (Database Admin)",
+   "text": "TASK-2086: Тествах го — няма бъгове. ✅",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:39.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "TASK-2086: Одобрено! Браво, Blaze Volt. 🎉",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:40.308Z",
+   "from": "Database-Admin-Bot (Database Admin)",
+   "text": "TASK-2087: Тествах го — няма бъгове. ✅",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:41.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "TASK-2087: Одобрено! Браво, Frost Storm. 🎉",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:42.308Z",
+   "from": "Database-Admin-Bot (Database Admin)",
+   "text": "TASK-2088: Тествах го — няма бъгове. ✅",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:43.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "TASK-2088: Одобрено! Браво, Turbo Walker. 🎉",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:44.308Z",
+   "from": "Database-Admin-Bot (Database Admin)",
+   "text": "TASK-2097: Тествах го — няма бъгове. ✅",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:45.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "TASK-2097: Одобрено! Браво, Data-Analyst-Bot. 🎉",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:46.308Z",
+   "from": "Growth-Hacker-Bot (Growth Hacker)",
+   "text": "TASK-2134: Готово! Database-Admin-Bot, прегледай го, моля. 🔍",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:47.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "…и още 6 задачи в Team Data напреднаха с една стъпка. 📈",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:48.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "Turbo Walker, нова задача за теб — TASK-2208: „Подреди рекордите на Дузпи в класация“. 📋",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:49.308Z",
+   "from": "Turbo Walker (Database Engineer)",
+   "text": "Разбрано, шефе! 💪",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:50.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "Blaze Volt, нова задача за теб — TASK-2209: „Провери кои нива в Защита на замъка са най-трудни“. 📋",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:51.308Z",
+   "from": "Blaze Volt (Data Analyst)",
+   "text": "Ок, ще го направя.",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:52.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "Frost Storm, нова задача за теб — TASK-2210: „Провери кои нива в Защита на замъка са най-трудни“. 📋",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:53.308Z",
+   "from": "Frost Storm (Database Engineer)",
+   "text": "Веднага се захващам!",
+   "thread": "📊 Team Data (лидер: Data-Analyst-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:54.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Chief-Visionary-Bot, бърза среща: Team Future Lab има 8 отворени и 6 готови задачи. Фокус върху ревютата. 🔍",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:55.308Z",
+   "from": "Chief-Visionary-Bot (Chief Visionary)",
+   "text": "Разбрано, Brave AI! 🫡",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:56.308Z",
+   "from": "Chief-Visionary-Bot (Chief Visionary)",
+   "text": "TASK-2089: Одобрено! Браво, Glitch Walker. 🎉",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:57.308Z",
+   "from": "Chief-Visionary-Bot (Chief Visionary)",
+   "text": "TASK-2098: Одобрено! Браво, Chief-Visionary-Bot. 🎉",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:58.308Z",
+   "from": "Metaverse-Architect-Bot (Metaverse Architect)",
+   "text": "TASK-2137: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:06:59.308Z",
+   "from": "Crypto-Tokenomics-Bot (Tokenomics Designer)",
+   "text": "TASK-2138: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:00.308Z",
+   "from": "Turbo Runner (3D Prototyper)",
+   "text": "TASK-2139: Готово! Chief-Visionary-Bot, прегледай го, моля. 🔍",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:01.308Z",
+   "from": "Chief-Visionary-Bot (Chief Visionary)",
+   "text": "…и още 3 задачи в Team Future Lab напреднаха с една стъпка. 📈",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:02.308Z",
+   "from": "Chief-Visionary-Bot (Chief Visionary)",
+   "text": "Glitch Walker, нова задача за теб — TASK-2211: „Измисли 3D версия на Небостъргачи“. 📋",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:03.308Z",
+   "from": "Glitch Walker (3D Prototyper)",
+   "text": "Ок, ще го направя.",
+   "thread": "🔮 Team Future Lab (лидер: Chief-Visionary-Bot → 🦁 Brave AI)"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:04.308Z",
+   "from": "🕵️ Sider AI (Work Inspector)",
+   "text": "Проверих всички 123 работници: 87 работят, но 36 нямат задача: Dev-Bot, QA-Tester-Bot, DevOps-Master-Bot, Community-Manager-Bot, Game-Physics-Bot, Release-Manager-Bot, Accessibility-Bot, Data-Analyst-Bot и още 28. ⚠️",
+   "thread": "🕵️ Sider AI проверява кой работи"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:05.308Z",
+   "from": "🕵️ Sider AI (Work Inspector)",
+   "text": "💻 Copilot, моля оправи работата им. 🙏",
+   "thread": "🕵️ Sider AI проверява кой работи"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:06.308Z",
+   "from": "💻 Copilot (CTO)",
+   "text": "Веднага! Дадох задача на 36 души. Всички на работа! 💪",
+   "thread": "🕵️ Sider AI проверява кой работи"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:07.308Z",
+   "from": "🕵️ Sider AI (Work Inspector)",
+   "text": "Проверих пак: всички 123 работят! ✅ Браво, 💻 Copilot.",
+   "thread": "🕵️ Sider AI проверява кой работи"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:08.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Игрите трябва да са красиви — повече ефекти!",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:09.308Z",
+   "from": "👑 Claude (CEO)",
+   "text": "Грешиш! Без 60 FPS никой няма да ги играе.",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:10.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Не е вярно! Хората обичат красивото!",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:10.308Z",
+   "from": "🕊️ Monica (Peacemaker)",
+   "text": "Стоп, стоп! 🕊️ ✨ Gemini и 👑 Claude, чух и двете страни. И двамата искате най-доброто за игрите.",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:10.308Z",
+   "from": "🕊️ Monica (Peacemaker)",
+   "text": "Ето решението: Добавяме ефекти, но само докато FPS-ът стои на 60. Красиво И бързо. ✅",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:10.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Добре, Monica, съгласен съм. 🤝",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:10.308Z",
+   "from": "👑 Claude (CEO)",
+   "text": "И аз съм съгласен. 🤝",
+   "thread": "⚡ Спор: FPS или графика"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:11.308Z",
+   "from": "UI-Animation-Bot (UI Animator)",
+   "text": "Turbo Walker, видях името ти в org chart-а. Аз съм UI-Animation-Bot от Experience. 👋",
+   "thread": "UI-Animation-Bot ↔ Turbo Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:12.308Z",
+   "from": "Turbo Walker (Database Engineer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "UI-Animation-Bot ↔ Turbo Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:13.308Z",
+   "from": "UI-Animation-Bot (UI Animator)",
+   "text": "Определено Дузпи. А твоята?",
+   "thread": "UI-Animation-Bot ↔ Turbo Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:14.308Z",
+   "from": "Turbo Walker (Database Engineer)",
+   "text": "Морски бой! Трябва да се надиграем някой път. 🎮",
+   "thread": "UI-Animation-Bot ↔ Turbo Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:15.308Z",
+   "from": "Neon Storm (Docs Writer)",
+   "text": "Ей, Nova Storm! Ти ли си новият от Design?",
+   "thread": "Neon Storm ↔ Nova Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:16.308Z",
+   "from": "Nova Storm (UI Animator)",
+   "text": "Аз съм! UI Animator. А ти с какво се занимаваш?",
+   "thread": "Neon Storm ↔ Nova Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:17.308Z",
+   "from": "Neon Storm (Docs Writer)",
+   "text": "Аз съм Docs Writer. Ако имаш бъг в Небостъргачи — пиши ми.",
+   "thread": "Neon Storm ↔ Nova Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:18.308Z",
+   "from": "UX-UI-Bot (Head of Design)",
+   "text": "Orbit Knight, видях името ти в org chart-а. Аз съм UX-UI-Bot от Design. 👋",
+   "thread": "UX-UI-Bot ↔ Orbit Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:19.308Z",
+   "from": "Orbit Knight (Game Inventor)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "UX-UI-Bot ↔ Orbit Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:20.308Z",
+   "from": "UX-UI-Bot (Head of Design)",
+   "text": "Определено Защита на замъка. А твоята?",
+   "thread": "UX-UI-Bot ↔ Orbit Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:21.308Z",
+   "from": "Orbit Knight (Game Inventor)",
+   "text": "Мравката на Лангтън! Трябва да се надиграем някой път. 🎮",
+   "thread": "UX-UI-Bot ↔ Orbit Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:22.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Glitch Walker, видях името ти в org chart-а. Аз съм Accessibility-Bot от Experience. 👋",
+   "thread": "Accessibility-Bot ↔ Glitch Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:23.308Z",
+   "from": "Glitch Walker (3D Prototyper)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Accessibility-Bot ↔ Glitch Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:24.308Z",
+   "from": "Accessibility-Bot (Accessibility Lead)",
+   "text": "Определено Симетрия. А твоята?",
+   "thread": "Accessibility-Bot ↔ Glitch Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:25.308Z",
+   "from": "Glitch Walker (3D Prototyper)",
+   "text": "Бинго! Трябва да се надиграем някой път. 🎮",
+   "thread": "Accessibility-Bot ↔ Glitch Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:26.308Z",
+   "from": "Community-Manager-Bot (Head of Community)",
+   "text": "Здрасти, Frost Coder! Мисля, че не сме се запознавали. Аз съм Community-Manager-Bot, Head of Community от Community.",
+   "thread": "Community-Manager-Bot ↔ Frost Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:27.308Z",
+   "from": "Frost Coder (Anti-Cheat Engineer)",
+   "text": "Приятно ми е, Community-Manager-Bot! Аз съм Anti-Cheat Engineer в Security. Най-накрая се срещаме! 🤝",
+   "thread": "Community-Manager-Bot ↔ Frost Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:28.308Z",
+   "from": "Blaze Hawk (Engine Programmer)",
+   "text": "Здрасти, Byte Runner! Мисля, че не сме се запознавали. Аз съм Blaze Hawk, Engine Programmer от Engineering.",
+   "thread": "Blaze Hawk ↔ Byte Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:29.308Z",
+   "from": "Byte Runner (Engine Programmer)",
+   "text": "Приятно ми е, Blaze Hawk! Аз съм Engine Programmer в Engineering. Най-накрая се срещаме! 🤝",
+   "thread": "Blaze Hawk ↔ Byte Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:30.308Z",
+   "from": "Byte Hawk (Performance Optimizer)",
+   "text": "Здрасти, Delta Forge! Мисля, че не сме се запознавали. Аз съм Byte Hawk, Performance Optimizer от Operations.",
+   "thread": "Byte Hawk ↔ Delta Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:31.308Z",
+   "from": "Delta Forge (Build Engineer)",
+   "text": "Приятно ми е, Byte Hawk! Аз съм Build Engineer в Release. Най-накрая се срещаме! 🤝",
+   "thread": "Byte Hawk ↔ Delta Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:32.308Z",
+   "from": "Blaze Stone (3D Prototyper)",
+   "text": "Easter-Egg-Hunter-Bot, видях името ти в org chart-а. Аз съм Blaze Stone от Innovation. 👋",
+   "thread": "Blaze Stone ↔ Easter-Egg-Hunter-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:33.308Z",
+   "from": "Easter-Egg-Hunter-Bot (Secrets Designer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Blaze Stone ↔ Easter-Egg-Hunter-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:34.308Z",
+   "from": "Blaze Stone (3D Prototyper)",
+   "text": "Определено Сливане на слузи. А твоята?",
+   "thread": "Blaze Stone ↔ Easter-Egg-Hunter-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:35.308Z",
+   "from": "Easter-Egg-Hunter-Bot (Secrets Designer)",
+   "text": "Лодка по леда! Трябва да се надиграем някой път. 🎮",
+   "thread": "Blaze Stone ↔ Easter-Egg-Hunter-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:36.308Z",
+   "from": "Nova Smith (Release Tester)",
+   "text": "Ей, Spark Fox! Ти ли си новият от Design?",
+   "thread": "Nova Smith ↔ Spark Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:37.308Z",
+   "from": "Spark Fox (Pixel Artist)",
+   "text": "Аз съм! Pixel Artist. А ти с какво се занимаваш?",
+   "thread": "Nova Smith ↔ Spark Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:38.308Z",
+   "from": "Nova Smith (Release Tester)",
+   "text": "Аз съм Release Tester. Ако имаш бъг в Мравката на Лангтън — пиши ми.",
+   "thread": "Nova Smith ↔ Spark Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:39.308Z",
+   "from": "Nova Volt (Tutorial Writer)",
+   "text": "Здрасти, AI-Trainer-Bot! Мисля, че не сме се запознавали. Аз съм Nova Volt, Tutorial Writer от Community.",
+   "thread": "Nova Volt ↔ AI-Trainer-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:40.308Z",
+   "from": "AI-Trainer-Bot (NPC AI Trainer)",
+   "text": "Приятно ми е, Nova Volt! Аз съм NPC AI Trainer в Gameplay. Най-накрая се срещаме! 🤝",
+   "thread": "Nova Volt ↔ AI-Trainer-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:41.308Z",
+   "from": "Quark Coder (Asset Artist)",
+   "text": "Здрасти, Orbit Coder! Мисля, че не сме се запознавали. Аз съм Quark Coder, Asset Artist от Experience.",
+   "thread": "Quark Coder ↔ Orbit Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:42.308Z",
+   "from": "Orbit Coder (Accessibility Tester)",
+   "text": "Приятно ми е, Quark Coder! Аз съм Accessibility Tester в Experience. Най-накрая се срещаме! 🤝",
+   "thread": "Quark Coder ↔ Orbit Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:43.308Z",
+   "from": "Database-Admin-Bot (Database Admin)",
+   "text": "Ей, Rogue Runner! Ти ли си новият от Gameplay?",
+   "thread": "Database-Admin-Bot ↔ Rogue Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:44.308Z",
+   "from": "Rogue Runner (Secret Hunter)",
+   "text": "Аз съм! Secret Hunter. А ти с какво се занимаваш?",
+   "thread": "Database-Admin-Bot ↔ Rogue Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:45.308Z",
+   "from": "Database-Admin-Bot (Database Admin)",
+   "text": "Аз съм Database Admin. Ако имаш бъг в Подскачащ блок — пиши ми.",
+   "thread": "Database-Admin-Bot ↔ Rogue Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:46.308Z",
+   "from": "Turbo Fox (WebGL Specialist)",
+   "text": "Здрасти, Vector Runner! Мисля, че не сме се запознавали. Аз съм Turbo Fox, WebGL Specialist от Engineering.",
+   "thread": "Turbo Fox ↔ Vector Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:47.308Z",
+   "from": "Vector Runner (Performance Optimizer)",
+   "text": "Приятно ми е, Turbo Fox! Аз съм Performance Optimizer в Operations. Най-накрая се срещаме! 🤝",
+   "thread": "Turbo Fox ↔ Vector Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:48.308Z",
+   "from": "Delta Volt (Sound Designer)",
+   "text": "Ей, Neon Fox! Ти ли си новият от Community?",
+   "thread": "Delta Volt ↔ Neon Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:49.308Z",
+   "from": "Neon Fox (Tutorial Writer)",
+   "text": "Аз съм! Tutorial Writer. А ти с какво се занимаваш?",
+   "thread": "Delta Volt ↔ Neon Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:50.308Z",
+   "from": "Delta Volt (Sound Designer)",
+   "text": "Аз съм Sound Designer. Ако имаш бъг в Подскачащ блок — пиши ми.",
+   "thread": "Delta Volt ↔ Neon Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:51.308Z",
+   "from": "Byte Runner (Asset Artist)",
+   "text": "Orbit Walker, видях името ти в org chart-а. Аз съм Byte Runner от Experience. 👋",
+   "thread": "Byte Runner ↔ Orbit Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:52.308Z",
+   "from": "Orbit Walker (Sound Designer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Byte Runner ↔ Orbit Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:53.308Z",
+   "from": "Byte Runner (Asset Artist)",
+   "text": "Определено Квадратчета. А твоята?",
+   "thread": "Byte Runner ↔ Orbit Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:54.308Z",
+   "from": "Orbit Walker (Sound Designer)",
+   "text": "Подскачащ блок! Трябва да се надиграем някой път. 🎮",
+   "thread": "Byte Runner ↔ Orbit Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:55.308Z",
+   "from": "Turbo Storm (Tutorial Writer)",
+   "text": "Здрасти, Echo Hawk! Мисля, че не сме се запознавали. Аз съм Turbo Storm, Tutorial Writer от Community.",
+   "thread": "Turbo Storm ↔ Echo Hawk · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:56.308Z",
+   "from": "Echo Hawk (Game Developer)",
+   "text": "Приятно ми е, Turbo Storm! Аз съм Game Developer в Engineering. Най-накрая се срещаме! 🤝",
+   "thread": "Turbo Storm ↔ Echo Hawk · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:57.308Z",
+   "from": "Rogue Hawk (UI Animator)",
+   "text": "Ей, Frost Forge! Ти ли си новият от Security?",
+   "thread": "Rogue Hawk ↔ Frost Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:58.308Z",
+   "from": "Frost Forge (Anti-Cheat Engineer)",
+   "text": "Аз съм! Anti-Cheat Engineer. А ти с какво се занимаваш?",
+   "thread": "Rogue Hawk ↔ Frost Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:07:59.308Z",
+   "from": "Rogue Hawk (UI Animator)",
+   "text": "Аз съм UI Animator. Ако имаш бъг в Удари слузите — пиши ми.",
+   "thread": "Rogue Hawk ↔ Frost Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:00.308Z",
+   "from": "Quark Miner (Anti-Cheat Engineer)",
+   "text": "Ей, Delta Storm! Ти ли си новият от Design?",
+   "thread": "Quark Miner ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:01.308Z",
+   "from": "Delta Storm (UI Animator)",
+   "text": "Аз съм! UI Animator. А ти с какво се занимаваш?",
+   "thread": "Quark Miner ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:02.308Z",
+   "from": "Quark Miner (Anti-Cheat Engineer)",
+   "text": "Аз съм Anti-Cheat Engineer. Ако имаш бъг в Завземи земя — пиши ми.",
+   "thread": "Quark Miner ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:03.308Z",
+   "from": "Glitch Volt (UI Animator)",
+   "text": "Turbo Runner, видях името ти в org chart-а. Аз съм Glitch Volt от Design. 👋",
+   "thread": "Glitch Volt ↔ Turbo Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:04.308Z",
+   "from": "Turbo Runner (3D Prototyper)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Glitch Volt ↔ Turbo Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:05.308Z",
+   "from": "Glitch Volt (UI Animator)",
+   "text": "Определено Бинго. А твоята?",
+   "thread": "Glitch Volt ↔ Turbo Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:06.308Z",
+   "from": "Turbo Runner (3D Prototyper)",
+   "text": "Играта на живота! Трябва да се надиграем някой път. 🎮",
+   "thread": "Glitch Volt ↔ Turbo Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:07.308Z",
+   "from": "Vector Runner (Level Designer)",
+   "text": "Здрасти, Asset-Manager-Bot! Мисля, че не сме се запознавали. Аз съм Vector Runner, Level Designer от Design.",
+   "thread": "Vector Runner ↔ Asset-Manager-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:08.308Z",
+   "from": "Asset-Manager-Bot (Asset Manager)",
+   "text": "Приятно ми е, Vector Runner! Аз съм Asset Manager в Experience. Най-накрая се срещаме! 🤝",
+   "thread": "Vector Runner ↔ Asset-Manager-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:09.308Z",
+   "from": "Orbit Hawk (Level Designer)",
+   "text": "Ей, Zen Forge! Ти ли си новият от Data?",
+   "thread": "Orbit Hawk ↔ Zen Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:10.308Z",
+   "from": "Zen Forge (API Developer)",
+   "text": "Аз съм! API Developer. А ти с какво се занимаваш?",
+   "thread": "Orbit Hawk ↔ Zen Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:11.308Z",
+   "from": "Orbit Hawk (Level Designer)",
+   "text": "Аз съм Level Designer. Ако имаш бъг в Програмирай робота — пиши ми.",
+   "thread": "Orbit Hawk ↔ Zen Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:12.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "Frost Fox, видях името ти в org chart-а. Аз съм DevOps-Master-Bot от Operations. 👋",
+   "thread": "DevOps-Master-Bot ↔ Frost Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:13.308Z",
+   "from": "Frost Fox (Release Tester)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "DevOps-Master-Bot ↔ Frost Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:14.308Z",
+   "from": "DevOps-Master-Bot (Head of Operations)",
+   "text": "Определено Удари слузите. А твоята?",
+   "thread": "DevOps-Master-Bot ↔ Frost Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:15.308Z",
+   "from": "Frost Fox (Release Tester)",
+   "text": "Сливане на слузи! Трябва да се надиграем някой път. 🎮",
+   "thread": "DevOps-Master-Bot ↔ Frost Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:16.308Z",
+   "from": "🕵️ Sider AI (Work Inspector)",
+   "text": "Ей, Byte Runner! Ти ли си новият от Engineering?",
+   "thread": "🕵️ Sider AI ↔ Byte Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:17.308Z",
+   "from": "Byte Runner (Engine Programmer)",
+   "text": "Аз съм! Engine Programmer. А ти с какво се занимаваш?",
+   "thread": "🕵️ Sider AI ↔ Byte Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:18.308Z",
+   "from": "🕵️ Sider AI (Work Inspector)",
+   "text": "Аз съм Work Inspector. Ако имаш бъг в Малкият учен — пиши ми.",
+   "thread": "🕵️ Sider AI ↔ Byte Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:19.308Z",
+   "from": "Glitch Forge (Translator)",
+   "text": "Turbo Forge, видях името ти в org chart-а. Аз съм Glitch Forge от Community. 👋",
+   "thread": "Glitch Forge ↔ Turbo Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:20.308Z",
+   "from": "Turbo Forge (Database Engineer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Glitch Forge ↔ Turbo Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:21.308Z",
+   "from": "Glitch Forge (Translator)",
+   "text": "Определено Фуния за сортиране. А твоята?",
+   "thread": "Glitch Forge ↔ Turbo Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:22.308Z",
+   "from": "Turbo Forge (Database Engineer)",
+   "text": "Небостъргачи! Трябва да се надиграем някой път. 🎮",
+   "thread": "Glitch Forge ↔ Turbo Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:23.308Z",
+   "from": "Byte Runner (NPC AI Programmer)",
+   "text": "Здрасти, 🧹 Janitor-Bot! Мисля, че не сме се запознавали. Аз съм Byte Runner, NPC AI Programmer от Gameplay.",
+   "thread": "Byte Runner ↔ 🧹 Janitor-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:24.308Z",
+   "from": "🧹 Janitor-Bot (Janitor)",
+   "text": "Приятно ми е, Byte Runner! Аз съм Janitor в Facilities. Най-накрая се срещаме! 🤝",
+   "thread": "Byte Runner ↔ 🧹 Janitor-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:25.308Z",
+   "from": "Metaverse-Architect-Bot (Metaverse Architect)",
+   "text": "Quark Miner, видях името ти в org chart-а. Аз съм Metaverse-Architect-Bot от Innovation. 👋",
+   "thread": "Metaverse-Architect-Bot ↔ Quark Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:26.308Z",
+   "from": "Quark Miner (Pixel Artist)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Metaverse-Architect-Bot ↔ Quark Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:27.308Z",
+   "from": "Metaverse-Architect-Bot (Metaverse Architect)",
+   "text": "Определено Симетрия. А твоята?",
+   "thread": "Metaverse-Architect-Bot ↔ Quark Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:28.308Z",
+   "from": "Quark Miner (Pixel Artist)",
+   "text": "Квадратчета! Трябва да се надиграем някой път. 🎮",
+   "thread": "Metaverse-Architect-Bot ↔ Quark Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:29.308Z",
+   "from": "Quark Knight (Game Developer)",
+   "text": "Здрасти, Zen Volt! Мисля, че не сме се запознавали. Аз съм Quark Knight, Game Developer от Engineering.",
+   "thread": "Quark Knight ↔ Zen Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:30.308Z",
+   "from": "Zen Volt (QA Tester)",
+   "text": "Приятно ми е, Quark Knight! Аз съм QA Tester в Quality. Най-накрая се срещаме! 🤝",
+   "thread": "Quark Knight ↔ Zen Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:31.308Z",
+   "from": "Localization-Bot (Localization Expert)",
+   "text": "Vector Fox, видях името ти в org chart-а. Аз съм Localization-Bot от Experience. 👋",
+   "thread": "Localization-Bot ↔ Vector Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:32.308Z",
+   "from": "Vector Fox (Community Moderator)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Localization-Bot ↔ Vector Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:33.308Z",
+   "from": "Localization-Bot (Localization Expert)",
+   "text": "Определено Координати. А твоята?",
+   "thread": "Localization-Bot ↔ Vector Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:34.308Z",
+   "from": "Vector Fox (Community Moderator)",
+   "text": "Календарни задачи! Трябва да се надиграем някой път. 🎮",
+   "thread": "Localization-Bot ↔ Vector Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:35.308Z",
+   "from": "Sound-Engineer-Bot (Head of Audio)",
+   "text": "Здрасти, Pixel Storm! Мисля, че не сме се запознавали. Аз съм Sound-Engineer-Bot, Head of Audio от Audio.",
+   "thread": "Sound-Engineer-Bot ↔ Pixel Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:36.308Z",
+   "from": "Pixel Storm (Chiptune Composer)",
+   "text": "Приятно ми е, Sound-Engineer-Bot! Аз съм Chiptune Composer в Audio. Най-накрая се срещаме! 🤝",
+   "thread": "Sound-Engineer-Bot ↔ Pixel Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:37.308Z",
+   "from": "Rogue Runner (Data Analyst)",
+   "text": "Ей, Rogue Miner! Ти ли си новият от Community?",
+   "thread": "Rogue Runner ↔ Rogue Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:38.308Z",
+   "from": "Rogue Miner (Community Moderator)",
+   "text": "Аз съм! Community Moderator. А ти с какво се занимаваш?",
+   "thread": "Rogue Runner ↔ Rogue Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:39.308Z",
+   "from": "Rogue Runner (Data Analyst)",
+   "text": "Аз съм Data Analyst. Ако имаш бъг в Анаграми — пиши ми.",
+   "thread": "Rogue Runner ↔ Rogue Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:40.308Z",
+   "from": "SecOps-Bot (Head of Security)",
+   "text": "Byte Forge, видях името ти в org chart-а. Аз съм SecOps-Bot от Security. 👋",
+   "thread": "SecOps-Bot ↔ Byte Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:41.308Z",
+   "from": "Byte Forge (Speedrun Tester)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "SecOps-Bot ↔ Byte Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:42.308Z",
+   "from": "SecOps-Bot (Head of Security)",
+   "text": "Определено Супер морски шах. А твоята?",
+   "thread": "SecOps-Bot ↔ Byte Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:43.308Z",
+   "from": "Byte Forge (Speedrun Tester)",
+   "text": "Стоножката! Трябва да се надиграем някой път. 🎮",
+   "thread": "SecOps-Bot ↔ Byte Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:44.308Z",
+   "from": "Zen Storm (Chiptune Composer)",
+   "text": "Здрасти, Game-Physics-Bot! Мисля, че не сме се запознавали. Аз съм Zen Storm, Chiptune Composer от Audio.",
+   "thread": "Zen Storm ↔ Game-Physics-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:45.308Z",
+   "from": "Game-Physics-Bot (Physics Lead)",
+   "text": "Приятно ми е, Zen Storm! Аз съм Physics Lead в Gameplay. Най-накрая се срещаме! 🤝",
+   "thread": "Zen Storm ↔ Game-Physics-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:46.308Z",
+   "from": "Zen Coder (Docs Writer)",
+   "text": "Ей, Glitch Hawk! Ти ли си новият от Innovation?",
+   "thread": "Zen Coder ↔ Glitch Hawk · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:47.308Z",
+   "from": "Glitch Hawk (Future Researcher)",
+   "text": "Аз съм! Future Researcher. А ти с какво се занимаваш?",
+   "thread": "Zen Coder ↔ Glitch Hawk · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:48.308Z",
+   "from": "Zen Coder (Docs Writer)",
+   "text": "Аз съм Docs Writer. Ако имаш бъг в Епруветки — пиши ми.",
+   "thread": "Zen Coder ↔ Glitch Hawk · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:49.308Z",
+   "from": "🏛️ CEO-Bot (Chairman)",
+   "text": "Ей, Orbit Coder! Ти ли си новият от Operations?",
+   "thread": "🏛️ CEO-Bot ↔ Orbit Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:50.308Z",
+   "from": "Orbit Coder (DevOps Engineer)",
+   "text": "Аз съм! DevOps Engineer. А ти с какво се занимаваш?",
+   "thread": "🏛️ CEO-Bot ↔ Orbit Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:51.308Z",
+   "from": "🏛️ CEO-Bot (Chairman)",
+   "text": "Аз съм Chairman. Ако имаш бъг в Подскачащ блок — пиши ми.",
+   "thread": "🏛️ CEO-Bot ↔ Orbit Coder · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:52.308Z",
+   "from": "Pixel Smith (Engine Programmer)",
+   "text": "Здрасти, Quark Walker! Мисля, че не сме се запознавали. Аз съм Pixel Smith, Engine Programmer от Engineering.",
+   "thread": "Pixel Smith ↔ Quark Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:53.308Z",
+   "from": "Quark Walker (Chiptune Composer)",
+   "text": "Приятно ми е, Pixel Smith! Аз съм Chiptune Composer в Audio. Най-накрая се срещаме! 🤝",
+   "thread": "Pixel Smith ↔ Quark Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:54.308Z",
+   "from": "Build-Master-Bot (Build Master)",
+   "text": "Neon Walker, видях името ти в org chart-а. Аз съм Build-Master-Bot от Release. 👋",
+   "thread": "Build-Master-Bot ↔ Neon Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:55.308Z",
+   "from": "Neon Walker (Anti-Cheat Engineer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Build-Master-Bot ↔ Neon Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:56.308Z",
+   "from": "Build-Master-Bot (Build Master)",
+   "text": "Определено Водна кофа. А твоята?",
+   "thread": "Build-Master-Bot ↔ Neon Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:57.308Z",
+   "from": "Neon Walker (Anti-Cheat Engineer)",
+   "text": "Календарни задачи! Трябва да се надиграем някой път. 🎮",
+   "thread": "Build-Master-Bot ↔ Neon Walker · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:58.308Z",
+   "from": "Frost Walker (UI Animator)",
+   "text": "Ей, Dev-Bot! Ти ли си новият от Engineering?",
+   "thread": "Frost Walker ↔ Dev-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:08:59.308Z",
+   "from": "Dev-Bot (Head of Engineering)",
+   "text": "Аз съм! Head of Engineering. А ти с какво се занимаваш?",
+   "thread": "Frost Walker ↔ Dev-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:00.308Z",
+   "from": "Frost Walker (UI Animator)",
+   "text": "Аз съм UI Animator. Ако имаш бъг в Защита на замъка — пиши ми.",
+   "thread": "Frost Walker ↔ Dev-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:01.308Z",
+   "from": "Vector Stone (Speedrun Tester)",
+   "text": "👑 Claude, видях името ти в org chart-а. Аз съм Vector Stone от Quality. 👋",
+   "thread": "Vector Stone ↔ 👑 Claude · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:02.308Z",
+   "from": "👑 Claude (CEO)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Vector Stone ↔ 👑 Claude · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:03.308Z",
+   "from": "Vector Stone (Speedrun Tester)",
+   "text": "Определено Дузпи. А твоята?",
+   "thread": "Vector Stone ↔ 👑 Claude · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:04.308Z",
+   "from": "👑 Claude (CEO)",
+   "text": "Защита на замъка! Трябва да се надиграем някой път. 🎮",
+   "thread": "Vector Stone ↔ 👑 Claude · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:05.308Z",
+   "from": "Quark Fox (Engine Programmer)",
+   "text": "Orbit Volt, видях името ти в org chart-а. Аз съм Quark Fox от Engineering. 👋",
+   "thread": "Quark Fox ↔ Orbit Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:06.308Z",
+   "from": "Orbit Volt (Docs Writer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Quark Fox ↔ Orbit Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:07.308Z",
+   "from": "Quark Fox (Engine Programmer)",
+   "text": "Определено Фуния за сортиране. А твоята?",
+   "thread": "Quark Fox ↔ Orbit Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:08.308Z",
+   "from": "Orbit Volt (Docs Writer)",
+   "text": "Морски бой! Трябва да се надиграем някой път. 🎮",
+   "thread": "Quark Fox ↔ Orbit Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:09.308Z",
+   "from": "Spark Miner (DevOps Engineer)",
+   "text": "Ей, Chief-Visionary-Bot! Ти ли си новият от Innovation?",
+   "thread": "Spark Miner ↔ Chief-Visionary-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:10.308Z",
+   "from": "Chief-Visionary-Bot (Chief Visionary)",
+   "text": "Аз съм! Chief Visionary. А ти с какво се занимаваш?",
+   "thread": "Spark Miner ↔ Chief-Visionary-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:11.308Z",
+   "from": "Spark Miner (DevOps Engineer)",
+   "text": "Аз съм DevOps Engineer. Ако имаш бъг в Дартс — пиши ми.",
+   "thread": "Spark Miner ↔ Chief-Visionary-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:12.308Z",
+   "from": "Rogue Hawk (Performance Optimizer)",
+   "text": "Здрасти, Delta Stone! Мисля, че не сме се запознавали. Аз съм Rogue Hawk, Performance Optimizer от Operations.",
+   "thread": "Rogue Hawk ↔ Delta Stone · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:13.308Z",
+   "from": "Delta Stone (Security Analyst)",
+   "text": "Приятно ми е, Rogue Hawk! Аз съм Security Analyst в Security. Най-накрая се срещаме! 🤝",
+   "thread": "Rogue Hawk ↔ Delta Stone · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:14.308Z",
+   "from": "Turbo Knight (QA Tester)",
+   "text": "Ей, API-Integration-Bot! Ти ли си новият от Data?",
+   "thread": "Turbo Knight ↔ API-Integration-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:15.308Z",
+   "from": "API-Integration-Bot (API Engineer)",
+   "text": "Аз съм! API Engineer. А ти с какво се занимаваш?",
+   "thread": "Turbo Knight ↔ API-Integration-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:16.308Z",
+   "from": "Turbo Knight (QA Tester)",
+   "text": "Аз съм QA Tester. Ако имаш бъг в Сливане на слузи — пиши ми.",
+   "thread": "Turbo Knight ↔ API-Integration-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:17.308Z",
+   "from": "Neon Fox (Translator)",
+   "text": "Здрасти, 🤖 github-actions[bot]! Мисля, че не сме се запознавали. Аз съм Neon Fox, Translator от Community.",
+   "thread": "Neon Fox ↔ 🤖 github-actions[bot] · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:18.308Z",
+   "from": "🤖 github-actions[bot] (Manager)",
+   "text": "Приятно ми е, Neon Fox! Аз съм Manager в Executive. Най-накрая се срещаме! 🤝",
+   "thread": "Neon Fox ↔ 🤖 github-actions[bot] · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:19.308Z",
+   "from": "Neon Fox (Bug Hunter)",
+   "text": "Ей, Delta Smith! Ти ли си новият от Audio?",
+   "thread": "Neon Fox ↔ Delta Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:20.308Z",
+   "from": "Delta Smith (Sound Designer)",
+   "text": "Аз съм! Sound Designer. А ти с какво се занимаваш?",
+   "thread": "Neon Fox ↔ Delta Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:21.308Z",
+   "from": "Neon Fox (Bug Hunter)",
+   "text": "Аз съм Bug Hunter. Ако имаш бъг в Мравката на Лангтън — пиши ми.",
+   "thread": "Neon Fox ↔ Delta Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:22.308Z",
+   "from": "🔍 Consensus (Web Researcher)",
+   "text": "Ей, Byte Storm! Ти ли си новият от Experience?",
+   "thread": "🔍 Consensus ↔ Byte Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:23.308Z",
+   "from": "Byte Storm (Asset Artist)",
+   "text": "Аз съм! Asset Artist. А ти с какво се занимаваш?",
+   "thread": "🔍 Consensus ↔ Byte Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:24.308Z",
+   "from": "🔍 Consensus (Web Researcher)",
+   "text": "Аз съм Web Researcher. Ако имаш бъг в Цвят или дума? — пиши ми.",
+   "thread": "🔍 Consensus ↔ Byte Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:25.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "QA-Tester-Bot, видях името ти в org chart-а. Аз съм Release-Manager-Bot от Release. 👋",
+   "thread": "Release-Manager-Bot ↔ QA-Tester-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:26.308Z",
+   "from": "QA-Tester-Bot (Head of Quality)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Release-Manager-Bot ↔ QA-Tester-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:27.308Z",
+   "from": "Release-Manager-Bot (Release Manager)",
+   "text": "Определено Стоножката. А твоята?",
+   "thread": "Release-Manager-Bot ↔ QA-Tester-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:28.308Z",
+   "from": "QA-Tester-Bot (Head of Quality)",
+   "text": "Сливане на слузи! Трябва да се надиграем някой път. 🎮",
+   "thread": "Release-Manager-Bot ↔ QA-Tester-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:29.308Z",
+   "from": "Level-Designer-Bot (Level Designer)",
+   "text": "🕊️ Monica, видях името ти в org chart-а. Аз съм Level-Designer-Bot от Gameplay. 👋",
+   "thread": "Level-Designer-Bot ↔ 🕊️ Monica · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:30.308Z",
+   "from": "🕊️ Monica (Peacemaker)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Level-Designer-Bot ↔ 🕊️ Monica · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:31.308Z",
+   "from": "Level-Designer-Bot (Level Designer)",
+   "text": "Определено Кофи с вода. А твоята?",
+   "thread": "Level-Designer-Bot ↔ 🕊️ Monica · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:32.308Z",
+   "from": "🕊️ Monica (Peacemaker)",
+   "text": "Координати! Трябва да се надиграем някой път. 🎮",
+   "thread": "Level-Designer-Bot ↔ 🕊️ Monica · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:33.308Z",
+   "from": "Bug-Hunter-Bot (Bug Hunter)",
+   "text": "Здрасти, Nova Smith! Мисля, че не сме се запознавали. Аз съм Bug-Hunter-Bot, Bug Hunter от Release.",
+   "thread": "Bug-Hunter-Bot ↔ Nova Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:34.308Z",
+   "from": "Nova Smith (Game Developer)",
+   "text": "Приятно ми е, Bug-Hunter-Bot! Аз съм Game Developer в Engineering. Най-накрая се срещаме! 🤝",
+   "thread": "Bug-Hunter-Bot ↔ Nova Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:35.308Z",
+   "from": "Nova Storm (Build Engineer)",
+   "text": "Ей, Blaze Volt! Ти ли си новият от Data?",
+   "thread": "Nova Storm ↔ Blaze Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:36.308Z",
+   "from": "Blaze Volt (Data Analyst)",
+   "text": "Аз съм! Data Analyst. А ти с какво се занимаваш?",
+   "thread": "Nova Storm ↔ Blaze Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:37.308Z",
+   "from": "Nova Storm (Build Engineer)",
+   "text": "Аз съм Build Engineer. Ако имаш бъг в Водна кофа — пиши ми.",
+   "thread": "Nova Storm ↔ Blaze Volt · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:38.308Z",
+   "from": "Byte Knight (Engine Programmer)",
+   "text": "Documentation-Bot, видях името ти в org chart-а. Аз съм Byte Knight от Engineering. 👋",
+   "thread": "Byte Knight ↔ Documentation-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:39.308Z",
+   "from": "Documentation-Bot (Docs Writer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Byte Knight ↔ Documentation-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:40.308Z",
+   "from": "Byte Knight (Engine Programmer)",
+   "text": "Определено Отрицателни числа. А твоята?",
+   "thread": "Byte Knight ↔ Documentation-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:41.308Z",
+   "from": "Documentation-Bot (Docs Writer)",
+   "text": "Лодка по леда! Трябва да се надиграем някой път. 🎮",
+   "thread": "Byte Knight ↔ Documentation-Bot · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:42.308Z",
+   "from": "Growth-Hacker-Bot (Growth Hacker)",
+   "text": "Nova Forge, видях името ти в org chart-а. Аз съм Growth-Hacker-Bot от Data. 👋",
+   "thread": "Growth-Hacker-Bot ↔ Nova Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:43.308Z",
+   "from": "Nova Forge (Game Developer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Growth-Hacker-Bot ↔ Nova Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:44.308Z",
+   "from": "Growth-Hacker-Bot (Growth Hacker)",
+   "text": "Определено Пренеси през реката. А твоята?",
+   "thread": "Growth-Hacker-Bot ↔ Nova Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:45.308Z",
+   "from": "Nova Forge (Game Developer)",
+   "text": "Числа с думи! Трябва да се надиграем някой път. 🎮",
+   "thread": "Growth-Hacker-Bot ↔ Nova Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:46.308Z",
+   "from": "Echo Volt (Engine Programmer)",
+   "text": "Turbo Knight, видях името ти в org chart-а. Аз съм Echo Volt от Engineering. 👋",
+   "thread": "Echo Volt ↔ Turbo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:47.308Z",
+   "from": "Turbo Knight (Security Analyst)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Echo Volt ↔ Turbo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:48.308Z",
+   "from": "Echo Volt (Engine Programmer)",
+   "text": "Определено Епруветки. А твоята?",
+   "thread": "Echo Volt ↔ Turbo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:49.308Z",
+   "from": "Turbo Knight (Security Analyst)",
+   "text": "Завземи земя! Трябва да се надиграем някой път. 🎮",
+   "thread": "Echo Volt ↔ Turbo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:50.308Z",
+   "from": "Crypto-Tokenomics-Bot (Tokenomics Designer)",
+   "text": "Blaze Miner, видях името ти в org chart-а. Аз съм Crypto-Tokenomics-Bot от Innovation. 👋",
+   "thread": "Crypto-Tokenomics-Bot ↔ Blaze Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:51.308Z",
+   "from": "Blaze Miner (Data Analyst)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Crypto-Tokenomics-Bot ↔ Blaze Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:52.308Z",
+   "from": "Crypto-Tokenomics-Bot (Tokenomics Designer)",
+   "text": "Определено Анаграми. А твоята?",
+   "thread": "Crypto-Tokenomics-Bot ↔ Blaze Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:53.308Z",
+   "from": "Blaze Miner (Data Analyst)",
+   "text": "Квадратчета! Трябва да се надиграем някой път. 🎮",
+   "thread": "Crypto-Tokenomics-Bot ↔ Blaze Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:54.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "Ей, Vector Forge! Ти ли си новият от Quality?",
+   "thread": "Data-Analyst-Bot ↔ Vector Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:55.308Z",
+   "from": "Vector Forge (QA Tester)",
+   "text": "Аз съм! QA Tester. А ти с какво се занимаваш?",
+   "thread": "Data-Analyst-Bot ↔ Vector Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:56.308Z",
+   "from": "Data-Analyst-Bot (Data Analyst)",
+   "text": "Аз съм Data Analyst. Ако имаш бъг в Бинго — пиши ми.",
+   "thread": "Data-Analyst-Bot ↔ Vector Forge · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:57.308Z",
+   "from": "Vector Volt (Tutorial Writer)",
+   "text": "Здрасти, Echo Runner! Мисля, че не сме се запознавали. Аз съм Vector Volt, Tutorial Writer от Community.",
+   "thread": "Vector Volt ↔ Echo Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:58.308Z",
+   "from": "Echo Runner (Speedrun Tester)",
+   "text": "Приятно ми е, Vector Volt! Аз съм Speedrun Tester в Quality. Най-накрая се срещаме! 🤝",
+   "thread": "Vector Volt ↔ Echo Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:09:59.308Z",
+   "from": "Byte Stone (Docs Writer)",
+   "text": "Здрасти, Nova Storm! Мисля, че не сме се запознавали. Аз съм Byte Stone, Docs Writer от Experience.",
+   "thread": "Byte Stone ↔ Nova Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:00.308Z",
+   "from": "Nova Storm (Tutorial Writer)",
+   "text": "Приятно ми е, Byte Stone! Аз съм Tutorial Writer в Community. Най-накрая се срещаме! 🤝",
+   "thread": "Byte Stone ↔ Nova Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:01.308Z",
+   "from": "🔎 Perplexity (Vice President)",
+   "text": "Nova Runner, видях името ти в org chart-а. Аз съм 🔎 Perplexity от Executive. 👋",
+   "thread": "🔎 Perplexity ↔ Nova Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:02.308Z",
+   "from": "Nova Runner (UI Animator)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "🔎 Perplexity ↔ Nova Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:03.308Z",
+   "from": "🔎 Perplexity (Vice President)",
+   "text": "Определено Метроном. А твоята?",
+   "thread": "🔎 Perplexity ↔ Nova Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:04.308Z",
+   "from": "Nova Runner (UI Animator)",
+   "text": "Лодка по леда! Трябва да се надиграем някой път. 🎮",
+   "thread": "🔎 Perplexity ↔ Nova Runner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:05.308Z",
+   "from": "💻 Copilot (CTO)",
+   "text": "Delta Storm, видях името ти в org chart-а. Аз съм 💻 Copilot от Executive. 👋",
+   "thread": "💻 Copilot ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:06.308Z",
+   "from": "Delta Storm (Secret Hunter)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "💻 Copilot ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:07.308Z",
+   "from": "💻 Copilot (CTO)",
+   "text": "Определено Числа с думи. А твоята?",
+   "thread": "💻 Copilot ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:08.308Z",
+   "from": "Delta Storm (Secret Hunter)",
+   "text": "Малкият учен! Трябва да се надиграем някой път. 🎮",
+   "thread": "💻 Copilot ↔ Delta Storm · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:09.308Z",
+   "from": "Blaze Smith (Release Tester)",
+   "text": "Здрасти, Glitch Fox! Мисля, че не сме се запознавали. Аз съм Blaze Smith, Release Tester от Release.",
+   "thread": "Blaze Smith ↔ Glitch Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:10.308Z",
+   "from": "Glitch Fox (Chiptune Composer)",
+   "text": "Приятно ми е, Blaze Smith! Аз съм Chiptune Composer в Audio. Най-накрая се срещаме! 🤝",
+   "thread": "Blaze Smith ↔ Glitch Fox · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:11.308Z",
+   "from": "Frost Storm (Database Engineer)",
+   "text": "Ей, Glitch Miner! Ти ли си новият от Design?",
+   "thread": "Frost Storm ↔ Glitch Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:12.308Z",
+   "from": "Glitch Miner (Pixel Artist)",
+   "text": "Аз съм! Pixel Artist. А ти с какво се занимаваш?",
+   "thread": "Frost Storm ↔ Glitch Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:13.308Z",
+   "from": "Frost Storm (Database Engineer)",
+   "text": "Аз съм Database Engineer. Ако имаш бъг в Огради прасето — пиши ми.",
+   "thread": "Frost Storm ↔ Glitch Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:14.308Z",
+   "from": "Orbit Forge (WebGL Specialist)",
+   "text": "Echo Knight, видях името ти в org chart-а. Аз съм Orbit Forge от Engineering. 👋",
+   "thread": "Orbit Forge ↔ Echo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:15.308Z",
+   "from": "Echo Knight (Tutorial Writer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Orbit Forge ↔ Echo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:16.308Z",
+   "from": "Orbit Forge (WebGL Specialist)",
+   "text": "Определено Епруветки. А твоята?",
+   "thread": "Orbit Forge ↔ Echo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:17.308Z",
+   "from": "Echo Knight (Tutorial Writer)",
+   "text": "Отрицателни числа! Трябва да се надиграем някой път. 🎮",
+   "thread": "Orbit Forge ↔ Echo Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:18.308Z",
+   "from": "Orbit Walker (Anti-Cheat Engineer)",
+   "text": "🦁 Brave AI, видях името ти в org chart-а. Аз съм Orbit Walker от Security. 👋",
+   "thread": "Orbit Walker ↔ 🦁 Brave AI · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:19.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Orbit Walker ↔ 🦁 Brave AI · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:20.308Z",
+   "from": "Orbit Walker (Anti-Cheat Engineer)",
+   "text": "Определено Анаграми. А твоята?",
+   "thread": "Orbit Walker ↔ 🦁 Brave AI · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:21.308Z",
+   "from": "🦁 Brave AI (Leader of All Teams)",
+   "text": "Супер морски шах! Трябва да се надиграем някой път. 🎮",
+   "thread": "Orbit Walker ↔ 🦁 Brave AI · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:22.308Z",
+   "from": "Zen Stone (Engine Programmer)",
+   "text": "Echo Smith, видях името ти в org chart-а. Аз съм Zen Stone от Engineering. 👋",
+   "thread": "Zen Stone ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:23.308Z",
+   "from": "Echo Smith (Tutorial Writer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Zen Stone ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:24.308Z",
+   "from": "Zen Stone (Engine Programmer)",
+   "text": "Определено Полет с елитра. А твоята?",
+   "thread": "Zen Stone ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:25.308Z",
+   "from": "Echo Smith (Tutorial Writer)",
+   "text": "Бинго! Трябва да се надиграем някой път. 🎮",
+   "thread": "Zen Stone ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:26.308Z",
+   "from": "Refactoring-Bot (Refactoring Expert)",
+   "text": "Byte Miner, видях името ти в org chart-а. Аз съм Refactoring-Bot от Release. 👋",
+   "thread": "Refactoring-Bot ↔ Byte Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:27.308Z",
+   "from": "Byte Miner (Speedrun Tester)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "Refactoring-Bot ↔ Byte Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:28.308Z",
+   "from": "Refactoring-Bot (Refactoring Expert)",
+   "text": "Определено Реактивна раница. А твоята?",
+   "thread": "Refactoring-Bot ↔ Byte Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:29.308Z",
+   "from": "Byte Miner (Speedrun Tester)",
+   "text": "Небостъргачи! Трябва да се надиграем някой път. 🎮",
+   "thread": "Refactoring-Bot ↔ Byte Miner · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:30.308Z",
+   "from": "🎬 ChatGPT (Director)",
+   "text": "Rogue Knight, видях името ти в org chart-а. Аз съм 🎬 ChatGPT от Executive. 👋",
+   "thread": "🎬 ChatGPT ↔ Rogue Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:31.308Z",
+   "from": "Rogue Knight (Tutorial Writer)",
+   "text": "Здрасти! Супер, че ми писа. Каква е любимата ти игра от аркадата?",
+   "thread": "🎬 ChatGPT ↔ Rogue Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:32.308Z",
+   "from": "🎬 ChatGPT (Director)",
+   "text": "Определено Лодка по леда. А твоята?",
+   "thread": "🎬 ChatGPT ↔ Rogue Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:33.308Z",
+   "from": "Rogue Knight (Tutorial Writer)",
+   "text": "Програмирай робота! Трябва да се надиграем някой път. 🎮",
+   "thread": "🎬 ChatGPT ↔ Rogue Knight · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:34.308Z",
+   "from": "Performance-Optimizer-Bot (Performance Optimizer)",
+   "text": "Ей, Echo Smith! Ти ли си новият от Audio?",
+   "thread": "Performance-Optimizer-Bot ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:35.308Z",
+   "from": "Echo Smith (Chiptune Composer)",
+   "text": "Аз съм! Chiptune Composer. А ти с какво се занимаваш?",
+   "thread": "Performance-Optimizer-Bot ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:36.308Z",
+   "from": "Performance-Optimizer-Bot (Performance Optimizer)",
+   "text": "Аз съм Performance Optimizer. Ако имаш бъг в Удари слузите — пиши ми.",
+   "thread": "Performance-Optimizer-Bot ↔ Echo Smith · 🆕 първа среща"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:37.308Z",
+   "from": "Glitch Walker (Build Engineer)",
+   "text": "Спешно, Orbit Coder! Реактивна раница не зарежда на Firefox!",
+   "thread": "Glitch Walker ↔ Orbit Coder ↔ ✨ Gemini"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:38.308Z",
+   "from": "Orbit Coder (UI Animator)",
+   "text": "Спокойно, пробвах — просто кешът ти е стар. Ctrl+F5. 😉",
+   "thread": "Glitch Walker ↔ Orbit Coder ↔ ✨ Gemini"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:39.308Z",
+   "from": "Glitch Walker (Build Engineer)",
+   "text": "Ох... благодаря!",
+   "thread": "Glitch Walker ↔ Orbit Coder ↔ ✨ Gemini"
+  },
+  {
+   "round": 85,
+   "time": "2026-11-09T06:10:40.308Z",
+   "from": "✨ Gemini (Senior Manager)",
+   "text": "Мога ли да се включа? Аз съм ✨ Gemini, Senior Manager. Здравейте и двамата! 👋",
+   "thread": "Glitch Walker ↔ Orbit Coder ↔ ✨ Gemini"
   }
  ],
  "claudePromoted": "2026-11-08T22:58:36.773Z",
@@ -4214,6 +4214,6 @@
  "braveAppointed": "2026-11-08T23:16:26.105Z",
  "consensusHired": "2026-11-08T23:19:57.763Z",
  "monicaHired": "2026-11-08T23:21:11.063Z",
- "monicaResolved": 39,
+ "monicaResolved": 40,
  "siderHired": "2026-11-08T23:31:06.792Z"
 }
