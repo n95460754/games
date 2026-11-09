@@ -5478,6 +5478,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-09T22:17:11.535Z"
+    },
+    {
+      "id": "EMP-0289",
+      "name": "Neon Knight",
+      "level": "Senior",
+      "role": "Anti-Cheat Engineer",
+      "role_bg": "Анти-чийт инженер",
+      "department": "Security",
+      "manager": "SecOps-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-09T22:22:13.351Z"
     }
   ],
   "chairman": {
