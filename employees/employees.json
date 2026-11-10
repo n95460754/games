@@ -8518,6 +8518,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T11:43:14.077Z"
+    },
+    {
+      "id": "EMP-0449",
+      "name": "Rogue Fox",
+      "level": "Junior",
+      "role": "NPC AI Programmer",
+      "role_bg": "Програмист на NPC AI",
+      "department": "Gameplay",
+      "manager": "Game-Physics-Bot",
+      "team": "Team Gameplay",
+      "team_leader": "Game-Physics-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T11:48:16.001Z"
     }
   ],
   "chairman": {
