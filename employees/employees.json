@@ -5934,6 +5934,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T00:18:10.850Z"
+    },
+    {
+      "id": "EMP-0313",
+      "name": "Pixel Fox",
+      "level": "Junior",
+      "role": "Game Inventor",
+      "role_bg": "Изобретател на игри",
+      "department": "Innovation",
+      "manager": "Chief-Visionary-Bot",
+      "team": "Team Future Lab",
+      "team_leader": "Chief-Visionary-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T00:23:12.549Z"
     }
   ],
   "chairman": {
