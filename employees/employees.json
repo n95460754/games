@@ -7340,6 +7340,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T06:30:49.777Z"
+    },
+    {
+      "id": "EMP-0387",
+      "name": "Rogue Hawk",
+      "level": "Mid",
+      "role": "Secret Hunter",
+      "role_bg": "Ловец на тайни",
+      "department": "Gameplay",
+      "manager": "Game-Physics-Bot",
+      "team": "Team Gameplay",
+      "team_leader": "Game-Physics-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T06:35:51.717Z"
     }
   ],
   "chairman": {
