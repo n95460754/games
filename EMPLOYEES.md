@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **408** / 500
+Общо служители: **409** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -334,7 +334,7 @@
 
 # 🚀 Team Release — лидер: Release-Manager-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Release — шеф: Release-Manager-Bot · 37 души
+## Release — шеф: Release-Manager-Bot · 38 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -375,6 +375,7 @@
 | EMP-0372 | Orbit Smith | Intern | Release Tester / Тестер на релийзи | 2026-11-10 05:20 UTC |
 | EMP-0394 | Glitch Walker | Mid | Build Engineer / Билд инженер | 2026-11-10 07:11 UTC |
 | EMP-0401 | Frost Coder | Junior | Code Cleaner / Чистач на код | 2026-11-10 07:46 UTC |
+| EMP-0409 | Blaze Hawk | Junior | Release Tester / Тестер на релийзи | 2026-11-10 08:26 UTC |
 
 # 🌍 Team Experience — лидер: Accessibility-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
