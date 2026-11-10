@@ -7796,6 +7796,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T08:31:38.888Z"
+    },
+    {
+      "id": "EMP-0411",
+      "name": "Frost Forge",
+      "level": "Lead",
+      "role": "Bug Hunter",
+      "role_bg": "Ловец на бъгове",
+      "department": "Quality",
+      "manager": "QA-Tester-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T08:36:41.079Z"
     }
   ],
   "chairman": {
