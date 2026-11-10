@@ -8670,6 +8670,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T12:23:30.056Z"
+    },
+    {
+      "id": "EMP-0457",
+      "name": "Blaze Runner",
+      "level": "Mid",
+      "role": "Anti-Cheat Engineer",
+      "role_bg": "Анти-чийт инженер",
+      "department": "Security",
+      "manager": "SecOps-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T12:28:31.951Z"
     }
   ],
   "chairman": {
