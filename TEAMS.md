@@ -9,194 +9,195 @@
 - **Лидер:** Dev-Bot (→ 🦁 Brave AI)
 - **В отбора:** QA-Tester-Bot, UX-UI-Bot, Sound-Engineer-Bot
 - **Отдели:** Engineering, Quality, Design, Audio
-- **Служители:** 170
-- **Задачи:** 174 отворени, 24 готови
+- **Служители:** 171
+- **Задачи:** 175 отворени, 24 готови
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41077 | Добави бонус ниво в Фото сафари | Dev-Bot | 🔍 За ревю |
-| TASK-41078 | Пробвай Не бъди смачкан на Firefox и Edge | QA-Tester-Bot | 🔍 За ревю |
-| TASK-41086 | Добави анимация при победа в Следи сандъка | Spark Fox | 🔍 За ревю |
-| TASK-41087 | Оптимизирай draw() в Строй числото до 60 FPS | Blaze Hawk | 🔍 За ревю |
-| TASK-41088 | Нарисувай нови спрайтове за Яйцата | Nova Storm | 🔍 За ревю |
-| TASK-41090 | Оправи колизиите в Магистрала | Echo Volt | 🔍 За ревю |
-| TASK-41093 | Оправи колизиите в Рецепти за изработване | Quark Fox | 🔍 За ревю |
-| TASK-41095 | Направи regression тест на Хвърчило | Turbo Knight | 🔍 За ревю |
-| TASK-41097 | Добави бонус ниво в Вътрешен часовник | Quark Knight | 🔍 За ревю |
-| TASK-41099 | Направи звук при game over в Танкова битка | Zen Storm | 🔍 За ревю |
-| TASK-41101 | Направи 8-bit звук за скок в Свържи двойките | Delta Volt | 🔍 За ревю |
-| TASK-41105 | Добави анимация при победа в Блоков любимец | Orbit Hawk | 🔍 За ревю |
-| TASK-41107 | Тествай Факли срещу мобове на телефон | Vector Forge | 🔍 За ревю |
-| TASK-41108 | Пробвай Яйцата на Firefox и Edge | Vector Stone | 🔍 За ревю |
-| TASK-41110 | Добави бонус ниво в Осем царици | Zen Stone | 🔍 За ревю |
-| TASK-41111 | Добави фонова мелодия в Изгледи на постройката | Pixel Storm | 🔍 За ревю |
-| TASK-41114 | Махни глобалните променливи от Бърза сметка | Byte Knight | 🔍 За ревю |
-| TASK-41117 | Махни глобалните променливи от Изгледи на постройката | Byte Runner | 🔍 За ревю |
-| TASK-41120 | Направи regression тест на Звезден кораб | Zen Volt | 🔍 За ревю |
-| TASK-41122 | Оптимизирай draw() в Координати до 60 FPS | Turbo Fox | 🔍 За ревю |
-| TASK-41127 | Направи 8-bit звук за скок в Бърза сметка | Byte Volt | 🔍 За ревю |
-| TASK-41132 | Добави фонова мелодия в Строй числото | Echo Stone | 🔍 За ревю |
-| TASK-41136 | Оправи колизиите в Запомни числото | Vector Coder | 🔍 За ревю |
-| TASK-41139 | Направи звук при game over в Изгледи на постройката | Nova Stone | 🔍 За ревю |
-| TASK-41142 | Махни глобалните променливи от Строй числото | Neon Volt | 🔍 За ревю |
-| TASK-41146 | Направи 8-bit звук за скок в Стригач на овце | Quark Fox | 🔍 За ревю |
-| TASK-41147 | Направи звук при game over в Календарни задачи | Blaze Hawk | 🔍 За ревю |
-| TASK-41151 | Направи regression тест на Таблицата | Zen Volt | 🔍 За ревю |
-| TASK-41152 | Оправи колизиите в Блоков волейбол | Turbo Smith | 🔍 За ревю |
-| TASK-41154 | Оправи колизиите в Риболов | Quark Miner | 🔍 За ревю |
-| TASK-41155 | Добави анимация при победа в Удари слузите | Pixel Stone | 🔍 За ревю |
-| TASK-41164 | Добави бонус ниво в Таблицата | Blaze Coder | 🔍 За ревю |
-| TASK-41165 | Нарисувай нови спрайтове за Парашутист | Glitch Fox | 🔍 За ревю |
-| TASK-41166 | Оправи колизиите в Координати | Pixel Runner | 🔍 За ревю |
-| TASK-41169 | Добави анимация при победа в Средно аритметично | Byte Volt | 🔍 За ревю |
-| TASK-41172 | Махни глобалните променливи от Бърз мост | Spark Knight | 🔍 За ревю |
-| TASK-41173 | Добави фонова мелодия в Координати | Orbit Walker | 🔍 За ревю |
-| TASK-41176 | Добави бонус ниво в Лице и периметър | Rogue Hawk | 🔍 За ревю |
-| TASK-41183 | Провери дали рекордът в Фото сафари се пази | Spark Smith | 🔍 За ревю |
-| TASK-41185 | Добави фонова мелодия в Запомни числото | Zen Miner | 🔍 За ревю |
-| TASK-41187 | Добави анимация при победа в Хвърчило | Zen Miner | 🔍 За ревю |
-| TASK-41189 | Тествай Изгледи на постройката на телефон | Spark Miner | 🔍 За ревю |
-| TASK-41193 | Направи звук при game over в Въздушен хокей | Nova Runner | 🔍 За ревю |
-| TASK-41194 | Направи regression тест на Английски думи | Orbit Storm | 🔍 За ревю |
-| TASK-41199 | Пробвай Стригач на овце на Firefox и Edge | Frost Coder | 🔍 За ревю |
-| TASK-41200 | Направи звук при game over в Хвърчило | Neon Fox | 🔍 За ревю |
-| TASK-41204 | Махни глобалните променливи от Бърз мост | Glitch Stone | 🔍 За ревю |
-| TASK-41206 | Оптимизирай draw() в Въздушен хокей до 60 FPS | Neon Runner | 🔍 За ревю |
-| TASK-41211 | Махни глобалните променливи от Мелница | Orbit Miner | 🔍 За ревю |
-| TASK-41225 | Подобри менюто на Бърз мост | Zen Knight | 🔍 За ревю |
-| TASK-41226 | Направи тъмна тема за Календарни задачи | Frost Miner | 🔍 За ревю |
-| TASK-41241 | Нарисувай нови спрайтове за Танкова битка | Zen Runner | 🔍 За ревю |
-| TASK-41243 | Провери дали рекордът в Строй числото се пази | Spark Walker | 🔍 За ревю |
-| TASK-41246 | Пробвай Строй числото на Firefox и Edge | Nova Fox | 🔍 За ревю |
-| TASK-41263 | Направи regression тест на Боулинг | Neon Fox | 🔨 В процес |
-| TASK-41264 | Пробвай Боулинг на Firefox и Edge | Echo Runner | 🔨 В процес |
-| TASK-41265 | Добави анимация при победа в Закръгли числото | Quark Miner | 🔨 В процес |
-| TASK-41269 | Добави анимация при победа в Хвърляне на зарове | Nova Runner | 🔨 В процес |
-| TASK-41271 | Добави бонус ниво в Латински квадрат | Byte Runner | 🔨 В процес |
-| TASK-41272 | Направи звук при game over в Пресечи релсите | Quark Walker | 🔨 В процес |
-| TASK-41274 | Подобри менюто на Везни с тежести | Orbit Coder | 🔨 В процес |
-| TASK-41276 | Добави анимация при победа в Малкият учен | Glitch Miner | 🔨 В процес |
-| TASK-41279 | Направи 8-bit звук за скок в Боулинг | Delta Smith | 🔨 В процес |
-| TASK-41281 | Направи тъмна тема за Латински квадрат | Rogue Hawk | 🔨 В процес |
-| TASK-41282 | Направи тъмна тема за Домино ефект | Glitch Volt | 🔨 В процес |
-| TASK-41285 | Направи regression тест на Гравитация | Byte Forge | 🔨 В процес |
-| TASK-41286 | Добави анимация при победа в Малкият учен | Vector Runner | 🔨 В процес |
-| TASK-41287 | Направи 8-bit звук за скок в Манделброт | Glitch Fox | 🔨 В процес |
-| TASK-41289 | Направи тъмна тема за Тримино | Delta Storm | 🔨 В процес |
-| TASK-41291 | Подобри менюто на Разбий кода | Spark Knight | 🔨 В процес |
-| TASK-41292 | Подобри менюто на Хвърляне на зарове | Frost Fox | 🔨 В процес |
-| TASK-41295 | Направи 8-bit звук за скок в Метроном | Spark Storm | 🔨 В процес |
-| TASK-41305 | Добави анимация при победа в Стакове по 64 | Neon Hawk | 🔨 В процес |
-| TASK-41310 | Оптимизирай draw() в Къде беше? до 60 FPS | Glitch Runner | 🔨 В процес |
-| TASK-41318 | Провери дали рекордът в Ендър дупка се пази | Vector Hawk | 🔨 В процес |
-| TASK-41320 | Пробвай Блокосечене на Firefox и Edge | Quark Stone | 🔨 В процес |
-| TASK-41321 | Тествай Рудотрошач на телефон | Pixel Miner | 🔨 В процес |
-| TASK-41323 | Направи 8-bit звук за скок в Везни с тежести | Rogue Runner | 🔨 В процес |
-| TASK-41324 | Подобри менюто на Рудни мехури | Spark Volt | 🔨 В процес |
-| TASK-41325 | Добави анимация при победа в Раздели наравно | Byte Coder | 🔨 В процес |
-| TASK-41326 | Направи звук при game over в Стакове по 64 | Orbit Volt | 🔨 В процес |
-| TASK-41327 | Махни глобалните променливи от Наклони кутията | Spark Stone | 🔨 В процес |
-| TASK-41330 | Добави фонова мелодия в Блоков тенис | Pixel Smith | 🔨 В процес |
-| TASK-41332 | Пробвай Ендър дупка на Firefox и Edge | Delta Forge | 🔨 В процес |
-| TASK-41333 | Добави фонова мелодия в Гравитация | Vector Stone | 🔨 В процес |
-| TASK-41335 | Подобри менюто на Рудни мехури | Frost Smith | 🔨 В процес |
-| TASK-41342 | Пробвай Хвърляне на зарове на Firefox и Edge | Byte Stone | 🔨 В процес |
-| TASK-41346 | Тествай Отбий огнената топка на телефон | Spark Knight | 🔨 В процес |
-| TASK-41351 | Оправи колизиите в Археология с четка | Neon Fox | 🔨 В процес |
-| TASK-41352 | Подобри менюто на Рудни мехури | Turbo Walker | 🔨 В процес |
-| TASK-41358 | Оптимизирай draw() в Запомни числото до 60 FPS | Spark Coder | 🔨 В процес |
-| TASK-41359 | Направи тъмна тема за Ендър скок | Pixel Storm | 🔨 В процес |
-| TASK-41362 | Добави бонус ниво в Наклони кутията | Turbo Volt | 🔨 В процес |
-| TASK-41364 | Пробвай Метроном на Firefox и Edge | Pixel Fox | 🔨 В процес |
-| TASK-41365 | Направи 8-bit звук за скок в Блоков тенис | Vector Hawk | 🔨 В процес |
-| TASK-41367 | Подобри менюто на Лавови тръби | Neon Stone | 🔨 В процес |
-| TASK-41368 | Направи 8-bit звук за скок в По-голямо/по-малко | Quark Smith | 🔨 В процес |
-| TASK-41370 | Добави фонова мелодия в Гравитация | Orbit Stone | 🔨 В процес |
-| TASK-41371 | Направи звук при game over в Наклони кутията | Orbit Runner | 🔨 В процес |
-| TASK-41372 | Добави анимация при победа в Метеоритен миньор | Turbo Runner | 🔨 В процес |
-| TASK-41375 | Добави фонова мелодия в Блокова змия | Zen Fox | 🔨 В процес |
-| TASK-41377 | Добави фонова мелодия в Рудни мехури | Echo Coder | 🔨 В процес |
-| TASK-41384 | Махни глобалните променливи от Фото сафари | Quark Volt | 🔨 В процес |
-| TASK-41390 | Тествай Рикошет на големите на телефон | Turbo Storm | 🔨 В процес |
-| TASK-41391 | Махни глобалните променливи от Фото сафари | Blaze Smith | 🔨 В процес |
-| TASK-41392 | Провери дали рекордът в Пресечи релсите се пази | Zen Storm | 🔨 В процес |
-| TASK-41393 | Направи 8-bit звук за скок в Тримино | Glitch Miner | 🔨 В процес |
-| TASK-41396 | Направи regression тест на Зъбни колела | Frost Forge | 🔨 В процес |
-| TASK-41397 | Добави бонус ниво в Малкият учен | Turbo Volt | 🔨 В процес |
-| TASK-41401 | Нарисувай нови спрайтове за Кърлинг на леда | Orbit Fox | 🔨 В процес |
-| TASK-41403 | Направи regression тест на Манделброт | Blaze Walker | 🔨 В процес |
-| TASK-41404 | Нарисувай нови спрайтове за Рудни мехури | Blaze Volt | 🔨 В процес |
-| TASK-41405 | Направи тъмна тема за Фото сафари | Quark Volt | 🔨 В процес |
-| TASK-41406 | Направи 8-bit звук за скок в Зъбни колела | Orbit Storm | 🔨 В процес |
-| TASK-41413 | Тествай Блокосечене на телефон | Turbo Walker | 🔨 В процес |
-| TASK-41417 | Подобри менюто на Закръгли числото | UX-UI-Bot | 📝 За правене |
-| TASK-41418 | Направи 8-bit звук за скок в Светофар | Sound-Engineer-Bot | 📝 За правене |
-| TASK-41424 | Махни глобалните променливи от Водопровод | Pixel Smith | 📝 За правене |
-| TASK-41431 | Махни глобалните променливи от Снежен голем | Nova Forge | 📝 За правене |
-| TASK-41436 | Добави бонус ниво в Водопровод | Echo Hawk | 📝 За правене |
-| TASK-41437 | Добави анимация при победа в Налей точно | Frost Walker | 📝 За правене |
-| TASK-41438 | Тествай Кука с въже на телефон | Byte Miner | 📝 За правене |
-| TASK-41441 | Направи 8-bit звук за скок в Кука с въже | Orbit Walker | 📝 За правене |
-| TASK-41444 | Направи 8-bit звук за скок в Разбий кода | Echo Smith | 📝 За правене |
-| TASK-41447 | Добави бонус ниво в Налей точно | Nova Smith | 📝 За правене |
-| TASK-41450 | Добави бонус ниво в Водопровод | Orbit Forge | 📝 За правене |
-| TASK-41453 | Добави анимация при победа в Три в ред | Rogue Coder | 📝 За правене |
-| TASK-41454 | Подобри менюто на Обем в блокове | Pixel Fox | 📝 За правене |
-| TASK-41456 | Нарисувай нови спрайтове за Обем в блокове | Pixel Smith | 📝 За правене |
-| TASK-41459 | Нарисувай нови спрайтове за Средно аритметично | Nova Miner | 📝 За правене |
-| TASK-41460 | Добави анимация при победа в Смеси боите | Frost Forge | 📝 За правене |
-| TASK-41461 | Направи 8-bit звук за скок в Снежен голем | Frost Coder | 📝 За правене |
-| TASK-41467 | Направи тъмна тема за Фенери в пещерата | Spark Forge | 📝 За правене |
-| TASK-41468 | Направи regression тест на Минно поле | Spark Walker | 📝 За правене |
-| TASK-41469 | Направи тъмна тема за Три в ред | Frost Stone | 📝 За правене |
-| TASK-41473 | Подобри менюто на Небостъргачи | Quark Fox | 📝 За правене |
-| TASK-41478 | Направи regression тест на Закръгли числото | Blaze Miner | 📝 За правене |
-| TASK-41484 | Тествай Гмуркане за съкровища на телефон | Spark Fox | 📝 За правене |
-| TASK-41485 | Провери дали рекордът в Кука с въже се пази | Rogue Miner | 📝 За правене |
-| TASK-41486 | Оптимизирай draw() в Калейдоскоп до 60 FPS | Delta Coder | 📝 За правене |
-| TASK-41487 | Оправи колизиите в Падащи камъни | Spark Knight | 📝 За правене |
-| TASK-41489 | Тествай Изгаси факлите на телефон | Zen Miner | 📝 За правене |
-| TASK-41490 | Нарисувай нови спрайтове за Лабиринт с ключ | Glitch Knight | 📝 За правене |
-| TASK-41495 | Махни глобалните променливи от Падащи камъни | Glitch Coder | 📝 За правене |
-| TASK-41496 | Оправи колизиите в Палатки | Orbit Fox | 📝 За правене |
-| TASK-41498 | Направи звук при game over в Фантоми в нощта | Pixel Forge | 📝 За правене |
-| TASK-41499 | Направи звук при game over в Хеликоптер спасител | Spark Forge | 📝 За правене |
-| TASK-41504 | Направи 8-bit звук за скок в Симетрия | Vector Walker | 📝 За правене |
-| TASK-41507 | Направи тъмна тема за Цвят или дума? | Pixel Stone | 📝 За правене |
-| TASK-41508 | Оптимизирай draw() в Обем в блокове до 60 FPS | Glitch Coder | 📝 За правене |
-| TASK-41512 | Оправи колизиите в Симетрия | Rogue Storm | 📝 За правене |
-| TASK-41513 | Нарисувай нови спрайтове за Симетрия | Byte Runner | 📝 За правене |
-| TASK-41514 | Направи regression тест на Логически детектив | Delta Stone | 📝 За правене |
-| TASK-41519 | Нарисувай нови спрайтове за Цвят или дума? | Delta Storm | 📝 За правене |
-| TASK-41520 | Тествай Сребърни рибки на телефон | Zen Fox | 📝 За правене |
-| TASK-41521 | Добави бонус ниво в Танкова битка | Spark Forge | 📝 За правене |
-| TASK-41530 | Направи тъмна тема за Разбий кода | Quark Storm | 📝 За правене |
-| TASK-41531 | Подобри менюто на Цвят или дума? | Nova Hawk | 📝 За правене |
-| TASK-41532 | Пробвай Проценти на Firefox и Edge | Spark Smith | 📝 За правене |
-| TASK-41535 | Направи 8-bit звук за скок в Дървосекач | Vector Knight | 📝 За правене |
-| TASK-41542 | Направи звук при game over в Танкова битка | Echo Hawk | 📝 За правене |
-| TASK-41543 | Махни глобалните променливи от Цвят или дума? | Delta Runner | 📝 За правене |
-| TASK-41545 | Направи тъмна тема за Калейдоскоп | Delta Volt | 📝 За правене |
-| TASK-41547 | Оправи колизиите в Калейдоскоп | Frost Coder | 📝 За правене |
-| TASK-41548 | Махни глобалните променливи от Фантоми в нощта | Quark Hawk | 📝 За правене |
-| TASK-41552 | Провери дали рекордът в Скритата флотилия се пази | Quark Volt | 📝 За правене |
-| TASK-41556 | Пробвай Оцвети с вълна на Firefox и Edge | Delta Miner | 📝 За правене |
-| TASK-41566 | Направи звук при game over в Разбий кода | Zen Fox | 📝 За правене |
-| TASK-41567 | Добави анимация при победа в Календарни задачи | Zen Forge | 📝 За правене |
-| TASK-41569 | Добави бонус ниво в Три в ред | Rogue Walker | 📝 За правене |
-| TASK-41570 | Направи звук при game over в Гмуркане за съкровища | Turbo Stone | 📝 За правене |
-| TASK-41573 | Тествай Калейдоскоп на телефон | Byte Stone | 📝 За правене |
-| TASK-41575 | Добави анимация при победа в Падащи камъни | Spark Hawk | 📝 За правене |
-| TASK-41576 | Направи звук при game over в Логически детектив | Byte Smith | 📝 За правене |
+| TASK-41263 | Направи regression тест на Боулинг | Neon Fox | 🔍 За ревю |
+| TASK-41264 | Пробвай Боулинг на Firefox и Edge | Echo Runner | 🔍 За ревю |
+| TASK-41265 | Добави анимация при победа в Закръгли числото | Quark Miner | 🔍 За ревю |
+| TASK-41269 | Добави анимация при победа в Хвърляне на зарове | Nova Runner | 🔍 За ревю |
+| TASK-41271 | Добави бонус ниво в Латински квадрат | Byte Runner | 🔍 За ревю |
+| TASK-41272 | Направи звук при game over в Пресечи релсите | Quark Walker | 🔍 За ревю |
+| TASK-41274 | Подобри менюто на Везни с тежести | Orbit Coder | 🔍 За ревю |
+| TASK-41276 | Добави анимация при победа в Малкият учен | Glitch Miner | 🔍 За ревю |
+| TASK-41279 | Направи 8-bit звук за скок в Боулинг | Delta Smith | 🔍 За ревю |
+| TASK-41281 | Направи тъмна тема за Латински квадрат | Rogue Hawk | 🔍 За ревю |
+| TASK-41282 | Направи тъмна тема за Домино ефект | Glitch Volt | 🔍 За ревю |
+| TASK-41285 | Направи regression тест на Гравитация | Byte Forge | 🔍 За ревю |
+| TASK-41286 | Добави анимация при победа в Малкият учен | Vector Runner | 🔍 За ревю |
+| TASK-41287 | Направи 8-bit звук за скок в Манделброт | Glitch Fox | 🔍 За ревю |
+| TASK-41289 | Направи тъмна тема за Тримино | Delta Storm | 🔍 За ревю |
+| TASK-41291 | Подобри менюто на Разбий кода | Spark Knight | 🔍 За ревю |
+| TASK-41292 | Подобри менюто на Хвърляне на зарове | Frost Fox | 🔍 За ревю |
+| TASK-41295 | Направи 8-bit звук за скок в Метроном | Spark Storm | 🔍 За ревю |
+| TASK-41305 | Добави анимация при победа в Стакове по 64 | Neon Hawk | 🔍 За ревю |
+| TASK-41310 | Оптимизирай draw() в Къде беше? до 60 FPS | Glitch Runner | 🔍 За ревю |
+| TASK-41318 | Провери дали рекордът в Ендър дупка се пази | Vector Hawk | 🔍 За ревю |
+| TASK-41320 | Пробвай Блокосечене на Firefox и Edge | Quark Stone | 🔍 За ревю |
+| TASK-41321 | Тествай Рудотрошач на телефон | Pixel Miner | 🔍 За ревю |
+| TASK-41323 | Направи 8-bit звук за скок в Везни с тежести | Rogue Runner | 🔍 За ревю |
+| TASK-41324 | Подобри менюто на Рудни мехури | Spark Volt | 🔍 За ревю |
+| TASK-41325 | Добави анимация при победа в Раздели наравно | Byte Coder | 🔍 За ревю |
+| TASK-41326 | Направи звук при game over в Стакове по 64 | Orbit Volt | 🔍 За ревю |
+| TASK-41327 | Махни глобалните променливи от Наклони кутията | Spark Stone | 🔍 За ревю |
+| TASK-41330 | Добави фонова мелодия в Блоков тенис | Pixel Smith | 🔍 За ревю |
+| TASK-41332 | Пробвай Ендър дупка на Firefox и Edge | Delta Forge | 🔍 За ревю |
+| TASK-41333 | Добави фонова мелодия в Гравитация | Vector Stone | 🔍 За ревю |
+| TASK-41335 | Подобри менюто на Рудни мехури | Frost Smith | 🔍 За ревю |
+| TASK-41342 | Пробвай Хвърляне на зарове на Firefox и Edge | Byte Stone | 🔍 За ревю |
+| TASK-41346 | Тествай Отбий огнената топка на телефон | Spark Knight | 🔍 За ревю |
+| TASK-41351 | Оправи колизиите в Археология с четка | Neon Fox | 🔍 За ревю |
+| TASK-41352 | Подобри менюто на Рудни мехури | Turbo Walker | 🔍 За ревю |
+| TASK-41358 | Оптимизирай draw() в Запомни числото до 60 FPS | Spark Coder | 🔍 За ревю |
+| TASK-41359 | Направи тъмна тема за Ендър скок | Pixel Storm | 🔍 За ревю |
+| TASK-41362 | Добави бонус ниво в Наклони кутията | Turbo Volt | 🔍 За ревю |
+| TASK-41364 | Пробвай Метроном на Firefox и Edge | Pixel Fox | 🔍 За ревю |
+| TASK-41365 | Направи 8-bit звук за скок в Блоков тенис | Vector Hawk | 🔍 За ревю |
+| TASK-41367 | Подобри менюто на Лавови тръби | Neon Stone | 🔍 За ревю |
+| TASK-41368 | Направи 8-bit звук за скок в По-голямо/по-малко | Quark Smith | 🔍 За ревю |
+| TASK-41370 | Добави фонова мелодия в Гравитация | Orbit Stone | 🔍 За ревю |
+| TASK-41371 | Направи звук при game over в Наклони кутията | Orbit Runner | 🔍 За ревю |
+| TASK-41372 | Добави анимация при победа в Метеоритен миньор | Turbo Runner | 🔍 За ревю |
+| TASK-41375 | Добави фонова мелодия в Блокова змия | Zen Fox | 🔍 За ревю |
+| TASK-41377 | Добави фонова мелодия в Рудни мехури | Echo Coder | 🔍 За ревю |
+| TASK-41384 | Махни глобалните променливи от Фото сафари | Quark Volt | 🔍 За ревю |
+| TASK-41390 | Тествай Рикошет на големите на телефон | Turbo Storm | 🔍 За ревю |
+| TASK-41391 | Махни глобалните променливи от Фото сафари | Blaze Smith | 🔍 За ревю |
+| TASK-41392 | Провери дали рекордът в Пресечи релсите се пази | Zen Storm | 🔍 За ревю |
+| TASK-41393 | Направи 8-bit звук за скок в Тримино | Glitch Miner | 🔍 За ревю |
+| TASK-41396 | Направи regression тест на Зъбни колела | Frost Forge | 🔍 За ревю |
+| TASK-41397 | Добави бонус ниво в Малкият учен | Turbo Volt | 🔍 За ревю |
+| TASK-41401 | Нарисувай нови спрайтове за Кърлинг на леда | Orbit Fox | 🔍 За ревю |
+| TASK-41403 | Направи regression тест на Манделброт | Blaze Walker | 🔍 За ревю |
+| TASK-41404 | Нарисувай нови спрайтове за Рудни мехури | Blaze Volt | 🔍 За ревю |
+| TASK-41405 | Направи тъмна тема за Фото сафари | Quark Volt | 🔍 За ревю |
+| TASK-41406 | Направи 8-bit звук за скок в Зъбни колела | Orbit Storm | 🔍 За ревю |
+| TASK-41413 | Тествай Блокосечене на телефон | Turbo Walker | 🔍 За ревю |
+| TASK-41417 | Подобри менюто на Закръгли числото | UX-UI-Bot | 🔨 В процес |
+| TASK-41418 | Направи 8-bit звук за скок в Светофар | Sound-Engineer-Bot | 🔨 В процес |
+| TASK-41424 | Махни глобалните променливи от Водопровод | Pixel Smith | 🔨 В процес |
+| TASK-41431 | Махни глобалните променливи от Снежен голем | Nova Forge | 🔨 В процес |
+| TASK-41436 | Добави бонус ниво в Водопровод | Echo Hawk | 🔨 В процес |
+| TASK-41437 | Добави анимация при победа в Налей точно | Frost Walker | 🔨 В процес |
+| TASK-41438 | Тествай Кука с въже на телефон | Byte Miner | 🔨 В процес |
+| TASK-41441 | Направи 8-bit звук за скок в Кука с въже | Orbit Walker | 🔨 В процес |
+| TASK-41444 | Направи 8-bit звук за скок в Разбий кода | Echo Smith | 🔨 В процес |
+| TASK-41447 | Добави бонус ниво в Налей точно | Nova Smith | 🔨 В процес |
+| TASK-41450 | Добави бонус ниво в Водопровод | Orbit Forge | 🔨 В процес |
+| TASK-41453 | Добави анимация при победа в Три в ред | Rogue Coder | 🔨 В процес |
+| TASK-41454 | Подобри менюто на Обем в блокове | Pixel Fox | 🔨 В процес |
+| TASK-41456 | Нарисувай нови спрайтове за Обем в блокове | Pixel Smith | 🔨 В процес |
+| TASK-41459 | Нарисувай нови спрайтове за Средно аритметично | Nova Miner | 🔨 В процес |
+| TASK-41460 | Добави анимация при победа в Смеси боите | Frost Forge | 🔨 В процес |
+| TASK-41461 | Направи 8-bit звук за скок в Снежен голем | Frost Coder | 🔨 В процес |
+| TASK-41467 | Направи тъмна тема за Фенери в пещерата | Spark Forge | 🔨 В процес |
+| TASK-41468 | Направи regression тест на Минно поле | Spark Walker | 🔨 В процес |
+| TASK-41469 | Направи тъмна тема за Три в ред | Frost Stone | 🔨 В процес |
+| TASK-41473 | Подобри менюто на Небостъргачи | Quark Fox | 🔨 В процес |
+| TASK-41478 | Направи regression тест на Закръгли числото | Blaze Miner | 🔨 В процес |
+| TASK-41484 | Тествай Гмуркане за съкровища на телефон | Spark Fox | 🔨 В процес |
+| TASK-41485 | Провери дали рекордът в Кука с въже се пази | Rogue Miner | 🔨 В процес |
+| TASK-41486 | Оптимизирай draw() в Калейдоскоп до 60 FPS | Delta Coder | 🔨 В процес |
+| TASK-41487 | Оправи колизиите в Падащи камъни | Spark Knight | 🔨 В процес |
+| TASK-41489 | Тествай Изгаси факлите на телефон | Zen Miner | 🔨 В процес |
+| TASK-41490 | Нарисувай нови спрайтове за Лабиринт с ключ | Glitch Knight | 🔨 В процес |
+| TASK-41495 | Махни глобалните променливи от Падащи камъни | Glitch Coder | 🔨 В процес |
+| TASK-41496 | Оправи колизиите в Палатки | Orbit Fox | 🔨 В процес |
+| TASK-41498 | Направи звук при game over в Фантоми в нощта | Pixel Forge | 🔨 В процес |
+| TASK-41499 | Направи звук при game over в Хеликоптер спасител | Spark Forge | 🔨 В процес |
+| TASK-41504 | Направи 8-bit звук за скок в Симетрия | Vector Walker | 🔨 В процес |
+| TASK-41507 | Направи тъмна тема за Цвят или дума? | Pixel Stone | 🔨 В процес |
+| TASK-41508 | Оптимизирай draw() в Обем в блокове до 60 FPS | Glitch Coder | 🔨 В процес |
+| TASK-41512 | Оправи колизиите в Симетрия | Rogue Storm | 🔨 В процес |
+| TASK-41513 | Нарисувай нови спрайтове за Симетрия | Byte Runner | 🔨 В процес |
+| TASK-41514 | Направи regression тест на Логически детектив | Delta Stone | 🔨 В процес |
+| TASK-41519 | Нарисувай нови спрайтове за Цвят или дума? | Delta Storm | 🔨 В процес |
+| TASK-41520 | Тествай Сребърни рибки на телефон | Zen Fox | 🔨 В процес |
+| TASK-41521 | Добави бонус ниво в Танкова битка | Spark Forge | 🔨 В процес |
+| TASK-41530 | Направи тъмна тема за Разбий кода | Quark Storm | 🔨 В процес |
+| TASK-41531 | Подобри менюто на Цвят или дума? | Nova Hawk | 🔨 В процес |
+| TASK-41532 | Пробвай Проценти на Firefox и Edge | Spark Smith | 🔨 В процес |
+| TASK-41535 | Направи 8-bit звук за скок в Дървосекач | Vector Knight | 🔨 В процес |
+| TASK-41542 | Направи звук при game over в Танкова битка | Echo Hawk | 🔨 В процес |
+| TASK-41543 | Махни глобалните променливи от Цвят или дума? | Delta Runner | 🔨 В процес |
+| TASK-41545 | Направи тъмна тема за Калейдоскоп | Delta Volt | 🔨 В процес |
+| TASK-41547 | Оправи колизиите в Калейдоскоп | Frost Coder | 🔨 В процес |
+| TASK-41548 | Махни глобалните променливи от Фантоми в нощта | Quark Hawk | 🔨 В процес |
+| TASK-41552 | Провери дали рекордът в Скритата флотилия се пази | Quark Volt | 🔨 В процес |
+| TASK-41556 | Пробвай Оцвети с вълна на Firefox и Edge | Delta Miner | 🔨 В процес |
+| TASK-41566 | Направи звук при game over в Разбий кода | Zen Fox | 🔨 В процес |
+| TASK-41567 | Добави анимация при победа в Календарни задачи | Zen Forge | 🔨 В процес |
+| TASK-41569 | Добави бонус ниво в Три в ред | Rogue Walker | 🔨 В процес |
+| TASK-41570 | Направи звук при game over в Гмуркане за съкровища | Turbo Stone | 🔨 В процес |
+| TASK-41573 | Тествай Калейдоскоп на телефон | Byte Stone | 🔨 В процес |
+| TASK-41575 | Добави анимация при победа в Падащи камъни | Spark Hawk | 🔨 В процес |
+| TASK-41576 | Направи звук при game over в Логически детектив | Byte Smith | 🔨 В процес |
+| TASK-41577 | Оптимизирай draw() в Прилепче до 60 FPS | Dev-Bot | 📝 За правене |
+| TASK-41578 | Пробвай Сборни блокове на Firefox и Edge | QA-Tester-Bot | 📝 За правене |
+| TASK-41586 | Добави анимация при победа в Сборни блокове | Spark Fox | 📝 За правене |
+| TASK-41587 | Добави бонус ниво в Пирамида за маяк | Blaze Hawk | 📝 За правене |
+| TASK-41588 | Нарисувай нови спрайтове за Часовник | Nova Storm | 📝 За правене |
+| TASK-41590 | Добави бонус ниво в Липсващото число | Echo Volt | 📝 За правене |
+| TASK-41593 | Оптимизирай draw() в Пръчки от блейз до 60 FPS | Quark Fox | 📝 За правене |
+| TASK-41595 | Пробвай Ловец на руди на Firefox и Edge | Turbo Knight | 📝 За правене |
+| TASK-41597 | Махни глобалните променливи от Лабиринт | Quark Knight | 📝 За правене |
+| TASK-41599 | Направи 8-bit звук за скок в Наклони кутията | Zen Storm | 📝 За правене |
+| TASK-41601 | Направи 8-bit звук за скок в Лабиринт | Delta Volt | 📝 За правене |
+| TASK-41605 | Добави анимация при победа в Рудната змия | Orbit Hawk | 📝 За правене |
+| TASK-41607 | Направи regression тест на Без да вдигаш молива | Vector Forge | 📝 За правене |
+| TASK-41608 | Направи regression тест на Мелница | Vector Stone | 📝 За правене |
+| TASK-41610 | Добави бонус ниво в Палатки | Zen Stone | 📝 За правене |
+| TASK-41611 | Добави фонова мелодия в Манделброт | Pixel Storm | 📝 За правене |
+| TASK-41614 | Оправи колизиите в Блоков кликер | Byte Knight | 📝 За правене |
+| TASK-41617 | Добави бонус ниво в Пирамида за маяк | Byte Runner | 📝 За правене |
+| TASK-41620 | Пробвай Бинго на Firefox и Edge | Zen Volt | 📝 За правене |
+| TASK-41622 | Оптимизирай draw() в Ракетна защита до 60 FPS | Turbo Fox | 📝 За правене |
+| TASK-41627 | Добави фонова мелодия в Разбий кода | Byte Volt | 📝 За правене |
+| TASK-41632 | Направи звук при game over в Скорост, време, път | Echo Stone | 📝 За правене |
+| TASK-41636 | Оптимизирай draw() в Скорост, време, път до 60 FPS | Vector Coder | 📝 За правене |
+| TASK-41639 | Направи звук при game over в Сборни блокове | Nova Stone | 📝 За правене |
+| TASK-41642 | Оправи колизиите в Разбий кода | Neon Volt | 📝 За правене |
+| TASK-41646 | Направи 8-bit звук за скок в Спирограф | Quark Fox | 📝 За правене |
+| TASK-41647 | Направи звук при game over в Пирамида за маяк | Blaze Hawk | 📝 За правене |
+| TASK-41651 | Тествай Пръчки от блейз на телефон | Zen Volt | 📝 За правене |
+| TASK-41652 | Махни глобалните променливи от Осем царици | Turbo Smith | 📝 За правене |
+| TASK-41654 | Оправи колизиите в Прилепче | Quark Miner | 📝 За правене |
+| TASK-41655 | Нарисувай нови спрайтове за Строй числото | Pixel Stone | 📝 За правене |
+| TASK-41664 | Оптимизирай draw() в Часовник до 60 FPS | Blaze Coder | 📝 За правене |
+| TASK-41665 | Направи тъмна тема за Ракетна защита | Glitch Fox | 📝 За правене |
+| TASK-41666 | Оптимизирай draw() в Скорост, време, път до 60 FPS | Pixel Runner | 📝 За правене |
+| TASK-41669 | Добави анимация при победа в Морски бой | Byte Volt | 📝 За правене |
+| TASK-41672 | Оптимизирай draw() в Скорост, време, път до 60 FPS | Spark Knight | 📝 За правене |
+| TASK-41673 | Добави фонова мелодия в Чети графиката | Orbit Walker | 📝 За правене |
+| TASK-41676 | Добави бонус ниво в Манделброт | Rogue Hawk | 📝 За правене |
+| TASK-41683 | Направи regression тест на Чети графиката | Spark Smith | 📝 За правене |
+| TASK-41685 | Добави фонова мелодия в Ракетна защита | Zen Miner | 📝 За правене |
+| TASK-41687 | Добави анимация при победа в Плъзгащ пъзел | Zen Miner | 📝 За правене |
+| TASK-41689 | Направи regression тест на Мелница | Spark Miner | 📝 За правене |
+| TASK-41693 | Направи 8-bit звук за скок в Колко време мина | Nova Runner | 📝 За правене |
+| TASK-41694 | Пробвай Раздели слузите на Firefox и Edge | Orbit Storm | 📝 За правене |
+| TASK-41699 | Пробвай Пчеличка на Firefox и Edge | Frost Coder | 📝 За правене |
+| TASK-41700 | Направи 8-bit звук за скок в Колко пътя? | Neon Fox | 📝 За правене |
+| TASK-41704 | Оправи колизиите в Колко време мина | Glitch Stone | 📝 За правене |
+| TASK-41706 | Оптимизирай draw() в Колко пътя? до 60 FPS | Neon Runner | 📝 За правене |
+| TASK-41711 | Добави бонус ниво в Пирамида за маяк | Orbit Miner | 📝 За правене |
+| TASK-41725 | Нарисувай нови спрайтове за Липсващото число | Zen Knight | 📝 За правене |
+| TASK-41726 | Добави анимация при победа в Пръчки от блейз | Frost Miner | 📝 За правене |
+| TASK-41741 | Подобри менюто на Спирограф | Zen Runner | 📝 За правене |
+| TASK-41743 | Пробвай Ракетна защита на Firefox и Edge | Spark Walker | 📝 За правене |
+| TASK-41746 | Направи regression тест на Липсващото число | Nova Fox | 📝 За правене |
+| TASK-41748 | Подобри менюто на Деление | Echo Volt | 📝 За правене |
 | TASK-0008 | Подобри менюто на Строй числото | UX-UI-Bot | ✅ Готово |
 | TASK-0009 | Оправи колизиите в Оцвети картата | Blaze Hawk | ✅ Готово |
 | TASK-0001 | Нарисувай нови спрайтове за Стрелочник | Spark Fox | ✅ Готово |
 | TASK-0002 | Направи regression тест на Скачане на въже | Echo Runner | ✅ Готово |
 | TASK-0003 | Направи regression тест на Блокова змия | Neon Fox | ✅ Готово |
 
-<details><summary>Всички 170 служители в Team Dev</summary>
+<details><summary>Всички 171 служители в Team Dev</summary>
 
-Spark Fox (Pixel Artist, Design) · Neon Fox (Bug Hunter, Quality) · Echo Runner (Speedrun Tester, Quality) · Blaze Hawk (Engine Programmer, Engineering) · Nova Storm (UI Animator, Design) · Quark Miner (Pixel Artist, Design) · Echo Volt (Engine Programmer, Engineering) · Pixel Smith (Engine Programmer, Engineering) · Quark Fox (Engine Programmer, Engineering) · Turbo Knight (QA Tester, Quality) · Quark Knight (Game Developer, Engineering) · Zen Storm (Chiptune Composer, Audio) · Nova Runner (UI Animator, Design) · Delta Volt (Sound Designer, Audio) · Byte Runner (Engine Programmer, Engineering) · Nova Forge (Game Developer, Engineering) · Quark Walker (Chiptune Composer, Audio) · Orbit Hawk (Level Designer, Design) · Orbit Coder (UI Animator, Design) · Vector Forge (QA Tester, Quality) · Glitch Miner (Pixel Artist, Design) · Echo Hawk (Game Developer, Engineering) · Vector Stone (Speedrun Tester, Quality) · Frost Walker (UI Animator, Design) · Byte Miner (Speedrun Tester, Quality) · Zen Stone (Engine Programmer, Engineering) · Delta Smith (Sound Designer, Audio) · Pixel Storm (Chiptune Composer, Audio) · Rogue Hawk (UI Animator, Design) · Orbit Walker (Sound Designer, Audio) · Glitch Volt (UI Animator, Design) · Byte Knight (Engine Programmer, Engineering) · Echo Smith (Chiptune Composer, Audio) · Byte Forge (Speedrun Tester, Quality) · Byte Runner (Engine Programmer, Engineering) · Vector Runner (Level Designer, Design) · Glitch Fox (Chiptune Composer, Audio) · Nova Smith (Game Developer, Engineering) · Zen Volt (QA Tester, Quality) · Delta Storm (UI Animator, Design) · Orbit Forge (WebGL Specialist, Engineering) · Turbo Fox (WebGL Specialist, Engineering) · Spark Knight (Level Designer, Design) · Frost Fox (Pixel Artist, Design) · Rogue Coder (Level Designer, Design) · Pixel Fox (UI Animator, Design) · Spark Storm (Chiptune Composer, Audio) · Byte Volt (Sound Designer, Audio) · Pixel Smith (Level Designer, Design) · Nova Miner (Level Designer, Design) · Frost Forge (Level Designer, Design) · Echo Stone (Chiptune Composer, Audio) · Frost Coder (Chiptune Composer, Audio) · Vector Coder (Engine Programmer, Engineering) · Neon Hawk (Pixel Artist, Design) · Spark Forge (Level Designer, Design) · Nova Stone (Sound Designer, Audio) · Spark Walker (Bug Hunter, Quality) · Frost Stone (Level Designer, Design) · Glitch Runner (Game Developer, Engineering) · Neon Volt (Engine Programmer, Engineering) · Quark Fox (UI Animator, Design) · Quark Fox (Chiptune Composer, Audio) · Blaze Hawk (Chiptune Composer, Audio) · Vector Hawk (QA Tester, Quality) · Blaze Miner (QA Tester, Quality) · Zen Volt (QA Tester, Quality) · Quark Stone (Speedrun Tester, Quality) · Turbo Smith (Game Developer, Engineering) · Pixel Miner (Bug Hunter, Quality) · Quark Miner (Game Developer, Engineering) · Rogue Runner (Sound Designer, Audio) · Pixel Stone (Pixel Artist, Design) · Spark Volt (Pixel Artist, Design) · Spark Fox (Speedrun Tester, Quality) · Byte Coder (Level Designer, Design) · Rogue Miner (QA Tester, Quality) · Orbit Volt (Sound Designer, Audio) · Delta Coder (WebGL Specialist, Engineering) · Spark Stone (Engine Programmer, Engineering) · Spark Knight (Game Developer, Engineering) · Zen Miner (Speedrun Tester, Quality) · Pixel Smith (Sound Designer, Audio) · Glitch Knight (UI Animator, Design) · Delta Forge (Speedrun Tester, Quality) · Blaze Coder (Engine Programmer, Engineering) · Vector Stone (Sound Designer, Audio) · Glitch Fox (Level Designer, Design) · Pixel Runner (Game Developer, Engineering) · Frost Smith (UI Animator, Design) · Glitch Coder (Engine Programmer, Engineering) · Orbit Fox (Engine Programmer, Engineering) · Byte Volt (Pixel Artist, Design) · Pixel Forge (Sound Designer, Audio) · Spark Forge (Sound Designer, Audio) · Spark Knight (Game Developer, Engineering) · Orbit Walker (Chiptune Composer, Audio) · Byte Stone (Speedrun Tester, Quality) · Vector Walker (Chiptune Composer, Audio) · Rogue Hawk (Engine Programmer, Engineering) · Spark Knight (Speedrun Tester, Quality) · Pixel Stone (Pixel Artist, Design) · Glitch Coder (Game Developer, Engineering) · Neon Fox (Engine Programmer, Engineering) · Spark Smith (Bug Hunter, Quality) · Turbo Walker (UI Animator, Design) · Rogue Storm (Engine Programmer, Engineering) · Byte Runner (UI Animator, Design) · Zen Miner (Chiptune Composer, Audio) · Delta Stone (Bug Hunter, Quality) · Zen Miner (Pixel Artist, Design) · Spark Miner (Speedrun Tester, Quality) · Spark Coder (WebGL Specialist, Engineering) · Pixel Storm (Level Designer, Design) · Delta Storm (UI Animator, Design) · Zen Fox (Speedrun Tester, Quality) · Spark Forge (Engine Programmer, Engineering) · Nova Runner (Sound Designer, Audio) · Turbo Volt (Engine Programmer, Engineering) · Orbit Storm (Speedrun Tester, Quality) · Pixel Fox (Speedrun Tester, Quality) · Vector Hawk (Sound Designer, Audio) · Neon Stone (Level Designer, Design) · Frost Coder (QA Tester, Quality) · Quark Smith (Sound Designer, Audio) · Neon Fox (Chiptune Composer, Audio) · Orbit Stone (Chiptune Composer, Audio) · Quark Storm (UI Animator, Design) · Orbit Runner (Sound Designer, Audio) · Nova Hawk (Pixel Artist, Design) · Turbo Runner (Level Designer, Design) · Spark Smith (Speedrun Tester, Quality) · Glitch Stone (WebGL Specialist, Engineering) · Neon Runner (Engine Programmer, Engineering) · Zen Fox (Chiptune Composer, Audio) · Vector Knight (Chiptune Composer, Audio) · Echo Coder (Sound Designer, Audio) · Orbit Miner (WebGL Specialist, Engineering) · Echo Hawk (Sound Designer, Audio) · Delta Runner (Game Developer, Engineering) · Quark Volt (Game Developer, Engineering) · Delta Volt (Level Designer, Design) · Frost Coder (Engine Programmer, Engineering) · Quark Hawk (Engine Programmer, Engineering) · Turbo Storm (QA Tester, Quality) · Blaze Smith (WebGL Specialist, Engineering) · Zen Storm (Bug Hunter, Quality) · Quark Volt (QA Tester, Quality) · Glitch Miner (Sound Designer, Audio) · Zen Knight (UI Animator, Design) · Frost Miner (UI Animator, Design) · Frost Forge (Bug Hunter, Quality) · Delta Miner (QA Tester, Quality) · Turbo Volt (WebGL Specialist, Engineering) · Orbit Fox (Level Designer, Design) · Blaze Walker (Speedrun Tester, Quality) · Blaze Volt (Pixel Artist, Design) · Quark Volt (Level Designer, Design) · Orbit Storm (Chiptune Composer, Audio) · Zen Fox (Sound Designer, Audio) · Zen Forge (UI Animator, Design) · Rogue Walker (Game Developer, Engineering) · Zen Runner (UI Animator, Design) · Turbo Stone (Sound Designer, Audio) · Spark Walker (Speedrun Tester, Quality) · Turbo Walker (Bug Hunter, Quality) · Byte Stone (Bug Hunter, Quality) · Nova Fox (QA Tester, Quality) · Spark Hawk (Level Designer, Design) · Byte Smith (Chiptune Composer, Audio)
+Spark Fox (Pixel Artist, Design) · Neon Fox (Bug Hunter, Quality) · Echo Runner (Speedrun Tester, Quality) · Blaze Hawk (Engine Programmer, Engineering) · Nova Storm (UI Animator, Design) · Quark Miner (Pixel Artist, Design) · Echo Volt (Engine Programmer, Engineering) · Pixel Smith (Engine Programmer, Engineering) · Quark Fox (Engine Programmer, Engineering) · Turbo Knight (QA Tester, Quality) · Quark Knight (Game Developer, Engineering) · Zen Storm (Chiptune Composer, Audio) · Nova Runner (UI Animator, Design) · Delta Volt (Sound Designer, Audio) · Byte Runner (Engine Programmer, Engineering) · Nova Forge (Game Developer, Engineering) · Quark Walker (Chiptune Composer, Audio) · Orbit Hawk (Level Designer, Design) · Orbit Coder (UI Animator, Design) · Vector Forge (QA Tester, Quality) · Glitch Miner (Pixel Artist, Design) · Echo Hawk (Game Developer, Engineering) · Vector Stone (Speedrun Tester, Quality) · Frost Walker (UI Animator, Design) · Byte Miner (Speedrun Tester, Quality) · Zen Stone (Engine Programmer, Engineering) · Delta Smith (Sound Designer, Audio) · Pixel Storm (Chiptune Composer, Audio) · Rogue Hawk (UI Animator, Design) · Orbit Walker (Sound Designer, Audio) · Glitch Volt (UI Animator, Design) · Byte Knight (Engine Programmer, Engineering) · Echo Smith (Chiptune Composer, Audio) · Byte Forge (Speedrun Tester, Quality) · Byte Runner (Engine Programmer, Engineering) · Vector Runner (Level Designer, Design) · Glitch Fox (Chiptune Composer, Audio) · Nova Smith (Game Developer, Engineering) · Zen Volt (QA Tester, Quality) · Delta Storm (UI Animator, Design) · Orbit Forge (WebGL Specialist, Engineering) · Turbo Fox (WebGL Specialist, Engineering) · Spark Knight (Level Designer, Design) · Frost Fox (Pixel Artist, Design) · Rogue Coder (Level Designer, Design) · Pixel Fox (UI Animator, Design) · Spark Storm (Chiptune Composer, Audio) · Byte Volt (Sound Designer, Audio) · Pixel Smith (Level Designer, Design) · Nova Miner (Level Designer, Design) · Frost Forge (Level Designer, Design) · Echo Stone (Chiptune Composer, Audio) · Frost Coder (Chiptune Composer, Audio) · Vector Coder (Engine Programmer, Engineering) · Neon Hawk (Pixel Artist, Design) · Spark Forge (Level Designer, Design) · Nova Stone (Sound Designer, Audio) · Spark Walker (Bug Hunter, Quality) · Frost Stone (Level Designer, Design) · Glitch Runner (Game Developer, Engineering) · Neon Volt (Engine Programmer, Engineering) · Quark Fox (UI Animator, Design) · Quark Fox (Chiptune Composer, Audio) · Blaze Hawk (Chiptune Composer, Audio) · Vector Hawk (QA Tester, Quality) · Blaze Miner (QA Tester, Quality) · Zen Volt (QA Tester, Quality) · Quark Stone (Speedrun Tester, Quality) · Turbo Smith (Game Developer, Engineering) · Pixel Miner (Bug Hunter, Quality) · Quark Miner (Game Developer, Engineering) · Rogue Runner (Sound Designer, Audio) · Pixel Stone (Pixel Artist, Design) · Spark Volt (Pixel Artist, Design) · Spark Fox (Speedrun Tester, Quality) · Byte Coder (Level Designer, Design) · Rogue Miner (QA Tester, Quality) · Orbit Volt (Sound Designer, Audio) · Delta Coder (WebGL Specialist, Engineering) · Spark Stone (Engine Programmer, Engineering) · Spark Knight (Game Developer, Engineering) · Zen Miner (Speedrun Tester, Quality) · Pixel Smith (Sound Designer, Audio) · Glitch Knight (UI Animator, Design) · Delta Forge (Speedrun Tester, Quality) · Blaze Coder (Engine Programmer, Engineering) · Vector Stone (Sound Designer, Audio) · Glitch Fox (Level Designer, Design) · Pixel Runner (Game Developer, Engineering) · Frost Smith (UI Animator, Design) · Glitch Coder (Engine Programmer, Engineering) · Orbit Fox (Engine Programmer, Engineering) · Byte Volt (Pixel Artist, Design) · Pixel Forge (Sound Designer, Audio) · Spark Forge (Sound Designer, Audio) · Spark Knight (Game Developer, Engineering) · Orbit Walker (Chiptune Composer, Audio) · Byte Stone (Speedrun Tester, Quality) · Vector Walker (Chiptune Composer, Audio) · Rogue Hawk (Engine Programmer, Engineering) · Spark Knight (Speedrun Tester, Quality) · Pixel Stone (Pixel Artist, Design) · Glitch Coder (Game Developer, Engineering) · Neon Fox (Engine Programmer, Engineering) · Spark Smith (Bug Hunter, Quality) · Turbo Walker (UI Animator, Design) · Rogue Storm (Engine Programmer, Engineering) · Byte Runner (UI Animator, Design) · Zen Miner (Chiptune Composer, Audio) · Delta Stone (Bug Hunter, Quality) · Zen Miner (Pixel Artist, Design) · Spark Miner (Speedrun Tester, Quality) · Spark Coder (WebGL Specialist, Engineering) · Pixel Storm (Level Designer, Design) · Delta Storm (UI Animator, Design) · Zen Fox (Speedrun Tester, Quality) · Spark Forge (Engine Programmer, Engineering) · Nova Runner (Sound Designer, Audio) · Turbo Volt (Engine Programmer, Engineering) · Orbit Storm (Speedrun Tester, Quality) · Pixel Fox (Speedrun Tester, Quality) · Vector Hawk (Sound Designer, Audio) · Neon Stone (Level Designer, Design) · Frost Coder (QA Tester, Quality) · Quark Smith (Sound Designer, Audio) · Neon Fox (Chiptune Composer, Audio) · Orbit Stone (Chiptune Composer, Audio) · Quark Storm (UI Animator, Design) · Orbit Runner (Sound Designer, Audio) · Nova Hawk (Pixel Artist, Design) · Turbo Runner (Level Designer, Design) · Spark Smith (Speedrun Tester, Quality) · Glitch Stone (WebGL Specialist, Engineering) · Neon Runner (Engine Programmer, Engineering) · Zen Fox (Chiptune Composer, Audio) · Vector Knight (Chiptune Composer, Audio) · Echo Coder (Sound Designer, Audio) · Orbit Miner (WebGL Specialist, Engineering) · Echo Hawk (Sound Designer, Audio) · Delta Runner (Game Developer, Engineering) · Quark Volt (Game Developer, Engineering) · Delta Volt (Level Designer, Design) · Frost Coder (Engine Programmer, Engineering) · Quark Hawk (Engine Programmer, Engineering) · Turbo Storm (QA Tester, Quality) · Blaze Smith (WebGL Specialist, Engineering) · Zen Storm (Bug Hunter, Quality) · Quark Volt (QA Tester, Quality) · Glitch Miner (Sound Designer, Audio) · Zen Knight (UI Animator, Design) · Frost Miner (UI Animator, Design) · Frost Forge (Bug Hunter, Quality) · Delta Miner (QA Tester, Quality) · Turbo Volt (WebGL Specialist, Engineering) · Orbit Fox (Level Designer, Design) · Blaze Walker (Speedrun Tester, Quality) · Blaze Volt (Pixel Artist, Design) · Quark Volt (Level Designer, Design) · Orbit Storm (Chiptune Composer, Audio) · Zen Fox (Sound Designer, Audio) · Zen Forge (UI Animator, Design) · Rogue Walker (Game Developer, Engineering) · Zen Runner (UI Animator, Design) · Turbo Stone (Sound Designer, Audio) · Spark Walker (Speedrun Tester, Quality) · Turbo Walker (Bug Hunter, Quality) · Byte Stone (Bug Hunter, Quality) · Nova Fox (QA Tester, Quality) · Spark Hawk (Level Designer, Design) · Byte Smith (Chiptune Composer, Audio) · Echo Volt (Level Designer, Design)
 
 </details>
 
@@ -210,123 +211,123 @@ Spark Fox (Pixel Artist, Design) · Neon Fox (Bug Hunter, Quality) · Echo Runne
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41079 | Намали размера на Хвърчило | DevOps-Master-Bot | 🔍 За ревю |
-| TASK-41080 | Събери отзиви от играчите за Бърз мост | Community-Manager-Bot | 🔍 За ревю |
-| TASK-41089 | Преведи Мелница на английски | Glitch Forge | 🔍 За ревю |
-| TASK-41091 | Добави анти-чийт за рекордите в Стригач на овце | Quark Miner | 🔍 За ревю |
-| TASK-41092 | Преведи Рецепти за изработване на английски | Turbo Storm | 🔍 За ревю |
-| TASK-41094 | Събери отзиви от играчите за Факли срещу мобове | Echo Smith | 🔍 За ревю |
-| TASK-41096 | Провери пътищата на Рецепти за изработване в GitHub Pages | Rogue Hawk | 🔍 За ревю |
-| TASK-41100 | Провери Парашутист за XSS | Neon Walker | 🔍 За ревю |
-| TASK-41104 | Напиши туториал за Стригач на овце | Rogue Knight | 🔍 За ревю |
-| TASK-41118 | Събери отзиви от играчите за Хвърчило | Neon Fox | 🔍 За ревю |
-| TASK-41119 | Преведи Стригач на овце на английски | Vector Volt | 🔍 За ревю |
-| TASK-41124 | Напиши туториал за Свържи двойките | Rogue Hawk | 🔍 За ревю |
-| TASK-41128 | Намали размера на Средно аритметично | Delta Runner | 🔍 За ревю |
-| TASK-41133 | Провери пътищата на Лице и периметър в GitHub Pages | Zen Knight | 🔍 За ревю |
-| TASK-41134 | Напиши туториал за Календарни задачи | Vector Stone | 🔍 За ревю |
-| TASK-41137 | Събери отзиви от играчите за Яйцата | Frost Runner | 🔍 За ревю |
-| TASK-41138 | Преведи Рецепти за изработване на английски | Rogue Fox | 🔍 За ревю |
-| TASK-41143 | Преведи Блоков любимец на английски | Delta Walker | 🔍 За ревю |
-| TASK-41145 | Напиши туториал за Риболов | Glitch Forge | 🔍 За ревю |
-| TASK-41150 | Преведи Блоков любимец на английски | Orbit Storm | 🔍 За ревю |
-| TASK-41156 | Преведи Не бъди смачкан на английски | Glitch Volt | 🔍 За ревю |
-| TASK-41159 | Напиши туториал за Вътрешен часовник | Rogue Coder | 🔍 За ревю |
-| TASK-41161 | Провери пътищата на Средно аритметично в GitHub Pages | Frost Storm | 🔍 За ревю |
-| TASK-41162 | Добави анти-чийт за рекордите в Блоков волейбол | Echo Coder | 🔍 За ревю |
-| TASK-41168 | Провери пътищата на Рецепти за изработване в GitHub Pages | Echo Runner | 🔍 За ревю |
-| TASK-41182 | Провери дали Таблицата не зарежда външни скриптове | Quark Volt | 🔍 За ревю |
-| TASK-41184 | Провери Блоков тенис за XSS | Vector Stone | 🔍 За ревю |
-| TASK-41186 | Провери Строй числото за XSS | Quark Fox | 🔍 За ревю |
-| TASK-41190 | Напиши туториал за Мелница | Vector Coder | 🔍 За ревю |
-| TASK-41192 | Преведи Стригач на овце на английски | Glitch Coder | 🔍 За ревю |
-| TASK-41197 | Преведи Звезден кораб на английски | Orbit Storm | 🔍 За ревю |
-| TASK-41198 | Напиши туториал за Бърз мост | Echo Hawk | 🔍 За ревю |
-| TASK-41207 | Провери Следи сандъка за XSS | Zen Hawk | 🔍 За ревю |
-| TASK-41209 | Ускори зареждането на Познай числото | Echo Miner | 🔍 За ревю |
-| TASK-41217 | Ускори зареждането на Въздушен хокей | Frost Walker | 🔍 За ревю |
-| TASK-41218 | Провери пътищата на Орбитална защита в GitHub Pages | Nova Hawk | 🔍 За ревю |
-| TASK-41219 | Добави анти-чийт за рекордите в Блоков тенис | Neon Coder | 🔍 За ревю |
-| TASK-41223 | Провери Строй числото за XSS | Zen Stone | 🔍 За ревю |
-| TASK-41227 | Събери отзиви от играчите за Рецепти за изработване | Byte Walker | 🔍 За ревю |
-| TASK-41230 | Добави анти-чийт за рекордите в Таблицата | Spark Miner | 🔍 За ревю |
-| TASK-41231 | Напиши туториал за Вътрешен часовник | Turbo Coder | 🔍 За ревю |
-| TASK-41232 | Провери Мелница за XSS | Byte Coder | 🔍 За ревю |
-| TASK-41235 | Добави анти-чийт за рекордите в Удари слузите | Delta Fox | 🔍 За ревю |
-| TASK-41236 | Добави анти-чийт за рекордите в Хвърчило | Neon Smith | 🔍 За ревю |
-| TASK-41237 | Преведи Блоков любимец на английски | Blaze Miner | 🔍 За ревю |
-| TASK-41239 | Провери пътищата на Бърза сметка в GitHub Pages | Orbit Runner | 🔍 За ревю |
-| TASK-41245 | Провери Фото сафари за XSS | Vector Knight | 🔍 За ревю |
-| TASK-41248 | Добави анти-чийт за рекордите в Закръгли числото | SecOps-Bot | 🔨 В процес |
-| TASK-41262 | Събери отзиви от играчите за Гравитация | Rogue Miner | 🔨 В процес |
-| TASK-41266 | Преведи Разбий кода на английски | Vector Fox | 🔨 В процес |
-| TASK-41270 | Напиши туториал за Зъбни колела | Nova Storm | 🔨 В процес |
-| TASK-41273 | Провери дали Ендър скок не зарежда външни скриптове | Delta Stone | 🔨 В процес |
-| TASK-41280 | Напиши туториал за Пресечи релсите | Nova Volt | 🔨 В процес |
-| TASK-41288 | Провери пътищата на Блоков бегач в GitHub Pages | Byte Hawk | 🔨 В процес |
-| TASK-41290 | Провери дали Лавови тръби не зарежда външни скриптове | Frost Forge | 🔨 В процес |
-| TASK-41293 | Напиши туториал за По-голямо/по-малко | Turbo Fox | 🔨 В процес |
-| TASK-41294 | Провери пътищата на Малкият учен в GitHub Pages | Orbit Miner | 🔨 В процес |
-| TASK-41296 | Събери отзиви от играчите за По-голямо/по-малко | Nova Stone | 🔨 В процес |
-| TASK-41298 | Събери отзиви от играчите за Стакове по 64 | Delta Walker | 🔨 В процес |
-| TASK-41300 | Провери дали Рудотрошач не зарежда външни скриптове | Blaze Coder | 🔨 В процес |
-| TASK-41303 | Провери пътищата на Малкият учен в GitHub Pages | Delta Hawk | 🔨 В процес |
-| TASK-41304 | Провери Хвърляне на зарове за XSS | Blaze Fox | 🔨 В процес |
-| TASK-41308 | Намали размера на Бягай от хоглините | Quark Storm | 🔨 В процес |
-| TASK-41309 | Преведи Домино ефект на английски | Byte Runner | 🔨 В процес |
-| TASK-41311 | Ускори зареждането на Пресечи релсите | Nova Hawk | 🔨 В процес |
-| TASK-41312 | Напиши туториал за Лавови тръби | Rogue Smith | 🔨 В процес |
-| TASK-41315 | Провери Ендър скок за XSS | Vector Hawk | 🔨 В процес |
-| TASK-41317 | Провери Латински квадрат за XSS | Delta Miner | 🔨 В процес |
-| TASK-41328 | Събери отзиви от играчите за Скритата флотилия | Vector Runner | 🔨 В процес |
-| TASK-41334 | Провери пътищата на Латински квадрат в GitHub Pages | Delta Hawk | 🔨 В процес |
-| TASK-41337 | Провери дали Зъбни колела не зарежда външни скриптове | Spark Forge | 🔨 В процес |
-| TASK-41347 | Провери пътищата на Метроном в GitHub Pages | Quark Fox | 🔨 В процес |
-| TASK-41353 | Провери Боулинг за XSS | Neon Stone | 🔨 В процес |
-| TASK-41355 | Намали размера на Кърлинг на леда | Echo Runner | 🔨 В процес |
-| TASK-41373 | Напиши туториал за Кърлинг на леда | Rogue Volt | 🔨 В процес |
-| TASK-41379 | Преведи Рушащият се остров на английски | Turbo Knight | 🔨 В процес |
-| TASK-41380 | Преведи По-голямо/по-малко на английски | Quark Stone | 🔨 В процес |
-| TASK-41398 | Намали размера на Закръгли числото | Turbo Storm | 🔨 В процес |
-| TASK-41407 | Провери Къде беше? за XSS | Orbit Stone | 🔨 В процес |
-| TASK-41408 | Напиши туториал за Латински квадрат | Rogue Storm | 🔨 В процес |
-| TASK-41410 | Напиши туториал за Скритата флотилия | Orbit Walker | 🔨 В процес |
-| TASK-41411 | Провери Бягай от хоглините за XSS | Frost Fox | 🔨 В процес |
-| TASK-41412 | Провери Изгаси факлите за XSS | Nova Miner | 🔨 В процес |
-| TASK-41414 | Провери пътищата на Блоков тенис в GitHub Pages | Vector Fox | 🔨 В процес |
-| TASK-41415 | Преведи Блоков бегач на английски | Echo Runner | 🔨 В процес |
-| TASK-41416 | Събери отзиви от играчите за Ендър скок | Neon Smith | 🔨 В процес |
-| TASK-41423 | Ускори зареждането на Раздели слузите | Spark Miner | 📝 За правене |
-| TASK-41425 | Провери пътищата на Падащи камъни в GitHub Pages | Orbit Coder | 📝 За правене |
-| TASK-41427 | Събери отзиви от играчите за Разбий кода | Neon Fox | 📝 За правене |
-| TASK-41428 | Намали размера на Надолу | Vector Runner | 📝 За правене |
-| TASK-41430 | Добави анти-чийт за рекордите в Хеликоптер спасител | Turbo Knight | 📝 За правене |
-| TASK-41433 | Преведи Поправи с една клечка на английски | Echo Knight | 📝 За правене |
-| TASK-41446 | Провери дали Логически детектив не зарежда външни скриптове | Orbit Walker | 📝 За правене |
-| TASK-41449 | Провери дали Светофар не зарежда външни скриптове | Frost Coder | 📝 За правене |
-| TASK-41462 | Ускори зареждането на Танкова битка | Orbit Miner | 📝 За правене |
-| TASK-41466 | Ускори зареждането на Числа с думи | Frost Coder | 📝 За правене |
-| TASK-41480 | Ускори зареждането на Танкова битка | Pixel Smith | 📝 За правене |
-| TASK-41483 | Напиши туториал за Липсващият знак | Turbo Coder | 📝 За правене |
-| TASK-41491 | Добави анти-чийт за рекордите в Средно аритметично | Pixel Runner | 📝 За правене |
-| TASK-41494 | Добави анти-чийт за рекордите в Падащи камъни | Blaze Smith | 📝 За правене |
-| TASK-41503 | Провери Небостъргачи за XSS | Orbit Storm | 📝 За правене |
-| TASK-41505 | Събери отзиви от играчите за Логически детектив | Vector Coder | 📝 За правене |
-| TASK-41510 | Провери Гмуркане за съкровища за XSS | Frost Miner | 📝 За правене |
-| TASK-41515 | Провери дали Надолу не зарежда външни скриптове | Neon Knight | 📝 За правене |
-| TASK-41527 | Намали размера на Кука с въже | Neon Runner | 📝 За правене |
-| TASK-41536 | Провери Скритата флотилия за XSS | Pixel Hawk | 📝 За правене |
-| TASK-41537 | Преведи Скритата флотилия на английски | Zen Stone | 📝 За правене |
-| TASK-41544 | Събери отзиви от играчите за Небостъргачи | Neon Walker | 📝 За правене |
-| TASK-41553 | Провери пътищата на Разбий кода в GitHub Pages | Pixel Coder | 📝 За правене |
-| TASK-41554 | Събери отзиви от играчите за Небостъргачи | Rogue Volt | 📝 За правене |
-| TASK-41560 | Преведи Налей точно на английски | Rogue Knight | 📝 За правене |
-| TASK-41562 | Провери Снежен голем за XSS | Nova Runner | 📝 За правене |
-| TASK-41564 | Събери отзиви от играчите за Поправи с една клечка | Delta Volt | 📝 За правене |
-| TASK-41565 | Добави анти-чийт за рекордите в Открий разликите | Blaze Storm | 📝 За правене |
-| TASK-41571 | Провери дали Три в ред не зарежда външни скриптове | Blaze Runner | 📝 За правене |
-| TASK-41572 | Провери дали Падащи камъни не зарежда външни скриптове | Pixel Hawk | 📝 За правене |
-| TASK-41574 | Провери Надолу за XSS | Neon Stone | 📝 За правене |
+| TASK-41248 | Добави анти-чийт за рекордите в Закръгли числото | SecOps-Bot | 🔍 За ревю |
+| TASK-41262 | Събери отзиви от играчите за Гравитация | Rogue Miner | 🔍 За ревю |
+| TASK-41266 | Преведи Разбий кода на английски | Vector Fox | 🔍 За ревю |
+| TASK-41270 | Напиши туториал за Зъбни колела | Nova Storm | 🔍 За ревю |
+| TASK-41273 | Провери дали Ендър скок не зарежда външни скриптове | Delta Stone | 🔍 За ревю |
+| TASK-41280 | Напиши туториал за Пресечи релсите | Nova Volt | 🔍 За ревю |
+| TASK-41288 | Провери пътищата на Блоков бегач в GitHub Pages | Byte Hawk | 🔍 За ревю |
+| TASK-41290 | Провери дали Лавови тръби не зарежда външни скриптове | Frost Forge | 🔍 За ревю |
+| TASK-41293 | Напиши туториал за По-голямо/по-малко | Turbo Fox | 🔍 За ревю |
+| TASK-41294 | Провери пътищата на Малкият учен в GitHub Pages | Orbit Miner | 🔍 За ревю |
+| TASK-41296 | Събери отзиви от играчите за По-голямо/по-малко | Nova Stone | 🔍 За ревю |
+| TASK-41298 | Събери отзиви от играчите за Стакове по 64 | Delta Walker | 🔍 За ревю |
+| TASK-41300 | Провери дали Рудотрошач не зарежда външни скриптове | Blaze Coder | 🔍 За ревю |
+| TASK-41303 | Провери пътищата на Малкият учен в GitHub Pages | Delta Hawk | 🔍 За ревю |
+| TASK-41304 | Провери Хвърляне на зарове за XSS | Blaze Fox | 🔍 За ревю |
+| TASK-41308 | Намали размера на Бягай от хоглините | Quark Storm | 🔍 За ревю |
+| TASK-41309 | Преведи Домино ефект на английски | Byte Runner | 🔍 За ревю |
+| TASK-41311 | Ускори зареждането на Пресечи релсите | Nova Hawk | 🔍 За ревю |
+| TASK-41312 | Напиши туториал за Лавови тръби | Rogue Smith | 🔍 За ревю |
+| TASK-41315 | Провери Ендър скок за XSS | Vector Hawk | 🔍 За ревю |
+| TASK-41317 | Провери Латински квадрат за XSS | Delta Miner | 🔍 За ревю |
+| TASK-41328 | Събери отзиви от играчите за Скритата флотилия | Vector Runner | 🔍 За ревю |
+| TASK-41334 | Провери пътищата на Латински квадрат в GitHub Pages | Delta Hawk | 🔍 За ревю |
+| TASK-41337 | Провери дали Зъбни колела не зарежда външни скриптове | Spark Forge | 🔍 За ревю |
+| TASK-41347 | Провери пътищата на Метроном в GitHub Pages | Quark Fox | 🔍 За ревю |
+| TASK-41353 | Провери Боулинг за XSS | Neon Stone | 🔍 За ревю |
+| TASK-41355 | Намали размера на Кърлинг на леда | Echo Runner | 🔍 За ревю |
+| TASK-41373 | Напиши туториал за Кърлинг на леда | Rogue Volt | 🔍 За ревю |
+| TASK-41379 | Преведи Рушащият се остров на английски | Turbo Knight | 🔍 За ревю |
+| TASK-41380 | Преведи По-голямо/по-малко на английски | Quark Stone | 🔍 За ревю |
+| TASK-41398 | Намали размера на Закръгли числото | Turbo Storm | 🔍 За ревю |
+| TASK-41407 | Провери Къде беше? за XSS | Orbit Stone | 🔍 За ревю |
+| TASK-41408 | Напиши туториал за Латински квадрат | Rogue Storm | 🔍 За ревю |
+| TASK-41410 | Напиши туториал за Скритата флотилия | Orbit Walker | 🔍 За ревю |
+| TASK-41411 | Провери Бягай от хоглините за XSS | Frost Fox | 🔍 За ревю |
+| TASK-41412 | Провери Изгаси факлите за XSS | Nova Miner | 🔍 За ревю |
+| TASK-41414 | Провери пътищата на Блоков тенис в GitHub Pages | Vector Fox | 🔍 За ревю |
+| TASK-41415 | Преведи Блоков бегач на английски | Echo Runner | 🔍 За ревю |
+| TASK-41416 | Събери отзиви от играчите за Ендър скок | Neon Smith | 🔍 За ревю |
+| TASK-41423 | Ускори зареждането на Раздели слузите | Spark Miner | 🔨 В процес |
+| TASK-41425 | Провери пътищата на Падащи камъни в GitHub Pages | Orbit Coder | 🔨 В процес |
+| TASK-41427 | Събери отзиви от играчите за Разбий кода | Neon Fox | 🔨 В процес |
+| TASK-41428 | Намали размера на Надолу | Vector Runner | 🔨 В процес |
+| TASK-41430 | Добави анти-чийт за рекордите в Хеликоптер спасител | Turbo Knight | 🔨 В процес |
+| TASK-41433 | Преведи Поправи с една клечка на английски | Echo Knight | 🔨 В процес |
+| TASK-41446 | Провери дали Логически детектив не зарежда външни скриптове | Orbit Walker | 🔨 В процес |
+| TASK-41449 | Провери дали Светофар не зарежда външни скриптове | Frost Coder | 🔨 В процес |
+| TASK-41462 | Ускори зареждането на Танкова битка | Orbit Miner | 🔨 В процес |
+| TASK-41466 | Ускори зареждането на Числа с думи | Frost Coder | 🔨 В процес |
+| TASK-41480 | Ускори зареждането на Танкова битка | Pixel Smith | 🔨 В процес |
+| TASK-41483 | Напиши туториал за Липсващият знак | Turbo Coder | 🔨 В процес |
+| TASK-41491 | Добави анти-чийт за рекордите в Средно аритметично | Pixel Runner | 🔨 В процес |
+| TASK-41494 | Добави анти-чийт за рекордите в Падащи камъни | Blaze Smith | 🔨 В процес |
+| TASK-41503 | Провери Небостъргачи за XSS | Orbit Storm | 🔨 В процес |
+| TASK-41505 | Събери отзиви от играчите за Логически детектив | Vector Coder | 🔨 В процес |
+| TASK-41510 | Провери Гмуркане за съкровища за XSS | Frost Miner | 🔨 В процес |
+| TASK-41515 | Провери дали Надолу не зарежда външни скриптове | Neon Knight | 🔨 В процес |
+| TASK-41527 | Намали размера на Кука с въже | Neon Runner | 🔨 В процес |
+| TASK-41536 | Провери Скритата флотилия за XSS | Pixel Hawk | 🔨 В процес |
+| TASK-41537 | Преведи Скритата флотилия на английски | Zen Stone | 🔨 В процес |
+| TASK-41544 | Събери отзиви от играчите за Небостъргачи | Neon Walker | 🔨 В процес |
+| TASK-41553 | Провери пътищата на Разбий кода в GitHub Pages | Pixel Coder | 🔨 В процес |
+| TASK-41554 | Събери отзиви от играчите за Небостъргачи | Rogue Volt | 🔨 В процес |
+| TASK-41560 | Преведи Налей точно на английски | Rogue Knight | 🔨 В процес |
+| TASK-41562 | Провери Снежен голем за XSS | Nova Runner | 🔨 В процес |
+| TASK-41564 | Събери отзиви от играчите за Поправи с една клечка | Delta Volt | 🔨 В процес |
+| TASK-41565 | Добави анти-чийт за рекордите в Открий разликите | Blaze Storm | 🔨 В процес |
+| TASK-41571 | Провери дали Три в ред не зарежда външни скриптове | Blaze Runner | 🔨 В процес |
+| TASK-41572 | Провери дали Падащи камъни не зарежда външни скриптове | Pixel Hawk | 🔨 В процес |
+| TASK-41574 | Провери Надолу за XSS | Neon Stone | 🔨 В процес |
+| TASK-41579 | Намали размера на Лабиринт | DevOps-Master-Bot | 📝 За правене |
+| TASK-41580 | Напиши туториал за Зигзаг | Community-Manager-Bot | 📝 За правене |
+| TASK-41589 | Събери отзиви от играчите за Деление | Glitch Forge | 📝 За правене |
+| TASK-41591 | Провери дали Ракетна защита не зарежда външни скриптове | Quark Miner | 📝 За правене |
+| TASK-41592 | Преведи Разбий кода на английски | Turbo Storm | 📝 За правене |
+| TASK-41594 | Напиши туториал за Строй числото | Echo Smith | 📝 За правене |
+| TASK-41596 | Намали размера на Часовник | Rogue Hawk | 📝 За правене |
+| TASK-41600 | Провери Деление за XSS | Neon Walker | 📝 За правене |
+| TASK-41604 | Напиши туториал за Пчеличка | Rogue Knight | 📝 За правене |
+| TASK-41618 | Преведи Блоков кликер на английски | Neon Fox | 📝 За правене |
+| TASK-41619 | Преведи Раздели слузите на английски | Vector Volt | 📝 За правене |
+| TASK-41624 | Преведи Мелница на английски | Rogue Hawk | 📝 За правене |
+| TASK-41628 | Провери пътищата на Наклони кутията в GitHub Pages | Delta Runner | 📝 За правене |
+| TASK-41633 | Ускори зареждането на Зигзаг | Zen Knight | 📝 За правене |
+| TASK-41634 | Напиши туториал за Пръчки от блейз | Vector Stone | 📝 За правене |
+| TASK-41637 | Напиши туториал за Спирограф | Frost Runner | 📝 За правене |
+| TASK-41638 | Събери отзиви от играчите за Реверси | Rogue Fox | 📝 За правене |
+| TASK-41643 | Преведи Колко време мина на английски | Delta Walker | 📝 За правене |
+| TASK-41645 | Събери отзиви от играчите за Бинго | Glitch Forge | 📝 За правене |
+| TASK-41650 | Преведи Рудната змия на английски | Orbit Storm | 📝 За правене |
+| TASK-41656 | Напиши туториал за Разбий кода | Glitch Volt | 📝 За правене |
+| TASK-41659 | Преведи Морски бой на английски | Rogue Coder | 📝 За правене |
+| TASK-41661 | Намали размера на Прилепче | Frost Storm | 📝 За правене |
+| TASK-41662 | Добави анти-чийт за рекордите в Пирамида за маяк | Echo Coder | 📝 За правене |
+| TASK-41668 | Намали размера на Вълкът и овцете | Echo Runner | 📝 За правене |
+| TASK-41682 | Провери дали Прилепче не зарежда външни скриптове | Quark Volt | 📝 За правене |
+| TASK-41684 | Провери дали Фото сафари не зарежда външни скриптове | Vector Stone | 📝 За правене |
+| TASK-41686 | Добави анти-чийт за рекордите в Строй числото | Quark Fox | 📝 За правене |
+| TASK-41690 | Събери отзиви от играчите за Неравенства | Vector Coder | 📝 За правене |
+| TASK-41692 | Събери отзиви от играчите за Колко пътя? | Glitch Coder | 📝 За правене |
+| TASK-41697 | Събери отзиви от играчите за Блоков кликер | Orbit Storm | 📝 За правене |
+| TASK-41698 | Събери отзиви от играчите за Червен прах | Echo Hawk | 📝 За правене |
+| TASK-41707 | Провери Рудната змия за XSS | Zen Hawk | 📝 За правене |
+| TASK-41709 | Ускори зареждането на Фото сафари | Echo Miner | 📝 За правене |
+| TASK-41717 | Намали размера на Вятърна арена | Frost Walker | 📝 За правене |
+| TASK-41718 | Намали размера на Деление | Nova Hawk | 📝 За правене |
+| TASK-41719 | Добави анти-чийт за рекордите в Латински квадрат | Neon Coder | 📝 За правене |
+| TASK-41723 | Провери Морски бой за XSS | Zen Stone | 📝 За правене |
+| TASK-41727 | Напиши туториал за Деление | Byte Walker | 📝 За правене |
+| TASK-41730 | Добави анти-чийт за рекордите в Колко време мина | Spark Miner | 📝 За правене |
+| TASK-41731 | Преведи Часовник на английски | Turbo Coder | 📝 За правене |
+| TASK-41732 | Провери дали Разбий кода не зарежда външни скриптове | Byte Coder | 📝 За правене |
+| TASK-41735 | Провери дали Бинго не зарежда външни скриптове | Delta Fox | 📝 За правене |
+| TASK-41736 | Провери Деление за XSS | Neon Smith | 📝 За правене |
+| TASK-41737 | Събери отзиви от играчите за Разбий кода | Blaze Miner | 📝 За правене |
+| TASK-41739 | Ускори зареждането на Ловец на руди | Orbit Runner | 📝 За правене |
+| TASK-41745 | Провери Скорост, време, път за XSS | Vector Knight | 📝 За правене |
 | TASK-0016 | Намали размера на Пукни рудите | Orbit Coder | ✅ Готово |
 | TASK-0010 | Добави анти-чийт за рекордите в Битка с дракона | SecOps-Bot | ✅ Готово |
 | TASK-0004 | Напиши туториал за Дама | Rogue Miner | ✅ Готово |
@@ -349,42 +350,42 @@ Rogue Miner (Community Moderator, Community) · Glitch Forge (Translator, Commun
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41081 | Направи гравитацията в Запомни числото по-реалистична | Game-Physics-Bot | 🔍 За ревю |
-| TASK-41113 | Направи гравитацията в Стригач на овце по-реалистична | Delta Storm | 🔍 За ревю |
-| TASK-41130 | Скрий тайно ниво в Хвърляне на зарове 🥚 | Frost Forge | 🔍 За ревю |
-| TASK-41140 | Направи ново трудно ниво за Календарни задачи | Turbo Runner | 🔍 За ревю |
-| TASK-41167 | Направи ново трудно ниво за Бърз мост | Nova Miner | 🔍 За ревю |
-| TASK-41174 | Скрий тайно ниво в Строй числото 🥚 | Glitch Coder | 🔍 За ревю |
-| TASK-41178 | Добави по-умни врагове в Свържи двойките | Glitch Fox | 🔍 За ревю |
-| TASK-41180 | Направи ново трудно ниво за Вътрешен часовник | Quark Runner | 🔍 За ревю |
-| TASK-41228 | Добави по-умни врагове в Рецепти за изработване | Spark Hawk | 🔍 За ревю |
-| TASK-41229 | Направи гравитацията в Средно аритметично по-реалистична | Nova Miner | 🔍 За ревю |
-| TASK-41234 | Добави по-умни врагове в Факли срещу мобове | Quark Walker | 🔍 За ревю |
-| TASK-41240 | Направи гравитацията в Хвърляне на зарове по-реалистична | Rogue Fox | 🔍 За ревю |
-| TASK-41249 | Скрий тайно ниво в Хвърляне на зарове 🥚 | Level-Designer-Bot | 🔨 В процес |
-| TASK-41250 | Добави по-умни врагове в Запомни числото | AI-Trainer-Bot | 🔨 В процес |
-| TASK-41251 | Направи ново трудно ниво за Бягай от хоглините | Easter-Egg-Hunter-Bot | 🔨 В процес |
-| TASK-41275 | Направи гравитацията в Ендър дупка по-реалистична | Rogue Runner | 🔨 В процес |
-| TASK-41299 | Направи гравитацията в Манделброт по-реалистична | Neon Knight | 🔨 В процес |
-| TASK-41340 | Скрий тайно ниво в Латински квадрат 🥚 | Blaze Walker | 🔨 В процес |
-| TASK-41343 | Направи гравитацията в Жонгльор по-реалистична | Neon Smith | 🔨 В процес |
-| TASK-41349 | Направи ново трудно ниво за Домино ефект | Zen Walker | 🔨 В процес |
-| TASK-41363 | Скрий тайно ниво в Закръгли числото 🥚 | Neon Smith | 🔨 В процес |
-| TASK-41387 | Скрий тайно ниво в Блокова змия 🥚 | Orbit Walker | 🔨 В процес |
-| TASK-41388 | Направи гравитацията в Рикошет на големите по-реалистична | Rogue Hawk | 🔨 В процес |
-| TASK-41409 | Направи гравитацията в Бягай от хоглините по-реалистична | Pixel Fox | 🔨 В процес |
-| TASK-41429 | Направи ново трудно ниво за Палатки | Byte Runner | 📝 За правене |
-| TASK-41458 | Скрий тайно ниво в Изгаси факлите 🥚 | Delta Knight | 📝 За правене |
-| TASK-41471 | Добави по-умни врагове в Снежен голем | Orbit Fox | 📝 За правене |
-| TASK-41475 | Скрий тайно ниво в Фантоми в нощта 🥚 | Turbo Volt | 📝 За правене |
-| TASK-41493 | Направи ново трудно ниво за Скритата флотилия | Pixel Stone | 📝 За правене |
-| TASK-41500 | Добави по-умни врагове в Светофар | Nova Hawk | 📝 За правене |
-| TASK-41501 | Направи ново трудно ниво за Закръгли числото | Blaze Smith | 📝 За правене |
-| TASK-41516 | Скрий тайно ниво в Дървосекач 🥚 | Turbo Hawk | 📝 За правене |
-| TASK-41538 | Добави по-умни врагове в Сребърни рибки | Frost Hawk | 📝 За правене |
-| TASK-41539 | Направи гравитацията в Калейдоскоп по-реалистична | Zen Walker | 📝 За правене |
-| TASK-41551 | Направи гравитацията в Проценти по-реалистична | Turbo Forge | 📝 За правене |
-| TASK-41557 | Скрий тайно ниво в Минно поле 🥚 | Pixel Miner | 📝 За правене |
+| TASK-41249 | Скрий тайно ниво в Хвърляне на зарове 🥚 | Level-Designer-Bot | 🔍 За ревю |
+| TASK-41250 | Добави по-умни врагове в Запомни числото | AI-Trainer-Bot | 🔍 За ревю |
+| TASK-41251 | Направи ново трудно ниво за Бягай от хоглините | Easter-Egg-Hunter-Bot | 🔍 За ревю |
+| TASK-41275 | Направи гравитацията в Ендър дупка по-реалистична | Rogue Runner | 🔍 За ревю |
+| TASK-41299 | Направи гравитацията в Манделброт по-реалистична | Neon Knight | 🔍 За ревю |
+| TASK-41340 | Скрий тайно ниво в Латински квадрат 🥚 | Blaze Walker | 🔍 За ревю |
+| TASK-41343 | Направи гравитацията в Жонгльор по-реалистична | Neon Smith | 🔍 За ревю |
+| TASK-41349 | Направи ново трудно ниво за Домино ефект | Zen Walker | 🔍 За ревю |
+| TASK-41363 | Скрий тайно ниво в Закръгли числото 🥚 | Neon Smith | 🔍 За ревю |
+| TASK-41387 | Скрий тайно ниво в Блокова змия 🥚 | Orbit Walker | 🔍 За ревю |
+| TASK-41388 | Направи гравитацията в Рикошет на големите по-реалистична | Rogue Hawk | 🔍 За ревю |
+| TASK-41409 | Направи гравитацията в Бягай от хоглините по-реалистична | Pixel Fox | 🔍 За ревю |
+| TASK-41429 | Направи ново трудно ниво за Палатки | Byte Runner | 🔨 В процес |
+| TASK-41458 | Скрий тайно ниво в Изгаси факлите 🥚 | Delta Knight | 🔨 В процес |
+| TASK-41471 | Добави по-умни врагове в Снежен голем | Orbit Fox | 🔨 В процес |
+| TASK-41475 | Скрий тайно ниво в Фантоми в нощта 🥚 | Turbo Volt | 🔨 В процес |
+| TASK-41493 | Направи ново трудно ниво за Скритата флотилия | Pixel Stone | 🔨 В процес |
+| TASK-41500 | Добави по-умни врагове в Светофар | Nova Hawk | 🔨 В процес |
+| TASK-41501 | Направи ново трудно ниво за Закръгли числото | Blaze Smith | 🔨 В процес |
+| TASK-41516 | Скрий тайно ниво в Дървосекач 🥚 | Turbo Hawk | 🔨 В процес |
+| TASK-41538 | Добави по-умни врагове в Сребърни рибки | Frost Hawk | 🔨 В процес |
+| TASK-41539 | Направи гравитацията в Калейдоскоп по-реалистична | Zen Walker | 🔨 В процес |
+| TASK-41551 | Направи гравитацията в Проценти по-реалистична | Turbo Forge | 🔨 В процес |
+| TASK-41557 | Скрий тайно ниво в Минно поле 🥚 | Pixel Miner | 🔨 В процес |
+| TASK-41581 | Добави по-умни врагове в Рудната змия | Game-Physics-Bot | 📝 За правене |
+| TASK-41613 | Направи ново трудно ниво за Скорост, време, път | Delta Storm | 📝 За правене |
+| TASK-41630 | Добави по-умни врагове в Неравенства | Frost Forge | 📝 За правене |
+| TASK-41640 | Направи ново трудно ниво за Мелница | Turbo Runner | 📝 За правене |
+| TASK-41667 | Направи ново трудно ниво за Зигзаг | Nova Miner | 📝 За правене |
+| TASK-41674 | Направи гравитацията в Червен прах по-реалистична | Glitch Coder | 📝 За правене |
+| TASK-41678 | Добави по-умни врагове в Фото сафари | Glitch Fox | 📝 За правене |
+| TASK-41680 | Добави по-умни врагове в Ловец на руди | Quark Runner | 📝 За правене |
+| TASK-41728 | Скрий тайно ниво в Зигзаг 🥚 | Spark Hawk | 📝 За правене |
+| TASK-41729 | Направи ново трудно ниво за Раздели слузите | Nova Miner | 📝 За правене |
+| TASK-41734 | Направи гравитацията в Вълкът и овцете по-реалистична | Quark Walker | 📝 За правене |
+| TASK-41740 | Добави по-умни врагове в Лабиринт | Rogue Fox | 📝 За правене |
 | TASK-0055 | Добави по-умни врагове в Обърни блоковете | Level-Designer-Bot | ✅ Готово |
 | TASK-0056 | Направи ново трудно ниво за Гмуркане за съкровища | Easter-Egg-Hunter-Bot | ✅ Готово |
 | TASK-0017 | Направи ново трудно ниво за Раздели слузите | Level-Designer-Bot | ✅ Готово |
@@ -407,56 +408,56 @@ Byte Runner (NPC AI Programmer, Gameplay) · Rogue Runner (Secret Hunter, Gamepl
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41082 | Подготви Блоков волейбол за пускане | Release-Manager-Bot | 🔍 За ревю |
-| TASK-41103 | Почисти стария код в Вътрешен часовник | Delta Forge | 🔍 За ревю |
-| TASK-41112 | Направи Свържи двойките да зарежда под 1 секунда | Frost Fox | 🔍 За ревю |
-| TASK-41125 | Подготви Запомни числото за пускане | Zen Knight | 🔍 За ревю |
-| TASK-41135 | Подготви Осем царици за пускане | Echo Hawk | 🔍 За ревю |
-| TASK-41149 | Почисти стария код в Факли срещу мобове | Frost Forge | 🔍 За ревю |
-| TASK-41158 | Направи Следи сандъка да зарежда под 1 секунда | Zen Runner | 🔍 За ревю |
-| TASK-41196 | Почисти стария код в Лице и периметър | Neon Smith | 🔍 За ревю |
-| TASK-41201 | Хвани последните бъгове в Яйцата | Blaze Runner | 🔍 За ревю |
-| TASK-41205 | Почисти стария код в Блоков любимец | Echo Runner | 🔍 За ревю |
-| TASK-41224 | Подготви Хвърчило за пускане | Frost Coder | 🔍 За ревю |
-| TASK-41233 | Направи Мелница да зарежда под 1 секунда | Rogue Runner | 🔍 За ревю |
-| TASK-41242 | Хвани последните бъгове в Координати | Quark Fox | 🔍 За ревю |
-| TASK-41252 | Почисти стария код в Изгаси факлите | Performance-Optimizer-Bot | 🔨 В процес |
-| TASK-41253 | Хвани последните бъгове в Кърлинг на леда | Refactoring-Bot | 🔨 В процес |
-| TASK-41254 | Подготви Ендър дупка за пускане | Bug-Hunter-Bot | 🔨 В процес |
-| TASK-41284 | Хвани последните бъгове в Кърлинг на леда | Nova Storm | 🔨 В процес |
-| TASK-41302 | Подготви Боулинг за пускане | Rogue Volt | 🔨 В процес |
-| TASK-41307 | Почисти стария код в Скритата флотилия | Nova Smith | 🔨 В процес |
-| TASK-41314 | Хвани последните бъгове в Ендър дупка | Byte Knight | 🔨 В процес |
-| TASK-41316 | Подготви Закръгли числото за пускане | Vector Runner | 🔨 В процес |
-| TASK-41338 | Почисти стария код в Раздели наравно | Frost Knight | 🔨 В процес |
-| TASK-41339 | Хвани последните бъгове в Стакове по 64 | Rogue Hawk | 🔨 В процес |
-| TASK-41341 | Подготви Везни с тежести за пускане | Turbo Storm | 🔨 В процес |
-| TASK-41345 | Направи Лавови тръби да зарежда под 1 секунда | Vector Runner | 🔨 В процес |
-| TASK-41348 | Почисти стария код в Фото сафари | Turbo Volt | 🔨 В процес |
-| TASK-41354 | Подготви Ендър дупка за пускане | Frost Runner | 🔨 В процес |
-| TASK-41361 | Подготви Метеоритен миньор за пускане | Pixel Miner | 🔨 В процес |
-| TASK-41381 | Почисти стария код в Бягай от хоглините | Vector Miner | 🔨 В процес |
-| TASK-41382 | Хвани последните бъгове в Отбий огнената топка | Orbit Forge | 🔨 В процес |
-| TASK-41383 | Почисти стария код в Латински квадрат | Orbit Smith | 🔨 В процес |
-| TASK-41399 | Хвани последните бъгове в Отбий огнената топка | Frost Walker | 🔨 В процес |
-| TASK-41400 | Направи Блокова змия да зарежда под 1 секунда | Byte Stone | 🔨 В процес |
-| TASK-41402 | Хвани последните бъгове в Разбий кода | Byte Knight | 🔨 В процес |
-| TASK-41419 | Почисти стария код в Танкова битка | Build-Master-Bot | 📝 За правене |
-| TASK-41422 | Почисти стария код в Оцвети с вълна | Glitch Walker | 📝 За правене |
-| TASK-41435 | Почисти стария код в Средно аритметично | Blaze Smith | 📝 За правене |
-| TASK-41445 | Подготви Фенери в пещерата за пускане | Nova Smith | 📝 За правене |
-| TASK-41452 | Направи Небостъргачи да зарежда под 1 секунда | Quark Forge | 📝 За правене |
-| TASK-41455 | Почисти стария код в Разбий кода | Turbo Runner | 📝 За правене |
-| TASK-41474 | Направи Раздели слузите да зарежда под 1 секунда | Zen Coder | 📝 За правене |
-| TASK-41479 | Подготви Поправи с една клечка за пускане | Rogue Walker | 📝 За правене |
-| TASK-41497 | Направи Минно поле да зарежда под 1 секунда | Nova Miner | 📝 За правене |
-| TASK-41509 | Почисти стария код в Водопровод | Echo Knight | 📝 За правене |
-| TASK-41528 | Почисти стария код в Дървосекач | Zen Runner | 📝 За правене |
-| TASK-41534 | Почисти стария код в Раздели слузите | Zen Forge | 📝 За правене |
-| TASK-41550 | Направи Цвят или дума? да зарежда под 1 секунда | Glitch Walker | 📝 За правене |
-| TASK-41555 | Направи Поправи с една клечка да зарежда под 1 секунда | Blaze Hawk | 📝 За правене |
-| TASK-41559 | Подготви Хеликоптер спасител за пускане | Delta Fox | 📝 За правене |
-| TASK-41568 | Подготви Обем в блокове за пускане | Orbit Fox | 📝 За правене |
+| TASK-41252 | Почисти стария код в Изгаси факлите | Performance-Optimizer-Bot | 🔍 За ревю |
+| TASK-41253 | Хвани последните бъгове в Кърлинг на леда | Refactoring-Bot | 🔍 За ревю |
+| TASK-41254 | Подготви Ендър дупка за пускане | Bug-Hunter-Bot | 🔍 За ревю |
+| TASK-41284 | Хвани последните бъгове в Кърлинг на леда | Nova Storm | 🔍 За ревю |
+| TASK-41302 | Подготви Боулинг за пускане | Rogue Volt | 🔍 За ревю |
+| TASK-41307 | Почисти стария код в Скритата флотилия | Nova Smith | 🔍 За ревю |
+| TASK-41314 | Хвани последните бъгове в Ендър дупка | Byte Knight | 🔍 За ревю |
+| TASK-41316 | Подготви Закръгли числото за пускане | Vector Runner | 🔍 За ревю |
+| TASK-41338 | Почисти стария код в Раздели наравно | Frost Knight | 🔍 За ревю |
+| TASK-41339 | Хвани последните бъгове в Стакове по 64 | Rogue Hawk | 🔍 За ревю |
+| TASK-41341 | Подготви Везни с тежести за пускане | Turbo Storm | 🔍 За ревю |
+| TASK-41345 | Направи Лавови тръби да зарежда под 1 секунда | Vector Runner | 🔍 За ревю |
+| TASK-41348 | Почисти стария код в Фото сафари | Turbo Volt | 🔍 За ревю |
+| TASK-41354 | Подготви Ендър дупка за пускане | Frost Runner | 🔍 За ревю |
+| TASK-41361 | Подготви Метеоритен миньор за пускане | Pixel Miner | 🔍 За ревю |
+| TASK-41381 | Почисти стария код в Бягай от хоглините | Vector Miner | 🔍 За ревю |
+| TASK-41382 | Хвани последните бъгове в Отбий огнената топка | Orbit Forge | 🔍 За ревю |
+| TASK-41383 | Почисти стария код в Латински квадрат | Orbit Smith | 🔍 За ревю |
+| TASK-41399 | Хвани последните бъгове в Отбий огнената топка | Frost Walker | 🔍 За ревю |
+| TASK-41400 | Направи Блокова змия да зарежда под 1 секунда | Byte Stone | 🔍 За ревю |
+| TASK-41402 | Хвани последните бъгове в Разбий кода | Byte Knight | 🔍 За ревю |
+| TASK-41419 | Почисти стария код в Танкова битка | Build-Master-Bot | 🔨 В процес |
+| TASK-41422 | Почисти стария код в Оцвети с вълна | Glitch Walker | 🔨 В процес |
+| TASK-41435 | Почисти стария код в Средно аритметично | Blaze Smith | 🔨 В процес |
+| TASK-41445 | Подготви Фенери в пещерата за пускане | Nova Smith | 🔨 В процес |
+| TASK-41452 | Направи Небостъргачи да зарежда под 1 секунда | Quark Forge | 🔨 В процес |
+| TASK-41455 | Почисти стария код в Разбий кода | Turbo Runner | 🔨 В процес |
+| TASK-41474 | Направи Раздели слузите да зарежда под 1 секунда | Zen Coder | 🔨 В процес |
+| TASK-41479 | Подготви Поправи с една клечка за пускане | Rogue Walker | 🔨 В процес |
+| TASK-41497 | Направи Минно поле да зарежда под 1 секунда | Nova Miner | 🔨 В процес |
+| TASK-41509 | Почисти стария код в Водопровод | Echo Knight | 🔨 В процес |
+| TASK-41528 | Почисти стария код в Дървосекач | Zen Runner | 🔨 В процес |
+| TASK-41534 | Почисти стария код в Раздели слузите | Zen Forge | 🔨 В процес |
+| TASK-41550 | Направи Цвят или дума? да зарежда под 1 секунда | Glitch Walker | 🔨 В процес |
+| TASK-41555 | Направи Поправи с една клечка да зарежда под 1 секунда | Blaze Hawk | 🔨 В процес |
+| TASK-41559 | Подготви Хеликоптер спасител за пускане | Delta Fox | 🔨 В процес |
+| TASK-41568 | Подготви Обем в блокове за пускане | Orbit Fox | 🔨 В процес |
+| TASK-41582 | Направи Зигзаг да зарежда под 1 секунда | Release-Manager-Bot | 📝 За правене |
+| TASK-41603 | Направи Пързалка за топчета да зарежда под 1 секунда | Delta Forge | 📝 За правене |
+| TASK-41612 | Подготви Неравенства за пускане | Frost Fox | 📝 За правене |
+| TASK-41625 | Хвани последните бъгове в Неравенства | Zen Knight | 📝 За правене |
+| TASK-41635 | Направи Латински квадрат да зарежда под 1 секунда | Echo Hawk | 📝 За правене |
+| TASK-41649 | Почисти стария код в Неравенства | Frost Forge | 📝 За правене |
+| TASK-41658 | Подготви Ракетна защита за пускане | Zen Runner | 📝 За правене |
+| TASK-41696 | Направи Вятърна арена да зарежда под 1 секунда | Neon Smith | 📝 За правене |
+| TASK-41701 | Направи Мелница да зарежда под 1 секунда | Blaze Runner | 📝 За правене |
+| TASK-41705 | Хвани последните бъгове в Лабиринт с ключ | Echo Runner | 📝 За правене |
+| TASK-41724 | Направи Плъзгащ пъзел да зарежда под 1 секунда | Frost Coder | 📝 За правене |
+| TASK-41733 | Почисти стария код в Зигзаг | Rogue Runner | 📝 За правене |
+| TASK-41742 | Почисти стария код в Осем царици | Quark Fox | 📝 За правене |
 | TASK-0037 | Подготви Аквариум за пускане | Glitch Walker | ✅ Готово |
 | TASK-0038 | Подготви Солитер за пускане | Build-Master-Bot | ✅ Готово |
 | TASK-0020 | Направи Шанс за диамант да зарежда под 1 секунда | Refactoring-Bot | ✅ Готово |
@@ -479,41 +480,41 @@ Glitch Walker (Build Engineer, Release) · Delta Forge (Build Engineer, Release)
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41083 | Добави управление само с клавиатура в Средно аритметично | Accessibility-Bot | 🔍 За ревю |
-| TASK-41102 | Добави плавни анимации в менюто на Следи сандъка | Byte Stone | 🔍 За ревю |
-| TASK-41109 | Добави плавни анимации в менюто на Парашутист | Orbit Volt | 🔍 За ревю |
-| TASK-41116 | Добави управление само с клавиатура в Хвърчило | Orbit Coder | 🔍 За ревю |
-| TASK-41126 | Добави плавни анимации в менюто на Строй числото | Nova Volt | 🔍 За ревю |
-| TASK-41188 | Напиши инструкции за Фото сафари | Pixel Stone | 🔍 За ревю |
-| TASK-41210 | Добави управление само с клавиатура в Удари слузите | Delta Forge | 🔍 За ревю |
-| TASK-41214 | Направи Мелница удобна за далтонисти | Spark Forge | 🔍 За ревю |
-| TASK-41215 | Добави управление само с клавиатура в Лице и периметър | Glitch Fox | 🔍 За ревю |
-| TASK-41244 | Добави управление само с клавиатура в Вълкът и овцете | Rogue Walker | 🔍 За ревю |
-| TASK-41255 | Добави плавни анимации в менюто на Хвърляне на зарове | Localization-Bot | 🔨 В процес |
-| TASK-41256 | Добави управление само с клавиатура в Зъбни колела | UI-Animation-Bot | 🔨 В процес |
-| TASK-41257 | Добави управление само с клавиатура в Рушащият се остров | Asset-Manager-Bot | 🔨 В процес |
-| TASK-41268 | Напиши инструкции за Блоков тенис | Byte Runner | 🔨 В процес |
-| TASK-41277 | Направи Метроном удобна за далтонисти | Zen Coder | 🔨 В процес |
-| TASK-41278 | Направи Рикошет на големите удобна за далтонисти | Byte Storm | 🔨 В процес |
-| TASK-41329 | Добави управление само с клавиатура в Зъбни колела | Vector Smith | 🔨 В процес |
-| TASK-41331 | Добави плавни анимации в менюто на Ендър дупка | Frost Hawk | 🔨 В процес |
-| TASK-41356 | Добави плавни анимации в менюто на Метроном | Echo Fox | 🔨 В процес |
-| TASK-41389 | Добави плавни анимации в менюто на Ендър дупка | Turbo Forge | 🔨 В процес |
-| TASK-41394 | Направи Закръгли числото удобна за далтонисти | Quark Runner | 🔨 В процес |
-| TASK-41395 | Добави управление само с клавиатура в Лавови тръби | Nova Stone | 🔨 В процес |
-| TASK-41420 | Добави плавни анимации в менюто на Смеси боите | Documentation-Bot | 📝 За правене |
-| TASK-41432 | Добави плавни анимации в менюто на Сребърни рибки | Quark Coder | 📝 За правене |
-| TASK-41443 | Направи Танкова битка удобна за далтонисти | Neon Storm | 📝 За правене |
-| TASK-41464 | Добави плавни анимации в менюто на Уравнения | Delta Stone | 📝 За правене |
-| TASK-41472 | Направи Налей точно удобна за далтонисти | Turbo Volt | 📝 За правене |
-| TASK-41476 | Добави плавни анимации в менюто на Палатки | Orbit Smith | 📝 За правене |
-| TASK-41518 | Добави управление само с клавиатура в Падащи камъни | Orbit Fox | 📝 За правене |
-| TASK-41524 | Добави управление само с клавиатура в Симетрия | Orbit Stone | 📝 За правене |
-| TASK-41526 | Добави управление само с клавиатура в Разбий кода | Pixel Walker | 📝 За правене |
-| TASK-41529 | Добави управление само с клавиатура в Небостъргачи | Turbo Knight | 📝 За правене |
-| TASK-41533 | Направи Падащи камъни удобна за далтонисти | Blaze Smith | 📝 За правене |
-| TASK-41558 | Добави плавни анимации в менюто на Симетрия | Byte Hawk | 📝 За правене |
-| TASK-41561 | Добави управление само с клавиатура в Уравнения | Vector Miner | 📝 За правене |
+| TASK-41255 | Добави плавни анимации в менюто на Хвърляне на зарове | Localization-Bot | 🔍 За ревю |
+| TASK-41256 | Добави управление само с клавиатура в Зъбни колела | UI-Animation-Bot | 🔍 За ревю |
+| TASK-41257 | Добави управление само с клавиатура в Рушащият се остров | Asset-Manager-Bot | 🔍 За ревю |
+| TASK-41268 | Напиши инструкции за Блоков тенис | Byte Runner | 🔍 За ревю |
+| TASK-41277 | Направи Метроном удобна за далтонисти | Zen Coder | 🔍 За ревю |
+| TASK-41278 | Направи Рикошет на големите удобна за далтонисти | Byte Storm | 🔍 За ревю |
+| TASK-41329 | Добави управление само с клавиатура в Зъбни колела | Vector Smith | 🔍 За ревю |
+| TASK-41331 | Добави плавни анимации в менюто на Ендър дупка | Frost Hawk | 🔍 За ревю |
+| TASK-41356 | Добави плавни анимации в менюто на Метроном | Echo Fox | 🔍 За ревю |
+| TASK-41389 | Добави плавни анимации в менюто на Ендър дупка | Turbo Forge | 🔍 За ревю |
+| TASK-41394 | Направи Закръгли числото удобна за далтонисти | Quark Runner | 🔍 За ревю |
+| TASK-41395 | Добави управление само с клавиатура в Лавови тръби | Nova Stone | 🔍 За ревю |
+| TASK-41420 | Добави плавни анимации в менюто на Смеси боите | Documentation-Bot | 🔨 В процес |
+| TASK-41432 | Добави плавни анимации в менюто на Сребърни рибки | Quark Coder | 🔨 В процес |
+| TASK-41443 | Направи Танкова битка удобна за далтонисти | Neon Storm | 🔨 В процес |
+| TASK-41464 | Добави плавни анимации в менюто на Уравнения | Delta Stone | 🔨 В процес |
+| TASK-41472 | Направи Налей точно удобна за далтонисти | Turbo Volt | 🔨 В процес |
+| TASK-41476 | Добави плавни анимации в менюто на Палатки | Orbit Smith | 🔨 В процес |
+| TASK-41518 | Добави управление само с клавиатура в Падащи камъни | Orbit Fox | 🔨 В процес |
+| TASK-41524 | Добави управление само с клавиатура в Симетрия | Orbit Stone | 🔨 В процес |
+| TASK-41526 | Добави управление само с клавиатура в Разбий кода | Pixel Walker | 🔨 В процес |
+| TASK-41529 | Добави управление само с клавиатура в Небостъргачи | Turbo Knight | 🔨 В процес |
+| TASK-41533 | Направи Падащи камъни удобна за далтонисти | Blaze Smith | 🔨 В процес |
+| TASK-41558 | Добави плавни анимации в менюто на Симетрия | Byte Hawk | 🔨 В процес |
+| TASK-41561 | Добави управление само с клавиатура в Уравнения | Vector Miner | 🔨 В процес |
+| TASK-41583 | Направи Рудната змия удобна за далтонисти | Accessibility-Bot | 📝 За правене |
+| TASK-41602 | Добави плавни анимации в менюто на Наклони кутията | Byte Stone | 📝 За правене |
+| TASK-41609 | Напиши инструкции за Лабиринт | Orbit Volt | 📝 За правене |
+| TASK-41616 | Добави плавни анимации в менюто на Скорост, време, път | Orbit Coder | 📝 За правене |
+| TASK-41626 | Добави плавни анимации в менюто на Разбий кода | Nova Volt | 📝 За правене |
+| TASK-41688 | Направи Зигзаг удобна за далтонисти | Pixel Stone | 📝 За правене |
+| TASK-41710 | Напиши инструкции за Вълкът и овцете | Delta Forge | 📝 За правене |
+| TASK-41714 | Напиши инструкции за Липсващото число | Spark Forge | 📝 За правене |
+| TASK-41715 | Добави управление само с клавиатура в Пързалка за топчета | Glitch Fox | 📝 За правене |
+| TASK-41744 | Направи Сборни блокове удобна за далтонисти | Rogue Walker | 📝 За правене |
 | TASK-0062 | Направи Чети графиката удобна за далтонисти | Localization-Bot | ✅ Готово |
 | TASK-0039 | Добави плавни анимации в менюто на Щит | Documentation-Bot | ✅ Готово |
 | TASK-0023 | Добави управление само с клавиатура в Ледена пързалка | UI-Animation-Bot | ✅ Готово |
@@ -536,52 +537,52 @@ Byte Runner (Asset Artist, Experience) · Byte Stone (Docs Writer, Experience) �
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41084 | Преброй колко пъти се играе Осем царици | Data-Analyst-Bot | 🔍 За ревю |
-| TASK-41098 | Подреди рекордите на Не бъди смачкан в класация | Blaze Volt | 🔍 За ревю |
-| TASK-41106 | Подреди рекордите на Вътрешен часовник в класация | Turbo Walker | 🔍 За ревю |
-| TASK-41115 | Провери кои нива в Познай числото са най-трудни | Frost Storm | 🔍 За ревю |
-| TASK-41123 | Подреди рекордите на Хвърчило в класация | Rogue Forge | 🔍 За ревю |
-| TASK-41131 | Провери кои нива в Мелница са най-трудни | Neon Walker | 🔍 За ревю |
-| TASK-41141 | Подреди рекордите на Хвърляне на зарове в класация | Rogue Smith | 🔍 За ревю |
-| TASK-41144 | Подреди рекордите на Английски думи в класация | Vector Forge | 🔍 За ревю |
-| TASK-41148 | Преброй колко пъти се играе Английски думи | Frost Hawk | 🔍 За ревю |
-| TASK-41157 | Подреди рекордите на Изгледи на постройката в класация | Delta Fox | 🔍 За ревю |
-| TASK-41160 | Подреди рекордите на Следи сандъка в класация | Quark Runner | 🔍 За ревю |
-| TASK-41170 | Преброй колко пъти се играе Английски думи | Delta Smith | 🔍 За ревю |
-| TASK-41177 | Провери кои нива в Удари слузите са най-трудни | Zen Volt | 🔍 За ревю |
-| TASK-41203 | Провери кои нива в Следи сандъка са най-трудни | Blaze Smith | 🔍 За ревю |
-| TASK-41208 | Преброй колко пъти се играе Строй числото | Delta Miner | 🔍 За ревю |
-| TASK-41213 | Преброй колко пъти се играе Календарни задачи | Turbo Knight | 🔍 За ревю |
-| TASK-41220 | Преброй колко пъти се играе Хвърчило | Echo Fox | 🔍 За ревю |
-| TASK-41247 | Подреди рекордите на Средно аритметично в класация | Echo Hawk | 🔍 За ревю |
-| TASK-41258 | Подреди рекордите на Блокова змия в класация | API-Integration-Bot | 🔨 В процес |
-| TASK-41259 | Подреди рекордите на Раздели наравно в класация | Growth-Hacker-Bot | 🔨 В процес |
-| TASK-41267 | Провери кои нива в Кърлинг на леда са най-трудни | Rogue Runner | 🔨 В процес |
-| TASK-41297 | Провери кои нива в Скритата флотилия са най-трудни | Echo Knight | 🔨 В процес |
-| TASK-41301 | Преброй колко пъти се играе Рикошет на големите | Frost Storm | 🔨 В процес |
-| TASK-41306 | Преброй колко пъти се играе Метроном | Vector Hawk | 🔨 В процес |
-| TASK-41313 | Провери кои нива в Везни с тежести са най-трудни | Turbo Walker | 🔨 В процес |
-| TASK-41350 | Подреди рекордите на Блоков тенис в класация | Quark Runner | 🔨 В процес |
-| TASK-41357 | Преброй колко пъти се играе Отбий огнената топка | Byte Fox | 🔨 В процес |
-| TASK-41360 | Подреди рекордите на Блоков тенис в класация | Echo Forge | 🔨 В процес |
-| TASK-41386 | Провери кои нива в Скритата флотилия са най-трудни | Zen Forge | 🔨 В процес |
-| TASK-41421 | Преброй колко пъти се играе Открий разликите | Database-Admin-Bot | 📝 За правене |
-| TASK-41426 | Подреди рекордите на Числа с думи в класация | Zen Forge | 📝 За правене |
-| TASK-41440 | Подреди рекордите на Обем в блокове в класация | Blaze Miner | 📝 За правене |
-| TASK-41442 | Преброй колко пъти се играе Падащи камъни | Turbo Forge | 📝 За правене |
-| TASK-41457 | Подреди рекордите на Разбий кода в класация | Pixel Volt | 📝 За правене |
-| TASK-41463 | Провери кои нива в Калейдоскоп са най-трудни | Rogue Smith | 📝 За правене |
-| TASK-41465 | Подреди рекордите на Надолу в класация | Zen Coder | 📝 За правене |
-| TASK-41477 | Провери кои нива в Кука с въже са най-трудни | Quark Miner | 📝 За правене |
-| TASK-41482 | Подреди рекордите на Три в ред в класация | Nova Fox | 📝 За правене |
-| TASK-41488 | Подреди рекордите на Числа с думи в класация | Delta Hawk | 📝 За правене |
-| TASK-41502 | Провери кои нива в Цвят или дума? са най-трудни | Zen Miner | 📝 За правене |
-| TASK-41506 | Преброй колко пъти се играе Уравнения | Rogue Storm | 📝 За правене |
-| TASK-41511 | Провери кои нива в Сребърни рибки са най-трудни | Pixel Coder | 📝 За правене |
-| TASK-41522 | Подреди рекордите на Числа с думи в класация | Orbit Coder | 📝 За правене |
-| TASK-41525 | Преброй колко пъти се играе Цвят или дума? | Quark Fox | 📝 За правене |
-| TASK-41541 | Преброй колко пъти се играе Танкова битка | Blaze Knight | 📝 За правене |
-| TASK-41563 | Преброй колко пъти се играе Липсващият знак | Nova Runner | 📝 За правене |
+| TASK-41258 | Подреди рекордите на Блокова змия в класация | API-Integration-Bot | 🔍 За ревю |
+| TASK-41259 | Подреди рекордите на Раздели наравно в класация | Growth-Hacker-Bot | 🔍 За ревю |
+| TASK-41267 | Провери кои нива в Кърлинг на леда са най-трудни | Rogue Runner | 🔍 За ревю |
+| TASK-41297 | Провери кои нива в Скритата флотилия са най-трудни | Echo Knight | 🔍 За ревю |
+| TASK-41301 | Преброй колко пъти се играе Рикошет на големите | Frost Storm | 🔍 За ревю |
+| TASK-41306 | Преброй колко пъти се играе Метроном | Vector Hawk | 🔍 За ревю |
+| TASK-41313 | Провери кои нива в Везни с тежести са най-трудни | Turbo Walker | 🔍 За ревю |
+| TASK-41350 | Подреди рекордите на Блоков тенис в класация | Quark Runner | 🔍 За ревю |
+| TASK-41357 | Преброй колко пъти се играе Отбий огнената топка | Byte Fox | 🔍 За ревю |
+| TASK-41360 | Подреди рекордите на Блоков тенис в класация | Echo Forge | 🔍 За ревю |
+| TASK-41386 | Провери кои нива в Скритата флотилия са най-трудни | Zen Forge | 🔍 За ревю |
+| TASK-41421 | Преброй колко пъти се играе Открий разликите | Database-Admin-Bot | 🔨 В процес |
+| TASK-41426 | Подреди рекордите на Числа с думи в класация | Zen Forge | 🔨 В процес |
+| TASK-41440 | Подреди рекордите на Обем в блокове в класация | Blaze Miner | 🔨 В процес |
+| TASK-41442 | Преброй колко пъти се играе Падащи камъни | Turbo Forge | 🔨 В процес |
+| TASK-41457 | Подреди рекордите на Разбий кода в класация | Pixel Volt | 🔨 В процес |
+| TASK-41463 | Провери кои нива в Калейдоскоп са най-трудни | Rogue Smith | 🔨 В процес |
+| TASK-41465 | Подреди рекордите на Надолу в класация | Zen Coder | 🔨 В процес |
+| TASK-41477 | Провери кои нива в Кука с въже са най-трудни | Quark Miner | 🔨 В процес |
+| TASK-41482 | Подреди рекордите на Три в ред в класация | Nova Fox | 🔨 В процес |
+| TASK-41488 | Подреди рекордите на Числа с думи в класация | Delta Hawk | 🔨 В процес |
+| TASK-41502 | Провери кои нива в Цвят или дума? са най-трудни | Zen Miner | 🔨 В процес |
+| TASK-41506 | Преброй колко пъти се играе Уравнения | Rogue Storm | 🔨 В процес |
+| TASK-41511 | Провери кои нива в Сребърни рибки са най-трудни | Pixel Coder | 🔨 В процес |
+| TASK-41522 | Подреди рекордите на Числа с думи в класация | Orbit Coder | 🔨 В процес |
+| TASK-41525 | Преброй колко пъти се играе Цвят или дума? | Quark Fox | 🔨 В процес |
+| TASK-41541 | Преброй колко пъти се играе Танкова битка | Blaze Knight | 🔨 В процес |
+| TASK-41563 | Преброй колко пъти се играе Липсващият знак | Nova Runner | 🔨 В процес |
+| TASK-41584 | Преброй колко пъти се играе Колко време мина | Data-Analyst-Bot | 📝 За правене |
+| TASK-41598 | Провери кои нива в Прилепче са най-трудни | Blaze Volt | 📝 За правене |
+| TASK-41606 | Подреди рекордите на Колко време мина в класация | Turbo Walker | 📝 За правене |
+| TASK-41615 | Преброй колко пъти се играе Лабиринт | Frost Storm | 📝 За правене |
+| TASK-41623 | Провери кои нива в Реверси са най-трудни | Rogue Forge | 📝 За правене |
+| TASK-41631 | Подреди рекордите на Пчеличка в класация | Neon Walker | 📝 За правене |
+| TASK-41641 | Подреди рекордите на Плъзгащ пъзел в класация | Rogue Smith | 📝 За правене |
+| TASK-41644 | Преброй колко пъти се играе Вълкът и овцете | Vector Forge | 📝 За правене |
+| TASK-41648 | Преброй колко пъти се играе Ракетна защита | Frost Hawk | 📝 За правене |
+| TASK-41657 | Провери кои нива в Рудната змия са най-трудни | Delta Fox | 📝 За правене |
+| TASK-41660 | Провери кои нива в Наклони кутията са най-трудни | Quark Runner | 📝 За правене |
+| TASK-41670 | Подреди рекордите на Спирограф в класация | Delta Smith | 📝 За правене |
+| TASK-41677 | Преброй колко пъти се играе Вятърна арена | Zen Volt | 📝 За правене |
+| TASK-41703 | Подреди рекордите на Манделброт в класация | Blaze Smith | 📝 За правене |
+| TASK-41708 | Подреди рекордите на Зигзаг в класация | Delta Miner | 📝 За правене |
+| TASK-41713 | Провери кои нива в Рудната змия са най-трудни | Turbo Knight | 📝 За правене |
+| TASK-41720 | Преброй колко пъти се играе Скорост, време, път | Echo Fox | 📝 За правене |
+| TASK-41747 | Подреди рекордите на Спирограф в класация | Echo Hawk | 📝 За правене |
 | TASK-0040 | Преброй колко пъти се играе Танкова битка | Zen Forge | ✅ Готово |
 | TASK-0041 | Преброй колко пъти се играе Цветна дъга | Database-Admin-Bot | ✅ Готово |
 | TASK-0026 | Подреди рекордите на Шанс за диамант в класация | Growth-Hacker-Bot | ✅ Готово |
@@ -604,48 +605,48 @@ Rogue Runner (Data Analyst, Data) · Zen Forge (API Developer, Data) · Blaze Vo
 
 | Задача | Какво | Кой | Статус |
 |---|---|---|---|
-| TASK-41085 | Измисли мултиплейър режим за Вътрешен часовник | Chief-Visionary-Bot | 🔍 За ревю |
-| TASK-41121 | Измисли система от значки за Следи сандъка 🏅 | Glitch Walker | 🔍 За ревю |
-| TASK-41129 | Измисли система от значки за Бърза сметка 🏅 | Byte Fox | 🔍 За ревю |
-| TASK-41153 | Измисли система от значки за Водопровод 🏅 | Neon Storm | 🔍 За ревю |
-| TASK-41163 | Измисли мултиплейър режим за Вътрешен часовник | Echo Coder | 🔍 За ревю |
-| TASK-41171 | Измисли мултиплейър режим за Хвърляне на зарове | Frost Coder | 🔍 За ревю |
-| TASK-41175 | Измисли 3D версия на Познай числото | Quark Smith | 🔍 За ревю |
-| TASK-41179 | Измисли 3D версия на Въздушен хокей | Zen Smith | 🔍 За ревю |
-| TASK-41181 | Измисли 3D версия на Въздушен хокей | Spark Storm | 🔍 За ревю |
-| TASK-41191 | Измисли система от значки за Строй числото 🏅 | Neon Fox | 🔍 За ревю |
-| TASK-41195 | Измисли система от значки за Вълкът и овцете 🏅 | Echo Miner | 🔍 За ревю |
-| TASK-41202 | Измисли мултиплейър режим за Блоков любимец | Rogue Stone | 🔍 За ревю |
-| TASK-41212 | Измисли мултиплейър режим за Мелница | Delta Fox | 🔍 За ревю |
-| TASK-41216 | Измисли система от значки за Блоков тенис 🏅 | Vector Walker | 🔍 За ревю |
-| TASK-41221 | Измисли система от значки за Звезден кораб 🏅 | Echo Stone | 🔍 За ревю |
-| TASK-41222 | Измисли система от значки за Блоков любимец 🏅 | Turbo Coder | 🔍 За ревю |
-| TASK-41238 | Измисли 3D версия на Познай числото | Glitch Runner | 🔍 За ревю |
-| TASK-41260 | Измисли 3D версия на Бягай от хоглините | Metaverse-Architect-Bot | 🔨 В процес |
-| TASK-41261 | Измисли система от значки за Манделброт 🏅 | Crypto-Tokenomics-Bot | 🔨 В процес |
-| TASK-41283 | Измисли 3D версия на Пресечи релсите | Turbo Runner | 🔨 В процес |
-| TASK-41319 | Измисли система от значки за Отбий огнената топка 🏅 | Zen Hawk | 🔨 В процес |
-| TASK-41322 | Измисли мултиплейър режим за Рудотрошач | Quark Knight | 🔨 В процес |
-| TASK-41336 | Измисли система от значки за Блокова змия 🏅 | Nova Coder | 🔨 В процес |
-| TASK-41344 | Измисли мултиплейър режим за Манделброт | Delta Coder | 🔨 В процес |
-| TASK-41366 | Измисли система от значки за Кърлинг на леда 🏅 | Pixel Fox | 🔨 В процес |
-| TASK-41369 | Измисли мултиплейър режим за Запомни числото | Pixel Storm | 🔨 В процес |
-| TASK-41374 | Измисли мултиплейър режим за Домино ефект | Nova Hawk | 🔨 В процес |
-| TASK-41376 | Измисли мултиплейър режим за Рудни мехури | Neon Storm | 🔨 В процес |
-| TASK-41378 | Измисли 3D версия на Блоков бегач | Orbit Forge | 🔨 В процес |
-| TASK-41385 | Измисли 3D версия на Блоков бегач | Neon Knight | 🔨 В процес |
-| TASK-41434 | Измисли 3D версия на Фантоми в нощта | Glitch Hawk | 📝 За правене |
-| TASK-41439 | Измисли 3D версия на Гмуркане за съкровища | Orbit Knight | 📝 За правене |
-| TASK-41448 | Измисли мултиплейър режим за Цвят или дума? | Blaze Stone | 📝 За правене |
-| TASK-41451 | Измисли система от значки за Три в ред 🏅 | Neon Coder | 📝 За правене |
-| TASK-41470 | Измисли 3D версия на Проценти | Neon Miner | 📝 За правене |
-| TASK-41481 | Измисли система от значки за Водопровод 🏅 | Pixel Stone | 📝 За правене |
-| TASK-41492 | Измисли система от значки за Хеликоптер спасител 🏅 | Glitch Walker | 📝 За правене |
-| TASK-41517 | Измисли мултиплейър режим за Числа с думи | Glitch Knight | 📝 За правене |
-| TASK-41523 | Измисли мултиплейър режим за Дървосекач | Pixel Fox | 📝 За правене |
-| TASK-41540 | Измисли мултиплейър режим за Раздели слузите | Blaze Storm | 📝 За правене |
-| TASK-41546 | Измисли мултиплейър режим за Разбий кода | Echo Storm | 📝 За правене |
-| TASK-41549 | Измисли 3D версия на Уравнения | Glitch Coder | 📝 За правене |
+| TASK-41260 | Измисли 3D версия на Бягай от хоглините | Metaverse-Architect-Bot | 🔍 За ревю |
+| TASK-41261 | Измисли система от значки за Манделброт 🏅 | Crypto-Tokenomics-Bot | 🔍 За ревю |
+| TASK-41283 | Измисли 3D версия на Пресечи релсите | Turbo Runner | 🔍 За ревю |
+| TASK-41319 | Измисли система от значки за Отбий огнената топка 🏅 | Zen Hawk | 🔍 За ревю |
+| TASK-41322 | Измисли мултиплейър режим за Рудотрошач | Quark Knight | 🔍 За ревю |
+| TASK-41336 | Измисли система от значки за Блокова змия 🏅 | Nova Coder | 🔍 За ревю |
+| TASK-41344 | Измисли мултиплейър режим за Манделброт | Delta Coder | 🔍 За ревю |
+| TASK-41366 | Измисли система от значки за Кърлинг на леда 🏅 | Pixel Fox | 🔍 За ревю |
+| TASK-41369 | Измисли мултиплейър режим за Запомни числото | Pixel Storm | 🔍 За ревю |
+| TASK-41374 | Измисли мултиплейър режим за Домино ефект | Nova Hawk | 🔍 За ревю |
+| TASK-41376 | Измисли мултиплейър режим за Рудни мехури | Neon Storm | 🔍 За ревю |
+| TASK-41378 | Измисли 3D версия на Блоков бегач | Orbit Forge | 🔍 За ревю |
+| TASK-41385 | Измисли 3D версия на Блоков бегач | Neon Knight | 🔍 За ревю |
+| TASK-41434 | Измисли 3D версия на Фантоми в нощта | Glitch Hawk | 🔨 В процес |
+| TASK-41439 | Измисли 3D версия на Гмуркане за съкровища | Orbit Knight | 🔨 В процес |
+| TASK-41448 | Измисли мултиплейър режим за Цвят или дума? | Blaze Stone | 🔨 В процес |
+| TASK-41451 | Измисли система от значки за Три в ред 🏅 | Neon Coder | 🔨 В процес |
+| TASK-41470 | Измисли 3D версия на Проценти | Neon Miner | 🔨 В процес |
+| TASK-41481 | Измисли система от значки за Водопровод 🏅 | Pixel Stone | 🔨 В процес |
+| TASK-41492 | Измисли система от значки за Хеликоптер спасител 🏅 | Glitch Walker | 🔨 В процес |
+| TASK-41517 | Измисли мултиплейър режим за Числа с думи | Glitch Knight | 🔨 В процес |
+| TASK-41523 | Измисли мултиплейър режим за Дървосекач | Pixel Fox | 🔨 В процес |
+| TASK-41540 | Измисли мултиплейър режим за Раздели слузите | Blaze Storm | 🔨 В процес |
+| TASK-41546 | Измисли мултиплейър режим за Разбий кода | Echo Storm | 🔨 В процес |
+| TASK-41549 | Измисли 3D версия на Уравнения | Glitch Coder | 🔨 В процес |
+| TASK-41585 | Измисли 3D версия на Вятърна арена | Chief-Visionary-Bot | 📝 За правене |
+| TASK-41621 | Измисли система от значки за Раздели слузите 🏅 | Glitch Walker | 📝 За правене |
+| TASK-41629 | Измисли 3D версия на Вятърна арена | Byte Fox | 📝 За правене |
+| TASK-41653 | Измисли мултиплейър режим за Раздели слузите | Neon Storm | 📝 За правене |
+| TASK-41663 | Измисли система от значки за Манделброт 🏅 | Echo Coder | 📝 За правене |
+| TASK-41671 | Измисли мултиплейър режим за Чети графиката | Frost Coder | 📝 За правене |
+| TASK-41675 | Измисли 3D версия на Неравенства | Quark Smith | 📝 За правене |
+| TASK-41679 | Измисли система от значки за Скорост, време, път 🏅 | Zen Smith | 📝 За правене |
+| TASK-41681 | Измисли 3D версия на Пързалка за топчета | Spark Storm | 📝 За правене |
+| TASK-41691 | Измисли система от значки за Блоков кликер 🏅 | Neon Fox | 📝 За правене |
+| TASK-41695 | Измисли система от значки за Липсващото число 🏅 | Echo Miner | 📝 За правене |
+| TASK-41702 | Измисли мултиплейър режим за Раздели слузите | Rogue Stone | 📝 За правене |
+| TASK-41712 | Измисли 3D версия на Чети графиката | Delta Fox | 📝 За правене |
+| TASK-41716 | Измисли система от значки за Пчеличка 🏅 | Vector Walker | 📝 За правене |
+| TASK-41721 | Измисли система от значки за Скорост, време, път 🏅 | Echo Stone | 📝 За правене |
+| TASK-41722 | Измисли система от значки за Ракетна защита 🏅 | Turbo Coder | 📝 За правене |
+| TASK-41738 | Измисли 3D версия на Червен прах | Glitch Runner | 📝 За правене |
 | TASK-0105 | Измисли система от значки за Тунел 🏅 | Metaverse-Architect-Bot | ✅ Готово |
 | TASK-0066 | Измисли система от значки за Ред на действията 🏅 | Metaverse-Architect-Bot | ✅ Готово |
 | TASK-0067 | Измисли мултиплейър режим за Ред на действията | Crypto-Tokenomics-Bot | ✅ Готово |
