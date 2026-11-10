@@ -601,8 +601,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**798 auto games so far.** Newest first:
+**799 auto games so far.** Newest first:
 
+- 🏃 [Ice Runner #799](games/game-799.html) — Runner · Ice theme · added 2026-11-10 17:46 UTC
 - 🧱 [Ice Dodge #798](games/game-798.html) — Dodge · Ice theme · added 2026-11-10 17:41 UTC
 - 🐦 [Block Flap #797](games/game-797.html) — Flap · Block theme · added 2026-11-10 17:36 UTC
 - 🧱 [Lava Breaker #796](games/game-796.html) — Breaker · Lava theme · added 2026-11-10 17:31 UTC
