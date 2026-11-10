@@ -6048,6 +6048,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T00:48:21.596Z"
+    },
+    {
+      "id": "EMP-0319",
+      "name": "Quark Fox",
+      "level": "Junior",
+      "role": "Data Analyst",
+      "role_bg": "Анализатор на данни",
+      "department": "Data",
+      "manager": "Data-Analyst-Bot",
+      "team": "Team Data",
+      "team_leader": "Data-Analyst-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T00:53:23.280Z"
     }
   ],
   "chairman": {
