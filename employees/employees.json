@@ -7739,6 +7739,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T08:16:32.449Z"
+    },
+    {
+      "id": "EMP-0408",
+      "name": "Nova Stone",
+      "level": "Junior",
+      "role": "Asset Artist",
+      "role_bg": "Артист на асети",
+      "department": "Experience",
+      "manager": "Accessibility-Bot",
+      "team": "Team Experience",
+      "team_leader": "Accessibility-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T08:21:34.561Z"
     }
   ],
   "chairman": {
