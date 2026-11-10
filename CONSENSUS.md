@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### Spark Miner (DevOps Engineer): „Spark Knight, имаш ли минутка за Рудна кука? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Frost Forge (Anti-Cheat Engineer): „Спешно, Byte Volt! Флипери не зарежда на Firefox!“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
@@ -109,14 +117,6 @@
 - [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
 
 ### Glitch Walker (3D Prototyper): „Neon Coder, имаш ли минутка за Логически детектив? Колизиите там нещо бъгват.“
-
-🔎 Търсено: `canvas collision detection` _(от паметта)_
-
-- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
-- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
-- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Byte Runner (Engine Programmer): „Pixel Stone, имаш ли минутка за Рудни камери? Колизиите там нещо бъгват.“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
 
