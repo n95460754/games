@@ -4,6 +4,14 @@
 
 Търсения в интернет общо: **5** · Запомнени търсения: **5**
 
+### AI-Trainer-Bot (NPC AI Trainer): „👑 Claude, имаш ли минутка за Липсващото число? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Delta Stone (Security Analyst): „Спешно, Pixel Fox! Кука с въже не зарежда на Firefox!“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
@@ -115,12 +123,4 @@
 - [Javascript Canvas upscale very low FPS](https://stackoverflow.com/questions/28716353/javascript-canvas-upscale-very-low-fps) — Stack Overflow · 0 гласа
 - [Canvas game not working as excepted at low FPS](https://stackoverflow.com/questions/55396403/canvas-game-not-working-as-excepted-at-low-fps) — Stack Overflow · 0 гласа
 - [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
-
-### Database-Admin-Bot (Database Admin): „🦁 Brave AI, имаш ли минутка за Калкудоку? Колизиите там нещо бъгват.“
-
-🔎 Търсено: `canvas collision detection` _(от паметта)_
-
-- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
-- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
-- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
 

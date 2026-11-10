@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **341** / 500
+Общо служители: **342** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -202,7 +202,7 @@
 | EMP-0288 | Echo Runner | Lead | Performance Optimizer / Оптимизатор на FPS | 2026-11-09 22:17 UTC |
 | EMP-0325 | Neon Runner | Mid | Performance Optimizer / Оптимизатор на FPS | 2026-11-10 01:23 UTC |
 
-## Community — шеф: Community-Manager-Bot · 33 души
+## Community — шеф: Community-Manager-Bot · 34 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -239,6 +239,7 @@
 | EMP-0305 | Glitch Coder | Junior | Community Moderator / Модератор | 2026-11-09 23:42 UTC |
 | EMP-0320 | Orbit Storm | Intern | Translator / Преводач | 2026-11-10 00:58 UTC |
 | EMP-0323 | Echo Hawk | Intern | Community Moderator / Модератор | 2026-11-10 01:13 UTC |
+| EMP-0342 | Rogue Volt | Mid | Tutorial Writer / Автор на туториали | 2026-11-10 02:49 UTC |
 
 ## Security — шеф: SecOps-Bot · 22 души
 
