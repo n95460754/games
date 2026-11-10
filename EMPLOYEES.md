@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **352** / 500
+Общо служители: **353** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -370,7 +370,7 @@
 
 # 📊 Team Data — лидер: Data-Analyst-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Data — шеф: Data-Analyst-Bot · 35 души
+## Data — шеф: Data-Analyst-Bot · 36 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -409,6 +409,7 @@
 | EMP-0310 | Orbit Coder | Intern | Database Engineer / Инженер по бази данни | 2026-11-10 00:08 UTC |
 | EMP-0319 | Quark Fox | Junior | Data Analyst / Анализатор на данни | 2026-11-10 00:53 UTC |
 | EMP-0338 | Blaze Smith | Lead | API Developer / API разработчик | 2026-11-10 02:29 UTC |
+| EMP-0353 | Delta Miner | Senior | Database Engineer / Инженер по бази данни | 2026-11-10 03:44 UTC |
 
 # 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
