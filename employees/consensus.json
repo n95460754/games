@@ -194,50 +194,6 @@
  "pending": [],
  "log": [
   {
-   "who": "Vector Runner (Performance Optimizer)",
-   "said": "Спешно, Quark Miner! Огради прасето не зарежда на Firefox!",
-   "query": "javascript cache not updating",
-   "round": 332,
-   "at": "2026-11-10T02:54:11.130Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "How can I force clients to refresh JavaScript files?",
-     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
-     "score": 722,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Chrome not updating cache (javascript files)",
-     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
-     "score": 4,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "MVC 5 JavaScript Caching",
-     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
-     "score": 5,
-     "accepted": false
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
-     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache-Control header",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
-     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
-    }
-   ]
-  },
-  {
    "who": "Neon Coder (Game Inventor)",
    "said": "Frost Coder, имаш ли минутка за Средно аритметично? Колизиите там нещо бъгват.",
    "query": "canvas collision detection",
@@ -2355,6 +2311,50 @@
    "query": "javascript cache not updating",
    "round": 404,
    "at": "2026-11-10T08:56:49.372Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "How can I force clients to refresh JavaScript files?",
+     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
+     "score": 722,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Chrome not updating cache (javascript files)",
+     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
+     "score": 4,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "MVC 5 JavaScript Caching",
+     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
+     "score": 5,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
+     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache-Control header",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
+     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
+    }
+   ]
+  },
+  {
+   "who": "Delta Smith (Sound Designer)",
+   "said": "Спешно, Spark Knight! Блоков кликер не зарежда на Firefox!",
+   "query": "javascript cache not updating",
+   "round": 405,
+   "at": "2026-11-10T09:01:51.601Z",
    "fromCache": true,
    "error": null,
    "results": [
