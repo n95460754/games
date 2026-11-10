@@ -18,11 +18,11 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **395** / 500
+Общо служители: **396** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Engineering — шеф: Dev-Bot · 41 души
+## Engineering — шеф: Dev-Bot · 42 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -67,6 +67,7 @@
 | EMP-0375 | Quark Volt | Junior | Game Developer / Разработчик на игри | 2026-11-10 05:35 UTC |
 | EMP-0385 | Frost Coder | Senior | Engine Programmer / Програмист на енджина | 2026-11-10 06:25 UTC |
 | EMP-0388 | Quark Hawk | Mid | Engine Programmer / Програмист на енджина | 2026-11-10 06:40 UTC |
+| EMP-0396 | Blaze Smith | Lead | WebGL Specialist / WebGL специалист | 2026-11-10 07:21 UTC |
 
 ## Quality — шеф: QA-Tester-Bot · 29 души
 
