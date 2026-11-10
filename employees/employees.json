@@ -9202,6 +9202,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T14:44:28.169Z"
+    },
+    {
+      "id": "EMP-0485",
+      "name": "Neon Knight",
+      "level": "Mid",
+      "role": "Community Moderator",
+      "role_bg": "Модератор",
+      "department": "Community",
+      "manager": "Community-Manager-Bot",
+      "team": "Team DevOps",
+      "team_leader": "DevOps-Master-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T14:49:30.295Z"
     }
   ],
   "chairman": {
