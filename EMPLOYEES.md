@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **499** / 500
+Общо служители: **500** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -117,11 +117,10 @@
 | EMP-0467 | Nova Fox | Intern | QA Tester / Тестер | 2026-11-10 13:18 UTC |
 | EMP-0491 | Neon Stone | Senior | Speedrun Tester / Спийдрън тестер | 2026-11-10 15:20 UTC |
 
-## Design — шеф: UX-UI-Bot · 51 души
+## Design — шеф: UX-UI-Bot · 52 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
-| EMP-0006 | Nova Storm | Mid | UI Animator / UI аниматор | 2026-11-08 23:06 UTC |
 | EMP-0008 | Quark Miner | Junior | Pixel Artist / Пиксел артист | 2026-11-08 23:11 UTC |
 | EMP-0030 | Nova Runner | Junior | UI Animator / UI аниматор | 2026-11-09 00:37 UTC |
 | EMP-0044 | Orbit Hawk | Mid | Level Designer / Дизайнер на нива | 2026-11-09 01:47 UTC |
@@ -171,8 +170,9 @@
 | EMP-0469 | Spark Hawk | Mid | Level Designer / Дизайнер на нива | 2026-11-10 13:28 UTC |
 | EMP-0473 | Echo Volt | Mid | Level Designer / Дизайнер на нива | 2026-11-10 13:49 UTC |
 | EMP-0495 | Orbit Volt | Mid | Level Designer / Дизайнер на нива | 2026-11-10 15:40 UTC |
+| EMP-0500 | Zen Fox | Intern | Level Designer / Дизайнер на нива | 2026-11-10 16:05 UTC |
 
-_…показани са последните 50 от 51._
+_…показани са последните 50 от 52._
 
 ## Audio — шеф: Sound-Engineer-Bot · 39 души
 
