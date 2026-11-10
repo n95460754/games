@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **488** / 500
+Общо служители: **489** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -216,7 +216,7 @@
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Operations — шеф: DevOps-Master-Bot · 29 души
+## Operations — шеф: DevOps-Master-Bot · 30 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -249,6 +249,7 @@
 | EMP-0465 | Vector Fox | Junior | Performance Optimizer / Оптимизатор на FPS | 2026-11-10 13:08 UTC |
 | EMP-0482 | Glitch Hawk | Lead | DevOps Engineer / DevOps инженер | 2026-11-10 14:34 UTC |
 | EMP-0487 | Pixel Smith | Senior | DevOps Engineer / DevOps инженер | 2026-11-10 14:59 UTC |
+| EMP-0489 | Glitch Fox | Mid | DevOps Engineer / DevOps инженер | 2026-11-10 15:10 UTC |
 
 ## Community — шеф: Community-Manager-Bot · 51 души
 
