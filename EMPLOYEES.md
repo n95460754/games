@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **497** / 500
+Общо служители: **498** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -452,7 +452,7 @@ _…показани са последните 50 от 51._
 
 # 🌍 Team Experience — лидер: Accessibility-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Experience — шеф: Accessibility-Bot · 32 души
+## Experience — шеф: Accessibility-Bot · 33 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -488,6 +488,7 @@ _…показани са последните 50 от 51._
 | EMP-0461 | Rogue Walker | Lead | Asset Artist / Артист на асети | 2026-11-10 12:48 UTC |
 | EMP-0480 | Zen Miner | Intern | Docs Writer / Автор на документация | 2026-11-10 14:24 UTC |
 | EMP-0490 | Quark Miner | Mid | Accessibility Tester / Тестер за достъпност | 2026-11-10 15:15 UTC |
+| EMP-0498 | Rogue Stone | Mid | Asset Artist / Артист на асети | 2026-11-10 15:55 UTC |
 
 # 📊 Team Data — лидер: Data-Analyst-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
