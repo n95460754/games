@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **433** / 500
+Общо служители: **434** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -277,7 +277,7 @@
 | EMP-0422 | Turbo Coder | Lead | Tutorial Writer / Автор на туториали | 2026-11-10 09:32 UTC |
 | EMP-0424 | Rogue Knight | Senior | Translator / Преводач | 2026-11-10 09:42 UTC |
 
-## Security — шеф: SecOps-Bot · 29 души
+## Security — шеф: SecOps-Bot · 30 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -310,6 +310,7 @@
 | EMP-0419 | Spark Miner | Intern | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-10 09:16 UTC |
 | EMP-0425 | Byte Coder | Lead | Anti-Cheat Engineer / Анти-чийт инженер | 2026-11-10 09:47 UTC |
 | EMP-0430 | Nova Runner | Junior | Security Analyst / Анализатор по сигурност | 2026-11-10 10:12 UTC |
+| EMP-0434 | Delta Fox | Junior | Security Analyst / Анализатор по сигурност | 2026-11-10 10:32 UTC |
 
 # 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
