@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **487** / 500
+Общо служители: **488** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -353,7 +353,7 @@ _…показани са последните 50 от 51._
 
 # 🎮 Team Gameplay — лидер: Game-Physics-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Gameplay — шеф: Game-Physics-Bot · 32 души
+## Gameplay — шеф: Game-Physics-Bot · 33 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -389,6 +389,7 @@ _…показани са последните 50 от 51._
 | EMP-0431 | Quark Walker | Intern | Physics Programmer / Програмист на физика | 2026-11-10 10:17 UTC |
 | EMP-0449 | Rogue Fox | Junior | NPC AI Programmer / Програмист на NPC AI | 2026-11-10 11:48 UTC |
 | EMP-0450 | Pixel Fox | Senior | Physics Programmer / Програмист на физика | 2026-11-10 11:53 UTC |
+| EMP-0488 | Frost Hawk | Lead | Level Builder / Строител на нива | 2026-11-10 15:04 UTC |
 
 # 🚀 Team Release — лидер: Release-Manager-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
