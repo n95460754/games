@@ -6922,6 +6922,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T04:40:05.975Z"
+    },
+    {
+      "id": "EMP-0365",
+      "name": "Delta Fox",
+      "level": "Intern",
+      "role": "Future Researcher",
+      "role_bg": "Изследовател на бъдещето",
+      "department": "Innovation",
+      "manager": "Chief-Visionary-Bot",
+      "team": "Team Future Lab",
+      "team_leader": "Chief-Visionary-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T04:45:07.913Z"
     }
   ],
   "chairman": {
