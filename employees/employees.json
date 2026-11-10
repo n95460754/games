@@ -6181,6 +6181,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T01:23:35.461Z"
+    },
+    {
+      "id": "EMP-0326",
+      "name": "Frost Coder",
+      "level": "Mid",
+      "role": "QA Tester",
+      "role_bg": "Тестер",
+      "department": "Quality",
+      "manager": "QA-Tester-Bot",
+      "team": "Team Dev",
+      "team_leader": "Dev-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T01:28:37.430Z"
     }
   ],
   "chairman": {
