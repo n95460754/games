@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **350** / 500
+Общо служители: **351** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -411,7 +411,7 @@
 
 # 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Innovation — шеф: Chief-Visionary-Bot · 28 души
+## Innovation — шеф: Chief-Visionary-Bot · 29 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -443,4 +443,5 @@
 | EMP-0330 | Pixel Storm | Junior | Future Researcher / Изследовател на бъдещето | 2026-11-10 01:48 UTC |
 | EMP-0335 | Rogue Stone | Mid | 3D Prototyper / 3D прототипист | 2026-11-10 02:13 UTC |
 | EMP-0345 | Nova Hawk | Senior | Game Inventor / Изобретател на игри | 2026-11-10 03:04 UTC |
+| EMP-0351 | Neon Storm | Intern | 3D Prototyper / 3D прототипист | 2026-11-10 03:34 UTC |
 
