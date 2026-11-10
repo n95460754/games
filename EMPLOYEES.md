@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **329** / 500
+Общо служители: **330** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -393,7 +393,7 @@
 
 # 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Innovation — шеф: Chief-Visionary-Bot · 25 души
+## Innovation — шеф: Chief-Visionary-Bot · 26 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -422,4 +422,5 @@
 | EMP-0313 | Pixel Fox | Junior | Game Inventor / Изобретател на игри | 2026-11-10 00:23 UTC |
 | EMP-0314 | Echo Miner | Senior | 3D Prototyper / 3D прототипист | 2026-11-10 00:28 UTC |
 | EMP-0321 | Pixel Fox | Intern | Game Inventor / Изобретател на игри | 2026-11-10 01:03 UTC |
+| EMP-0330 | Pixel Storm | Junior | Future Researcher / Изследовател на бъдещето | 2026-11-10 01:48 UTC |
 
