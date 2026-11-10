@@ -6770,6 +6770,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T03:59:36.042Z"
+    },
+    {
+      "id": "EMP-0357",
+      "name": "Orbit Forge",
+      "level": "Intern",
+      "role": "Future Researcher",
+      "role_bg": "Изследовател на бъдещето",
+      "department": "Innovation",
+      "manager": "Chief-Visionary-Bot",
+      "team": "Team Future Lab",
+      "team_leader": "Chief-Visionary-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T04:04:52.576Z"
     }
   ],
   "chairman": {
