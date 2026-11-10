@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **471** / 500
+Общо служители: **472** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -168,7 +168,7 @@
 | EMP-0452 | Zen Runner | Intern | UI Animator / UI аниматор | 2026-11-10 12:03 UTC |
 | EMP-0469 | Spark Hawk | Mid | Level Designer / Дизайнер на нива | 2026-11-10 13:28 UTC |
 
-## Audio — шеф: Sound-Engineer-Bot · 38 души
+## Audio — шеф: Sound-Engineer-Bot · 39 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -210,6 +210,7 @@
 | EMP-0441 | Orbit Storm | Senior | Chiptune Composer / Чиптюн композитор | 2026-11-10 11:08 UTC |
 | EMP-0442 | Zen Fox | Intern | Sound Designer / Звуков дизайнер | 2026-11-10 11:13 UTC |
 | EMP-0454 | Turbo Stone | Senior | Sound Designer / Звуков дизайнер | 2026-11-10 12:13 UTC |
+| EMP-0472 | Byte Smith | Lead | Chiptune Composer / Чиптюн композитор | 2026-11-10 13:44 UTC |
 
 # ⚙️ Team DevOps — лидер: DevOps-Master-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
