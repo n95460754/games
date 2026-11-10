@@ -18,7 +18,7 @@
 
 **🦁 Brave AI** — Leader of All Teams / Лидер на всички отбори (→ github-actions[bot])
 
-Общо служители: **381** / 500
+Общо служители: **382** / 500
 
 # 🛠️ Team Dev — лидер: Dev-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
@@ -436,7 +436,7 @@
 
 # 🔮 Team Future Lab — лидер: Chief-Visionary-Bot (→ Brave AI → github-actions[bot] → Gemini → ChatGPT → Perplexity → Copilot → Claude)
 
-## Innovation — шеф: Chief-Visionary-Bot · 34 души
+## Innovation — шеф: Chief-Visionary-Bot · 35 души
 
 | ID | Име | Ниво | Длъжност | Нает |
 |---|---|---|---|---|
@@ -474,4 +474,5 @@
 | EMP-0365 | Delta Fox | Intern | Future Researcher / Изследовател на бъдещето | 2026-11-10 04:45 UTC |
 | EMP-0377 | Vector Walker | Intern | 3D Prototyper / 3D прототипист | 2026-11-10 05:45 UTC |
 | EMP-0378 | Neon Knight | Lead | 3D Prototyper / 3D прототипист | 2026-11-10 05:50 UTC |
+| EMP-0382 | Echo Storm | Intern | 3D Prototyper / 3D прототипист | 2026-11-10 06:10 UTC |
 
