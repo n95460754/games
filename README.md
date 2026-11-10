@@ -601,8 +601,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**704 auto games so far.** Newest first:
+**705 auto games so far.** Newest first:
 
+- 🐍 [Toxic Snake #705](games/game-705.html) — Snake · Toxic theme · added 2026-11-10 09:52 UTC
 - 🐍 [Space Snake #704](games/game-704.html) — Snake · Space theme · added 2026-11-10 09:47 UTC
 - 🧱 [Candy Dodge #703](games/game-703.html) — Dodge · Candy theme · added 2026-11-10 09:42 UTC
 - 🎯 [Retro Tap Rush #702](games/game-702.html) — Tap Rush · Retro theme · added 2026-11-10 09:37 UTC
