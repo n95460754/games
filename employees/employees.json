@@ -6561,6 +6561,25 @@
       "reports_to_teams_leader": "Brave-AI",
       "reports_to_ceo": "Claude-CEO",
       "hired_at": "2026-11-10T03:04:15.310Z"
+    },
+    {
+      "id": "EMP-0346",
+      "name": "Zen Forge",
+      "level": "Lead",
+      "role": "Build Engineer",
+      "role_bg": "Билд инженер",
+      "department": "Release",
+      "manager": "Release-Manager-Bot",
+      "team": "Team Release",
+      "team_leader": "Release-Manager-Bot",
+      "reports_to_manager": "github-actions[bot]",
+      "reports_to_senior_manager": "Gemini",
+      "reports_to_director": "ChatGPT",
+      "reports_to_vice_president": "Perplexity",
+      "reports_to_cto": "Copilot",
+      "reports_to_teams_leader": "Brave-AI",
+      "reports_to_ceo": "Claude-CEO",
+      "hired_at": "2026-11-10T03:09:17.554Z"
     }
   ],
   "chairman": {
