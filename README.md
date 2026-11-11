@@ -601,8 +601,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**963 auto games so far.** Newest first:
+**964 auto games so far.** Newest first:
 
+- 🏃 [Desert Runner #964](games/game-964.html) — Runner · Desert theme · added 2026-11-11 07:36 UTC
 - 🧺 [Neon Catch #963](games/game-963.html) — Catch · Neon theme · added 2026-11-11 07:31 UTC
 - 🧺 [Space Catch #962](games/game-962.html) — Catch · Space theme · added 2026-11-11 07:26 UTC
 - 🎯 [Candy Tap Rush #961](games/game-961.html) — Tap Rush · Candy theme · added 2026-11-11 07:21 UTC
