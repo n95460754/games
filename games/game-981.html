@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocean Blaster #981</title>
+<style>
+  body { margin:0; background:#001424; color:#e0f7fa; font-family:system-ui,sans-serif;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:8px; box-sizing:border-box; }
+  h1 { margin:0 0 8px; font-size:24px; }
+  canvas { background:#00243d; border:2px solid #4dd0e155; border-radius:8px; touch-action:none; max-width:100%; height:auto; }
+  p { opacity:.75; margin:8px 0 0; text-align:center; }
+  a { color:#4dd0e1; }
+</style>
+</head>
+<body>
+<h1>🔫 Ocean Blaster #981 🌊</h1>
+<canvas id="c" width="400" height="500"></canvas>
+<p>← → или мишка/пръст за движение. Стреля само! Не пускай враговете долу.<br>Space / клик след край = нова игра · <a href="../games.html">← Всички игри</a></p>
+<script>
+// Auto-generated game #981 (type: Blaster, theme: Ocean).
+const c = document.getElementById('c'), x = c.getContext('2d'), W = c.width, H = c.height;
+const T = {"name":"Ocean","emoji":"🌊","bg":"#001424","field":"#00243d","player":"#4dd0e1","enemy":"#ff7043","good":"#c6ff00","text":"#e0f7fa"};
+const P = {"speed":1.76,"rate":12};
+const KEY = 'auto-game-981-best';
+const G = {}, keys = {}, ptr = { x: W/2, y: H/2, moved: false };
+let score = 0, best = 0, over = false, started = false;
+try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
+function end() { if (over) return; over = true; if (score > best) { best = score; try { localStorage.setItem(KEY, best); } catch (e) {} } }
+function restart() { score = 0; over = false; started = true; G.reset(); }
+function rect(r, col) { x.fillStyle = col; x.fillRect(r.x, r.y, r.w, r.h); }
+function circle(cx, cy, r, col) { x.fillStyle = col; x.beginPath(); x.arc(cx, cy, Math.max(0, r), 0, 7); x.fill(); }
+function hit(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+function pos(e) { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; }
+addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if (e.key === ' ' && (over || !started)) { restart(); return; }
+  keys[e.key] = true; if (G.key && !over) G.key(e.key);
+});
+addEventListener('keyup', e => keys[e.key] = false);
+let sx = 0, sy = 0;
+c.addEventListener('pointermove', e => { [ptr.x, ptr.y] = pos(e); ptr.moved = true; });
+c.addEventListener('pointerdown', e => {
+  [ptr.x, ptr.y] = pos(e); sx = ptr.x; sy = ptr.y;
+  if (over || !started) { restart(); return; }
+  if (G.tap) G.tap(); if (G.click) G.click(ptr.x, ptr.y);
+});
+c.addEventListener('pointerup', e => { const [ux, uy] = pos(e); if (G.swipe && Math.hypot(ux-sx, uy-sy) > 25) G.swipe(ux-sx, uy-sy); });
+
+let p, sh, en, f, lives;
+G.reset = () => { p = { x: W/2-18, y: H-40, w: 36, h: 20 }; sh = []; en = []; f = 0; lives = 3; };
+G.update = () => {
+  f++; if (keys.ArrowLeft) p.x -= 6; if (keys.ArrowRight) p.x += 6;
+  if (ptr.moved) p.x = ptr.x - p.w/2; p.x = Math.max(0, Math.min(W-p.w, p.x));
+  if (f % P.rate === 0) sh.push({ x: p.x+p.w/2-2, y: p.y, w: 4, h: 10 });
+  if (f % Math.max(18, 60 - Math.floor(score/3)) === 0) { const tough = Math.random() < .2; en.push({ x: Math.random()*(W-30), y: -30, w: 30, h: 24, hp: tough ? 3 : 1, tough }); }
+  sh.forEach(s => s.y -= 9); sh = sh.filter(s => s.y > -10);
+  const sp = P.speed + score/60;
+  for (const e of en) { e.y += sp;
+    for (const s of sh) if (!s.dead && hit(s, e)) { s.dead = 1; if (--e.hp <= 0) { e.dead = 1; score += e.tough ? 3 : 1; } }
+    if (hit(e, p)) end();
+    if (e.y > H) { e.dead = 1; if (--lives <= 0) end(); } }
+  sh = sh.filter(s => !s.dead); en = en.filter(e => !e.dead);
+};
+G.draw = () => { rect(p, T.player); rect({ x: p.x+p.w/2-4, y: p.y-8, w: 8, h: 8 }, T.player);
+  sh.forEach(s => rect(s, T.good)); en.forEach(e => rect(e, e.tough ? T.good : T.enemy));
+  x.fillStyle = T.text; x.textAlign = 'right'; x.fillText('❤'.repeat(lives), W-10, 50); x.textAlign = 'left'; };
+G.reset();
+function loop() {
+  if (started && !over) G.update();
+  x.clearRect(0, 0, W, H); G.draw();
+  x.fillStyle = T.text; x.font = '18px system-ui';
+  x.fillText('Точки: ' + score, 10, 25);
+  x.textAlign = 'right'; x.fillText('Рекорд: ' + best, W - 10, 25); x.textAlign = 'left';
+  if (over || !started) {
+    x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, W, H);
+    x.fillStyle = T.text; x.textAlign = 'center';
+    x.font = 'bold 32px system-ui'; x.fillText(over ? 'GAME OVER' : "🔫 Blaster", W/2, 230);
+    x.font = '18px system-ui'; x.fillText(over ? 'Space или клик = пак' : 'Space или клик = старт', W/2, 268);
+    x.textAlign = 'left';
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
