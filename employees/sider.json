@@ -1,16 +1,7 @@
 {
- "runs": 628,
- "fixed_total": 70488,
+ "runs": 629,
+ "fixed_total": 70666,
  "history": [
-  {
-   "round": 614,
-   "at": "2026-11-11T02:30:52.321Z",
-   "workers": 528,
-   "idle_before": 178,
-   "idle_after": 0,
-   "fixer": "Perplexity",
-   "given": 178
-  },
   {
    "round": 615,
    "at": "2026-11-11T02:35:54.040Z",
@@ -271,15 +262,24 @@
    "idle_after": 0,
    "fixer": "Copilot",
    "given": 181
+  },
+  {
+   "round": 644,
+   "at": "2026-11-11T05:01:48.209Z",
+   "workers": 528,
+   "idle_before": 178,
+   "idle_after": 0,
+   "fixer": "Perplexity",
+   "given": 178
   }
  ],
  "last": {
-  "round": 643,
-  "at": "2026-11-11T04:56:46.412Z",
+  "round": 644,
+  "at": "2026-11-11T05:01:48.209Z",
   "workers": 528,
-  "idle_before": 181,
+  "idle_before": 178,
   "idle_after": 0,
-  "fixer": "Copilot",
-  "given": 181
+  "fixer": "Perplexity",
+  "given": 178
  }
 }
