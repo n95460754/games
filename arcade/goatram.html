@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Козият удар</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐐 Козият удар</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 382. Козият удар
+A.add({id:'goatram',cat:'action',icon:'🐐',name:'Козият удар',desc:'Козата пази планинския връх — блъсни мобовете от скалата, но пусни селяните!',
+  help:'← / → (или A / D) — козата блъска наляво или надясно. Мишка/пръст: кликни в лявата или дясната половина. Зомбита (1 т.), паяци (2 т.) и бронирани зомбита (2 удара, 3 т.) идват от двете страни — блъсни ги, преди да стигнат до теб. Селяните НЕ ги блъскай — пусни ги да те погалят (+2). Удар във въздуха те замайва за миг. Серия от 5+ дава +1 за удар. 3 живота.',
+  T:[{n:'Зомби',sp:36,hp:1,pts:1},{n:'Паяк',sp:66,hp:1,pts:2},{n:'Бронирано зомби',sp:28,hp:2,pts:3},{n:'Селянин',sp:40,hp:1,pts:0}],
+  GY:236,REACH:104,
+  start(g){g.m=[];g.lives=3;g.sp=1.2;g.cd=0;g.stun=0;g.face=1;g.dash=0;g.fly=[];g.pop=[];g.combo=0;g.hurt=0;
+    g.clouds=[0,1,2,3].map(i=>({x:A.rnd(0,480),y:A.rnd(30,110),w:A.ri(3,6)*12}));},
+  spawn(g){
+    const side=Math.random()<.5?-1:1,x=side<0?-24:504;
+    if(g.m.some(m=>m.side===side&&Math.abs(m.x-x)<46))return;
+    let tp=0;const r=Math.random();
+    if(g.t>5&&r<.16)tp=3;else if(g.t>10&&r<.36)tp=1;else if(g.t>20&&r<.52)tp=2;
+    g.m.push({tp,side,x,hp:this.T[tp].hp,kb:0,an:Math.random()*6});
+  },
+  ram(g,dir){
+    if(g.stun>0||g.cd>0)return;
+    g.face=dir;g.dash=.14;g.cd=.15;
+    let best=null,bd=1e9;
+    for(const m of g.m){const d=(m.x-240)*dir;if(d>0&&d<this.REACH&&d<bd){bd=d;best=m;}}
+    if(!best){g.stun=.4;g.combo=0;A.beep(140,.12,'sawtooth');g.pop.push({x:240+dir*50,y:180,s:'Мимо!',col:'#bbb',t:.7});return;}
+    const T=this.T[best.tp];
+    if(best.tp===3){
+      g.m.splice(g.m.indexOf(best),1);this.launch(g,best,dir);g.combo=0;g.lives--;g.hurt=.4;
+      A.beep(110,.3,'sawtooth',.06);g.pop.push({x:best.x,y:170,s:'Не селянина! −❤',col:'#f55',t:1.1});
+      if(g.lives<=0)A.over(g,'Блъсна селянина от планината! 😱');return;
+    }
+    best.hp--;
+    if(best.hp>0){best.x+=dir*48;best.kb=.25;A.beep(900,.05,'square');A.beep(600,.08,'triangle');
+      g.pop.push({x:best.x,y:180,s:'Дзън!',col:'#cfd8dc',t:.6});return;}
+    g.m.splice(g.m.indexOf(best),1);this.launch(g,best,dir);g.combo++;
+    const pts=T.pts+(g.combo>=5?1:0);g.score+=pts;
+    A.beep(300+Math.min(g.combo,10)*40,.08,'triangle');
+    g.pop.push({x:best.x,y:180,s:'+'+pts+(g.combo>=5?' серия '+g.combo:''),col:'#ffeb3b',t:.9});
+  },
+  launch(g,m,dir){g.fly.push({tp:m.tp,x:m.x,y:this.GY,vx:dir*A.rnd(170,250),vy:-A.rnd(170,240),rot:0,vr:dir*A.rnd(5,9),side:-dir,hp:0});},
+  key(g,k){if(k==='ArrowLeft'||k==='KeyA')this.ram(g,-1);else if(k==='ArrowRight'||k==='KeyD')this.ram(g,1);},
+  click(g,mx){this.ram(g,mx<240?-1:1);},
+  update(g,dt){
+    g.cd-=dt;g.stun-=dt;g.dash-=dt;g.hurt-=dt;
+    g.sp-=dt;if(g.sp<=0){this.spawn(g);g.sp=A.rnd(.9,1.7)*Math.max(.38,1-g.t/120);}
+    const mul=1+Math.min(1.3,g.t/80);
+    for(let i=g.m.length-1;i>=0;i--){const m=g.m[i];m.an+=dt*8;
+      if(m.kb>0){m.kb-=dt;continue;}
+      m.x+=-m.side*this.T[m.tp].sp*mul*dt;
+      if(Math.abs(m.x-240)<26){g.m.splice(i,1);
+        if(m.tp===3){g.score+=2;A.tune([660,880]);g.pop.push({x:240,y:160,s:'❤ +2',col:'#ff80ab',t:1});}
+        else{g.lives--;g.hurt=.4;g.combo=0;A.beep(100,.3,'sawtooth',.06);g.pop.push({x:240,y:160,s:'Ох! −❤',col:'#f55',t:1});
+          if(g.lives<=0)return A.over(g,this.T[m.tp].n+' превзе върха! 🏔️');}}}
+    for(let i=g.fly.length-1;i>=0;i--){const f=g.fly[i];f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy+=420*dt;f.rot+=f.vr*dt;if(f.y>420)g.fly.splice(i,1);}
+    for(let i=g.pop.length-1;i>=0;i--){const q=g.pop[i];q.y-=30*dt;q.t-=dt;if(q.t<=0)g.pop.splice(i,1);}
+    for(const cl of g.clouds){cl.x+=8*dt;if(cl.x>520)cl.x=-cl.w-20;}
+  },
+  mob(tp,x,y,side,an,hp){
+    const lg=Math.sin(an)*3,f=-side;
+    if(tp===1){c.fillStyle='#3e2723';for(let k=-1;k<=1;k+=2){c.fillRect(x-22,y-8+(k>0?lg:-lg)*.5,44,3);}c.fillRect(x-14,y-16,28,12);
+      c.fillStyle='#4e342e';c.fillRect(x+f*10-6,y-18,12,12);c.fillStyle='#e53935';c.fillRect(x+f*14-2,y-15,3,3);c.fillRect(x+f*9-2,y-15,3,3);return;}
+    const skin=tp===3?'#d7a98c':'#4caf50',shirt=tp===3?'#795548':'#00897b',pants=tp===3?'#5d4037':'#3949ab';
+    c.fillStyle=pants;c.fillRect(x-7,y-14+Math.max(0,lg),6,14);c.fillRect(x+1,y-14+Math.max(0,-lg),6,14);
+    c.fillStyle=shirt;c.fillRect(x-8,y-32,16,18);
+    c.fillStyle=skin;if(tp!==3){c.fillRect(x+f*4-3,y-30,f*12,5);}
+    c.fillRect(x-7,y-46,14,14);
+    if(tp===3){c.fillStyle='#a1887f';c.fillRect(x+f*7-2,y-40,4,6);c.fillStyle='#4e342e';c.fillRect(x-7,y-46,14,3);}
+    c.fillStyle='#111';c.fillRect(x+f*3-1,y-41,3,3);
+    if(tp===2&&hp>1){c.fillStyle='#b0bec5';c.fillRect(x-8,y-48,16,6);c.fillRect(x-9,y-32,18,12);c.fillStyle='#eceff1';c.fillRect(x-8,y-48,16,2);}
+  },
+  goat(g){
+    const x=240+(g.dash>0?g.face*14:0),y=this.GY,f=g.face,st=g.stun>0;
+    if(g.hurt>0&&Math.floor(g.t*20)%2)return;
+    c.fillStyle='#bdbdbd';c.fillRect(x-15,y-12,5,12);c.fillRect(x-6,y-12,5,12);c.fillRect(x+3,y-12,5,12);c.fillRect(x+11,y-12,5,12);
+    A.block(x-18,y-30,36,'#f5f5f5',19);
+    c.fillStyle='#e0e0e0';c.fillRect(x-f*18-(f>0?4:0),y-30,4,6);
+    const hx=x+f*18-(f>0?0:14);A.block(hx,y-40,14,'#fafafa');
+    c.fillStyle='#9e9e9e';c.fillRect(hx+(f>0?2:8),y-48,4,9);c.fillRect(hx+(f>0?8:2),y-48,4,9);
+    c.fillStyle=st?'#ff5252':'#111';c.fillRect(hx+(f>0?8:3),y-36,3,3);
+    c.fillStyle='#cfcfcf';c.fillRect(hx+(f>0?10:0),y-28,4,5);
+    if(st)A.txt('✶',x,y-58,14,'#ffeb3b','center');
+  },
+  draw(g){
+    for(let i=0;i<9;i++){c.fillStyle=`rgb(${110+i*6},${170+i*5},${230-i*2})`;c.fillRect(0,i*30,480,30);}
+    c.fillStyle='rgba(255,255,255,.85)';for(const cl of g.clouds){c.fillRect(cl.x,cl.y,cl.w,12);c.fillRect(cl.x+12,cl.y-8,cl.w-24,8);}
+    // далечни върхове
+    const peaks=[[60,140],[170,110],[320,125],[430,100]];
+    for(const [px,py] of peaks){for(let k=0;k<8;k++){const w=(k+1)*16,yy=py+k*16;c.fillStyle=k<2?'#eef4ff':'#7a8a99';c.fillRect(px-w/2,yy,w,16);}}
+    // скала
+    const GY=this.GY;
+    for(let x=0;x<480;x+=24){A.block(x,GY,24,'#7d7d7d');c.fillStyle='#eef4ff';c.fillRect(x,GY,24,5);
+      for(let y=GY+24;y<360;y+=24)A.block(x,y,24,y>300?'#5f5f5f':'#6e6e6e');}
+    // зона на удара
+    c.fillStyle='rgba(255,213,79,.55)';c.fillRect(240-this.REACH-2,GY+6,4,10);c.fillRect(240+this.REACH-2,GY+6,4,10);
+    c.fillStyle='rgba(255,213,79,.18)';c.fillRect(240-this.REACH,GY+8,this.REACH*2,4);
+    for(const m of g.m)this.mob(m.tp,m.x,GY,m.side,m.an,m.hp);
+    for(const f of g.fly){c.save();c.translate(f.x,f.y-20);c.rotate(f.rot);this.mob(f.tp,0,20,f.side,0,0);c.restore();}
+    this.goat(g);
+    for(const q of g.pop)A.txt(q.s,q.x,q.y,15,q.col,'center');
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,26);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,13,14,'#f55');
+    A.txt('← блъсни   блъсни →',240,13,12,'#ffe082','center');
+    A.txt(g.combo>=3?'Серия '+g.combo:'⏱ '+Math.floor(g.t)+' с',470,13,13,g.combo>=3?'#ffeb3b':'#fff','right');
+    if(g.t<4)A.txt('Блъскай мобовете, пускай селяните!',240,300,16,'#fff','center');
+  }
+});
+</script>
+</body>
+</html>

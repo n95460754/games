@@ -364,7 +364,10 @@ const GAMES=[
    {"id": "hitcount", "cat": "brain", "icon": "⚔️", "name": "Колко удара?", "desc": "Мобът има толкова живот, мечът удря толкова — колко удара трябват?", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "guardians", "cat": "action", "icon": "🐡", "name": "Лазерите на пазителите", "desc": "Събирай призмарин в подводния храм и бягай от лазерите на пазителите!", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "ringlock", "cat": "puzzle", "icon": "🔐", "name": "Сейфът с пръстени", "desc": "Върти квадратните пръстени и подреди скъпоценните камъни над ключалката!", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "feedfarm", "cat": "skill", "icon": "🐄", "name": "Нахрани животните", "desc": "Гладни животни идват в кошарите — дай на всяко точната храна, преди да се ядоса!", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "feedfarm", "cat": "skill", "icon": "🐄", "name": "Нахрани животните", "desc": "Гладни животни идват в кошарите — дай на всяко точната храна, преди да се ядоса!", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "goatram", "cat": "action", "icon": "🐐", "name": "Козият удар", "desc": "Козата пази планинския връх — блъсни мобовете от скалата, но пусни селяните!", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "lamppairs", "cat": "puzzle", "icon": "💡", "name": "Лампи по двойки", "desc": "Запали точно 2 лампи във всяка стая — и всяка лампа трябва да има точно един светещ съсед", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "oresums", "cat": "brain", "icon": "⛏️", "name": "Рудни суми", "desc": "Изкопай излишните рудни блокове, така че сборът на всеки ред и колона да стане точно колкото е написано", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
