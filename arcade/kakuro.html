@@ -53,9 +53,9 @@ A.add({id:'kakuro',cat:'puzzle',icon:'➕',name:'Какуро',desc:'Кръст�
   bad(g,run){const vs=run.cells.map(([a,b])=>g.v[a][b]);if(vs.includes(0))return vs.reduce((s,x)=>s+x,0)>=run.sum;return vs.reduce((s,x)=>s+x,0)!==run.sum;},
   put(g,d){if(g.done>0)return;const[r,cI]=g.sel;g.v[r][cI]=d;A.beep(d?500+d*40:200,.04);
     if(g.cells.every(([a,b])=>g.v[a][b]&&!this.dup(g,a,b))&&g.runs.every(run=>!this.bad(g,run))){g.solved++;g.score+=g.runs.length;g.time+=40;g.done=1.4;A.tune([660,880,1100,1320]);}},
-  move(g,dr,dc){let[r,cI]=g.sel;for(let k=0;k<8;k++){r=(r+dr+g.R)%g.R;cI=(cI+dc+g.Cn)%g.Cn;if(g.w[r][cI]){g.sel=[r,cI];return;}}},
+  step(g,dr,dc){let[r,cI]=g.sel;for(let k=0;k<8;k++){r=(r+dr+g.R)%g.R;cI=(cI+dc+g.Cn)%g.Cn;if(g.w[r][cI]){g.sel=[r,cI];return;}}},
   key(g,k,ch){const m={ArrowUp:[-1,0],KeyW:[-1,0],ArrowDown:[1,0],KeyS:[1,0],ArrowLeft:[0,-1],KeyA:[0,-1],ArrowRight:[0,1],KeyD:[0,1]}[k];
-    if(m)return this.move(g,m[0],m[1]);if(ch>='1'&&ch<='9')return this.put(g,+ch);if(ch==='0'||k==='Backspace'||k==='Delete')this.put(g,0);},
+    if(m)return this.step(g,m[0],m[1]);if(ch>='1'&&ch<='9')return this.put(g,+ch);if(ch==='0'||k==='Backspace'||k==='Delete')this.put(g,0);},
   click(g,mx,my){if(my>=306){const i=Math.floor((mx-5)/47);if(i>=0&&i<9)this.put(g,i+1);else if(i===9)this.put(g,0);return;}
     const cI=Math.floor((mx-g.ox)/g.cs),r=Math.floor((my-g.oy)/g.cs);if(r>=0&&r<g.R&&cI>=0&&cI<g.Cn&&g.w[r][cI]){g.sel=[r,cI];A.beep(400,.03);}},
   update(g,dt){if(g.done>0){g.done-=dt;if(g.done<=0)this.make(g);return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени: '+g.solved);},
