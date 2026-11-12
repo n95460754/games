@@ -1,16 +1,7 @@
 {
- "runs": 888,
- "fixed_total": 116243,
+ "runs": 889,
+ "fixed_total": 116424,
  "history": [
-  {
-   "round": 874,
-   "at": "2026-11-12T00:20:50.416Z",
-   "workers": 528,
-   "idle_before": 181,
-   "idle_after": 0,
-   "fixer": "Gemini",
-   "given": 181
-  },
   {
    "round": 875,
    "at": "2026-11-12T00:26:06.481Z",
@@ -271,15 +262,24 @@
    "idle_after": 0,
    "fixer": "ChatGPT",
    "given": 169
+  },
+  {
+   "round": 904,
+   "at": "2026-11-12T02:52:02.205Z",
+   "workers": 528,
+   "idle_before": 181,
+   "idle_after": 0,
+   "fixer": "Gemini",
+   "given": 181
   }
  ],
  "last": {
-  "round": 903,
-  "at": "2026-11-12T02:47:00.536Z",
+  "round": 904,
+  "at": "2026-11-12T02:52:02.205Z",
   "workers": 528,
-  "idle_before": 169,
+  "idle_before": 181,
   "idle_after": 0,
-  "fixer": "ChatGPT",
-  "given": 169
+  "fixer": "Gemini",
+  "given": 181
  }
 }
