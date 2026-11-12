@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**394 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 384 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**397 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 387 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-394-5aa13a)
+![Games](https://img.shields.io/badge/games-397-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 384 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 387 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -529,8 +529,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 382 | 🐐 Goat Ram (Козият удар) | [`goatram.html`](arcade/goatram.html) | A mountain goat guards a snowy peak. Zombies, fast spiders and armored zombies (2 hits) walk in from both sides — ram them off the cliff with ← → or by tapping the left/right half, before they reach you. But let the villagers through: ramming one costs a life, letting it pet the goat gives +2. Ramming thin air stuns you for a moment; a streak of 5+ gives +1 per hit; 3 lives |
 | 383 | 💡 Lamp Pairs (Лампи по двойки) | [`lamppairs.html`](arcade/lamppairs.html) | A Norinori logic puzzle with redstone lamps: light exactly 2 lamps in every room, and every lit lamp must touch exactly one other lit lamp, so they always come in pairs. Click to cycle lamp → ✕ → empty, or use arrows + Space / X. Grids grow from 5×5 to 8×8; each solved puzzle gives points and +30 seconds; 150 seconds |
 | 384 | ⛏️ Ore Sums (Рудни суми) | [`oresums.html`](arcade/oresums.html) | A grid of numbered ore blocks — mine out the ones you don't need so the numbers left in each row and column add up exactly to the targets on the side and bottom (they turn green when right). Click or arrows + Space to mine, right-click / K to mark a block that stays. Grids grow from 4×4 to 6×6 with bigger numbers; each solved grid gives points and +20 seconds; 120 seconds |
+| 385 | ⚔️ Spawner Smash (Разбий спаунъра) | [`spawnersmash.html`](arcade/spawnersmash.html) | A top-down dungeon fight: a mob spawner in a cage keeps releasing zombies, fast spiders and armored zombies (2 hits) that chase you. Move with arrows / WASD or tap where to go, and swing your diamond sword all around you with Space or a click. Hit the spawner enough times to smash it (+10 × level) — each new spawner is tougher and faster; apples heal; 3 hearts |
+| 386 | 🌡️ Lava Thermometers (Лавови термометри) | [`lavathermo.html`](arcade/lavathermo.html) | A Thermometers logic puzzle: glass tubes must be filled with lava starting from the round bulb, with no gaps. The numbers on the right and bottom say how many lava cells each row and column must have (green = exact, red = too many). Click/tap a cell to fill its tube up to there, or use arrows + Space. Grids grow from 4×4 to 7×7; each solved puzzle gives points and +30 seconds; 150 seconds |
+| 387 | 🛒 Multiple Catcher (Ловец на кратни) | [`multicatch.html`](arcade/multicatch.html) | Number blocks fall from the sky — catch with your minecart only the numbers that divide evenly by N (shown at the top) and dodge the rest. Arrows / A D or move the mouse / finger. A wrong number costs a heart and shows the remainder; a streak of 5+ gives double points; every 8 catches N changes and blocks fall faster; gold blocks give +5; 3 hearts |
 
-All 384 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 387 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -558,14 +561,14 @@ minecraft/
 │   ├── breaker.html        # 2. Ore Breaker
 │   ├── ...                 # one .html file per game
 │   ├── dungeon.html        # 50. Cave Explorer
-│   ├── ...                 # games 51–377
-│   ├── hitcount.html       # 378. How Many Hits?
-│   ├── guardians.html      # 379. Guardian Lasers
-│   ├── ringlock.html       # 380. Ring Safe
+│   ├── ...                 # games 51–380
 │   ├── feedfarm.html       # 381. Feed the Animals
 │   ├── goatram.html        # 382. Goat Ram
 │   ├── lamppairs.html      # 383. Lamp Pairs
-│   └── oresums.html        # 384. Ore Sums
+│   ├── oresums.html        # 384. Ore Sums
+│   ├── spawnersmash.html   # 385. Spawner Smash
+│   ├── lavathermo.html     # 386. Lava Thermometers
+│   └── multicatch.html     # 387. Multiple Catcher
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json

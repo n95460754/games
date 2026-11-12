@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ловец на кратни</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🛒 Ловец на кратни</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 387. Ловец на кратни
+A.add({id:'multicatch',cat:'brain',icon:'🛒',name:'Ловец на кратни',desc:'Хвани с вагонетката само блоковете с числа, които се делят на N, и избягвай останалите',
+  help:'Отгоре падат блокове с числа. Хващай с вагонетката САМО числата, които се делят без остатък на N (горе в средата). Стрелки / A D — движение, или мести мишката / пръста. Вярно = +1 точка (серия от 5+ дава +2), грешно число = −1 сърце. Изпуснато кратно прекъсва серията. На всеки 8 хванати N се сменя и блоковете падат по-бързо. Златният блок дава +5. 3 сърца.',
+  start(g){g.x=240;g.tx=null;g.hp=3;g.N=A.ri(2,5);g.got=0;g.lvl=0;g.bl=[];g.st=0;g.sp=.8;g.streak=0;g.parts=[];g.why='';g.fl=0;g.chg=1.5;},
+  newN(g){let n;do{n=A.ri(2,Math.min(9,4+g.lvl));}while(n===g.N);g.N=n;g.chg=1.5;A.tune([440,554,659]);},
+  spawn(g){const N=g.N;let v,gold=false;if(Math.random()<.05){gold=true;v=N*A.ri(2,12);}else if(Math.random()<.5)v=N*A.ri(1,12);else{do{v=A.ri(2,N*12);}while(v%N===0);}
+    g.bl.push({x:A.ri(20,428),y:-34,v,gold,vy:45+g.lvl*7+A.rnd(0,15)});},
+  key(g,k){},
+  move(g,mx){g.tx=mx;},
+  click(g,mx){g.tx=mx;},
+  update(g,dt){const K=A.keys;g.fl-=dt;g.chg-=dt;const d=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0);
+    if(d){g.tx=null;g.x+=d*280*dt;}else if(g.tx!==null){const e=g.tx-g.x;g.x+=Math.sign(e)*Math.min(Math.abs(e),400*dt);}
+    g.x=A.clamp(g.x,30,450);g.st-=dt;if(g.st<=0){g.st=Math.max(.55,1.15-g.lvl*.07);this.spawn(g);}
+    for(const b of g.bl){b.y+=b.vy*dt;
+      if(b.y+32>=306&&b.y<330&&Math.abs(b.x+16-g.x)<44){b.dead=1;const ok=b.v%g.N===0;
+        if(ok){g.streak++;g.score+=b.gold?5:g.streak>=5?2:1;g.got++;A.beep(660+Math.min(g.streak,10)*40,.06,'triangle');
+          for(let i=0;i<8;i++)g.parts.push({x:b.x+16,y:306,vx:A.rnd(-80,80),vy:A.rnd(-160,-40),t:.6,col:b.gold?C.gold:C.gem});
+          if(g.got%8===0){g.lvl++;this.newN(g);}}
+        else{g.hp--;g.streak=0;g.fl=.3;g.why=b.v+' не се дели на '+g.N+' (остатък '+(b.v%g.N)+')';A.beep(140,.25,'sawtooth');
+          if(g.hp<=0)return A.over(g,g.why);}}
+      else if(b.y>360){b.dead=1;if(b.v%g.N===0)g.streak=0;}}
+    g.bl=g.bl.filter(b=>!b.dead);for(const q of g.parts){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=300*dt;q.t-=dt;}g.parts=g.parts.filter(q=>q.t>0);},
+  draw(g){A.bg('#5b8fc9');c.fillStyle='#7aa8da';for(let i=0;i<5;i++)c.fillRect((i*130+g.t*8)%560-80,60+i*37%90,70,14);
+    for(let x=0;x<480;x+=20){A.block(x,340,20,C.stone);}c.fillStyle='#6b4a2a';for(let x=0;x<480;x+=16)c.fillRect(x,334,8,6);c.fillStyle='#999';c.fillRect(0,331,480,3);
+    for(const b of g.bl){A.block(b.x,b.y,32,b.gold?C.gold:'#9a6a3a');c.fillStyle='rgba(0,0,0,.25)';c.fillRect(b.x+4,b.y+4,24,24);
+      A.txt(''+b.v,b.x+16,b.y+17,b.v>99?12:15,'#fff','center');}
+    const x=g.x;A.block(x-40,306,80,'#5a5a5a',24);c.fillStyle='#333';c.fillRect(x-36,310,72,8);c.fillStyle='#222';c.beginPath();c.arc(x-24,331,6,0,7);c.arc(x+24,331,6,0,7);c.fill();
+    for(const q of g.parts){c.fillStyle=q.col;c.fillRect(q.x-3,q.y-3,6,6);}
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,40);
+    A.txt('Кратни на '+g.N,240,20,g.chg>0?26+Math.sin(g.t*20)*3:24,'#ffd54f','center');
+    A.txt('❤'.repeat(g.hp)+'♡'.repeat(Math.max(0,3-g.hp)),8,20,15,'#f55');A.txt(g.streak>=5?'🔥 серия '+g.streak:'серия '+g.streak,472,20,13,'#fff','right');
+    if(g.why)A.txt(g.why,240,52,12,'#ffe0e0','center');
+    if(g.fl>0){c.fillStyle='rgba(220,60,60,.3)';c.fillRect(0,0,480,360);}}
+});
+</script>
+</body>
+</html>

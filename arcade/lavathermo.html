@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лавови термометри</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🌡️ Лавови термометри</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 386. Лавови термометри
+A.add({id:'lavathermo',cat:'puzzle',icon:'🌡️',name:'Лавови термометри',desc:'Напълни стъклените тръби с лава от колбата нагоре, така че всеки ред и колона да има точно толкова лава, колкото пише',
+  help:'Всяка стъклена тръба (термометър) се пълни с лава САМО от кръглата колба нататък, без празни места. Числата вдясно и долу казват колко клетки с лава трябва да има в реда / колоната (зелено = точно, червено = много). Клик/докосване на клетка = напълни тръбата дотам (втори клик = една по-малко). Клавиатура: стрелки + Space. Решен пъзел = точки и +30 секунди; 150 секунди.',
+  SIZES:[4,4,5,5,6,6,7],
+  start(g){g.time=150;g.lvl=0;g.cx=0;g.cy=0;g.win=0;g.parts=[];this.make(g);},
+  make(g){const N=this.SIZES[Math.min(g.lvl,this.SIZES.length-1)];g.N=N;const own=[];for(let i=0;i<N*N;i++)own.push(-1);const th=[];
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){if(own[y*N+x]>=0)continue;
+      let ar=0;while(x+ar<N&&own[y*N+x+ar]<0&&ar<5)ar++;let ad=0;while(y+ad<N&&own[(y+ad)*N+x]<0&&ad<5)ad++;
+      const down=ad>1&&(ar<2||Math.random()<.5),av=down?ad:ar,len=Math.min(av,A.ri(av>1?2:1,4)),cells=[];
+      for(let i=0;i<len;i++){const cx=down?x:x+i,cy=down?y+i:y;cells.push([cx,cy]);own[cy*N+cx]=th.length;}
+      if(Math.random()<.5)cells.reverse();th.push({cells,f:0});}
+    let tot=0;const sol=th.map(t=>{const v=A.ri(0,t.cells.length);tot+=v;return v;});if(!tot)sol[0]=th[0].cells.length;
+    g.th=th;g.own=own;g.R=new Array(N).fill(0);g.Cc=new Array(N).fill(0);
+    th.forEach((t,i)=>{for(let k=0;k<sol[i];k++){const [cx,cy]=t.cells[k];g.R[cy]++;g.Cc[cx]++;}});
+    g.cs=Math.floor(290/N);g.ox=Math.floor((440-g.cs*N)/2);g.oy=28;g.cx=Math.min(g.cx,N-1);g.cy=Math.min(g.cy,N-1);},
+  counts(g){const N=g.N,r=new Array(N).fill(0),cc=new Array(N).fill(0);for(const t of g.th)for(let k=0;k<t.f;k++){const [x,y]=t.cells[k];r[y]++;cc[x]++;}return [r,cc];},
+  tap(g,x,y){if(g.win>0)return;const i=g.own[y*g.N+x],t=g.th[i];let k=0;while(t.cells[k][0]!==x||t.cells[k][1]!==y)k++;
+    t.f=t.f===k+1?k:k+1;A.beep(t.f>k?440:300,.04);const [r,cc]=this.counts(g);
+    if(r.every((v,j)=>v===g.R[j])&&cc.every((v,j)=>v===g.Cc[j])){g.score+=g.N*10;g.time+=30;g.win=1.2;A.tune([523,659,784,1046]);
+      for(let j=0;j<30;j++)g.parts.push({x:A.rnd(g.ox,g.ox+g.cs*g.N),y:A.rnd(g.oy,g.oy+g.cs*g.N),vx:A.rnd(-60,60),vy:A.rnd(-120,-20),t:1});}},
+  key(g,k){const N=g.N;if(k==='ArrowLeft'||k==='KeyA')g.cx=(g.cx+N-1)%N;else if(k==='ArrowRight'||k==='KeyD')g.cx=(g.cx+1)%N;
+    else if(k==='ArrowUp'||k==='KeyW')g.cy=(g.cy+N-1)%N;else if(k==='ArrowDown'||k==='KeyS')g.cy=(g.cy+1)%N;else if(k==='Space'||k==='Enter')this.tap(g,g.cx,g.cy);},
+  click(g,mx,my){const x=Math.floor((mx-g.ox)/g.cs),y=Math.floor((my-g.oy)/g.cs);if(x>=0&&y>=0&&x<g.N&&y<g.N){g.cx=x;g.cy=y;this.tap(g,x,y);}},
+  update(g,dt){for(const q of g.parts){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=200*dt;q.t-=dt;}g.parts=g.parts.filter(q=>q.t>0);
+    if(g.win>0){g.win-=dt;if(g.win<=0){g.lvl++;this.make(g);}return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Решени: '+g.lvl);},
+  draw(g){A.bg('#2b1d1a');const N=g.N,s=g.cs,ox=g.ox,oy=g.oy;
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++)A.block(ox+x*s,oy+y*s,s,(x+y)%2?'#3a2f2a':'#433630');
+    const [r,cc]=this.counts(g),w=Math.max(6,s*.42),b=Math.max(9,s*.34);
+    for(const t of g.th){const P=t.cells.map(([x,y])=>[ox+x*s+s/2,oy+y*s+s/2]);
+      const seg=(a,z,col,ww)=>{c.strokeStyle=col;c.lineWidth=ww;c.lineCap='round';c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(z[0],z[1]);c.stroke();};
+      seg(P[0],P[P.length-1],'#111',w+6);seg(P[0],P[P.length-1],'#9fb4c4',w);
+      c.fillStyle='#111';c.beginPath();c.arc(P[0][0],P[0][1],b+3,0,7);c.fill();c.fillStyle='#9fb4c4';c.beginPath();c.arc(P[0][0],P[0][1],b,0,7);c.fill();
+      if(t.f>0){const lv=g.win>0?'#ffd23f':'#ff6a00';seg(P[0],P[t.f-1],lv,w-4);c.fillStyle=lv;c.beginPath();c.arc(P[0][0],P[0][1],b-3,0,7);c.fill();
+        c.fillStyle='rgba(255,230,120,.7)';for(let k=0;k<t.f;k++)c.fillRect(P[k][0]-2,P[k][1]-2,4,4);}}
+    const col=(v,t)=>v===t?'#7CFC6A':v>t?'#ff5a4a':'#fff';
+    for(let y=0;y<N;y++)A.txt(''+g.R[y],ox+N*s+16,oy+y*s+s/2,18,col(r[y],g.R[y]),'center');
+    for(let x=0;x<N;x++)A.txt(''+g.Cc[x],ox+x*s+s/2,oy+N*s+16,18,col(cc[x],g.Cc[x]),'center');
+    c.strokeStyle='#ffd54f';c.lineWidth=3;c.strokeRect(ox+g.cx*s+2,oy+g.cy*s+2,s-4,s-4);
+    for(const q of g.parts){c.fillStyle='#ffb02e';c.fillRect(q.x-3,q.y-3,6,6);}
+    A.txt('⏱ '+Math.ceil(g.time),10,12,14);A.txt('Пъзел '+(g.lvl+1)+' · '+N+'×'+N,470,12,13,'#ffd54f','right');
+    if(g.win>0)A.txt('Готово! +'+N*10,240,180,30,'#ffd54f','center');}
+});
+</script>
+</body>
+</html>

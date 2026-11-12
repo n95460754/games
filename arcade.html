@@ -367,7 +367,10 @@ const GAMES=[
   {"id": "feedfarm", "cat": "skill", "icon": "🐄", "name": "Нахрани животните", "desc": "Гладни животни идват в кошарите — дай на всяко точната храна, преди да се ядоса!", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "goatram", "cat": "action", "icon": "🐐", "name": "Козият удар", "desc": "Козата пази планинския връх — блъсни мобовете от скалата, но пусни селяните!", "unit": "", "dec": 0, "low": false, "noScore": false},
   {"id": "lamppairs", "cat": "puzzle", "icon": "💡", "name": "Лампи по двойки", "desc": "Запали точно 2 лампи във всяка стая — и всяка лампа трябва да има точно един светещ съсед", "unit": "", "dec": 0, "low": false, "noScore": false},
-  {"id": "oresums", "cat": "brain", "icon": "⛏️", "name": "Рудни суми", "desc": "Изкопай излишните рудни блокове, така че сборът на всеки ред и колона да стане точно колкото е написано", "unit": "", "dec": 0, "low": false, "noScore": false}
+  {"id": "oresums", "cat": "brain", "icon": "⛏️", "name": "Рудни суми", "desc": "Изкопай излишните рудни блокове, така че сборът на всеки ред и колона да стане точно колкото е написано", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "spawnersmash", "cat": "action", "icon": "⚔️", "name": "Разбий спаунъра", "desc": "Пробий си път през мобовете и строши спаунъра с меча, преди да те затрупат", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "lavathermo", "cat": "puzzle", "icon": "🌡️", "name": "Лавови термометри", "desc": "Напълни стъклените тръби с лава от колбата нагоре, така че всеки ред и колона да има точно толкова лава, колкото пише", "unit": "", "dec": 0, "low": false, "noScore": false},
+  {"id": "multicatch", "cat": "brain", "icon": "🛒", "name": "Ловец на кратни", "desc": "Хвани с вагонетката само блоковете с числа, които се делят на N, и избягвай останалите", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}
