@@ -358,7 +358,10 @@ const GAMES=[
    {"id": "oreprobe", "cat": "puzzle", "icon": "🔦", "name": "Сонда за руди", "desc": "Пускай лъчи в тъмната пещера и по това къде излизат познай къде са скрити диамантите!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "hoglinrun", "cat": "action", "icon": "🐗", "name": "Бягай от хоглините", "desc": "Събирай злато в Недъра, а хоглините се засилват по червената линия — отскочи навреме!", "unit": "", "dec": 0, "low": false, "noScore": false},
    {"id": "hiddendigit", "cat": "brain", "icon": "❓", "name": "Скритата цифра", "desc": "Сметка в колонка, но една цифра е скрита под златен блок — открий коя е!", "unit": "", "dec": 0, "low": false, "noScore": false},
-   {"id": "brushdig", "cat": "skill", "icon": "🖌️", "name": "Археология с четка", "desc": "Изчетквай пясъка, намери древната делва по числата и спри навреме, за да не я счупиш!", "unit": "", "dec": 0, "low": false, "noScore": false}
+   {"id": "brushdig", "cat": "skill", "icon": "🖌️", "name": "Археология с четка", "desc": "Изчетквай пясъка, намери древната делва по числата и спри навреме, за да не я счупиш!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "frogtongue", "cat": "action", "icon": "🐸", "name": "Жабешкият език", "desc": "Улавяй светулки и магмени кубчета с езика на жабата — но внимавай с пчелите!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "numhop", "cat": "puzzle", "icon": "🟢", "name": "Числови скокове", "desc": "Слузът скача точно толкова блока, колкото пише под него — стигни до диаманта!", "unit": "", "dec": 0, "low": false, "noScore": false},
+   {"id": "hitcount", "cat": "brain", "icon": "⚔️", "name": "Колко удара?", "desc": "Мобът има толкова живот, мечът удря толкова — колко удара трябват?", "unit": "", "dec": 0, "low": false, "noScore": false}
 ];
 const CATS={action:'⚡ Екшън',puzzle:'🧩 Пъзели',brain:'🧠 Ум и математика',skill:'🎯 Умения',board:'♟️ Настолни и пясъчник'};
 function best(d){try{const v=localStorage.getItem('arc_'+d.id);return v===null?null:JSON.parse(v);}catch(e){return null;}}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Колко удара?</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">⚔️ Колко удара?</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 378. Колко удара?
+A.add({id:'hitcount',cat:'brain',icon:'⚔️',name:'Колко удара?',desc:'Мобът има толкова живот, мечът удря толкова — колко удара трябват, за да падне?',
+  help:'Пресметни колко удара трябват, за да падне мобът (живот ÷ щета, закръглено НАГОРЕ — и последният удар се брои!). 1 ❤ = 2 живот. Пиши с цифрите и Enter, или натискай бутоните долу. Вярно = 1 т. (+1 за серия от 5), грешно = −5 секунди. 90 секунди.',
+  MOBS:[['Прасе',10,'#f4a6a6'],['Крава',10,'#5d4037'],['Паяк',16,'#3e2723'],['Зомби',20,'#4caf50'],['Скелет',20,'#e0e0e0'],['Кийпър',20,'#43a047'],['Блейз',20,'#ffb300'],['Вещица',26,'#6a1b9a'],['Ендърмен',40,'#212121'],['Хоглин',40,'#a1665e'],['Желязен голем',100,'#bdbdbd'],['Рейвиджър',100,'#546e7a']],
+  WPN:[['Дървен меч',4,'#9a6a3a'],['Каменен меч',5,'#7d7d7d'],['Железен меч',6,'#e8e8e8'],['Диамантен меч',7,'#4de8f5'],['Нетеритен меч',8,'#5d4a4a'],['Диамантена брадва',9,'#4de8f5'],['Тризъбец',9,'#26a69a']],
+  start(g){g.time=90;g.inp='';g.streak=0;g.why='';this.next(g);},
+  next(g){const lvl=g.score;let m,w,bonus=0,hearts=false;
+    do{m=A.pick(this.MOBS);}while(lvl<4&&m[1]>40);
+    w=A.pick(this.WPN);
+    if(lvl>=6&&Math.random()<.4)bonus=3;            // отвара за сила
+    if(lvl>=3&&m[1]<=40&&Math.random()<.5)hearts=true;
+    const dmg=w[1]+bonus;g.m=m;g.w=w;g.bonus=bonus;g.hearts=hearts;g.dmg=dmg;g.ans=Math.ceil(m[1]/dmg);g.inp='';},
+  answer(g){if(!g.inp)return;const ok=+g.inp===g.ans;flash(g,ok);
+    if(ok){g.streak++;g.score+=g.streak%5===0?2:1;g.why='';}
+    else{g.streak=0;g.time-=5;g.why=g.m[0]+': '+g.m[1]+' ÷ '+g.dmg+' → '+g.ans+' удара';}
+    g.inp='';this.next(g);},
+  key(g,k,ch){if(typeNum(g,k,ch))this.answer(g);},
+  click(g,mx,my){if(my<304||my>350)return;const i=Math.floor((mx-6)/39);if(i<0||i>11)return;
+    if(i<10){if(g.inp.length<4){g.inp+=i;A.beep(700,.02);}}else if(i===10)g.inp=g.inp.slice(0,-1);else this.answer(g);},
+  update(g,dt){tick(g,dt);},
+  draw(g){A.bg('#1d2b3a');
+    for(let x=0;x<24;x++){A.block(x*20,0,20,x%3?'#5aa13a':'#4f9433');}
+    const m=g.m;A.block(40,48,96,m[2],96);c.fillStyle=m[0]==='Кийпър'?'#000':m[0]==='Ендърмен'?'#d500f9':'#111';
+    c.fillRect(58,78,16,16);c.fillRect(102,78,16,16);c.fillRect(78,104,20,m[0]==='Кийпър'?22:8);
+    A.txt(m[0],156,58,22,'#fff');
+    if(g.hearts){A.txt('Живот: '+(m[1]/2)+' ❤',156,88,16,'#ff8a80');
+      for(let i=0;i<m[1]/2;i++){c.fillStyle='#e53935';c.fillRect(156+(i%10)*14,102+Math.floor(i/10)*14,11,10);}}
+    else{A.txt('Живот: '+m[1],156,88,16,'#ff8a80');c.fillStyle='#333';c.fillRect(156,102,200,10);c.fillStyle='#e53935';c.fillRect(156,102,200*Math.min(1,m[1]/100),10);}
+    // оръжие
+    const w=g.w;c.fillStyle='#5d4037';c.fillRect(48,172,6,22);c.fillStyle=w[2];c.fillRect(44,150,14,24);c.fillRect(40,170,22,5);
+    A.txt(w[0]+': '+w[1]+' щета'+(g.bonus?'  + 💪 Сила: +'+g.bonus:''),76,172,15,'#ffe082');
+    A.txt('Колко удара трябват?',240,218,22,'#fff','center');inputBox(g,262);
+    ['0','1','2','3','4','5','6','7','8','9','⌫','✔'].forEach((s,i)=>{const x=6+i*39;A.block(x,306,36,i===11?'#43a047':i===10?'#8d6e63':'#5a6b8c',42);A.txt(s,x+18,327,18,'#fff','center');});
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,22);
+    A.txt('⏱ '+Math.ceil(g.time),8,11,14,'#fff');if(g.streak>=2)A.txt('Серия '+g.streak,120,11,13,'#ffd54f');if(g.why)A.txt(g.why,472,11,12,'#ffab91','right');drawFlash(g);}
+});
+</script>
+</body>
+</html>

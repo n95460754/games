@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Жабешкият език</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐸 Жабешкият език</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 376. Жабешкият език
+A.add({id:'frogtongue',cat:'action',icon:'🐸',name:'Жабешкият език',desc:'Жабата лови светулки и магмени кубчета с езика си — но не хващай пчелите!',
+  help:'Мишка/пръст — насочи и кликни, за да изстреляш езика. Клавиатура: ← → (или A/D) завърта, Space изстрелва. Светулка = 1 т., магмено кубче = 3 т. Пчела = −1 живот. 3 живота, 75 секунди.',
+  start(g){g.ang=-Math.PI/2;g.tg=null;g.bugs=[];g.sp=.6;g.lives=3;g.time=75;g.parts=[];g.pop=[];g.hurt=0;g.combo=0;},
+  shoot(g){if(g.tg)return;g.tg={len:0,st:'out',bug:null};A.beep(420,.05,'triangle');},
+  aimAt(g,x,y){g.ang=A.clamp(Math.atan2(y-318,x-240),-Math.PI+.15,-.15);},
+  move(g,x,y){this.aimAt(g,x,y);},
+  click(g,x,y){this.aimAt(g,x,y);this.shoot(g);},
+  key(g,k){if(k==='Space'||k==='ArrowUp'||k==='KeyW')this.shoot(g);},
+  addBug(g){const r=Math.random(),lvl=Math.min(1,g.t/60);
+    const type=r<.22+lvl*.12?'bee':r<.4+lvl*.1?'magma':'fly';const dir=Math.random()<.5?1:-1;
+    const v=(type==='magma'?110:type==='bee'?80:65)*(1+lvl*.6)*A.rnd(.8,1.2);
+    g.bugs.push({type,x:dir>0?-20:500,y:A.rnd(40,240),y0:0,vx:v*dir,ph:A.rnd(0,6),amp:A.rnd(8,30)});g.bugs[g.bugs.length-1].y0=g.bugs[g.bugs.length-1].y;},
+  update(g,dt){
+    const K=A.keys;if(K.ArrowLeft||K.KeyA)g.ang=Math.max(-Math.PI+.15,g.ang-2.4*dt);if(K.ArrowRight||K.KeyD)g.ang=Math.min(-.15,g.ang+2.4*dt);
+    g.time-=dt;if(g.time<=0)return A.over(g,'Времето изтече! Жабата е сита 🐸');
+    if(g.hurt>0)g.hurt-=dt;
+    g.sp-=dt;if(g.sp<=0){g.sp=A.rnd(.35,.8)*Math.max(.55,1-g.t/120);if(g.bugs.length<12)this.addBug(g);}
+    for(let i=g.bugs.length-1;i>=0;i--){const b=g.bugs[i];if(b.caught)continue;b.x+=b.vx*dt;b.ph+=dt*4;b.y=b.y0+Math.sin(b.ph)*b.amp;
+      if(b.x<-40||b.x>520)g.bugs.splice(i,1);}
+    const t=g.tg;if(t){
+      const tx=240+Math.cos(g.ang)*t.len,ty=318+Math.sin(g.ang)*t.len;
+      if(t.st==='out'){t.len+=720*dt;
+        for(const b of g.bugs){if(!b.caught&&Math.hypot(b.x-tx,b.y-ty)<16){b.caught=true;t.bug=b;t.st='back';A.beep(b.type==='bee'?140:760,.08,b.type==='bee'?'sawtooth':'square');break;}}
+        if(t.len>=340||tx<0||tx>480||ty<20){t.st='back';if(!t.bug)g.combo=0;}}
+      else{t.len-=900*dt;if(t.bug){t.bug.x=240+Math.cos(g.ang)*Math.max(0,t.len);t.bug.y=318+Math.sin(g.ang)*Math.max(0,t.len);}
+        if(t.len<=0){const b=t.bug;g.tg=null;
+          if(b){g.bugs.splice(g.bugs.indexOf(b),1);
+            if(b.type==='bee'){g.lives--;g.hurt=.5;g.combo=0;A.beep(90,.3,'sawtooth',.06);g.pop.push({x:240,y:290,s:'−❤',col:'#f55',t:1});if(g.lives<=0)return A.over(g,'Ох! Пчелата ужили жабата 🐝');}
+            else{g.combo++;const p=(b.type==='magma'?3:1)+(g.combo>=5?1:0);g.score+=p;g.pop.push({x:240,y:290,s:'+'+p,col:b.type==='magma'?'#ff9800':'#ffeb3b',t:1});
+              for(let k=0;k<6;k++)g.parts.push({x:240,y:300,vx:A.rnd(-70,70),vy:A.rnd(-120,-30),t:.5,col:b.type==='magma'?C.lava:C.gold});}}}}
+    }
+    for(let i=g.parts.length-1;i>=0;i--){const q=g.parts[i];q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=200*dt;q.t-=dt;if(q.t<=0)g.parts.splice(i,1);}
+    for(let i=g.pop.length-1;i>=0;i--){const q=g.pop[i];q.y-=30*dt;q.t-=dt;if(q.t<=0)g.pop.splice(i,1);}
+  },
+  drawBug(b,t){const x=Math.round(b.x),y=Math.round(b.y);
+    if(b.type==='fly'){c.fillStyle='rgba(255,240,120,.25)';c.fillRect(x-10,y-10,20,20);A.block(x-5,y-5,10,'#3a3a2a');c.fillStyle=Math.sin(t*12+b.ph)>0?'#fff59d':'#ffeb3b';c.fillRect(x-4,y+1,8,5);c.fillStyle='rgba(220,240,255,.7)';c.fillRect(x-9,y-8,6,4);c.fillRect(x+3,y-8,6,4);}
+    else if(b.type==='magma'){A.block(x-9,y-9,18,'#7a1f0a');c.fillStyle='#ff6a00';c.fillRect(x-7,y-3,14,3);c.fillRect(x-7,y+3,14,2);c.fillStyle='#ffd23f';c.fillRect(x-5,y-6,3,3);c.fillRect(x+2,y-6,3,3);}
+    else{A.block(x-8,y-6,16,'#f9a825',12);c.fillStyle='#222';c.fillRect(x-3,y-6,3,12);c.fillRect(x+3,y-6,3,12);c.fillStyle='rgba(230,245,255,.8)';c.fillRect(x-6,y-12,6,5);c.fillRect(x+1,y-12,6,5);c.fillStyle='#000';c.fillRect(b.vx>0?x+6:x-8,y-2,2,2);}},
+  draw(g){
+    A.bg('#203a2c');
+    for(let x=0;x<24;x++){const h=40+((x*37)%5)*14;c.fillStyle=x%2?'#2a4a36':'#24402f';c.fillRect(x*20,260-h,20,h);}
+    for(let i=0;i<8;i++){const x=(i*71+g.t*6)%520-20;c.fillStyle='rgba(255,255,180,.15)';c.fillRect(x,30+(i*53)%150,3,3);}
+    c.fillStyle='#2e6b8a';c.fillRect(0,290,480,70);for(let x=0;x<480;x+=24){c.fillStyle='#3a7ea0';c.fillRect(x+((g.t*20)|0)%24,300+(x%48?8:20),12,3);}
+    A.block(180,316,120,'#3f8a24',22);c.fillStyle='#2e6a19';c.fillRect(234,316,12,10);
+    g.bugs.forEach(b=>this.drawBug(b,g.t));
+    // прицел
+    if(!g.tg){c.fillStyle='rgba(255,255,255,.35)';for(let d=40;d<340;d+=22)c.fillRect(240+Math.cos(g.ang)*d-2,318+Math.sin(g.ang)*d-2,4,4);}
+    // език
+    if(g.tg){const L=Math.max(0,g.tg.len),tx=240+Math.cos(g.ang)*L,ty=318+Math.sin(g.ang)*L;c.strokeStyle='#e91e63';c.lineWidth=6;c.beginPath();c.moveTo(240,306);c.lineTo(tx,ty);c.stroke();c.fillStyle='#f06292';c.fillRect(tx-6,ty-6,12,12);}
+    // жаба
+    const fx=208,fy=280,col=g.hurt>0&&Math.sin(g.t*40)>0?'#ef5350':'#7cb342';
+    A.block(fx,fy,64,col,38);A.block(fx+4,fy-12,18,'#9ccc65');A.block(fx+42,fy-12,18,'#9ccc65');
+    c.fillStyle='#000';c.fillRect(fx+10+Math.cos(g.ang)*3,fy-7,6,6);c.fillRect(fx+48+Math.cos(g.ang)*3,fy-7,6,6);
+    c.fillStyle='#33691e';c.fillRect(fx+14,fy+22,36,4);c.fillStyle='#558b2f';c.fillRect(fx-6,fy+30,14,8);c.fillRect(fx+56,fy+30,14,8);
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x,q.y,4,4);});
+    g.pop.forEach(q=>A.txt(q.s,q.x,q.y,18,q.col,'center'));
+    c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,0,480,26);
+    A.txt('⏱ '+Math.ceil(g.time),10,13,14,'#fff');A.txt('❤'.repeat(Math.max(0,g.lives)),240,13,14,'#f55','center');
+    if(g.combo>=5)A.txt('Серия '+g.combo+'! +1',470,13,13,'#ffeb3b','right');
+  }
+});
+</script>
+</body>
+</html>
