@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лазерите на пазителите</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🐡 Лазерите на пазителите</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 379. Лазерите на пазителите
+A.add({id:'guardians',cat:'action',icon:'🐡',name:'Лазерите на пазителите',desc:'Събирай призмарин в подводния храм и бягай от лазерите на пазителите!',
+  help:'Стрелки/WASD — плувай. Мишка/пръст — задръж и водолазът плува натам. Лилавата линия показва къде ще стреля пазителят — махни се от нея преди да стане жълта! Призмарин = 1 т., гъба = 3 т. 3 живота.',
+  start(g){g.x=240;g.y=190;g.lives=3;g.inv=0;g.gs=[];g.items=[];g.parts=[];g.pop=[];g.itT=0;
+    for(let i=0;i<4;i++)this.addItem(g,'shard');this.addGuard(g);},
+  addItem(g,type){g.items.push({type,x:A.rnd(30,450),y:A.rnd(60,330),t:type==='sponge'?7:99,ph:A.rnd(0,6)});},
+  addGuard(g){const side=A.ri(0,3),p=Math.random();
+    const pos=side===0?[20+p*440,44]:side===1?[460,44+p*296]:side===2?[20+p*440,340]:[20,44+p*296];
+    g.gs.push({x:pos[0],y:pos[1],side,dir:Math.random()<.5?1:-1,st:'wait',tm:A.rnd(1,2.2),tx:0,ty:0,eye:0});},
+  click(g){},
+  beamEnd(q){const dx=q.tx-q.x,dy=q.ty-q.y,L=Math.hypot(dx,dy)||1;return [q.x+dx/L*700,q.y+dy/L*700];},
+  segDist(px,py,ax,ay,bx,by){const dx=bx-ax,dy=by-ay,L=dx*dx+dy*dy;let t=L?((px-ax)*dx+(py-ay)*dy)/L:0;t=A.clamp(t,0,1);return Math.hypot(px-ax-t*dx,py-ay-t*dy);},
+  update(g,dt){
+    const K=A.keys,sp=150;let vx=(K.ArrowRight||K.KeyD?1:0)-(K.ArrowLeft||K.KeyA?1:0),vy=(K.ArrowDown||K.KeyS?1:0)-(K.ArrowUp||K.KeyW?1:0);
+    if(A.mouse.down){const dx=A.mouse.x-g.x,dy=A.mouse.y-g.y,L=Math.hypot(dx,dy);if(L>6){vx=dx/L;vy=dy/L;}}
+    const L=Math.hypot(vx,vy);if(L>0){g.x+=vx/L*sp*dt;g.y+=vy/L*sp*dt;}
+    g.x=A.clamp(g.x,40,440);g.y=A.clamp(g.y,62,322);if(g.inv>0)g.inv-=dt;
+    const want=Math.min(6,1+Math.floor(g.t/14));if(g.gs.length<want)this.addGuard(g);
+    const speedUp=Math.min(1,g.t/90);
+    for(const q of g.gs){
+      if(q.st==='wait'||q.st==='charge'&&q.tm>.45){if(q.side%2===0){q.x+=q.dir*30*dt;if(q.x<20||q.x>460){q.dir*=-1;q.x=A.clamp(q.x,20,460);}}
+        else{q.y+=q.dir*30*dt;if(q.y<44||q.y>340){q.dir*=-1;q.y=A.clamp(q.y,44,340);}}}
+      q.tm-=dt;q.eye+=dt;
+      if(q.st==='wait'&&q.tm<=0){q.st='charge';q.tm=1.25-speedUp*.4;A.beep(300,.12,'sine',.03);}
+      if(q.st==='charge'){if(q.tm>.45){q.tx=g.x;q.ty=g.y;}if(q.tm<=0){q.st='fire';q.tm=.28;A.beep(140,.2,'sawtooth',.05);}}
+      else if(q.st==='fire'){const e=this.beamEnd(q);
+        if(g.inv<=0&&this.segDist(g.x,g.y,q.x,q.y,e[0],e[1])<11){g.lives--;g.inv=1.3;A.beep(90,.35,'sawtooth',.07);
+          for(let k=0;k<10;k++)g.parts.push({x:g.x,y:g.y,vx:A.rnd(-90,90),vy:A.rnd(-90,90),t:.6,col:'#ffeb3b'});
+          if(g.lives<=0)return A.over(g,'Лазерът те улучи! 🐡');}
+        if(q.tm<=0){q.st='wait';q.tm=A.rnd(1.4,3)*(1-speedUp*.4);}}
+    }
+    g.itT+=dt;if(g.itT>1.2){g.itT=0;if(g.items.filter(i=>i.type==='shard').length<5)this.addItem(g,'shard');if(Math.random()<.12&&!g.items.some(i=>i.type==='sponge'))this.addItem(g,'sponge');}
+    for(let i=g.items.length-1;i>=0;i--){const it=g.items[i];it.ph+=dt*3;it.t-=dt;if(it.t<=0){g.items.splice(i,1);continue;}
+      if(Math.abs(it.x-g.x)<16&&Math.abs(it.y-g.y)<16){const p=it.type==='sponge'?3:1;g.score+=p;g.items.splice(i,1);
+        A.beep(it.type==='sponge'?990:760,.07,'triangle');g.pop.push({x:it.x,y:it.y,s:'+'+p,col:it.type==='sponge'?'#ffee58':'#80deea',t:.9});
+        for(let k=0;k<5;k++)g.parts.push({x:it.x,y:it.y,vx:A.rnd(-60,60),vy:A.rnd(-80,-10),t:.5,col:it.type==='sponge'?'#fdd835':'#4db6ac'});}}
+    for(let i=g.parts.length-1;i>=0;i--){const q=g.parts[i];q.x+=q.vx*dt;q.y+=q.vy*dt;q.t-=dt;if(q.t<=0)g.parts.splice(i,1);}
+    for(let i=g.pop.length-1;i>=0;i--){const q=g.pop[i];q.y-=30*dt;q.t-=dt;if(q.t<=0)g.pop.splice(i,1);}
+  },
+  draw(g){
+    A.bg('#0d3b4f');
+    for(let y=26;y<360;y+=30)for(let x=0;x<480;x+=30){c.fillStyle=(x/30+y/30|0)%2?'#2f6f6a':'#2a6360';c.fillRect(x,y,30,30);c.fillStyle='rgba(255,255,255,.05)';c.fillRect(x,y,30,2);}
+    c.fillStyle='rgba(120,220,255,.08)';for(let i=0;i<6;i++){const x=(i*90+g.t*12)%560-40;c.fillRect(x,26,24,334);}
+    for(let x=0;x<480;x+=30){A.block(x,26,30,'#3d8579',18);A.block(x,342,30,'#3d8579',18);}
+    for(let y=44;y<342;y+=30){A.block(0,y,10,'#3d8579',30);A.block(470,y,10,'#3d8579',30);}
+    for(const it of g.items){const b=Math.sin(it.ph)*3;
+      if(it.type==='shard'){c.fillStyle='#4db6ac';c.fillRect(it.x-4,it.y-9+b,8,18);c.fillStyle='#a7ffeb';c.fillRect(it.x-2,it.y-7+b,3,8);}
+      else{if(it.t>2||Math.sin(g.t*20)>0){A.block(it.x-10,it.y-10+b,20,'#fdd835');c.fillStyle='#c6a700';c.fillRect(it.x-5,it.y-4+b,4,4);c.fillRect(it.x+3,it.y+2+b,4,4);}}}
+    for(const q of g.gs){
+      if(q.st==='charge'){const e=this.beamEnd(q);c.strokeStyle=q.tm<=.45?'rgba(255,90,255,.9)':'rgba(200,80,255,.45)';c.lineWidth=q.tm<=.45?3:2;c.setLineDash([8,6]);c.beginPath();c.moveTo(q.x,q.y);c.lineTo(e[0],e[1]);c.stroke();c.setLineDash([]);}
+      if(q.st==='fire'){const e=this.beamEnd(q);c.strokeStyle='#fff59d';c.lineWidth=10;c.beginPath();c.moveTo(q.x,q.y);c.lineTo(e[0],e[1]);c.stroke();c.strokeStyle='#fff';c.lineWidth=4;c.stroke();}
+    }
+    for(const q of g.gs){const s=26,x=q.x-s/2,y=q.y-s/2;A.block(x,y,s,'#6fa88e');
+      c.fillStyle='#e8a33d';c.fillRect(x-4,y-4,4,4);c.fillRect(x+s,y-4,4,4);c.fillRect(x-4,y+s,4,4);c.fillRect(x+s,y+s,4,4);c.fillRect(x+11,y-6,4,6);
+      const a=Math.atan2(g.y-q.y,g.x-q.x);c.fillStyle='#fff';c.fillRect(x+7,y+7,12,12);c.fillStyle=q.st==='wait'?'#5d4037':'#d500f9';c.fillRect(q.x-3+Math.cos(a)*3,q.y-3+Math.sin(a)*3,6,6);}
+    if(g.inv<=0||Math.sin(g.t*30)>0){const x=g.x-8,y=g.y-8;A.block(x,y,16,'#3b7bd6',16);A.block(x+2,y-10,12,'#c68c53');c.fillStyle='#b3e5fc';c.fillRect(x+3,y-7,10,5);c.fillStyle='#000';c.fillRect(x+5,y-6,2,2);c.fillRect(x+9,y-6,2,2);
+      if(Math.sin(g.t*4)>.7){c.fillStyle='rgba(220,245,255,.7)';c.fillRect(x+12,y-16-((g.t*20)%8),3,3);}}
+    g.parts.forEach(q=>{c.fillStyle=q.col;c.fillRect(q.x,q.y,4,4);});
+    g.pop.forEach(q=>A.txt(q.s,q.x,q.y,16,q.col,'center'));
+    c.fillStyle='rgba(0,0,0,.5)';c.fillRect(0,0,480,26);
+    A.txt('❤'.repeat(Math.max(0,g.lives)),10,13,14,'#f55');A.txt('Пазители: '+g.gs.length,240,13,13,'#b2dfdb','center');A.txt('⏱ '+Math.floor(g.t)+' с',470,13,13,'#fff','right');
+  }
+});
+</script>
+</body>
+</html>

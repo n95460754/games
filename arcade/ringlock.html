@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сейфът с пръстени</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0e131b;color:#eef3f8;font-family:Consolas,"Courier New",monospace}
+#game{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#top{display:flex;gap:14px;align-items:center;justify-content:space-between;width:100%;max-width:960px;padding:6px 12px;font-size:15px;text-shadow:2px 2px 0 #000}
+#top b{color:#ffd54f}
+#top button{font:inherit;font-size:13px;padding:4px 10px;background:#5a6b8c;color:#fff;border:3px solid #000;cursor:pointer}
+canvas{image-rendering:pixelated;border:3px solid #000;touch-action:none;background:#000}
+#help{color:#b9c6d6;font-size:13px;padding:6px 12px;text-align:center;max-width:900px}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="top"><span id="gname">🔐 Сейфът с пръстени</span><span>Точки: <b id="gscore">0</b> · Рекорд: <b id="gbest">-</b></span><span><button id="restart" title="Отначало">↻</button> <button id="exit">☰ Всички игри (Esc)</button></span></div>
+  <canvas id="cv" width="480" height="360"></canvas>
+  <div id="help"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+// 380. Сейфът с пръстени
+A.add({id:'ringlock',cat:'puzzle',icon:'🔐',name:'Сейфът с пръстени',desc:'Върти квадратните пръстени и подреди скъпоценните камъни над ключалката!',
+  help:'Всеки пръстен има един скъпоценен камък. Завърти пръстените, така че всички камъни да застанат в колоната над ключалката (стрелката отгоре). ↑ ↓ (или 1–4) избира пръстен, ← → го върти. Мишка/пръст: клик вдясно от центъра върти по часовника, вляво — обратно. Внимание: верижките (🔗) въртят и съседния пръстен! 150 секунди, всеки сейф дава +20 с.',
+  GEM:['#4de8f5','#43e05b','#ffd23f','#ff2e55'],
+  cells(r){const a=[];for(let x=0;x<=r;x++)a.push([x,-r]);for(let y=-r+1;y<=r;y++)a.push([r,y]);for(let x=r-1;x>=-r;x--)a.push([x,r]);for(let y=r-1;y>=-r;y--)a.push([-r,y]);for(let x=-r+1;x<0;x++)a.push([x,-r]);return a;},
+  start(g){g.lvl=0;g.time=150;g.sel=0;g.solved=0;g.win=0;this.level(g);},
+  level(g){g.lvl++;const n=g.lvl<3?2:g.lvl<6?3:4;g.n=n;g.P=[];g.C=[];for(let r=1;r<=n;r++){g.P.push(8*r);g.C.push(this.cells(r));}
+    g.off=new Array(n).fill(0);g.link=new Array(n).fill(0);
+    // верижки: пръстен i върти и пръстен i+1 (+1 = в същата посока, -1 = обратно)
+    if(g.lvl>=2){const k=Math.min(n-1,1+Math.floor(g.lvl/3));const idx=A.shuffle([...Array(n-1).keys()]).slice(0,k);idx.forEach(i=>g.link[i]=g.lvl>=5&&Math.random()<.5?-1:1);}
+    const len=3+g.lvl*2;g.par=len;
+    do{for(let i=0;i<len;i++)this.turn(g,A.ri(0,n-1),Math.random()<.5?1:-1,true);}while(g.off.every(v=>v===0));
+    g.moves=0;g.sel=Math.min(g.sel,n-1);},
+  turn(g,r,d,silent){g.off[r]=(g.off[r]+d+g.P[r]*4)%g.P[r];
+    if(g.link[r]&&r+1<g.n){const r2=r+1;g.off[r2]=(g.off[r2]+d*g.link[r]+g.P[r2]*4)%g.P[r2];}
+    if(silent)return;g.moves++;A.beep(300+r*90,.04);
+    if(g.off.every(v=>v===0)){const pts=3+g.lvl+Math.max(0,g.par-g.moves);g.score+=pts;g.time+=20;g.solved++;g.win=1.2;g.winPts=pts;A.tune([523,659,784,1047]);}},
+  key(g,k,ch){if(g.win>0)return;
+    if(k==='ArrowUp'||k==='KeyW')g.sel=(g.sel+1)%g.n;else if(k==='ArrowDown'||k==='KeyS')g.sel=(g.sel-1+g.n)%g.n;
+    else if(ch>='1'&&ch<='4'&&+ch<=g.n)g.sel=+ch-1;
+    else if(k==='ArrowRight'||k==='KeyD')this.turn(g,g.sel,1);else if(k==='ArrowLeft'||k==='KeyA')this.turn(g,g.sel,-1);},
+  click(g,mx,my){if(g.win>0)return;const S=22,cx=240,cy=194;const gx=Math.round((mx-cx)/S),gy=Math.round((my-cy)/S),r=Math.max(Math.abs(gx),Math.abs(gy));
+    if(r<1||r>g.n)return;g.sel=r-1;this.turn(g,r-1,mx>=cx?1:-1);},
+  update(g,dt){if(g.win>0){g.win-=dt;if(g.win<=0)this.level(g);return;}g.time-=dt;if(g.time<=0)A.over(g,'Времето изтече! Отворени сейфове: '+g.solved);},
+  draw(g){A.bg('#2b2118');
+    for(let y=26;y<360;y+=24)for(let x=0;x<480;x+=24){c.fillStyle=(x/24+(y-26)/24)%2?'#3a2c20':'#35281d';c.fillRect(x,y,24,24);}
+    const S=22,cx=240,cy=194;
+    c.fillStyle='rgba(255,213,79,.18)';c.fillRect(cx-S/2,cy-(g.n+.5)*S,S,g.n*S);
+    A.txt('▼',cx,cy-(g.n+.5)*S-12,18,'#ffd54f','center');
+    for(let i=0;i<g.n;i++){const r=i+1,P=g.P[i],cs=g.C[i],sel=i===g.sel;
+      for(let j=0;j<P;j++){const [dx,dy]=cs[j],x=cx+dx*S-S/2,y=cy+dy*S-S/2,gem=j===g.off[i];
+        A.block(x,y,S,gem?this.GEM[i]:(r%2?'#7d7d7d':'#6a6a6a'));
+        if(gem){c.fillStyle='rgba(255,255,255,.7)';c.fillRect(x+5,y+5,5,5);c.fillStyle='rgba(0,0,0,.25)';c.fillRect(x+12,y+12,5,5);}
+        else{c.fillStyle='rgba(0,0,0,.18)';c.fillRect(x+4+(j*7)%10,y+5+(j*5)%10,4,3);}}
+      if(sel){c.strokeStyle=this.GEM[i];c.lineWidth=3;c.strokeRect(cx-r*S-S/2-2,cy-r*S-S/2-2,(2*r+1)*S+4,(2*r+1)*S+4);}
+      if(g.link[i]){A.txt('🔗'+(g.link[i]>0?'':'↺'),cx+(r+.5)*S+4,cy+(r+.5)*S+4,11,'#fff');}}
+    A.block(cx-S/2,cy-S/2,S,'#3e2723');c.fillStyle='#ffd54f';c.fillRect(cx-3,cy-6,6,6);c.fillRect(cx-1,cy,2,6);
+    c.fillStyle='rgba(0,0,0,.5)';c.fillRect(0,0,480,26);
+    A.txt('⏱ '+Math.ceil(g.time),10,13,14,'#fff');A.txt('Сейф '+g.lvl+' · ходове '+g.moves+' / '+g.par,240,13,13,'#ffe082','center');A.txt('Отворени: '+g.solved,470,13,13,'#a5d6a7','right');
+    for(let i=0;i<g.n;i++){A.block(8,300-i*26,20,this.GEM[i]);A.txt((i+1)+'',36,310-i*26,13,i===g.sel?'#fff':'#999');}
+    if(g.win>0){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,150,480,60);A.txt('🔓 Сейфът е отворен! +'+g.winPts,240,180,22,'#ffd54f','center');}
+  }
+});
+</script>
+</body>
+</html>

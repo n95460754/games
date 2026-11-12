@@ -1,13 +1,13 @@
 # ⛏️ My Minecraft: Block Games Collection
 
-**388 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 378 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
+**391 block games** that run straight in your browser: 10 full games plus the **Block Arcade** with 381 mini-games. Built with plain HTML + JavaScript (and [Three.js](https://threejs.org/) for the 3D ones). No build step, no installs, no server.
 
 > Moyata blokova igra: dig, build, explore, jump, solve and survive in a blocky world.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Three.js](https://img.shields.io/badge/Three.js-r128-000000?logo=three.js&logoColor=white)
-![Games](https://img.shields.io/badge/games-388-5aa13a)
+![Games](https://img.shields.io/badge/games-391-5aa13a)
 
 ## 🚀 Play
 
@@ -60,7 +60,7 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 
 ---
 
-## 🕹️ Block Arcade: 378 mini-games (`arcade/*.html`)
+## 🕹️ Block Arcade: 381 mini-games (`arcade/*.html`)
 
 **Every mini-game is its own `.html` file** in the `arcade/` folder, for example `arcade/snake.html` or `arcade/nim.html`, so you can open or share any game directly. `arcade.html` is the menu for all 237, with category buttons, a search box and your high scores. Inside a game, press **Esc** to go back to the menu. Space or a click restarts.
 
@@ -523,8 +523,11 @@ Almost everything works **offline**. Only Block Parkour ∞ loads Three.js from 
 | 376 | 🐸 Frog Tongue (Жабешкият език) | [`frogtongue.html`](arcade/frogtongue.html) | A blocky frog sits on a lily pad — aim with the mouse/finger (or ← →) and flick its tongue to catch fireflies (1 point) and magma cubes (3 points) flying over the swamp, but never a bee (−1 life). A streak of 5 catches gives +1 per catch; 3 lives, 75 seconds |
 | 377 | 🟢 Number Hops (Числови скокове) | [`numhop.html`](arcade/numhop.html) | A slime must jump EXACTLY as many blocks as the number under it — plan a route across the grid to the diamond. Arrows/WASD or tap a glowing block, R to restart the level. Every solved level gives +1 (+1 more for the fewest moves) and +10 seconds; grids grow from 5×5 to 7×7 |
 | 378 | ⚔️ How Many Hits? (Колко удара?) | [`hitcount.html`](arcade/hitcount.html) | A mob has some health (in points or ❤ hearts, 1 ❤ = 2) and your sword does some damage — how many hits does it take? Division rounded UP, later with a Strength potion bonus. Type the answer or tap the on-screen keypad; a wrong answer costs 5 seconds; 90 seconds |
+| 379 | 🐡 Guardian Lasers (Лазерите на пазителите) | [`guardians.html`](arcade/guardians.html) | Swim around an ocean monument collecting prismarine shards and sponges. Guardians drift along the walls and lock a purple aiming line onto you — get off the line before it turns into a yellow laser! More guardians join over time; 3 lives. |
+| 380 | 🔐 Ring Safe (Сейфът с пръстени) | [`ringlock.html`](arcade/ringlock.html) | A safe made of square stone rings, each hiding one gem. Rotate the rings (← → / click left or right of the lock) until every gem lines up in the column above the keyhole. Later safes have more rings and chains (🔗) that turn the next ring too. Each opened safe adds time. |
+| 381 | 🐄 Feed the Animals (Нахрани животните) | [`feedfarm.html`](arcade/feedfarm.html) | Hungry cows, pigs, chickens and horses pop into six pens — give each the right food (wheat, carrot, seeds, apple) before its patience bar runs out, and whack sneaky zombies with the sword. Mouse/touch hotbar or keys 1–5 + Q W E / A S D. |
 
-All 378 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
+All 381 pages share one small engine, `arcade/engine.js`. It handles the canvas, keyboard, mouse, touch swipes, sounds, the game-over screen and high scores (saved in `localStorage`). Each game file contains just its own `A.add({...})` object with `start`, `update`, `draw` and optional `key` / `click` functions.
 
 **Make your own mini-game:** copy any file in `arcade/` (for example `snake.html`), change the code inside `A.add({...})`, and add a card for it to the list in `arcade.html`.
 
@@ -556,7 +559,10 @@ minecraft/
 │   ├── brushdig.html       # 375. Archaeology Brush
 │   ├── frogtongue.html     # 376. Frog Tongue
 │   ├── numhop.html         # 377. Number Hops
-│   └── hitcount.html       # 378. How Many Hits?
+│   ├── hitcount.html       # 378. How Many Hits?
+│   ├── guardians.html      # 379. Guardian Lasers
+│   ├── ringlock.html       # 380. Ring Safe
+│   └── feedfarm.html       # 381. Feed the Animals
 ├── test.html               # Quick Three.js/WebGL check
 ├── three.min.js            # Three.js r128 (MIT license)
 ├── package.json
