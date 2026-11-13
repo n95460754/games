@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Catch #1723</title>
+<style>
+  body { margin:0; background:#0d0d1a; color:#ffffff; font-family:system-ui,sans-serif;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:8px; box-sizing:border-box; }
+  h1 { margin:0 0 8px; font-size:24px; }
+  canvas { background:#141428; border:2px solid #00e5ff55; border-radius:8px; touch-action:none; max-width:100%; height:auto; }
+  p { opacity:.75; margin:8px 0 0; text-align:center; }
+  a { color:#00e5ff; }
+</style>
+</head>
+<body>
+<h1>🧺 Neon Catch #1723 💜</h1>
+<canvas id="c" width="400" height="500"></canvas>
+<p>← → или мишка/пръст. Хващай ⭐, пази се от 💣. 3 живота.<br>Space / клик след край = нова игра · <a href="../games.html">← Всички игри</a></p>
+<script>
+// Auto-generated game #1723 (type: Catch, theme: Neon).
+const c = document.getElementById('c'), x = c.getContext('2d'), W = c.width, H = c.height;
+const T = {"name":"Neon","emoji":"💜","bg":"#0d0d1a","field":"#141428","player":"#00e5ff","enemy":"#ff2e88","good":"#ffe600","text":"#ffffff"};
+const P = {"speed":3.14,"bombs":0.21};
+const KEY = 'auto-game-1723-best';
+const G = {}, keys = {}, ptr = { x: W/2, y: H/2, moved: false };
+let score = 0, best = 0, over = false, started = false;
+try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
+function end() { if (over) return; over = true; if (score > best) { best = score; try { localStorage.setItem(KEY, best); } catch (e) {} } }
+function restart() { score = 0; over = false; started = true; G.reset(); }
+function rect(r, col) { x.fillStyle = col; x.fillRect(r.x, r.y, r.w, r.h); }
+function circle(cx, cy, r, col) { x.fillStyle = col; x.beginPath(); x.arc(cx, cy, Math.max(0, r), 0, 7); x.fill(); }
+function hit(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+function pos(e) { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; }
+addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if (e.key === ' ' && (over || !started)) { restart(); return; }
+  keys[e.key] = true; if (G.key && !over) G.key(e.key);
+});
+addEventListener('keyup', e => keys[e.key] = false);
+let sx = 0, sy = 0;
+c.addEventListener('pointermove', e => { [ptr.x, ptr.y] = pos(e); ptr.moved = true; });
+c.addEventListener('pointerdown', e => {
+  [ptr.x, ptr.y] = pos(e); sx = ptr.x; sy = ptr.y;
+  if (over || !started) { restart(); return; }
+  if (G.tap) G.tap(); if (G.click) G.click(ptr.x, ptr.y);
+});
+c.addEventListener('pointerup', e => { const [ux, uy] = pos(e); if (G.swipe && Math.hypot(ux-sx, uy-sy) > 25) G.swipe(ux-sx, uy-sy); });
+
+let p, it, f, lives;
+G.reset = () => { p = { x: W/2-35, y: H-40, w: 70, h: 14 }; it = []; f = 0; lives = 3; };
+G.update = () => {
+  f++; if (keys.ArrowLeft) p.x -= 7; if (keys.ArrowRight) p.x += 7;
+  if (ptr.moved) p.x = ptr.x - p.w/2; p.x = Math.max(0, Math.min(W-p.w, p.x));
+  if (f % Math.max(14, 40 - Math.floor(score/5)) === 0) it.push({ x: 15 + Math.random()*(W-30), y: -10, w: 18, h: 18, bad: Math.random() < P.bombs });
+  const sp = P.speed + score / 40;
+  for (const o of it) { o.y += sp;
+    if (hit(o, p)) { o.dead = 1; if (o.bad) { lives--; if (lives <= 0) end(); } else score++; }
+    else if (o.y > H) { o.dead = 1; if (!o.bad) { lives--; if (lives <= 0) end(); } } }
+  it = it.filter(o => !o.dead);
+};
+G.draw = () => { rect(p, T.player); it.forEach(o => circle(o.x+9, o.y+9, 9, o.bad ? T.enemy : T.good));
+  x.fillStyle = T.text; x.textAlign = 'right'; x.fillText('❤'.repeat(lives), W-10, 50); x.textAlign = 'left'; };
+G.reset();
+function loop() {
+  if (started && !over) G.update();
+  x.clearRect(0, 0, W, H); G.draw();
+  x.fillStyle = T.text; x.font = '18px system-ui';
+  x.fillText('Точки: ' + score, 10, 25);
+  x.textAlign = 'right'; x.fillText('Рекорд: ' + best, W - 10, 25); x.textAlign = 'left';
+  if (over || !started) {
+    x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, W, H);
+    x.fillStyle = T.text; x.textAlign = 'center';
+    x.font = 'bold 32px system-ui'; x.fillText(over ? 'GAME OVER' : "🧺 Catch", W/2, 230);
+    x.font = '18px system-ui'; x.fillText(over ? 'Space или клик = пак' : 'Space или клик = старт', W/2, 268);
+    x.textAlign = 'left';
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
