@@ -194,94 +194,6 @@
  "pending": [],
  "log": [
   {
-   "who": "Byte Volt (Pixel Artist)",
-   "said": "Спешно, Neon Coder! Кликомания не зарежда на Firefox!",
-   "query": "javascript cache not updating",
-   "round": 1164,
-   "at": "2026-11-13T00:48:17.597Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "How can I force clients to refresh JavaScript files?",
-     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
-     "score": 722,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Chrome not updating cache (javascript files)",
-     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
-     "score": 4,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "MVC 5 JavaScript Caching",
-     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
-     "score": 5,
-     "accepted": false
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
-     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "Cache-Control header",
-     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
-     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
-    }
-   ]
-  },
-  {
-   "who": "Blaze Walker (Speedrun Tester)",
-   "said": "Rogue Hawk, имаш ли минутка за Ловец на руди? Колизиите там нещо бъгват.",
-   "query": "canvas collision detection",
-   "round": 1165,
-   "at": "2026-11-13T00:53:20.093Z",
-   "fromCache": true,
-   "error": null,
-   "results": [
-    {
-     "source": "Stack Overflow",
-     "title": "Javascript canvas collision detection",
-     "url": "https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection",
-     "score": 7,
-     "accepted": true
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "Canvas collision detection wpf",
-     "url": "https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf",
-     "score": 0,
-     "accepted": false
-    },
-    {
-     "source": "Stack Overflow",
-     "title": "HTML5 Canvas Collision Detection",
-     "url": "https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection",
-     "score": 0,
-     "accepted": true
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "2D collision detection",
-     "url": "https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection",
-     "summary": "Algorithms to detect collision in 2D games depend on the type of shapes that can collide (e.g., Rectangle to Rectangle, Rectangle to Circle, Circle to Circle). Generally you will have a simple generic shape that covers the entity known as a \"hitbox\" so even though collision may not be pixel perfect, it will look good enough and be performant across multiple entities. This article provides a review of the most common techniques used to provide collision detection in 2D games."
-    },
-    {
-     "source": "MDN Web Docs",
-     "title": "3D collision detection",
-     "url": "https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection",
-     "summary": "This article provides an introduction to the different bounding volume techniques used to implement collision detection in 3D environments. Followup articles will cover implementations in specific 3D libraries."
-    }
-   ]
-  },
-  {
    "who": "Zen Fox (Speedrun Tester)",
    "said": "Спешно, Frost Miner! Острови в океана не зарежда на Firefox!",
    "query": "javascript cache not updating",
@@ -2390,6 +2302,94 @@
      "title": "Cache-Control header",
      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
      "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
+    }
+   ]
+  },
+  {
+   "who": "Vector Smith (Asset Artist)",
+   "said": "Спешно, Echo Knight! На око не зарежда на Firefox!",
+   "query": "javascript cache not updating",
+   "round": 1187,
+   "at": "2026-11-13T02:44:06.736Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "How can I force clients to refresh JavaScript files?",
+     "url": "https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files",
+     "score": 722,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Chrome not updating cache (javascript files)",
+     "url": "https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files",
+     "score": 4,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "MVC 5 JavaScript Caching",
+     "url": "https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching",
+     "score": 5,
+     "accepted": false
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cache",
+     "summary": "The Cache interface provides a persistent storage mechanism for Request / Response object pairs that are cached in long lived memory. How long a Cache object lives is browser dependent, but a single origin's scripts can typically rely on the presence of a previously populated Cache object. Note that the Cache interface is exposed to windowed scopes as well as workers. You don't have to use it in conjunction with service workers, even though it is defined in the service worker spec."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "Cache-Control header",
+     "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Cache-Control",
+     "summary": "The HTTP Cache-Control header holds directives (instructions) in both requests and responses that control caching in browsers and shared caches (e.g., Proxies, CDNs)."
+    }
+   ]
+  },
+  {
+   "who": "Neon Fox (Translator)",
+   "said": "Orbit Walker, имаш ли минутка за Ловец на руди? Колизиите там нещо бъгват.",
+   "query": "canvas collision detection",
+   "round": 1187,
+   "at": "2026-11-13T02:44:06.736Z",
+   "fromCache": true,
+   "error": null,
+   "results": [
+    {
+     "source": "Stack Overflow",
+     "title": "Javascript canvas collision detection",
+     "url": "https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection",
+     "score": 7,
+     "accepted": true
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "Canvas collision detection wpf",
+     "url": "https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf",
+     "score": 0,
+     "accepted": false
+    },
+    {
+     "source": "Stack Overflow",
+     "title": "HTML5 Canvas Collision Detection",
+     "url": "https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection",
+     "score": 0,
+     "accepted": true
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "2D collision detection",
+     "url": "https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection",
+     "summary": "Algorithms to detect collision in 2D games depend on the type of shapes that can collide (e.g., Rectangle to Rectangle, Rectangle to Circle, Circle to Circle). Generally you will have a simple generic shape that covers the entity known as a \"hitbox\" so even though collision may not be pixel perfect, it will look good enough and be performant across multiple entities. This article provides a review of the most common techniques used to provide collision detection in 2D games."
+    },
+    {
+     "source": "MDN Web Docs",
+     "title": "3D collision detection",
+     "url": "https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection",
+     "summary": "This article provides an introduction to the different bounding volume techniques used to implement collision detection in 3D environments. Followup articles will cover implementations in specific 3D libraries."
     }
    ]
   }
