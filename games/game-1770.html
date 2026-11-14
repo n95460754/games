@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ocean Runner #1770</title>
+<style>
+  body { margin:0; background:#001424; color:#e0f7fa; font-family:system-ui,sans-serif;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:8px; box-sizing:border-box; }
+  h1 { margin:0 0 8px; font-size:24px; }
+  canvas { background:#00243d; border:2px solid #4dd0e155; border-radius:8px; touch-action:none; max-width:100%; height:auto; }
+  p { opacity:.75; margin:8px 0 0; text-align:center; }
+  a { color:#4dd0e1; }
+</style>
+</head>
+<body>
+<h1>🏃 Ocean Runner #1770 🌊</h1>
+<canvas id="c" width="400" height="500"></canvas>
+<p>Space / ↑ / клик = скок. Прескачай препятствията!<br>Space / клик след край = нова игра · <a href="../games.html">← Всички игри</a></p>
+<script>
+// Auto-generated game #1770 (type: Runner, theme: Ocean).
+const c = document.getElementById('c'), x = c.getContext('2d'), W = c.width, H = c.height;
+const T = {"name":"Ocean","emoji":"🌊","bg":"#001424","field":"#00243d","player":"#4dd0e1","enemy":"#ff7043","good":"#c6ff00","text":"#e0f7fa"};
+const P = {"speed":5.42,"grav":0.74};
+const KEY = 'auto-game-1770-best';
+const G = {}, keys = {}, ptr = { x: W/2, y: H/2, moved: false };
+let score = 0, best = 0, over = false, started = false;
+try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
+function end() { if (over) return; over = true; if (score > best) { best = score; try { localStorage.setItem(KEY, best); } catch (e) {} } }
+function restart() { score = 0; over = false; started = true; G.reset(); }
+function rect(r, col) { x.fillStyle = col; x.fillRect(r.x, r.y, r.w, r.h); }
+function circle(cx, cy, r, col) { x.fillStyle = col; x.beginPath(); x.arc(cx, cy, Math.max(0, r), 0, 7); x.fill(); }
+function hit(a, b) { return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+function pos(e) { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; }
+addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if (e.key === ' ' && (over || !started)) { restart(); return; }
+  keys[e.key] = true; if (G.key && !over) G.key(e.key);
+});
+addEventListener('keyup', e => keys[e.key] = false);
+let sx = 0, sy = 0;
+c.addEventListener('pointermove', e => { [ptr.x, ptr.y] = pos(e); ptr.moved = true; });
+c.addEventListener('pointerdown', e => {
+  [ptr.x, ptr.y] = pos(e); sx = ptr.x; sy = ptr.y;
+  if (over || !started) { restart(); return; }
+  if (G.tap) G.tap(); if (G.click) G.click(ptr.x, ptr.y);
+});
+c.addEventListener('pointerup', e => { const [ux, uy] = pos(e); if (G.swipe && Math.hypot(ux-sx, uy-sy) > 25) G.swipe(ux-sx, uy-sy); });
+
+const GY = H-60; let p, ob, f, nx;
+G.reset = () => { p = { x: 60, y: GY-30, w: 26, h: 30, vy: 0 }; ob = []; f = 0; nx = 60; };
+G.tap = () => { if (p.y >= GY-p.h-0.5) p.vy = -12; };
+G.update = () => {
+  f++; if (keys[' '] || keys.ArrowUp || keys.w) G.tap();
+  p.vy += P.grav; p.y = Math.min(GY-p.h, p.y + p.vy); if (p.y >= GY-p.h) p.vy = 0;
+  const sp = P.speed + score/400;
+  if (--nx <= 0) { const h = 20 + Math.random()*35, fly = Math.random() < .25 && score > 300;
+    ob.push({ x: W, y: fly ? GY-p.h-36 : GY-h, w: 18 + Math.random()*16, h: fly ? 18 : h }); nx = 45 + Math.random()*60; }
+  ob.forEach(o => o.x -= sp); ob = ob.filter(o => o.x > -50);
+  if (ob.some(o => hit(o, p))) end(); score++;
+};
+G.draw = () => { rect({ x: 0, y: GY, w: W, h: 3 }, T.text); rect(p, T.player); ob.forEach(o => rect(o, T.enemy)); };
+G.reset();
+function loop() {
+  if (started && !over) G.update();
+  x.clearRect(0, 0, W, H); G.draw();
+  x.fillStyle = T.text; x.font = '18px system-ui';
+  x.fillText('Точки: ' + score, 10, 25);
+  x.textAlign = 'right'; x.fillText('Рекорд: ' + best, W - 10, 25); x.textAlign = 'left';
+  if (over || !started) {
+    x.fillStyle = 'rgba(0,0,0,.55)'; x.fillRect(0, 0, W, H);
+    x.fillStyle = T.text; x.textAlign = 'center';
+    x.font = 'bold 32px system-ui'; x.fillText(over ? 'GAME OVER' : "🏃 Runner", W/2, 230);
+    x.font = '18px system-ui'; x.fillText(over ? 'Space или клик = пак' : 'Space или клик = старт', W/2, 268);
+    x.textAlign = 'left';
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
