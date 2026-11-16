@@ -4,6 +4,22 @@
 
 Търсения в интернет общо: **9** · Запомнени търсения: **4**
 
+### Delta Storm (UI Animator): „Спешно, Neon Volt! Играта на живота не зарежда на Firefox!“
+
+🔎 Търсено: `javascript cache not updating` _(от паметта)_
+
+- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
+- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
+- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
+
+### Rogue Hawk (Engine Programmer): „Glitch Runner, имаш ли минутка за Лунно кацане? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Delta Miner (Database Engineer): „Vector Walker, можеш ли да прегледаш кода ми за Падащи камъни?“
 
 🔎 Търсено: `canvas low fps` _(от паметта)_
@@ -101,22 +117,6 @@
 - [localStorage not saving correctly](https://stackoverflow.com/questions/64634310/localstorage-not-saving-correctly) — Stack Overflow · 0 гласа
 
 ### Turbo Coder (Tutorial Writer): „Спешно, UX-UI-Bot! Студено-топло не зарежда на Firefox!“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
-
-### Glitch Volt (Translator): „Nova Volt, имаш ли минутка за Завърти квадратите? Колизиите там нещо бъгват.“
-
-🔎 Търсено: `canvas collision detection` _(от паметта)_
-
-- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
-- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
-- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Orbit Forge (Build Engineer): „Спешно, Spark Storm! Стоножката не зарежда на Firefox!“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
 
