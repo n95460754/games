@@ -619,8 +619,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**3036 auto games so far.** Newest first:
+**3037 auto games so far.** Newest first:
 
+- 🧺 [Neon Catch #3037](games/game-3037.html) — Catch · Neon theme · added 2026-11-18 13:53 UTC
 - 🔫 [Block Blaster #3036](games/game-3036.html) — Blaster · Block theme · added 2026-11-18 13:48 UTC
 - 🐍 [Retro Snake #3035](games/game-3035.html) — Snake · Retro theme · added 2026-11-18 13:43 UTC
 - 🔫 [Ice Blaster #3034](games/game-3034.html) — Blaster · Ice theme · added 2026-11-18 13:38 UTC
