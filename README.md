@@ -619,8 +619,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**3323 auto games so far.** Newest first:
+**3324 auto games so far.** Newest first:
 
+- 🐦 [Candy Flap #3324](games/game-3324.html) — Flap · Candy theme · added 2026-11-19 13:58 UTC
 - 🧺 [Ice Catch #3323](games/game-3323.html) — Catch · Ice theme · added 2026-11-19 13:53 UTC
 - 🔫 [Candy Blaster #3322](games/game-3322.html) — Blaster · Candy theme · added 2026-11-19 13:48 UTC
 - 🏃 [Desert Runner #3321](games/game-3321.html) — Runner · Desert theme · added 2026-11-19 13:43 UTC
