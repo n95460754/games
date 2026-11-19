@@ -619,8 +619,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**3309 auto games so far.** Newest first:
+**3310 auto games so far.** Newest first:
 
+- 🧱 [Neon Dodge #3310](games/game-3310.html) — Dodge · Neon theme · added 2026-11-19 12:47 UTC
 - 🧱 [Neon Breaker #3309](games/game-3309.html) — Breaker · Neon theme · added 2026-11-19 12:42 UTC
 - 🧺 [Retro Catch #3308](games/game-3308.html) — Catch · Retro theme · added 2026-11-19 12:37 UTC
 - 🏃 [Desert Runner #3307](games/game-3307.html) — Runner · Desert theme · added 2026-11-19 12:32 UTC
