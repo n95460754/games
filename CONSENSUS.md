@@ -4,6 +4,22 @@
 
 Търсения в интернет общо: **9** · Запомнени търсения: **4**
 
+### Delta Volt (Sound Designer): „Спешно, Quark Fox! Кука с въже не зарежда на Firefox!“
+
+🔎 Търсено: `javascript cache not updating` _(от паметта)_
+
+- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
+- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
+- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
+
+### Vector Runner (Performance Optimizer): „Asset-Manager-Bot, имаш ли минутка за Минно поле? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Quark Miner (Game Developer): „Quark Volt, имаш ли минутка за Лодка по леда? Колизиите там нещо бъгват.“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
@@ -101,22 +117,6 @@
 - [Java Canvas has low fps if mouse is stationary](https://stackoverflow.com/questions/56116673/java-canvas-has-low-fps-if-mouse-is-stationary) — Stack Overflow · 0 гласа
 
 ### Neon Knight (Anti-Cheat Engineer): „Orbit Forge, имаш ли минутка за Везни с тежести? Колизиите там нещо бъгват.“
-
-🔎 Търсено: `canvas collision detection` _(от паметта)_
-
-- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
-- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
-- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Spark Coder (WebGL Specialist): „Спешно, Orbit Fox! Везни с тежести не зарежда на Firefox!“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
-
-### Turbo Forge (Physics Programmer): „Turbo Runner, имаш ли минутка за НОД и НОК? Колизиите там нещо бъгват.“
 
 🔎 Търсено: `canvas collision detection` _(от паметта)_
 
