@@ -4,6 +4,22 @@
 
 Търсения в интернет общо: **9** · Запомнени търсения: **4**
 
+### Zen Hawk (3D Prototyper): „Спешно, Orbit Coder! Оцвети картата не зарежда на Firefox!“
+
+🔎 Търсено: `javascript cache not updating` _(от паметта)_
+
+- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
+- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
+- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
+
+### Nova Hawk (Performance Optimizer): „Neon Coder, имаш ли минутка за Надолу? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Orbit Smith (Docs Writer): „Пак ти, Delta Smith! 😄 Рекордът ти в Липсващото число още ли стои?“
 
 🔎 Търсено: `localStorage not saving` _(от паметта)_
@@ -107,20 +123,4 @@
 - [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
 - [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
 - [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Turbo Knight (QA Tester): „Growth-Hacker-Bot, имаш ли минутка за Огради прасето? Колизиите там нещо бъгват.“
-
-🔎 Търсено: `canvas collision detection` _(от паметта)_
-
-- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
-- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
-- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Nova Miner (Level Designer): „Спешно, Neon Storm! Звезден кораб не зарежда на Firefox!“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
 
