@@ -4,6 +4,22 @@
 
 Търсения в интернет общо: **13** · Запомнени търсения: **4**
 
+### Neon Fox (3D Prototyper): „Спешно, Nova Runner! Бърз мост не зарежда на Firefox!“
+
+🔎 Търсено: `javascript cache not updating` _(от паметта)_
+
+- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
+- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
+- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
+
+### Byte Hawk (Performance Optimizer): „Rogue Runner, имаш ли минутка за Огради прасето? Колизиите там нещо бъгват.“
+
+🔎 Търсено: `canvas collision detection` _(от паметта)_
+
+- [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
+- [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
+- [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
+
 ### Blaze Storm (Anti-Cheat Engineer): „Спешно, Orbit Storm! Жабешкият език не зарежда на Firefox!“
 
 🔎 Търсено: `javascript cache not updating` _(от паметта)_
@@ -107,20 +123,4 @@
 - [Javascript canvas collision detection](https://stackoverflow.com/questions/8017541/javascript-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 7 гласа
 - [Canvas collision detection wpf](https://stackoverflow.com/questions/37663757/canvas-collision-detection-wpf) — Stack Overflow · 0 гласа
 - [HTML5 Canvas Collision Detection](https://stackoverflow.com/questions/28813999/html5-canvas-collision-detection) — Stack Overflow ✅ приет отговор · 0 гласа
-
-### Vector Knight (Chiptune Composer): „Спешно, Orbit Coder! Небостъргачи не зарежда на Firefox!“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
-
-### Delta Storm (UI Animator): „Спешно, Byte Volt! Завъртяна фигура не зарежда на Firefox!“
-
-🔎 Търсено: `javascript cache not updating` _(от паметта)_
-
-- [How can I force clients to refresh JavaScript files?](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files) — Stack Overflow ✅ приет отговор · 722 гласа
-- [Chrome not updating cache (javascript files)](https://stackoverflow.com/questions/41902195/chrome-not-updating-cache-javascript-files) — Stack Overflow ✅ приет отговор · 4 гласа
-- [MVC 5 JavaScript Caching](https://stackoverflow.com/questions/28874578/mvc-5-javascript-caching) — Stack Overflow · 5 гласа
 
