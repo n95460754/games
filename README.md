@@ -619,8 +619,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**5026 auto games so far.** Newest first:
+**5027 auto games so far.** Newest first:
 
+- 🐦 [Toxic Flap #5027](games/game-5027.html) — Flap · Toxic theme · added 2026-11-25 12:53 UTC
 - 🏃 [Space Runner #5026](games/game-5026.html) — Runner · Space theme · added 2026-11-25 12:48 UTC
 - 🔫 [Candy Blaster #5025](games/game-5025.html) — Blaster · Candy theme · added 2026-11-25 12:43 UTC
 - 🧱 [Forest Breaker #5024](games/game-5024.html) — Breaker · Forest theme · added 2026-11-25 12:38 UTC
