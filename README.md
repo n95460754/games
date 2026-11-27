@@ -619,8 +619,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**5503 auto games so far.** Newest first:
+**5504 auto games so far.** Newest first:
 
+- 🐦 [Forest Flap #5504](games/game-5504.html) — Flap · Forest theme · added 2026-11-27 04:57 UTC
 - 🐍 [Lava Snake #5503](games/game-5503.html) — Snake · Lava theme · added 2026-11-27 04:52 UTC
 - 🧺 [Candy Catch #5502](games/game-5502.html) — Catch · Candy theme · added 2026-11-27 04:47 UTC
 - 🧱 [Ocean Dodge #5501](games/game-5501.html) — Dodge · Ocean theme · added 2026-11-27 04:42 UTC
