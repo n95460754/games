@@ -619,8 +619,9 @@ Three.js is © Three.js Authors, released under the [MIT License](https://github
 A new mini-game is generated and added here automatically **every 5 minutes** by a GitHub Action ([`scripts/generate-game.js`](scripts/generate-game.js)).
 
 <!-- AUTO-GAMES:START -->
-**5622 auto games so far.** Newest first:
+**5623 auto games so far.** Newest first:
 
+- 🐍 [Ocean Snake #5623](games/game-5623.html) — Snake · Ocean theme · added 2026-11-27 14:56 UTC
 - 🎯 [Block Tap Rush #5622](games/game-5622.html) — Tap Rush · Block theme · added 2026-11-27 14:51 UTC
 - 🧺 [Toxic Catch #5621](games/game-5621.html) — Catch · Toxic theme · added 2026-11-27 14:46 UTC
 - 🧱 [Neon Breaker #5620](games/game-5620.html) — Breaker · Neon theme · added 2026-11-27 14:41 UTC
